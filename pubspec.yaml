@@ -1,7 +1,7 @@
 name: kebabbo_flutter
 description: Kebbabbo Flutter version.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 0.0.1+1
 
@@ -14,12 +14,14 @@ dependencies:
 
   english_words: ^4.0.0
   provider: ^6.0.0
+  supabase_flutter: ^2.5.6
+  image_picker: ^1.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true
