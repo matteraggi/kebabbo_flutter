@@ -19,12 +19,11 @@ class _TopKebabPageState extends State<TopKebabPage> {
 
   Future<void> fetchKebab() async {
     try {
-      final response = await supabase.from('KebabItalia').select('*');
+      final response = await supabase.from('kebab').select('*');
 
       setState(() {
         dashList = List<Map<String, dynamic>>.from(response as List);
         isLoading = false;
-        print(dashList);
       });
     } catch (error) {
       setState(() {
@@ -44,37 +43,54 @@ class _TopKebabPageState extends State<TopKebabPage> {
           ? Center(child: CircularProgressIndicator())
           : errorMessage != null
               ? Center(child: Text('Errore: $errorMessage'))
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Top Kebab',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              : dashList.isEmpty
+                  ? Center(child: Text('Nessun Kebabbaro presente :('))
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: dashList.length,
+                            itemBuilder: (context, index) {
+                              return KebabListItem(
+                                name: dashList[index]['name'] ?? '',
+                                description:
+                                    dashList[index]['description'] ?? '',
+                              );
+                            },
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: dashList.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              dashList[index]['name'] ?? '',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+    );
+  }
+}
+
+class KebabListItem extends StatelessWidget {
+  final String name;
+  final String description;
+
+  KebabListItem({
+    required this.name,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        name,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(
+        description,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
