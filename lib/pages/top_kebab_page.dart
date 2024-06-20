@@ -11,6 +11,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
   List<Map<String, dynamic>> dashList = [];
   bool isLoading = true;
   String? errorMessage;
+  String orderByField = 'rating';
 
   @override
   void initState() {
@@ -20,7 +21,10 @@ class _TopKebabPageState extends State<TopKebabPage> {
 
   Future<void> fetchKebab() async {
     try {
-      final response = await supabase.from('kebab').select('*');
+      final response = await supabase
+          .from('kebab')
+          .select('*')
+          .order(orderByField, ascending: false);
 
       setState(() {
         dashList = List<Map<String, dynamic>>.from(response as List);
@@ -34,9 +38,51 @@ class _TopKebabPageState extends State<TopKebabPage> {
     }
   }
 
+  void changeOrderByField(String field) {
+    setState(() {
+      orderByField = field;
+      fetchKebab();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Top Kebab',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            DropdownButton<String>(
+              value: orderByField,
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  changeOrderByField(newValue);
+                }
+              },
+              items: <String>[
+                'rating',
+                'quality',
+                'price',
+                'dimension',
+                'menu',
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value.toUpperCase()),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage != null
@@ -47,18 +93,6 @@ class _TopKebabPageState extends State<TopKebabPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 16.0, left: 16.0, right: 16.0),
-                            child: Text(
-                              'Top Kebab',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
                           Expanded(
                             child: ListView.builder(
                               itemCount: dashList.length,
