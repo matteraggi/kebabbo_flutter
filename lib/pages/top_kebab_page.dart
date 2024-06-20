@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/components/kebab_item.dart';
 
 class TopKebabPage extends StatefulWidget {
   @override
@@ -36,61 +37,49 @@ class _TopKebabPageState extends State<TopKebabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Top Kebab'),
-      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage != null
               ? Center(child: Text('Errore: $errorMessage'))
               : dashList.isEmpty
                   ? Center(child: Text('Nessun Kebabbaro presente :('))
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: dashList.length,
-                            itemBuilder: (context, index) {
-                              return KebabListItem(
-                                name: dashList[index]['name'] ?? '',
-                                description:
-                                    dashList[index]['description'] ?? '',
-                              );
-                            },
+                  : SafeArea(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, left: 16.0, right: 16.0),
+                            child: Text(
+                              'Top Kebab',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: dashList.length,
+                              itemBuilder: (context, index) {
+                                final kebab = dashList[index];
+                                return KebabListItem(
+                                  name: kebab['name'] ?? '',
+                                  description: kebab['description'] ?? '',
+                                  rating: (kebab['rating'] ?? 0.0).toDouble(),
+                                  quality: (kebab['quality'] ?? 0.0).toDouble(),
+                                  price: (kebab['price'] ?? 0.0).toDouble(),
+                                  dimension:
+                                      (kebab['dimension'] ?? 0.0).toDouble(),
+                                  menu: (kebab['menu'] ?? 0.0).toDouble(),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-    );
-  }
-}
-
-class KebabListItem extends StatelessWidget {
-  final String name;
-  final String description;
-
-  KebabListItem({
-    required this.name,
-    required this.description,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        name,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(
-        description,
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
     );
   }
 }

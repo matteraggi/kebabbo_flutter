@@ -24,17 +24,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kebabbo',
-      theme: ThemeData.dark().copyWith(
-        primaryColor: Colors.green,
+      theme: ThemeData.light().copyWith(
+        primaryColor: Colors.red,
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            foregroundColor: Colors.green,
+            foregroundColor: Colors.red,
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.red,
           ),
         ),
       ),
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         page = TopKebabPage();
       case 4:
-        page = Specialpage();
+        page = SpecialPage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -94,8 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.account_circle),
+            label: 'Account',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
@@ -110,11 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Top Kebab',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
+            icon: Icon(Icons.zoom_out_map),
             label: 'Special',
           ),
         ],
-        backgroundColor: Colors.green, // Colore di sfondo della navbar
+        backgroundColor: Colors.red, // Colore di sfondo della navbar
         selectedItemColor: Colors.white, // Colore dell'elemento selezionato
         unselectedItemColor:
             Colors.black, // Colore degli elementi non selezionati
