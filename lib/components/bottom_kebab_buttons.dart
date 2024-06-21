@@ -18,6 +18,7 @@ class _BottomButtonItemState extends State<BottomButtonItem> {
       child: ElevatedButton(
         onPressed: () {
           print('Navigating to ${widget.linkMaps}');
+          //fare navigazione
         },
         child: Row(
           mainAxisSize: MainAxisSize.min, // Aggiungere questa riga

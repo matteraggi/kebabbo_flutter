@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/components/order_bar.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 
 class TopKebabPage extends StatefulWidget {
@@ -57,34 +57,18 @@ class _TopKebabPageState extends State<TopKebabPage> {
     });
   }
 
+  void changeOrderDirection(bool direction) {
+    setState(() {
+      orderDirection = direction;
+      fetchKebab();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     TextEditingController searchController = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(
-        title: DropdownButton<String>(
-          value: orderByField,
-          onChanged: (String? newValue) {
-            if (newValue != null) {
-              changeOrderByField(newValue);
-            }
-          },
-          items: <String>[
-            'rating',
-            'quality',
-            'price',
-            'dimension',
-            'menu',
-            'name',
-          ].map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value.toUpperCase()),
-            );
-          }).toList(),
-        ),
-      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage != null
@@ -93,10 +77,20 @@ class _TopKebabPageState extends State<TopKebabPage> {
                   ? Center(child: Text('Nessun Kebabbaro presente :('))
                   : SafeArea(
                       minimum: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 32),
+                        vertical: 0,
+                        horizontal: 32,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: 16),
+                          OrderBar(
+                            orderByField: orderByField,
+                            orderDirection: orderDirection,
+                            onChangeOrderByField: changeOrderByField,
+                            onChangeOrderDirection: changeOrderDirection,
+                          ),
+                          SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: TextField(
@@ -108,15 +102,15 @@ class _TopKebabPageState extends State<TopKebabPage> {
                               decoration: InputDecoration(
                                 hintText: "Cerca un kebabbaro...",
                                 hintStyle: TextStyle(
-                                  fontSize:
-                                      16, // Imposta la dimensione del testo del hint
-                                  color: Colors
-                                      .black, // Imposta il colore del testo del hint (opzionale)
+                                  fontSize: 16,
+                                  color: Colors.black,
                                 ),
                                 filled: true,
                                 fillColor: Colors.white,
                                 contentPadding: EdgeInsets.symmetric(
-                                    vertical: 0.0, horizontal: 20.0),
+                                  vertical: 0.0,
+                                  horizontal: 20.0,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30.0),
                                   borderSide: BorderSide.none,
