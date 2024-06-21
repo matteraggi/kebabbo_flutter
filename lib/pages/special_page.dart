@@ -76,16 +76,7 @@ class _SpecialPageState extends State<SpecialPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 16.0, left: 16.0, right: 16.0),
-                              child: Text(
-                                'Top Kebab',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
+                              padding: const EdgeInsets.only(top: 16.0),
                             ),
                             Expanded(
                               child: ListView.builder(

@@ -12,7 +12,8 @@ Color red = Color.fromRGBO(187, 0, 0, 1.0);
 Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
 Future<void> main() async {
-  await dotenv.load(fileName: "process.env");
+  /*
+  await dotenv.load(fileName: ".env");
 
   final supabaseUrl = dotenv.env['SUPABASE_URL'];
   final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'];
@@ -20,8 +21,12 @@ Future<void> main() async {
   if (supabaseUrl == null || supabaseAnonKey == null) {
     throw Exception("Supabase URL and Anon Key must be set in .env file");
   }
+  */
 
-  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+  await Supabase.initialize(
+      url: "https://ntrxsuhmslsvlflwbizb.supabase.co",
+      anonKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
   runApp(MyApp());
 }
 

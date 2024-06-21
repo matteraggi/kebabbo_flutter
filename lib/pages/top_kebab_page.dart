@@ -49,6 +49,8 @@ class _TopKebabPageState extends State<TopKebabPage> {
       orderByField = field;
       if (field == 'name') {
         orderDirection = true;
+      } else {
+        orderDirection = false;
       }
       fetchKebab();
     });
