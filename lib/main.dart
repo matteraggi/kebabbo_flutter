@@ -7,6 +7,9 @@ import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+Color red = Color.fromRGBO(187, 0, 0, 1.0);
+Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
+
 Future<void> main() async {
   await Supabase.initialize(
       url: 'https://ntrxsuhmslsvlflwbizb.supabase.co',
@@ -25,16 +28,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kebabbo',
       theme: ThemeData.light().copyWith(
-        primaryColor: Colors.red,
+        scaffoldBackgroundColor: yellow,
+        primaryColor: red,
+        appBarTheme: AppBarTheme(
+          backgroundColor: yellow,
+        ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            foregroundColor: Colors.red,
+            foregroundColor: red,
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: Colors.red,
+            backgroundColor: red,
           ),
         ),
       ),
@@ -67,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     Widget page;
+
     switch (selectedIndex) {
       case 0:
         page =
@@ -114,12 +122,10 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Special',
           ),
         ],
-        backgroundColor: Colors.red, // Colore di sfondo della navbar
-        selectedItemColor: Colors.white, // Colore dell'elemento selezionato
-        unselectedItemColor:
-            Colors.black, // Colore degli elementi non selezionati
-        type: BottomNavigationBarType
-            .fixed, // Assicura che tutti gli elementi siano visibili
+        backgroundColor: red, // Colore di sfondo della navbar
+        selectedItemColor: yellow,
+        unselectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

@@ -12,6 +12,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
   bool isLoading = true;
   String? errorMessage;
   String orderByField = 'rating';
+  bool orderDirection = false;
 
   @override
   void initState() {
@@ -24,23 +25,31 @@ class _TopKebabPageState extends State<TopKebabPage> {
       final response = await supabase
           .from('kebab')
           .select('*')
-          .order(orderByField, ascending: false);
+          .order(orderByField, ascending: orderDirection);
 
-      setState(() {
-        dashList = List<Map<String, dynamic>>.from(response as List);
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          dashList = List<Map<String, dynamic>>.from(response as List);
+          isLoading = false;
+        });
+      }
     } catch (error) {
-      setState(() {
-        errorMessage = error.toString();
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = error.toString();
+          isLoading = false;
+        });
+      }
     }
   }
 
+  // solo distanza non è fattibile in automatico da supabase
   void changeOrderByField(String field) {
     setState(() {
       orderByField = field;
+      if (field == 'name') {
+        orderDirection = true;
+      }
       fetchKebab();
     });
   }
@@ -73,6 +82,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                 'price',
                 'dimension',
                 'menu',
+                'name',
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
