@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 
@@ -58,41 +59,30 @@ class _TopKebabPageState extends State<TopKebabPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController searchController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Top Kebab',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            DropdownButton<String>(
-              value: orderByField,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  changeOrderByField(newValue);
-                }
-              },
-              items: <String>[
-                'rating',
-                'quality',
-                'price',
-                'dimension',
-                'menu',
-                'name',
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value.toUpperCase()),
-                );
-              }).toList(),
-            ),
-          ],
+        title: DropdownButton<String>(
+          value: orderByField,
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              changeOrderByField(newValue);
+            }
+          },
+          items: <String>[
+            'rating',
+            'quality',
+            'price',
+            'dimension',
+            'menu',
+            'name',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value.toUpperCase()),
+            );
+          }).toList(),
         ),
       ),
       body: isLoading
@@ -102,9 +92,39 @@ class _TopKebabPageState extends State<TopKebabPage> {
               : dashList.isEmpty
                   ? Center(child: Text('Nessun Kebabbaro presente :('))
                   : SafeArea(
+                      minimum: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 32),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: TextField(
+                              controller: searchController,
+                              onChanged: (value) {
+                                // Handle search text changes
+                                print('Search text: $value');
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Cerca un kebabbaro...",
+                                hintStyle: TextStyle(
+                                  fontSize:
+                                      16, // Imposta la dimensione del testo del hint
+                                  color: Colors
+                                      .black, // Imposta il colore del testo del hint (opzionale)
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 0.0, horizontal: 20.0),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                prefixIcon: Icon(Icons.search),
+                              ),
+                            ),
+                          ),
                           Expanded(
                             child: ListView.builder(
                               itemCount: dashList.length,

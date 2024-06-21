@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class KebabListItem extends StatefulWidget {
   final String name;
@@ -55,7 +54,6 @@ class _KebabListItemState extends State<KebabListItem> {
     return Card(
       elevation: 4,
       shadowColor: Colors.grey,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
       child: Center(
         child: ExpansionTile(
           leading: SizedBox(width: 10),
