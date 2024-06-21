@@ -20,7 +20,11 @@ class _SpecialPageState extends State<SpecialPage> {
 
   Future<void> fetchKebab(String tableName) async {
     try {
-      final response = await supabase.from(tableName).select('*');
+      final response = await supabase
+          .from(tableName)
+          .select('*')
+          .order("rating", ascending: false);
+
       if (!mounted) return;
       setState(() {
         dashList = List<Map<String, dynamic>>.from(response as List);
@@ -48,6 +52,7 @@ class _SpecialPageState extends State<SpecialPage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
+      animationDuration: Duration(milliseconds: 600),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Kebab'),

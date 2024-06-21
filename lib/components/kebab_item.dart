@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class KebabListItem extends StatefulWidget {
   final String name;
@@ -89,48 +91,37 @@ class _KebabListItemState extends State<KebabListItem> {
           ),
           trailing: SizedBox(width: 10),
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.description,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Qualità: ${widget.quality}',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Price: ${widget.price}',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Dimensione: ${widget.dimension}',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Menu: ${widget.menu}',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
               ),
-            ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.description,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    SingleStat(label: "Qualità", number: widget.quality),
+                    SizedBox(height: 8),
+                    SingleStat(label: "Prezzo", number: widget.price),
+                    SizedBox(height: 8),
+                    SingleStat(label: "Dimensione", number: widget.dimension),
+                    SizedBox(height: 8),
+                    SingleStat(label: "Menu", number: widget.menu),
+                  ],
+                ),
+              ),
+            )
           ],
           onExpansionChanged: (bool expanding) =>
               setState(() => isExpanded = expanding),
