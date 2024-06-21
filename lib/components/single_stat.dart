@@ -27,6 +27,7 @@ class _SingleStatState extends State<SingleStat> {
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
             Text(
@@ -34,6 +35,7 @@ class _SingleStatState extends State<SingleStat> {
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w800,
+                fontSize: 16,
               ),
             ),
           ],
@@ -43,7 +45,7 @@ class _SingleStatState extends State<SingleStat> {
           backgroundColor: Colors.grey[300],
           valueColor: AlwaysStoppedAnimation<Color>(red),
           minHeight: 8,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
       ],
     );

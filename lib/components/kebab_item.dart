@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 
@@ -10,6 +11,7 @@ class KebabListItem extends StatefulWidget {
   final double price;
   final double dimension;
   final double menu;
+  final String map;
 
   KebabListItem({
     required this.name,
@@ -19,6 +21,7 @@ class KebabListItem extends StatefulWidget {
     required this.price,
     required this.dimension,
     required this.menu,
+    required this.map,
   });
 
   @override
@@ -93,8 +96,8 @@ class _KebabListItemState extends State<KebabListItem> {
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
                 ),
               ),
               child: Padding(
@@ -116,6 +119,8 @@ class _KebabListItemState extends State<KebabListItem> {
                     SingleStat(label: "Dimensione", number: widget.dimension),
                     SizedBox(height: 8),
                     SingleStat(label: "Menu", number: widget.menu),
+                    SizedBox(height: 16),
+                    BottomButtonItem(linkMaps: widget.map)
                   ],
                 ),
               ),

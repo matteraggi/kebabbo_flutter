@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class BottomButtonItem extends StatefulWidget {
-  final String link_maps;
+  final String linkMaps;
 
   BottomButtonItem({
-    required this.link_maps,
+    required this.linkMaps,
   });
 
   @override
@@ -12,9 +12,28 @@ class BottomButtonItem extends StatefulWidget {
 }
 
 class _BottomButtonItemState extends State<BottomButtonItem> {
-
   @override
   Widget build(BuildContext context) {
-    return Row();
+    return IntrinsicWidth(
+      child: ElevatedButton(
+        onPressed: () {
+          print('Navigating to ${widget.linkMaps}');
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min, // Aggiungere questa riga
+          children: [
+            Icon(Icons.navigation, color: Colors.white, size: 16),
+            SizedBox(width: 5), // Spazio tra l'icona e il testo
+            Text(
+              'Google Maps',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

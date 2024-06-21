@@ -98,6 +98,7 @@ class _SpecialPageState extends State<SpecialPage> {
                                     dimension:
                                         (kebab['dimension'] ?? 0.0).toDouble(),
                                     menu: (kebab['menu'] ?? 0.0).toDouble(),
+                                    map: kebab['map'] ?? '',
                                   );
                                 },
                               ),
