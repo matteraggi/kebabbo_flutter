@@ -38,7 +38,7 @@ class OrderBar extends StatelessWidget {
               children: [
                 DropdownButtonHideUnderline(
                   child: Container(
-                    height: 40,
+                    height: 45,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),

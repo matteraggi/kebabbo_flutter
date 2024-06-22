@@ -55,8 +55,7 @@ class _SpecialPageState extends State<SpecialPage> {
       animationDuration: Duration(milliseconds: 600),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Kebab'),
-          bottom: TabBar(
+          title: TabBar(
             onTap: (index) {
               if (index == 0) {
                 onTabChange('kebab_world');
@@ -64,9 +63,55 @@ class _SpecialPageState extends State<SpecialPage> {
                 onTabChange('kebab_legend');
               }
             },
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: red,
+            ),
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.black,
+            labelStyle: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontSize: 16,
+            ),
             tabs: [
-              Tab(text: 'World'),
-              Tab(text: 'Special'),
+              Tab(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal:
+                          16), // Aggiungi padding intorno al contenuto della scheda
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.public,
+                        size: 24,
+                      ),
+                      SizedBox(width: 8),
+                      Text('World'),
+                    ],
+                  ),
+                ),
+              ),
+              Tab(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.local_play_rounded,
+                        size: 24,
+                      ),
+                      SizedBox(width: 8),
+                      Text('Special'),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -77,6 +122,10 @@ class _SpecialPageState extends State<SpecialPage> {
                 : dashList.isEmpty
                     ? Center(child: Text('Nessun Kebabbaro presente :('))
                     : SafeArea(
+                        minimum: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 32,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
