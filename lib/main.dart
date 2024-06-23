@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kebabbo_flutter/pages/about_page.dart';
 import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
@@ -7,6 +6,7 @@ import 'package:kebabbo_flutter/pages/map_page.dart';
 import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 Color red = Color.fromRGBO(187, 0, 0, 1.0);
 Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
@@ -82,6 +82,64 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 2;
+  Position? _currentPosition;
+  late Stream<Position> _positionStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      ),
+    );
+    _positionStream.listen((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+      // Se la pagina corrente è la mappa, aggiorna la posizione
+      if (selectedIndex == 2) {
+        (context
+            .findAncestorWidgetOfExactType<MapPage>()
+            ?.updatePosition(position));
+      }
+    });
+  }
+
+  Future<void> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _currentPosition = position;
+      if (selectedIndex == 2) {
+        (context
+            .findAncestorWidgetOfExactType<MapPage>()
+            ?.updatePosition(position));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +152,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         page = AboutPage();
       case 2:
-        page = MapPage();
+        page = MapPage(
+          currentPosition: _currentPosition,
+        );
       case 3:
         page = TopKebabPage();
       case 4:
@@ -130,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Top Kebab',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.zoom_out_map),
+            icon: Icon(Icons.local_play_rounded),
             label: 'Special',
           ),
         ],

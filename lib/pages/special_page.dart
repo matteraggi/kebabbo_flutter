@@ -103,11 +103,11 @@ class _SpecialPageState extends State<SpecialPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.local_play_rounded,
+                        Icons.brightness_high_sharp,
                         size: 24,
                       ),
                       SizedBox(width: 8),
-                      Text('Special'),
+                      Text('Lengend'),
                     ],
                   ),
                 ),

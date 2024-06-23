@@ -3,15 +3,16 @@
 Pareggiare Kebabbo Web
 
 - [ ] working search bar
-- [ ] goto google maps
 - [ ] maps in homepage
 - [ ] user position in homepage
 - [ ] maps in kebab_item
+- [ ] goto google maps
 - [ ] order by distance
-- [ ] special page style like top kebab
+- [x] special page style like top kebab
 - [ ] about page
 
------
+---
+
 Ancora non fatte in kebabbo Web
 
 - [ ] Login con Account e operazioni solo per user registrati
