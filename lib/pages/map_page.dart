@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kebabbo_flutter/components/popup_kebab.dart';
+import 'package:kebabbo_flutter/main.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapPage extends StatefulWidget {
@@ -18,12 +21,34 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  List<Map<String, dynamic>> dashList = [];
   final MapController _mapController = MapController();
+  final PopupController _popupController = PopupController();
   bool _isMapInitialized = false;
+  String? errorMessage;
 
   @override
   void initState() {
     super.initState();
+    fetchKebab();
+  }
+
+  Future<void> fetchKebab() async {
+    try {
+      final response = await supabase.from('kebab').select('*');
+
+      if (mounted) {
+        setState(() {
+          dashList = List<Map<String, dynamic>>.from(response as List);
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          errorMessage = error.toString();
+        });
+      }
+    }
   }
 
   void _centerMap() {
@@ -31,7 +56,7 @@ class _MapPageState extends State<MapPage> {
       _mapController.move(
         LatLng(widget.currentPosition!.latitude,
             widget.currentPosition!.longitude),
-        15,
+        14,
       );
     }
   }
@@ -40,7 +65,8 @@ class _MapPageState extends State<MapPage> {
   void didUpdateWidget(MapPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.currentPosition != null &&
-        oldWidget.currentPosition != widget.currentPosition) {
+        oldWidget.currentPosition != widget.currentPosition &&
+        _isMapInitialized) {
       _centerMap();
     }
   }
@@ -56,46 +82,99 @@ class _MapPageState extends State<MapPage> {
     LatLng _center = LatLng(
         widget.currentPosition!.latitude, widget.currentPosition!.longitude);
 
-    return Center(
-      child: FlutterMap(
-        options: MapOptions(
-          initialCenter: _center,
-          initialZoom: 10.2,
-          onMapReady: () {
-            setState(() {
-              _isMapInitialized = true;
-            });
-          },
+    List<Marker> markers = [
+      if (widget.currentPosition != null)
+        Marker(
+          width: 50.0,
+          height: 50.0,
+          point: LatLng(widget.currentPosition!.latitude,
+              widget.currentPosition!.longitude),
+          child: Image.asset("assets/images/user.png"),
+          key: const ValueKey('user_marker'), // Key to identify the user marker
         ),
+      ...dashList.map((item) {
+        return Marker(
+          width: 40.0,
+          height: 40.0,
+          point: LatLng(item['lat'], item['lng']),
+          child: Image.asset("assets/images/kebab.png"),
+          key: ValueKey(
+              'kebab_marker_${item['id']}'), // Unique key for each kebab marker
+        );
+      })
+    ];
+
+    return Center(
+      child: Stack(
         children: [
-          TileLayer(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
-          ),
-          RichAttributionWidget(
-            attributions: [
-              TextSourceAttribution(
-                'OpenStreetMap contributors',
-                onTap: () => _launchURL(
-                    Uri.parse('https://openstreetmap.org/copyright')),
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: _center,
+              initialZoom: 14,
+              onMapReady: () {
+                setState(() {
+                  _isMapInitialized = true;
+                });
+                // _centerMap();
+              },
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                subdomains: ['a', 'b', 'c'],
+              ),
+              RichAttributionWidget(
+                attributions: [
+                  TextSourceAttribution(
+                    'OpenStreetMap contributors',
+                    onTap: () => _launchURL(
+                        Uri.parse('https://openstreetmap.org/copyright')),
+                  ),
+                ],
+              ),
+              MarkerLayer(markers: markers),
+              PopupMarkerLayer(
+                options: PopupMarkerLayerOptions(
+                  markerCenterAnimation: MarkerCenterAnimation(
+                      curve: Curves.easeInOut,
+                      duration: const Duration(milliseconds: 500)),
+                  markerTapBehavior: MarkerTapBehavior.togglePopup(),
+                  popupController: _popupController,
+                  markers: markers,
+                  popupDisplayOptions: PopupDisplayOptions(
+                    builder: (BuildContext context, Marker marker) {
+                      // Open popup only if it's not the user marker
+                      if (marker.key == const ValueKey('user_marker')) {
+                        return SizedBox.shrink();
+                      }
+                      final item = dashList.firstWhere((element) =>
+                          marker.point.latitude == element['lat'] &&
+                          marker.point.longitude == element['lng']);
+                      return PopupKebabItem(
+                        name: item['name'],
+                        description: item['description'],
+                        rating: item['rating'].toDouble(),
+                        quality: item['quality'].toDouble(),
+                        price: item['price'].toDouble(),
+                        dimension: item['dimension'].toDouble(),
+                        menu: item['menu'].toDouble(),
+                      );
+                    },
+                  ),
+                ),
               ),
             ],
           ),
-          MarkerLayer(
-            markers: [
-              if (widget.currentPosition != null)
-                Marker(
-                  width: 40.0,
-                  height: 40.0,
-                  point: LatLng(widget.currentPosition!.latitude,
-                      widget.currentPosition!.longitude),
-                  child: Icon(
-                    Icons.location_on,
-                    color: Colors.blue,
-                    size: 40.0,
-                  ),
-                ),
-            ],
+          Positioned(
+            bottom: 16.0,
+            left: 16.0,
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              onPressed: _centerMap,
+              child: Icon(Icons.my_location, color: Colors.black),
+            ),
           ),
         ],
       ),

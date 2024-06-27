@@ -2,13 +2,13 @@
 
 Pareggiare Kebabbo Web
 
+- [x] maps in homepage
+- [x] user position in homepage
+- [x] special page style like top kebab
 - [ ] working search bar
-- [ ] maps in homepage
-- [ ] user position in homepage
+- [ ] order by distance
 - [ ] maps in kebab_item
 - [ ] goto google maps
-- [ ] order by distance
-- [x] special page style like top kebab
 - [ ] about page
 
 ---

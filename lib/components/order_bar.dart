@@ -46,6 +46,7 @@ class OrderBar extends StatelessWidget {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                     child: DropdownButton<String>(
+                      borderRadius: BorderRadius.circular(30),
                       alignment: Alignment.center,
                       enableFeedback: true,
                       value: orderByField,
