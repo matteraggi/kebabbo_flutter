@@ -10,10 +10,12 @@ class TopKebabPage extends StatefulWidget {
 
 class _TopKebabPageState extends State<TopKebabPage> {
   List<Map<String, dynamic>> dashList = [];
+  List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
   String orderByField = 'rating';
   bool orderDirection = false;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -31,6 +33,8 @@ class _TopKebabPageState extends State<TopKebabPage> {
       if (mounted) {
         setState(() {
           dashList = List<Map<String, dynamic>>.from(response as List);
+          searchResultList = List<Map<String, dynamic>>.from(
+              response as List);
           isLoading = false;
         });
       }
@@ -44,7 +48,27 @@ class _TopKebabPageState extends State<TopKebabPage> {
     }
   }
 
-  // solo distanza non è fattibile in automatico da supabase
+  void searchKebab(String query) {
+    final filteredList = dashList.where((kebab) {
+      final kebabName = kebab['name'].toString().toLowerCase();
+      final searchText = query.toLowerCase();
+      return kebabName.contains(searchText);
+    }).toList();
+
+    // Sort filtered list based on relevance
+    filteredList.sort((a, b) {
+      final aName = a['name'].toString().toLowerCase();
+      final bName = b['name'].toString().toLowerCase();
+      final aIndex = aName.indexOf(query.toLowerCase());
+      final bIndex = bName.indexOf(query.toLowerCase());
+      return aIndex.compareTo(bIndex);
+    });
+
+    setState(() {
+      searchResultList = filteredList;
+    });
+  }
+
   void changeOrderByField(String field) {
     setState(() {
       orderByField = field;
@@ -66,8 +90,6 @@ class _TopKebabPageState extends State<TopKebabPage> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
-
     return Scaffold(
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -95,10 +117,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: TextField(
                               controller: searchController,
-                              onChanged: (value) {
-                                // Handle search text changes
-                                print('Search text: $value');
-                              },
+                              onChanged: searchKebab,
                               decoration: InputDecoration(
                                 hintText: "Cerca un kebabbaro...",
                                 hintStyle: TextStyle(
@@ -121,9 +140,9 @@ class _TopKebabPageState extends State<TopKebabPage> {
                           ),
                           Expanded(
                             child: ListView.builder(
-                              itemCount: dashList.length,
+                              itemCount: searchResultList.length,
                               itemBuilder: (context, index) {
-                                final kebab = dashList[index];
+                                final kebab = searchResultList[index];
                                 return KebabListItem(
                                   name: kebab['name'] ?? '',
                                   description: kebab['description'] ?? '',

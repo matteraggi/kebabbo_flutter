@@ -6,7 +6,7 @@ Pareggiare Kebabbo Web
 - [x] user position in homepage
 - [x] special page style like top kebab
 - [x] goto google maps
-- [ ] working search bar
+- [x] working search bar
 - [ ] distance in kebab card - order by distance
 - [ ] about page
 
