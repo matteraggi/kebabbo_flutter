@@ -1,40 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class BottomButtonItem extends StatefulWidget {
+class BottomButtonItem extends StatelessWidget {
   final String linkMaps;
+  final String text;
+  final IconData icon;
 
-  BottomButtonItem({
-    required this.linkMaps,
-  });
+  const BottomButtonItem({required this.linkMaps, required this.text, required this.icon});
 
-  @override
-  _BottomButtonItemState createState() => _BottomButtonItemState();
-}
-
-class _BottomButtonItemState extends State<BottomButtonItem> {
   @override
   Widget build(BuildContext context) {
-    return IntrinsicWidth(
-      child: ElevatedButton(
-        onPressed: () {
-          print('Navigating to ${widget.linkMaps}');
-          //fare navigazione
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min, // Aggiungere questa riga
-          children: [
-            Icon(Icons.navigation, color: Colors.white, size: 16),
-            SizedBox(width: 5), // Spazio tra l'icona e il testo
-            Text(
-              'Google Maps',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
+    return ElevatedButton(
+      onPressed: _launchMaps,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white),
+          SizedBox(width: 5),
+          Text(text),
+        ],
       ),
     );
+  }
+
+  void _launchMaps() async {
+    final Uri url = Uri.parse(linkMaps);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
