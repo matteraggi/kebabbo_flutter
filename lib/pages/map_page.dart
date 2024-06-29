@@ -140,7 +140,7 @@ class _MapPageState extends State<MapPage> {
                   markerCenterAnimation: MarkerCenterAnimation(
                       curve: Curves.easeInOut,
                       duration: const Duration(milliseconds: 500)),
-                  markerTapBehavior: MarkerTapBehavior.togglePopup(),
+                  markerTapBehavior: MarkerTapBehavior.togglePopupAndHideRest(),
                   popupController: _popupController,
                   markers: markers,
                   popupDisplayOptions: PopupDisplayOptions(

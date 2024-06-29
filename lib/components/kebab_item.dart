@@ -120,7 +120,10 @@ class _KebabListItemState extends State<KebabListItem> {
                     SizedBox(height: 8),
                     SingleStat(label: "Menu", number: widget.menu),
                     SizedBox(height: 16),
-                    BottomButtonItem(linkMaps: widget.map)
+                    BottomButtonItem(
+                        linkMaps: widget.map,
+                        text: "Apri in Maps",
+                        icon: Icons.map),
                   ],
                 ),
               ),
