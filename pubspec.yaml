@@ -23,6 +23,7 @@ dependencies:
   geolocator: ^12.0.0
   flutter_map_marker_popup: ^7.0.0
   webview_flutter: ^4.0.1
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

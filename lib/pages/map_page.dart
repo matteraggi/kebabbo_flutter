@@ -99,7 +99,7 @@ class _MapPageState extends State<MapPage> {
           point: LatLng(item['lat'], item['lng']),
           child: Image.asset("assets/images/kebab.png"),
           key: ValueKey(
-              'kebab_marker_${item['id']}'), // Unique key for each kebab marker
+              'kebab_marker_${item['id']}'),
         );
       })
     ];
