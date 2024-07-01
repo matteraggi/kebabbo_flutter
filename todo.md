@@ -7,7 +7,7 @@ Pareggiare Kebabbo Web
 - [x] special page style like top kebab
 - [x] goto google maps
 - [x] working search bar
-- [ ] distance in kebab card - order by distance
+- [x] distance in kebab card - order by distance
 - [ ] about page
 
 ---

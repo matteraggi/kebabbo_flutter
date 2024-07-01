@@ -156,9 +156,9 @@ class _MyHomePageState extends State<MyHomePage> {
           currentPosition: _currentPosition,
         );
       case 3:
-        page = TopKebabPage();
+        page = TopKebabPage(currentPosition: _currentPosition!);
       case 4:
-        page = SpecialPage();
+        page = SpecialPage(currentPosition: _currentPosition);
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }

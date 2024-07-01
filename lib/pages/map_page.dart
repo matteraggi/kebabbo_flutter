@@ -116,7 +116,6 @@ class _MapPageState extends State<MapPage> {
                 setState(() {
                   _isMapInitialized = true;
                 });
-                // _centerMap();
               },
             ),
             children: [

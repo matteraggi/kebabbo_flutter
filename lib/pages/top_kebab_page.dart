@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/order_bar.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
+import 'package:postgrest/src/types.dart';
 
 class TopKebabPage extends StatefulWidget {
+  final Position currentPosition;
+
+  TopKebabPage({required this.currentPosition});
+
   @override
   _TopKebabPageState createState() => _TopKebabPageState();
 }
@@ -20,21 +26,47 @@ class _TopKebabPageState extends State<TopKebabPage> {
   @override
   void initState() {
     super.initState();
-    fetchKebab();
+    fetchKebab(widget.currentPosition);
   }
 
-  Future<void> fetchKebab() async {
+  Future<void> fetchKebab(Position userPosition) async {
     try {
-      final response = await supabase
-          .from('kebab')
-          .select('*')
-          .order(orderByField, ascending: orderDirection);
+      final PostgrestList response;
+      if (orderByField != 'distance') {
+        response = await supabase
+            .from('kebab')
+            .select('*')
+            .order(orderByField, ascending: orderDirection);
+      } else {
+        response = await supabase.from('kebab').select('*');
+      }
 
       if (mounted) {
+        List<Map<String, dynamic>> kebabs =
+            List<Map<String, dynamic>>.from(response as List);
+
+        // Calcola la distanza per ogni kebab
+        for (var kebab in kebabs) {
+          double distanceInMeters = Geolocator.distanceBetween(
+            userPosition.latitude,
+            userPosition.longitude,
+            kebab['lat'],
+            kebab['lng'],
+          );
+          kebab['distance'] = distanceInMeters / 1000;
+        }
+
+        if (orderByField == 'distance') {
+          kebabs.sort((a, b) {
+            return orderDirection
+                ? b['distance'].compareTo(a['distance'])
+                : a['distance'].compareTo(b['distance']);
+          });
+        }
+
         setState(() {
-          dashList = List<Map<String, dynamic>>.from(response as List);
-          searchResultList = List<Map<String, dynamic>>.from(
-              response as List);
+          dashList = kebabs;
+          searchResultList = kebabs;
           isLoading = false;
         });
       }
@@ -55,7 +87,6 @@ class _TopKebabPageState extends State<TopKebabPage> {
       return kebabName.contains(searchText);
     }).toList();
 
-    // Sort filtered list based on relevance
     filteredList.sort((a, b) {
       final aName = a['name'].toString().toLowerCase();
       final bName = b['name'].toString().toLowerCase();
@@ -72,19 +103,14 @@ class _TopKebabPageState extends State<TopKebabPage> {
   void changeOrderByField(String field) {
     setState(() {
       orderByField = field;
-      if (field == 'name') {
-        orderDirection = true;
-      } else {
-        orderDirection = false;
-      }
-      fetchKebab();
+      fetchKebab(widget.currentPosition);
     });
   }
 
   void changeOrderDirection(bool direction) {
     setState(() {
       orderDirection = direction;
-      fetchKebab();
+      fetchKebab(widget.currentPosition);
     });
   }
 
@@ -153,6 +179,10 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                       (kebab['dimension'] ?? 0.0).toDouble(),
                                   menu: (kebab['menu'] ?? 0.0).toDouble(),
                                   map: kebab['map'] ?? '',
+                                  lat: (kebab['lat'] ?? 0.0).toDouble(),
+                                  lng: (kebab['lng'] ?? 0.0).toDouble(),
+                                  distance:
+                                      (kebab['distance'] ?? 0.0).toDouble(),
                                 );
                               },
                             ),

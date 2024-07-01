@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:geolocator/geolocator.dart';
 
 class KebabListItem extends StatefulWidget {
   final String name;
@@ -12,6 +13,9 @@ class KebabListItem extends StatefulWidget {
   final double dimension;
   final double menu;
   final String map;
+  final double lat;
+  final double lng;
+  final double distance;
 
   KebabListItem({
     required this.name,
@@ -22,6 +26,9 @@ class KebabListItem extends StatefulWidget {
     required this.dimension,
     required this.menu,
     required this.map,
+    required this.lat,
+    required this.lng,
+    required this.distance,
   });
 
   @override
@@ -30,6 +37,11 @@ class KebabListItem extends StatefulWidget {
 
 class _KebabListItemState extends State<KebabListItem> {
   bool isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   List<Widget> _buildRatingStars(double rating) {
     List<Widget> stars = [];
@@ -82,7 +94,9 @@ class _KebabListItemState extends State<KebabListItem> {
               ),
               SizedBox(height: 8),
               Text(
-                "tot km distante da te",
+                widget.distance != null
+                    ? "${widget.distance.toStringAsFixed(2)} km distante da te"
+                    : "Calcolando la distanza...",
                 style: TextStyle(
                     color: Colors.grey,
                     fontSize: 12,

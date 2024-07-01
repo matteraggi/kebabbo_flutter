@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 
 class SpecialPage extends StatefulWidget {
+  Position? currentPosition;
+
+  SpecialPage({required this.currentPosition});
+
   @override
   _SpecialPageState createState() => _SpecialPageState();
 }
@@ -15,27 +20,43 @@ class _SpecialPageState extends State<SpecialPage> {
   @override
   void initState() {
     super.initState();
-    fetchKebab('kebab_world');
+    fetchKebab('kebab_world', widget.currentPosition!);
   }
 
-  Future<void> fetchKebab(String tableName) async {
+  Future<void> fetchKebab(String tableName, Position userPosition) async {
     try {
       final response = await supabase
           .from(tableName)
           .select('*')
           .order("rating", ascending: false);
 
-      if (!mounted) return;
-      setState(() {
-        dashList = List<Map<String, dynamic>>.from(response as List);
-        isLoading = false;
-      });
+      if (mounted) {
+        List<Map<String, dynamic>> kebabs =
+            List<Map<String, dynamic>>.from(response as List);
+
+        // Calcola la distanza per ogni kebab
+        for (var kebab in kebabs) {
+          double distanceInMeters = Geolocator.distanceBetween(
+            userPosition.latitude,
+            userPosition.longitude,
+            kebab['lat'],
+            kebab['lng'],
+          );
+          kebab['distance'] = distanceInMeters / 1000;
+        }
+
+        setState(() {
+          dashList = kebabs;
+          isLoading = false;
+        });
+      }
     } catch (error) {
-      if (!mounted) return;
-      setState(() {
-        errorMessage = error.toString();
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = error.toString();
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -45,7 +66,7 @@ class _SpecialPageState extends State<SpecialPage> {
       errorMessage = null;
       dashList = [];
     });
-    fetchKebab(tableName);
+    fetchKebab(tableName, widget.currentPosition!);
   }
 
   @override
@@ -138,17 +159,21 @@ class _SpecialPageState extends State<SpecialPage> {
                                 itemBuilder: (context, index) {
                                   final kebab = dashList[index];
                                   return KebabListItem(
-                                    name: kebab['name'] ?? '',
-                                    description: kebab['description'] ?? '',
-                                    rating: (kebab['rating'] ?? 0.0).toDouble(),
-                                    quality:
-                                        (kebab['quality'] ?? 0.0).toDouble(),
-                                    price: (kebab['price'] ?? 0.0).toDouble(),
-                                    dimension:
-                                        (kebab['dimension'] ?? 0.0).toDouble(),
-                                    menu: (kebab['menu'] ?? 0.0).toDouble(),
-                                    map: kebab['map'] ?? '',
-                                  );
+                                      name: kebab['name'] ?? '',
+                                      description: kebab['description'] ?? '',
+                                      rating:
+                                          (kebab['rating'] ?? 0.0).toDouble(),
+                                      quality:
+                                          (kebab['quality'] ?? 0.0).toDouble(),
+                                      price: (kebab['price'] ?? 0.0).toDouble(),
+                                      dimension: (kebab['dimension'] ?? 0.0)
+                                          .toDouble(),
+                                      menu: (kebab['menu'] ?? 0.0).toDouble(),
+                                      map: kebab['map'] ?? '',
+                                      lat: (kebab['lat'] ?? 0.0).toDouble(),
+                                      lng: (kebab['lng'] ?? 0.0).toDouble(),
+                                      distance: (kebab['distance'] ?? 0.0)
+                                          .toDouble());
                                 },
                               ),
                             ),

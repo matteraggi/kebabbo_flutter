@@ -67,6 +67,7 @@ class OrderBar extends StatelessWidget {
                         'dimension',
                         'menu',
                         'name',
+                        'distance',
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           alignment: Alignment.center,
