@@ -1,4 +1,4 @@
-# kebabbo_flutter
+# kebabbo
 
 A new Flutter project.
 

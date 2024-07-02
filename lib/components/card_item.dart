@@ -68,7 +68,7 @@ class CardItem extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         _launchUrl(url[
-                            index]); // Chiamata alla funzione per aprire l'URL corrispondente
+                            index]);
                       },
                       child: Row(
                         children: [

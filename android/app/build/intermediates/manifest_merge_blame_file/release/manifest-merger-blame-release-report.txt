@@ -1,0 +1,279 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.kebabbo"
+4    android:versionCode="1"
+5    android:versionName="0.0.1" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="34" />
+9-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:3:5-66
+11-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:3:22-64
+12    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+12-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:4:5-79
+12-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:4:22-76
+13    <uses-permission android:name="android.permission.     ACCESS_COARSE_LOCATION" />
+13-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:5:5-6:32
+13-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:5:5-6:32
+14    <!--
+15         Required to query activities that can process text, see:
+16         https://developer.android.com/training/package-visibility and
+17         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+18
+19         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin.
+20    -->
+21    <queries>
+21-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:53:5-58:15
+22        <intent>
+22-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:54:9-57:18
+23            <action android:name="android.intent.action.PROCESS_TEXT" />
+23-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:55:13-72
+23-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:55:21-70
+24
+25            <data android:mimeType="text/plain" />
+25-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:56:13-50
+25-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:56:19-48
+26        </intent>
+27    </queries>
+28
+29    <permission
+29-->[androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
+30        android:name="com.example.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+30-->[androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
+31        android:protectionLevel="signature" />
+31-->[androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
+32
+33    <uses-permission android:name="com.example.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+33-->[androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
+33-->[androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
+34
+35    <application
+36        android:name="android.app.Application"
+36-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:9:9-42
+37        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+37-->[androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:28:18-86
+38        android:icon="@mipmap/launcher_icon"
+38-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:10:9-45
+39        android:label="kebabbo_flutter" >
+39-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:8:9-40
+40        <activity
+40-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:11:9-41:20
+41            android:name="com.example.kebabbo.MainActivity"
+41-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:12:13-41
+42            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+42-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:17:13-163
+43            android:exported="true"
+43-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:13:13-36
+44            android:hardwareAccelerated="true"
+44-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:18:13-47
+45            android:launchMode="singleTop"
+45-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:14:13-43
+46            android:taskAffinity=""
+46-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:15:13-36
+47            android:theme="@style/LaunchTheme"
+47-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:16:13-47
+48            android:windowSoftInputMode="adjustResize" >
+48-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:19:13-55
+49
+50            <!--
+51                 Specifies an Android theme to apply to this Activity as soon as
+52                 the Android process has started. This theme is visible to the user
+53                 while the Flutter UI initializes. After that, this theme continues
+54                 to determine the Window background behind the Flutter UI.
+55            -->
+56            <meta-data
+56-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:24:13-27:17
+57                android:name="io.flutter.embedding.android.NormalTheme"
+57-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:25:15-70
+58                android:resource="@style/NormalTheme" />
+58-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:26:15-52
+59
+60            <intent-filter>
+60-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:28:13-31:29
+61                <action android:name="android.intent.action.MAIN" />
+61-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:29:17-68
+61-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:29:25-66
+62
+63                <category android:name="android.intent.category.LAUNCHER" />
+63-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:30:17-76
+63-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:30:27-74
+64            </intent-filter>
+65            <intent-filter>
+65-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:32:13-40:23
+66                <action android:name="android.intent.action.VIEW" />
+66-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:33:9-61
+66-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:33:17-58
+67
+68                <category android:name="android.intent.category.DEFAULT" />
+68-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:34:9-68
+68-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:34:19-65
+69                <category android:name="android.intent.category.BROWSABLE" />
+69-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:35:9-70
+69-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:35:19-67
+70                <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
+71                <data
+71-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:56:13-50
+72                    android:host="login-callback"
+72-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:39:11-40
+73                    android:scheme="io.supabase.flutterquickstart" />
+73-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:38:11-57
+74            </intent-filter>
+75        </activity>
+76        <!--
+77             Don't delete the meta-data below.
+78             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+79        -->
+80        <meta-data
+80-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:44:9-46:33
+81            android:name="flutterEmbedding"
+81-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:45:13-44
+82            android:value="2" />
+82-->/Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:46:13-30
+83
+84        <provider
+84-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:11:9-19:20
+85            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+85-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-82
+86            android:authorities="com.example.kebabbo.flutter.image_provider"
+86-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:13:13-74
+87            android:exported="false"
+87-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:14:13-37
+88            android:grantUriPermissions="true" >
+88-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:15:13-47
+89            <meta-data
+89-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:16:13-18:75
+90                android:name="android.support.FILE_PROVIDER_PATHS"
+90-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:17:17-67
+91                android:resource="@xml/flutter_image_picker_file_paths" />
+91-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:18:17-72
+92        </provider> <!-- Trigger Google Play services to install the backported photo picker module. -->
+93        <service
+93-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:21:9-33:19
+94            android:name="com.google.android.gms.metadata.ModuleDependencies"
+94-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:22:13-78
+95            android:enabled="false"
+95-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:23:13-36
+96            android:exported="false" >
+96-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:24:13-37
+97            <intent-filter>
+97-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:26:13-28:29
+98                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
+98-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:27:17-94
+98-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:27:25-91
+99            </intent-filter>
+100
+101            <meta-data
+101-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:30:13-32:36
+102                android:name="photopicker_activity:0:required"
+102-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:31:17-63
+103                android:value="" />
+103-->[:image_picker_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:32:17-33
+104        </service>
+105        <service
+105-->[:geolocator_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/geolocator_android-4.6.0/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-14:56
+106            android:name="com.baseflow.geolocator.GeolocatorLocationService"
+106-->[:geolocator_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/geolocator_android-4.6.0/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-77
+107            android:enabled="true"
+107-->[:geolocator_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/geolocator_android-4.6.0/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-35
+108            android:exported="false"
+108-->[:geolocator_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/geolocator_android-4.6.0/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:13:13-37
+109            android:foregroundServiceType="location" />
+109-->[:geolocator_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/geolocator_android-4.6.0/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:14:13-53
+110
+111        <activity
+111-->[:url_launcher_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-13:74
+112            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+112-->[:url_launcher_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-74
+113            android:exported="false"
+113-->[:url_launcher_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-37
+114            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+114-->[:url_launcher_android] /Users/matteoraggi/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.3/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:13:13-71
+115        <activity
+115-->[com.google.android.gms:play-services-base:18.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/e2b75c668ee6ed43f4451593c0411cae/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:20:9-22:45
+116            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+116-->[com.google.android.gms:play-services-base:18.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/e2b75c668ee6ed43f4451593c0411cae/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:20:19-85
+117            android:exported="false"
+117-->[com.google.android.gms:play-services-base:18.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/e2b75c668ee6ed43f4451593c0411cae/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:22:19-43
+118            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+118-->[com.google.android.gms:play-services-base:18.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/e2b75c668ee6ed43f4451593c0411cae/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:21:19-78
+119
+120        <meta-data
+120-->[com.google.android.gms:play-services-basement:18.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/40a6846c66df7cef3336541a280cfdef/transformed/jetified-play-services-basement-18.3.0/AndroidManifest.xml:21:9-23:69
+121            android:name="com.google.android.gms.version"
+121-->[com.google.android.gms:play-services-basement:18.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/40a6846c66df7cef3336541a280cfdef/transformed/jetified-play-services-basement-18.3.0/AndroidManifest.xml:22:13-58
+122            android:value="@integer/google_play_services_version" />
+122-->[com.google.android.gms:play-services-basement:18.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/40a6846c66df7cef3336541a280cfdef/transformed/jetified-play-services-basement-18.3.0/AndroidManifest.xml:23:13-66
+123
+124        <uses-library
+124-->[androidx.window:window:1.0.0-beta04] /Users/matteoraggi/.gradle/caches/transforms-3/4f86f4c61b99618f34b2dcd4061fd4e1/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+125            android:name="androidx.window.extensions"
+125-->[androidx.window:window:1.0.0-beta04] /Users/matteoraggi/.gradle/caches/transforms-3/4f86f4c61b99618f34b2dcd4061fd4e1/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+126            android:required="false" />
+126-->[androidx.window:window:1.0.0-beta04] /Users/matteoraggi/.gradle/caches/transforms-3/4f86f4c61b99618f34b2dcd4061fd4e1/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+127        <uses-library
+127-->[androidx.window:window:1.0.0-beta04] /Users/matteoraggi/.gradle/caches/transforms-3/4f86f4c61b99618f34b2dcd4061fd4e1/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+128            android:name="androidx.window.sidecar"
+128-->[androidx.window:window:1.0.0-beta04] /Users/matteoraggi/.gradle/caches/transforms-3/4f86f4c61b99618f34b2dcd4061fd4e1/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+129            android:required="false" />
+129-->[androidx.window:window:1.0.0-beta04] /Users/matteoraggi/.gradle/caches/transforms-3/4f86f4c61b99618f34b2dcd4061fd4e1/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+130
+131        <provider
+131-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:24:9-32:20
+132            android:name="androidx.startup.InitializationProvider"
+132-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:25:13-67
+133            android:authorities="com.example.kebabbo.androidx-startup"
+133-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:26:13-68
+134            android:exported="false" >
+134-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:27:13-37
+135            <meta-data
+135-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+136                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+136-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+137                android:value="androidx.startup" />
+137-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+138        </provider>
+139
+140        <receiver
+140-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+141            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+141-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+142            android:directBootAware="false"
+142-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+143            android:enabled="true"
+143-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+144            android:exported="true"
+144-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+145            android:permission="android.permission.DUMP" >
+145-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+146            <intent-filter>
+146-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+147                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+147-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+147-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+148            </intent-filter>
+149            <intent-filter>
+149-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+150                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+150-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+150-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+151            </intent-filter>
+152            <intent-filter>
+152-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+153                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+153-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+153-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+154            </intent-filter>
+155            <intent-filter>
+155-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+156                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+156-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+156-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/matteoraggi/.gradle/caches/transforms-3/dddef4c9e8c51fa57418b8550cd69c59/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+157            </intent-filter>
+158        </receiver>
+159    </application>
+160
+161</manifest>

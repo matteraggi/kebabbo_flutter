@@ -79,7 +79,7 @@ class _MapPageState extends State<MapPage> {
       );
     }
 
-    LatLng _center = LatLng(
+    LatLng center = LatLng(
         widget.currentPosition!.latitude, widget.currentPosition!.longitude);
 
     List<Marker> markers = [
@@ -110,7 +110,7 @@ class _MapPageState extends State<MapPage> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: _center,
+              initialCenter: center,
               initialZoom: 14,
               onMapReady: () {
                 setState(() {

@@ -8,10 +8,11 @@ import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-Color red = Color.fromRGBO(187, 0, 0, 1.0);
-Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
+const Color red = Color.fromRGBO(187, 0, 0, 1.0);
+const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
 Future<void> main() async {
+
   /*
   await dotenv.load(fileName: ".env");
 

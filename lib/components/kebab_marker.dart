@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 class KebabMarker extends Marker {
   final String name;
@@ -12,8 +10,8 @@ class KebabMarker extends Marker {
   final double menu;
 
   KebabMarker({
-    required LatLng point,
-    required Widget child,
+    required super.point,
+    required super.child,
     required this.name,
     required this.description,
     required this.rating,
@@ -21,5 +19,5 @@ class KebabMarker extends Marker {
     required this.price,
     required this.dimension,
     required this.menu,
-  }) : super(point: point, child: child);
+  });
 }
