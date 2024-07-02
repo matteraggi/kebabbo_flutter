@@ -74,7 +74,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     if (widget.currentPosition == null) {
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(),
       );
     }
@@ -122,7 +122,7 @@ class _MapPageState extends State<MapPage> {
               TileLayer(
                 urlTemplate:
                     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                subdomains: ['a', 'b', 'c'],
+                subdomains: const ['a', 'b', 'c'],
               ),
               RichAttributionWidget(
                 attributions: [
@@ -136,9 +136,9 @@ class _MapPageState extends State<MapPage> {
               MarkerLayer(markers: markers),
               PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
-                  markerCenterAnimation: MarkerCenterAnimation(
+                  markerCenterAnimation: const MarkerCenterAnimation(
                       curve: Curves.easeInOut,
-                      duration: const Duration(milliseconds: 500)),
+                      duration: Duration(milliseconds: 500)),
                   markerTapBehavior: MarkerTapBehavior.togglePopupAndHideRest(),
                   popupController: _popupController,
                   markers: markers,
@@ -146,7 +146,7 @@ class _MapPageState extends State<MapPage> {
                     builder: (BuildContext context, Marker marker) {
                       // Open popup only if it's not the user marker
                       if (marker.key == const ValueKey('user_marker')) {
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       }
                       final item = dashList.firstWhere((element) =>
                           marker.point.latitude == element['lat'] &&
@@ -172,7 +172,7 @@ class _MapPageState extends State<MapPage> {
             child: FloatingActionButton(
               backgroundColor: Colors.white,
               onPressed: _centerMap,
-              child: Icon(Icons.my_location, color: Colors.black),
+              child: const Icon(Icons.my_location, color: Colors.black),
             ),
           ),
         ],

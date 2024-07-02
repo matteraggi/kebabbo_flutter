@@ -73,7 +73,7 @@ class _SpecialPageState extends State<SpecialPage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      animationDuration: Duration(milliseconds: 600),
+      animationDuration: const Duration(milliseconds: 600),
       child: Scaffold(
         appBar: AppBar(
           title: TabBar(
@@ -90,21 +90,21 @@ class _SpecialPageState extends State<SpecialPage> {
             ),
             labelColor: Colors.white,
             unselectedLabelColor: Colors.black,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
-            unselectedLabelStyle: TextStyle(
+            unselectedLabelStyle: const TextStyle(
               fontSize: 16,
             ),
             tabs: [
               Tab(
                 child: Container(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       vertical: 8,
                       horizontal:
                           16), // Aggiungi padding intorno al contenuto della scheda
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -119,8 +119,8 @@ class _SpecialPageState extends State<SpecialPage> {
               ),
               Tab(
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Row(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -137,11 +137,11 @@ class _SpecialPageState extends State<SpecialPage> {
           ),
         ),
         body: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : errorMessage != null
                 ? Center(child: Text('Errore: $errorMessage'))
                 : dashList.isEmpty
-                    ? Center(child: Text('Nessun Kebabbaro presente :('))
+                    ? const Center(child: Text('Nessun Kebabbaro presente :('))
                     : SafeArea(
                         minimum: const EdgeInsets.symmetric(
                           vertical: 0,
@@ -150,8 +150,8 @@ class _SpecialPageState extends State<SpecialPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16.0),
                             ),
                             Expanded(
                               child: ListView.builder(

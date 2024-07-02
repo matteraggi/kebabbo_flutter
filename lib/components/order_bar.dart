@@ -22,11 +22,11 @@ class OrderBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               "Ordina per:",
               style: TextStyle(
                 color: Colors.white,
@@ -44,7 +44,7 @@ class OrderBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(color: red, width: 4),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                     child: DropdownButton<String>(
                       borderRadius: BorderRadius.circular(30),
                       alignment: Alignment.center,
@@ -56,10 +56,10 @@ class OrderBar extends StatelessWidget {
                         }
                       },
                       iconSize: 0,
-                      icon: SizedBox(
+                      icon: const SizedBox(
                         width: 5,
                       ),
-                      style: TextStyle(color: red),
+                      style: const TextStyle(color: red),
                       items: <String>[
                         'rating',
                         'quality',
@@ -74,7 +74,7 @@ class OrderBar extends StatelessWidget {
                           value: value,
                           child: Text(
                             value.toUpperCase(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: red,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
@@ -84,7 +84,7 @@ class OrderBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     onChangeOrderDirection(!orderDirection);

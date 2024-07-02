@@ -24,7 +24,7 @@ class _SingleStatState extends State<SingleStat> {
           children: [
             Text(
               widget.label,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -32,7 +32,7 @@ class _SingleStatState extends State<SingleStat> {
             ),
             Text(
               "${widget.number}",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w800,
                 fontSize: 16,
@@ -43,7 +43,7 @@ class _SingleStatState extends State<SingleStat> {
         LinearProgressIndicator(
           value: widget.number / 5,
           backgroundColor: Colors.grey[300],
-          valueColor: AlwaysStoppedAnimation<Color>(red),
+          valueColor: const AlwaysStoppedAnimation<Color>(red),
           minHeight: 8,
           borderRadius: BorderRadius.circular(12),
         ),

@@ -49,15 +49,15 @@ class _KebabListItemState extends State<KebabListItem> {
     bool hasHalfStar = rating - fullStars >= 0.5;
 
     for (int i = 0; i < fullStars; i++) {
-      stars.add(Icon(Icons.star, color: yellow, size: 40));
+      stars.add(const Icon(Icons.star, color: yellow, size: 40));
     }
 
     if (hasHalfStar) {
-      stars.add(Icon(Icons.star_half, color: yellow, size: 40));
+      stars.add(const Icon(Icons.star_half, color: yellow, size: 40));
     }
 
     while (stars.length < 5) {
-      stars.add(Icon(Icons.star_border, color: yellow, size: 40));
+      stars.add(const Icon(Icons.star_border, color: yellow, size: 40));
     }
 
     return stars;
@@ -70,7 +70,7 @@ class _KebabListItemState extends State<KebabListItem> {
       shadowColor: Colors.grey,
       child: Center(
         child: ExpansionTile(
-          leading: SizedBox(width: 10),
+          leading: const SizedBox(width: 10),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -79,36 +79,34 @@ class _KebabListItemState extends State<KebabListItem> {
                 widget.name,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2, // Numero massimo di righe
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w800,
                   fontSize: 22,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: _buildRatingStars(widget.rating),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
-                widget.distance != null
-                    ? "${widget.distance.toStringAsFixed(2)} km distante da te"
-                    : "Calcolando la distanza...",
-                style: TextStyle(
+                "${widget.distance.toStringAsFixed(2)} km distante da te",
+                style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
                     fontStyle: FontStyle.italic),
               )
             ],
           ),
-          trailing: SizedBox(width: 10),
+          trailing: const SizedBox(width: 10),
           children: [
             Container(
               decoration: BoxDecoration(
                 color: Colors.grey[200],
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                 ),
@@ -120,19 +118,19 @@ class _KebabListItemState extends State<KebabListItem> {
                   children: [
                     Text(
                       widget.description,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     SingleStat(label: "Qualità", number: widget.quality),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     SingleStat(label: "Prezzo", number: widget.price),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     SingleStat(label: "Dimensione", number: widget.dimension),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     SingleStat(label: "Menu", number: widget.menu),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     BottomButtonItem(
                         linkMaps: widget.map,
                         text: "Apri in Maps",

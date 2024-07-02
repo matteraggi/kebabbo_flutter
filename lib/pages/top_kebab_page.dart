@@ -118,11 +118,11 @@ class _TopKebabPageState extends State<TopKebabPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : errorMessage != null
               ? Center(child: Text('Errore: $errorMessage'))
               : dashList.isEmpty
-                  ? Center(child: Text('Nessun Kebabbaro presente :('))
+                  ? const Center(child: Text('Nessun Kebabbaro presente :('))
                   : SafeArea(
                       minimum: const EdgeInsets.symmetric(
                         vertical: 0,
@@ -131,14 +131,14 @@ class _TopKebabPageState extends State<TopKebabPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           OrderBar(
                             orderByField: orderByField,
                             orderDirection: orderDirection,
                             onChangeOrderByField: changeOrderByField,
                             onChangeOrderDirection: changeOrderDirection,
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: TextField(
@@ -146,13 +146,13 @@ class _TopKebabPageState extends State<TopKebabPage> {
                               onChanged: searchKebab,
                               decoration: InputDecoration(
                                 hintText: "Cerca un kebabbaro...",
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
                                 ),
                                 filled: true,
                                 fillColor: Colors.white,
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                   vertical: 0.0,
                                   horizontal: 20.0,
                                 ),
@@ -160,7 +160,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                   borderRadius: BorderRadius.circular(30.0),
                                   borderSide: BorderSide.none,
                                 ),
-                                prefixIcon: Icon(Icons.search),
+                                prefixIcon: const Icon(Icons.search),
                               ),
                             ),
                           ),
@@ -187,7 +187,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                               },
                             ),
                           ),
-                          SizedBox(height: 16)
+                          const SizedBox(height: 16)
                         ],
                       ),
                     ),

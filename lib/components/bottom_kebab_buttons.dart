@@ -16,7 +16,7 @@ class BottomButtonItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: Colors.white),
-          SizedBox(width: 5),
+          const SizedBox(width: 5),
           Text(text),
         ],
       ),

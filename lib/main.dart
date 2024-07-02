@@ -28,7 +28,7 @@ Future<void> main() async {
       url: "https://ntrxsuhmslsvlflwbizb.supabase.co",
       anonKey:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 final supabase = Supabase.instance.client;
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: yellow,
         primaryColor: red,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: yellow,
         ),
         textButtonTheme: TextButtonThemeData(
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _getLocation();
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
+      locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 10,
       ),
@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page =
-            supabase.auth.currentSession == null ? LoginPage() : AccountPage();
+            supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
       case 1:
         page = AboutPage();
       case 2:
@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
             selectedIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Account',

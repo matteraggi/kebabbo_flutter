@@ -23,13 +23,13 @@ class CardItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       elevation: 4,
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(
                     12.0), // Bordo arrotondato per l'immagine
@@ -49,18 +49,18 @@ class CardItem extends StatelessWidget {
                 Text(
                   name,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   description,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                       fontStyle: FontStyle.italic),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,13 +73,13 @@ class CardItem extends StatelessWidget {
                       child: Row(
                         children: [
                           Icon(icons[index], size: 40, color: Colors.black),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                         ],
                       ),
                     );
                   }),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ],
             ),
           ),

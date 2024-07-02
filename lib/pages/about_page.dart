@@ -8,34 +8,34 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
           child: ListView(
             children: [
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'La tua soluzione per il pranzo universitario',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "In Italia il mondo del Kebab è ancora un mondo oscuro. I migliori locali sono sottovalutati, e i peggiori ricevono recensioni alte su Google.",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "Per questo ci siamo noi: studenti universitari, come voi, con anni di esperienza come mangiatori di Kebab.",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "Testiamo e recensiamo Kebabbari e Street Food per voi. Benvenuti su Kebabbo.",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -44,14 +44,14 @@ class AboutPage extends StatelessWidget {
                       Container(
                         width: 60,
                         height: 60,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                         ),
-                        child: Icon(Icons.euro, color: Colors.black, size: 40),
+                        child: const Icon(Icons.euro, color: Colors.black, size: 40),
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 8),
+                      const Text(
                         'cheap',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -62,14 +62,14 @@ class AboutPage extends StatelessWidget {
                       Container(
                         width: 60,
                         height: 60,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                         ),
-                        child: Icon(Icons.bolt, color: Colors.black, size: 40),
+                        child: const Icon(Icons.bolt, color: Colors.black, size: 40),
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 8),
+                      const Text(
                         'fast',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -80,15 +80,15 @@ class AboutPage extends StatelessWidget {
                       Container(
                         width: 60,
                         height: 60,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                         ),
-                        child: Icon(Icons.restaurant,
+                        child: const Icon(Icons.restaurant,
                             color: Colors.black, size: 40),
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 8),
+                      const Text(
                         'tasty',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -96,7 +96,7 @@ class AboutPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -104,7 +104,7 @@ class AboutPage extends StatelessWidget {
                     image: 'assets/images/matteo.jpg',
                     name: 'Matteo',
                     description: 'Developer & Eater',
-                    icons: [
+                    icons: const [
                       FontAwesomeIcons.instagram,
                       FontAwesomeIcons.linkedin,
                       FontAwesomeIcons.github,
@@ -121,7 +121,7 @@ class AboutPage extends StatelessWidget {
                     image: 'assets/images/frigo.jpg',
                     name: 'Elia',
                     description: 'Developer & Eater',
-                    icons: [
+                    icons: const [
                       FontAwesomeIcons.instagram,
                       FontAwesomeIcons.linkedin,
                       FontAwesomeIcons.github
@@ -137,7 +137,7 @@ class AboutPage extends StatelessWidget {
                     image: 'assets/images/fra.jpg',
                     name: 'Francesco',
                     description: 'Social Media Manager',
-                    icons: [
+                    icons: const [
                       FontAwesomeIcons.instagram,
                       FontAwesomeIcons.github
                     ],
@@ -148,7 +148,7 @@ class AboutPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
         ),

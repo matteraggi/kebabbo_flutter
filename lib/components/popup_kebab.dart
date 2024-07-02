@@ -28,15 +28,15 @@ class PopupKebabItem extends StatelessWidget {
     bool hasHalfStar = rating - fullStars >= 0.5;
 
     for (int i = 0; i < fullStars; i++) {
-      stars.add(Icon(Icons.star, color: yellow, size: 25));
+      stars.add(const Icon(Icons.star, color: yellow, size: 25));
     }
 
     if (hasHalfStar) {
-      stars.add(Icon(Icons.star_half, color: yellow, size: 25));
+      stars.add(const Icon(Icons.star_half, color: yellow, size: 25));
     }
 
     while (stars.length < 5) {
-      stars.add(Icon(Icons.star_border, color: yellow, size: 25));
+      stars.add(const Icon(Icons.star_border, color: yellow, size: 25));
     }
 
     return stars;
@@ -48,7 +48,7 @@ class PopupKebabItem extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ConstrainedBox(
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxWidth: 325, // Limita la larghezza del popup
           ),
           child: SingleChildScrollView(
@@ -59,25 +59,25 @@ class PopupKebabItem extends StatelessWidget {
                 Row(
                   children: [
                     Text(name,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Row(
                       children: _buildRatingStars(rating),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
-                Text(description, style: TextStyle(fontSize: 14)),
-                Divider(), // Linea divisoria
+                const SizedBox(height: 8),
+                Text(description, style: const TextStyle(fontSize: 14)),
+                const Divider(), // Linea divisoria
                 SingleStat(label: "Qualità", number: quality),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 SingleStat(label: "Prezzo", number: price),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 SingleStat(label: "Dimensione", number: dimension),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 SingleStat(label: "Menu", number: menu),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
               ],
             ),
           ),
