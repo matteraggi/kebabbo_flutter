@@ -11,7 +11,7 @@ Pareggiare Kebabbo Web
 ---
 
 Ancora non fatte in kebabbo Web
-- [ ] Stella simpatia + rifare tot rating senza simpatia
+- [x] Stella simpatia + rifare tot rating senza simpatia
 - [ ] Sistemare link social non funzionanti
 - [ ] Rimuovere linea sotto tab World-Special
 - [ ] Login con Account e operazioni solo per user registrati

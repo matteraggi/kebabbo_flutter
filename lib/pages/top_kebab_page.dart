@@ -178,6 +178,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                   dimension:
                                       (kebab['dimension'] ?? 0.0).toDouble(),
                                   menu: (kebab['menu'] ?? 0.0).toDouble(),
+                                  fun: (kebab['fun'] ?? 0.0).toDouble(),
                                   map: kebab['map'] ?? '',
                                   lat: (kebab['lat'] ?? 0.0).toDouble(),
                                   lng: (kebab['lng'] ?? 0.0).toDouble(),
