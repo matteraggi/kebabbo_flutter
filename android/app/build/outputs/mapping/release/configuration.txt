@@ -133,7 +133,7 @@
 -keep class androidx.profileinstaller.ProfileInstallReceiver { <init>(); }
 -keep class androidx.startup.InitializationProvider { <init>(); }
 -keep class com.baseflow.geolocator.GeolocatorLocationService { <init>(); }
--keep class com.example.kebabbo.MainActivity { <init>(); }
+-keep class com.canny.kebabbo.MainActivity { <init>(); }
 -keep class com.google.android.gms.common.api.GoogleApiActivity { <init>(); }
 -keep class com.google.android.gms.metadata.ModuleDependencies { <init>(); }
 -keep class io.flutter.plugins.imagepicker.ImagePickerFileProvider { <init>(); }

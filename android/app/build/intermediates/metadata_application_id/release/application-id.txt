@@ -1,1 +1,1 @@
-com.example.kebabbo
+com.canny.kebabbo

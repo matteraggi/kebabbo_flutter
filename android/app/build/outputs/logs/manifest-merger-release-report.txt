@@ -212,7 +212,7 @@ INJECTED from /Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/s
 		INJECTED from /Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml
 		ADDED from /Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml
-activity#com.example.kebabbo.MainActivity
+activity#com.canny.kebabbo.MainActivity
 ADDED from /Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:11:9-41:20
 	android:launchMode
 		ADDED from /Users/matteoraggi/Developer/kebabbo_flutter/kebabbo/android/app/src/main/AndroidManifest.xml:14:13-43
@@ -354,7 +354,7 @@ ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transfo
 		ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
 	android:name
 		ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
-permission#com.example.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+permission#com.canny.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
 		ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
@@ -364,7 +364,7 @@ uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
-uses-permission#com.example.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission#com.canny.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.13.0] /Users/matteoraggi/.gradle/caches/transforms-3/fd0398014a5374dc41633efa4ef1bdaf/transformed/core-1.13.0/AndroidManifest.xml:26:22-94

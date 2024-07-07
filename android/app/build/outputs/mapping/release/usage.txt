@@ -4583,20 +4583,20 @@ com.baseflow.geolocator.permission.PermissionUtils:
     public void <init>()
 com.baseflow.geolocator.utils.Utils:
     public void <init>()
-com.example.kebabbo.BuildConfig
-com.example.kebabbo.R$attr
-com.example.kebabbo.R$color
-com.example.kebabbo.R$dimen
-com.example.kebabbo.R$drawable
-com.example.kebabbo.R$id
-com.example.kebabbo.R$integer
-com.example.kebabbo.R$layout
-com.example.kebabbo.R$mipmap
-com.example.kebabbo.R$string
-com.example.kebabbo.R$style
-com.example.kebabbo.R$styleable
-com.example.kebabbo.R$xml
-com.example.kebabbo.R
+com.canny.kebabbo.BuildConfig
+com.canny.kebabbo.R$attr
+com.canny.kebabbo.R$color
+com.canny.kebabbo.R$dimen
+com.canny.kebabbo.R$drawable
+com.canny.kebabbo.R$id
+com.canny.kebabbo.R$integer
+com.canny.kebabbo.R$layout
+com.canny.kebabbo.R$mipmap
+com.canny.kebabbo.R$string
+com.canny.kebabbo.R$style
+com.canny.kebabbo.R$styleable
+com.canny.kebabbo.R$xml
+com.canny.kebabbo.R
 com.google.android.gms.actions.ItemListIntents
 com.google.android.gms.actions.NoteIntents
 com.google.android.gms.actions.ReserveIntents

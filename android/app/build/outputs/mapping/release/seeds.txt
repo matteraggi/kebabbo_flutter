@@ -41,7 +41,7 @@ com.google.android.gms.internal.location.zzy
 androidx.window.R$attr
 com.google.android.gms.dynamic.IFragmentWrapper$Stub
 androidx.window.embedding.ActivityFilter
-com.example.kebabbo.MainActivity
+com.canny.kebabbo.MainActivity
 io.flutter.embedding.engine.plugins.lifecycle.HiddenLifecycleReference
 androidx.window.embedding.ExtensionEmbeddingBackend$EmbeddingCallbackImpl
 androidx.lifecycle.LegacySavedStateHandleController$tryToAddRecreator$1
@@ -1332,7 +1332,7 @@ androidx.window.layout.WindowInfoTracker$-CC: void overrideDecorator(androidx.wi
 androidx.window.layout.WindowMetricsCalculator: androidx.window.layout.WindowMetrics computeCurrentWindowMetrics(android.app.Activity)
 androidx.lifecycle.ReportFragment$LifecycleCallbacks: void onActivityStopped(android.app.Activity)
 androidx.arch.core.internal.SafeIterableMap$SupportRemove: SafeIterableMap$SupportRemove()
-com.example.kebabbo.MainActivity: MainActivity()
+com.canny.kebabbo.MainActivity: MainActivity()
 androidx.core.view.DisplayCutoutCompat$Api28Impl: int getSafeInsetBottom(android.view.DisplayCutout)
 androidx.window.core.Version$Companion: androidx.window.core.Version getVERSION_0_1()
 androidx.core.view.ViewCompat$Api21Impl: android.content.res.ColorStateList getBackgroundTintList(android.view.View)

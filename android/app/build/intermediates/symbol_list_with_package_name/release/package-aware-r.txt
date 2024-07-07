@@ -1,4 +1,4 @@
-com.example.kebabbo
+com.canny.kebabbo
 attr activityAction
 attr activityName
 attr alpha
