@@ -12,7 +12,7 @@ Pareggiare Kebabbo Web
 
 Ancora non fatte in kebabbo Web
 - [x] Stella simpatia + rifare tot rating senza simpatia
-- [ ] Sistemare link social non funzionanti
+- [ ] Forse link social about non funzionanti da android
 - [ ] Rimuovere linea sotto tab World-Special
 - [ ] Login con Account e operazioni solo per user registrati
 - [ ] Migliorare UI popup kebabbari nella mappa
