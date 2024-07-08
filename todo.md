@@ -16,7 +16,7 @@ Ancora non fatte in kebabbo Web
 - [x] Rimuovere linea sotto tab World-Special
 - [x] Icona app senza sfondo
 - [x] Migliorare UI popup kebabbari nella mappa
-- [ ] Inserire nella scheda kebab le sue caratteristiche (grafico con livello di salsa yogurt, quantità carne, piccantezza,...)
+- [x] Inserire nella scheda kebab le sue caratteristiche (grafico con livello di salsa yogurt, quantità carne, piccantezza,...)
 - [ ] Ricerca avanzata (build your kebab)
 - [ ] Possibilità di confrontare stats di due kebabbari
 - [ ] Modulo consigliaci un kebabbaro
