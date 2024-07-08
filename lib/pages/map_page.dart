@@ -117,6 +117,9 @@ class _MapPageState extends State<MapPage> {
                   _isMapInitialized = true;
                 });
               },
+              onTap: (_, __) {
+                _popupController.hideAllPopups();
+              },
             ),
             children: [
               TileLayer(

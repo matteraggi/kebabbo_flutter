@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
+import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 
@@ -16,6 +17,10 @@ class KebabListItem extends StatefulWidget {
   final double lat;
   final double lng;
   final double distance;
+  final double meat;
+  final double yogurt;
+  final double spicy;
+  final double onion;
 
   KebabListItem({
     required this.name,
@@ -30,6 +35,10 @@ class KebabListItem extends StatefulWidget {
     required this.lat,
     required this.lng,
     required this.distance,
+    required this.meat,
+    required this.yogurt,
+    required this.spicy,
+    required this.onion,
   });
 
   @override
@@ -135,6 +144,13 @@ class _KebabListItemState extends State<KebabListItem> {
                             label: "Dimensione", number: widget.dimension),
                         const SizedBox(height: 8),
                         SingleStat(label: "Menu", number: widget.menu),
+                        const SizedBox(height: 16),
+                        SingleChart(
+                          meat: widget.meat,
+                          yogurt: widget.yogurt,
+                          spicy: widget.spicy,
+                          onion: widget.onion,
+                        ),
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

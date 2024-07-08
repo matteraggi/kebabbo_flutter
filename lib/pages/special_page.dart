@@ -161,22 +161,26 @@ class _SpecialPageState extends State<SpecialPage> {
                                 itemBuilder: (context, index) {
                                   final kebab = dashList[index];
                                   return KebabListItem(
-                                      name: kebab['name'] ?? '',
-                                      description: kebab['description'] ?? '',
-                                      rating:
-                                          (kebab['rating'] ?? 0.0).toDouble(),
-                                      quality:
-                                          (kebab['quality'] ?? 0.0).toDouble(),
-                                      price: (kebab['price'] ?? 0.0).toDouble(),
-                                      dimension: (kebab['dimension'] ?? 0.0)
-                                          .toDouble(),
-                                      menu: (kebab['menu'] ?? 0.0).toDouble(),
-                                      fun: (kebab['fun'] ?? 0.0).toDouble(),
-                                      map: kebab['map'] ?? '',
-                                      lat: (kebab['lat'] ?? 0.0).toDouble(),
-                                      lng: (kebab['lng'] ?? 0.0).toDouble(),
-                                      distance: (kebab['distance'] ?? 0.0)
-                                          .toDouble());
+                                    name: kebab['name'] ?? '',
+                                    description: kebab['description'] ?? '',
+                                    rating: (kebab['rating'] ?? 0.0).toDouble(),
+                                    quality:
+                                        (kebab['quality'] ?? 0.0).toDouble(),
+                                    price: (kebab['price'] ?? 0.0).toDouble(),
+                                    dimension:
+                                        (kebab['dimension'] ?? 0.0).toDouble(),
+                                    menu: (kebab['menu'] ?? 0.0).toDouble(),
+                                    fun: (kebab['fun'] ?? 0.0).toDouble(),
+                                    map: kebab['map'] ?? '',
+                                    lat: (kebab['lat'] ?? 0.0).toDouble(),
+                                    lng: (kebab['lng'] ?? 0.0).toDouble(),
+                                    distance:
+                                        (kebab['distance'] ?? 0.0).toDouble(),
+                                    meat: (kebab['meat'] ?? 0.0).toDouble(),
+                                    yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
+                                    spicy: (kebab['spicy'] ?? 0.0).toDouble(),
+                                    onion: (kebab['onion'] ?? 0.0).toDouble(),
+                                  );
                                 },
                               ),
                             ),

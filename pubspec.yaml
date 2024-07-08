@@ -25,6 +25,7 @@ dependencies:
   webview_flutter: ^4.0.1
   font_awesome_flutter: ^10.7.0
   flutter_launcher_icons: ^0.13.1
+  fl_chart: ^0.68.0
 
   postgrest: any
 dev_dependencies:
