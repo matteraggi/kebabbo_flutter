@@ -77,6 +77,7 @@ class _SpecialPageState extends State<SpecialPage> {
       child: Scaffold(
         appBar: AppBar(
           title: TabBar(
+            dividerColor: Colors.transparent,
             onTap: (index) {
               if (index == 0) {
                 onTabChange('kebab_world');
@@ -119,7 +120,8 @@ class _SpecialPageState extends State<SpecialPage> {
               ),
               Tab(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
