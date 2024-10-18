@@ -4,6 +4,7 @@ import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/map_page.dart';
 import 'package:kebabbo_flutter/pages/special_page.dart';
+import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,7 +13,6 @@ const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
 Future<void> main() async {
-
   /*
   await dotenv.load(fileName: ".env");
 
@@ -148,10 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     switch (selectedIndex) {
       case 0:
-        page =
-            supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
-      case 1:
+        //page =     supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
         page = AboutPage();
+      case 1:
+        page = ToolsPage();
       case 2:
         page = MapPage(
           currentPosition: _currentPosition,
@@ -175,12 +175,12 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Account',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.info),
             label: 'About',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.build),
+            label: 'Tools',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
