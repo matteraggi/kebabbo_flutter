@@ -2,7 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/card_item.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+final matteraggiUrls = [
+  Uri.parse("https://www.instagram.com/matteraggiii"),
+  Uri.parse("https://www.linkedin.com/in/matteo-raggi"),
+  Uri.parse("https://www.github.com/matteraggi"),
+  Uri.parse("https://github.com/matteraggi")
+];
+
+final eliaUrls = [
+  Uri.parse("https://www.instagram.com/eliafriberg"),
+  Uri.parse("https://www.linkedin.com/in/elia-friberg-021a90295"),
+  Uri.parse("https://www.github.com/fri3erg")
+];
+
+final francescoUrls = [
+  Uri.parse("https://www.instagram.com/fra___espo"),
+  Uri.parse("https://www.github.com/Francesco0905")
+];
+
 class AboutPage extends StatelessWidget {
+  const AboutPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +68,8 @@ class AboutPage extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Colors.white,
                         ),
-                        child: const Icon(Icons.euro, color: Colors.black, size: 40),
+                        child: const Icon(Icons.euro,
+                            color: Colors.black, size: 40),
                       ),
                       const SizedBox(height: 8),
                       const Text(
@@ -66,7 +87,8 @@ class AboutPage extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Colors.white,
                         ),
-                        child: const Icon(Icons.bolt, color: Colors.black, size: 40),
+                        child: const Icon(Icons.bolt,
+                            color: Colors.black, size: 40),
                       ),
                       const SizedBox(height: 8),
                       const Text(
@@ -97,56 +119,85 @@ class AboutPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  CardItem(
-                    image: 'assets/images/matteo.jpg',
-                    name: 'Matteo',
-                    description: 'Developer & Eater',
-                    icons: const [
-                      FontAwesomeIcons.instagram,
-                      FontAwesomeIcons.linkedin,
-                      FontAwesomeIcons.github,
-                      FontAwesomeIcons.google,
-                    ],
-                    url: [
-                      Uri.parse("https://www.instagram.com/matteraggiii"),
-                      Uri.parse("https://www.linkedin.com/in/matteo-raggi"),
-                      Uri.parse("https://www.github.com/matteraggi"),
-                      Uri.parse("https://github.com/matteraggi")
-                    ],
-                  ),
-                  CardItem(
-                    image: 'assets/images/frigo.jpg',
-                    name: 'Elia',
-                    description: 'Developer & Eater',
-                    icons: const [
-                      FontAwesomeIcons.instagram,
-                      FontAwesomeIcons.linkedin,
-                      FontAwesomeIcons.github
-                    ],
-                    url: [
-                      Uri.parse("https://www.instagram.com/eliafriberg"),
-                      Uri.parse(
-                          "https://www.linkedin.com/in/elia-friberg-021a90295"),
-                      Uri.parse("https://www.github.com/fri3erg")
-                    ],
-                  ),
-                  CardItem(
-                    image: 'assets/images/fra.jpg',
-                    name: 'Francesco',
-                    description: 'Social Media Manager',
-                    icons: const [
-                      FontAwesomeIcons.instagram,
-                      FontAwesomeIcons.github
-                    ],
-                    url: [
-                      Uri.parse("https://www.instagram.com/fra___espo"),
-                      Uri.parse("https://www.github.com/Francesco0905")
-                    ],
-                  ),
-                ],
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  if (constraints.maxWidth > 900) {
+                    // Adjust threshold as needed
+                    // Enough space for a row
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CardItem(
+                            image: 'assets/images/matteo.jpg',
+                            name: 'Matteo',
+                            description: 'Developer & Eater',
+                            icons: const [
+                              FontAwesomeIcons.instagram,
+                              FontAwesomeIcons.linkedin,
+                              FontAwesomeIcons.github,
+                              FontAwesomeIcons.google,
+                            ],
+                            url: matteraggiUrls),
+                        CardItem(
+                            image: 'assets/images/frigo.jpg',
+                            name: 'Elia',
+                            description: 'Developer & Eater',
+                            icons: const [
+                              FontAwesomeIcons.instagram,
+                              FontAwesomeIcons.linkedin,
+                              FontAwesomeIcons.github
+                            ],
+                            url: eliaUrls),
+                        CardItem(
+                            image: 'assets/images/fra.jpg',
+                            name: 'Francesco',
+                            description: 'Social Media Manager',
+                            icons: const [
+                              FontAwesomeIcons.instagram,
+                              FontAwesomeIcons.github
+                            ],
+                            url: francescoUrls),
+                      ],
+                    );
+                  } else {
+                    // Not enough space, use a column
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CardItem(
+                            image: 'assets/images/matteo.jpg',
+                            name: 'Matteo',
+                            description: 'Developer & Eater',
+                            icons: const [
+                              FontAwesomeIcons.instagram,
+                              FontAwesomeIcons.linkedin,
+                              FontAwesomeIcons.github,
+                              FontAwesomeIcons.google,
+                            ],
+                            url: matteraggiUrls),
+                        CardItem(
+                            image: 'assets/images/frigo.jpg',
+                            name: 'Elia',
+                            description: 'Developer & Eater',
+                            icons: const [
+                              FontAwesomeIcons.instagram,
+                              FontAwesomeIcons.linkedin,
+                              FontAwesomeIcons.github
+                            ],
+                            url: eliaUrls),
+                        CardItem(
+                            image: 'assets/images/fra.jpg',
+                            name: 'Francesco',
+                            description: 'Social Media Manager',
+                            icons: const [
+                              FontAwesomeIcons.instagram,
+                              FontAwesomeIcons.github
+                            ],
+                            url: francescoUrls),
+                      ],
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 20),
             ],
