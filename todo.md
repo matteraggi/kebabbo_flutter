@@ -25,7 +25,7 @@ Ancora non fatte in kebabbo Web
 - [ ] Spostare special da un'altra parte che tanto viene visto meno (top kebab)
 - [ ] gestione tag (panino, kebab, altro,...) (top kebab)
 - [ ] Modulo consigliaci un kebabbaro (-> About)
-- [ ] Mettere About da un'altra parte e rimettere sezioni account
+- [ ] Mettere About da un'altra parte e rimettere sezioni account
 - [ ] Creare sezione feed
 - [ ] Login con Account e operazioni solo per user registrati -> feed
 - [ ] Pensare piano marketing con CMO dell'azienda

@@ -122,76 +122,7 @@ class _KebabListItemState extends State<KebabListItem> {
                   bottomRight: Radius.circular(12),
                 ),
               ),
-              child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.description,
-                          style: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SingleStat(label: "Qualità", number: widget.quality),
-                        const SizedBox(height: 8),
-                        SingleStat(label: "Prezzo", number: widget.price),
-                        const SizedBox(height: 8),
-                        SingleStat(
-                            label: "Dimensione", number: widget.dimension),
-                        const SizedBox(height: 8),
-                        SingleStat(label: "Menu", number: widget.menu),
-                        const SizedBox(height: 16),
-                        SingleChart(
-                          meat: widget.meat,
-                          yogurt: widget.yogurt,
-                          spicy: widget.spicy,
-                          onion: widget.onion,
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            BottomButtonItem(
-                                linkMaps: widget.map,
-                                text: "Apri in Maps",
-                                icon: Icons.map),
-                            if (widget.fun >= 3.5)
-                              Positioned(
-                                bottom: 8,
-                                right: 8,
-                                child: Transform.rotate(
-                                  angle: -0.2, // Ruota il badge verso sinistra
-                                  child: const Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.sentiment_very_satisfied,
-                                        color: yellow,
-                                        size: 30,
-                                      ),
-                                      Text(
-                                        'fun!',
-                                        style: TextStyle(
-                                          color: yellow,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+
             )
           ],
           onExpansionChanged: (bool expanding) =>
