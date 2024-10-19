@@ -5,7 +5,7 @@ class SingleStat extends StatefulWidget {
   final String label;
   final double number;
 
-  const SingleStat({
+  const SingleStat({super.key, 
     required this.label,
     required this.number,
   });

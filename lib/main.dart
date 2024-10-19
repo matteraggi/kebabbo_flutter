@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
+
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kebabbo',
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
@@ -77,6 +78,8 @@ extension ContextExtension on BuildContext {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+ 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -149,9 +152,9 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         //page =     supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
-        page = AboutPage();
+        page = const AboutPage();
       case 1:
-        page = ToolsPage();
+        page = const ToolsPage();
       case 2:
         page = MapPage(
           currentPosition: _currentPosition,

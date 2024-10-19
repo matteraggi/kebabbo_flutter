@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   english_words: ^4.0.0
   provider: ^6.0.0
   supabase_flutter: ^2.5.6
@@ -28,6 +27,8 @@ dependencies:
   fl_chart: ^0.68.0
 
   postgrest: any
+  flutter_map_cancellable_tile_provider: ^3.0.2
+  fuzzy: ^0.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

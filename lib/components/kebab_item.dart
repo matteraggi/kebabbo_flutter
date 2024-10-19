@@ -22,7 +22,7 @@ class KebabListItem extends StatefulWidget {
   final double spicy;
   final double onion;
 
-  KebabListItem({
+  const KebabListItem({super.key, 
     required this.name,
     required this.description,
     required this.rating,

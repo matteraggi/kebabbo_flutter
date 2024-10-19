@@ -8,7 +8,7 @@ class CardItem extends StatelessWidget {
   final List<IconData> icons;
   final List<Uri> url;
 
-  const CardItem({
+  const CardItem({super.key, 
     required this.image,
     required this.name,
     required this.description,
@@ -29,7 +29,7 @@ class CardItem extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(
                     12.0), // Bordo arrotondato per l'immagine

@@ -6,7 +6,7 @@ import 'package:kebabbo_flutter/components/kebab_item.dart';
 class SpecialPage extends StatefulWidget {
   Position? currentPosition;
 
-  SpecialPage({required this.currentPosition});
+  SpecialPage({super.key, required this.currentPosition});
 
   @override
   _SpecialPageState createState() => _SpecialPageState();
@@ -130,7 +130,7 @@ class _SpecialPageState extends State<SpecialPage> {
                         size: 24,
                       ),
                       SizedBox(width: 8),
-                      Text('Lengend'),
+                      Text('Legends'),
                     ],
                   ),
                 ),

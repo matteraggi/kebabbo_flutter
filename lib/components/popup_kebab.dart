@@ -11,7 +11,7 @@ class PopupKebabItem extends StatelessWidget {
   final double dimension;
   final double menu;
 
-  const PopupKebabItem({
+  const PopupKebabItem({super.key, 
     required this.name,
     required this.description,
     required this.rating,

@@ -7,7 +7,7 @@ class OrderBar extends StatelessWidget {
   final Function(String) onChangeOrderByField;
   final Function(bool) onChangeOrderDirection;
 
-  OrderBar({
+  const OrderBar({super.key, 
     required this.orderByField,
     required this.orderDirection,
     required this.onChangeOrderByField,

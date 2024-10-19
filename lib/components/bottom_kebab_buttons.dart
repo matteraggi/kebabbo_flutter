@@ -6,7 +6,7 @@ class BottomButtonItem extends StatelessWidget {
   final String text;
   final IconData icon;
 
-  const BottomButtonItem({required this.linkMaps, required this.text, required this.icon});
+  const BottomButtonItem({super.key, required this.linkMaps, required this.text, required this.icon});
 
   @override
   Widget build(BuildContext context) {

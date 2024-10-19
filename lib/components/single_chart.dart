@@ -9,12 +9,12 @@ class SingleChart extends StatefulWidget {
   final double onion;
 
   const SingleChart({
-    Key? key,
+    super.key,
     required this.meat,
     required this.yogurt,
     required this.spicy,
     required this.onion,
-  }) : super(key: key);
+  });
 
   @override
   State<SingleChart> createState() => _SingleChartState();

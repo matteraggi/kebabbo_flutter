@@ -9,7 +9,7 @@ class KebabMarker extends Marker {
   final double dimension;
   final double menu;
 
-  KebabMarker({
+  const KebabMarker({
     required super.point,
     required super.child,
     required this.name,
