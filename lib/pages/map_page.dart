@@ -6,11 +6,12 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 class MapPage extends StatefulWidget {
   Position? currentPosition;
 
-  MapPage({required this.currentPosition});
+  MapPage({super.key, required this.currentPosition});
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -122,11 +123,10 @@ class _MapPageState extends State<MapPage> {
               },
             ),
             children: [
-              TileLayer(
-                urlTemplate:
-                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                subdomains: const ['a', 'b', 'c'],
-              ),
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              tileProvider: CancellableNetworkTileProvider(), // Add this line
+            ),
               RichAttributionWidget(
                 attributions: [
                   TextSourceAttribution(
