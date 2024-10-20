@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/popup_kebab.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/about_page.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -99,8 +100,7 @@ class _MapPageState extends State<MapPage> {
           height: 40.0,
           point: LatLng(item['lat'], item['lng']),
           child: Image.asset("assets/images/kebab.png"),
-          key: ValueKey(
-              'kebab_marker_${item['id']}'),
+          key: ValueKey('kebab_marker_${item['id']}'),
         );
       })
     ];
@@ -123,10 +123,10 @@ class _MapPageState extends State<MapPage> {
               },
             ),
             children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              tileProvider: CancellableNetworkTileProvider(), // Add this line
-            ),
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                tileProvider: CancellableNetworkTileProvider(), // Add this line
+              ),
               RichAttributionWidget(
                 attributions: [
                   TextSourceAttribution(
@@ -168,6 +168,23 @@ class _MapPageState extends State<MapPage> {
                 ),
               ),
             ],
+          ),
+          // Pulsante info in alto a sinistra
+          Positioned(
+            top: 16.0,
+            left: 16.0,
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AboutPage(),
+                  ),
+                );
+              },
+              child: const Icon(Icons.info, color: Colors.black),
+            ),
           ),
           Positioned(
             bottom: 16.0,

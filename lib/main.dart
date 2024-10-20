@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/pages/about_page.dart';
+import 'package:kebabbo_flutter/pages/account_page.dart';
+import 'package:kebabbo_flutter/pages/feed_page.dart';
 import 'package:kebabbo_flutter/pages/map_page.dart';
 import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
@@ -150,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         //page =     supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
-        page = const AboutPage();
+        page = const AccountPage();
       case 1:
         page = const ToolsPage();
       case 2:
@@ -160,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         page = TopKebabPage(currentPosition: _currentPosition!);
       case 4:
-        page = SpecialPage(currentPosition: _currentPosition);
+        page = FeedPage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -176,12 +178,12 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'About',
+            icon: Icon(Icons.person),
+            label: 'Account',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.build),
-            label: 'Tools',
+            label: 'Build',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -192,8 +194,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Top Kebab',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_play_rounded),
-            label: 'Special',
+            icon: Icon(Icons.comment),
+            label: 'Feed',
           ),
         ],
         backgroundColor: red, // Colore di sfondo della navbar

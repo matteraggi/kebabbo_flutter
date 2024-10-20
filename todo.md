@@ -20,14 +20,14 @@ Ancora non fatte in kebabbo Web
 - [x] Icona app senza sfondo
 - [x] Migliorare UI popup kebabbari nella mappa
 - [x] Inserire nella scheda kebab le sue caratteristiche (grafico con livello di salsa yogurt, quantità carne, piccantezza,...)
-- [ ] Ricerca avanzata (build your kebab in db) (-> Build)
-- [ ] Possibilità di confrontare stats di due kebabbari (top kebab)
-- [ ] Spostare special da un'altra parte che tanto viene visto meno (top kebab)
+- [x] Mettere About da un'altra parte e rimettere sezioni account
+- [x] Spostare special da un'altra parte che tanto viene visto meno (top kebab)
 - [ ] gestione tag (panino, kebab, altro,...) (top kebab)
 - [ ] Modulo consigliaci un kebabbaro (-> About)
-- [ ] Mettere About da un'altra parte e rimettere sezioni account
+- [ ] Ricerca avanzata (build your kebab in db) (-> Build)
+- [ ] Possibilità di confrontare stats di due kebabbari (top kebab)
 - [ ] Creare sezione feed
-- [ ] Login con Account e operazioni solo per user registrati -> feed
+
 - [ ] Pensare piano marketing con CMO dell'azienda
 
 Schermate Bottom Bar:
