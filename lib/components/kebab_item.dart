@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
+import 'package:kebabbo_flutter/components/single_chart.dart';
+import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 class KebabListItem extends StatefulWidget {
@@ -112,7 +114,13 @@ class KebabListItemState extends State<KebabListItem> {
           trailing: const SizedBox(width: 10),
           children: [
             Container(
-              
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+              ),
               child: Stack(
                 children: [
                   Padding(
@@ -127,22 +135,22 @@ class KebabListItemState extends State<KebabListItem> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        //SingleStat(label: "Qualità", number: widget.quality),
+                        SingleStat(label: "Qualità", number: widget.quality),
                         const SizedBox(height: 8),
-                        //SingleStat(label: "Prezzo", number: widget.price),
+                        SingleStat(label: "Prezzo", number: widget.price),
                         const SizedBox(height: 8),
-                        //SingleStat(label: "Dimensione", number: widget.dimension),
+                        SingleStat(label: "Dimensione", number: widget.dimension),
                         const SizedBox(height: 8),
-                        //SingleStat(label: "Menu", number: widget.menu),
+                        SingleStat(label: "Menu", number: widget.menu),
                         const SizedBox(height: 16),
-                        /*
+                        
                         SingleChart(
                           meat: widget.meat,
                           yogurt: widget.yogurt,
                           spicy: widget.spicy,
                           onion: widget.onion,
                         ),
-                        */
+                        
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
