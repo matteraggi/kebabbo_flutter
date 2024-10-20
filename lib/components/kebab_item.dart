@@ -22,7 +22,8 @@ class KebabListItem extends StatefulWidget {
   final double spicy;
   final double onion;
 
-  const KebabListItem({super.key, 
+  const KebabListItem({
+    super.key,
     required this.name,
     required this.description,
     required this.rating,
@@ -139,18 +140,17 @@ class KebabListItemState extends State<KebabListItem> {
                         const SizedBox(height: 8),
                         SingleStat(label: "Prezzo", number: widget.price),
                         const SizedBox(height: 8),
-                        SingleStat(label: "Dimensione", number: widget.dimension),
+                        SingleStat(
+                            label: "Dimensione", number: widget.dimension),
                         const SizedBox(height: 8),
                         SingleStat(label: "Menu", number: widget.menu),
                         const SizedBox(height: 16),
-                         
                         SingleChart(
                           meat: widget.meat,
                           yogurt: widget.yogurt,
                           spicy: widget.spicy,
                           onion: widget.onion,
                         ),
-                        
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,29 +160,25 @@ class KebabListItemState extends State<KebabListItem> {
                                 text: "Apri in Maps",
                                 icon: Icons.map),
                             if (widget.fun >= 3.5)
-                              Positioned(
-                                bottom: 8,
-                                right: 8,
-                                child: Transform.rotate(
-                                  angle: -0.2, // Ruota il badge verso sinistra
-                                  child: const Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.sentiment_very_satisfied,
+                              Transform.rotate(
+                                angle: -0.2, // Ruota il badge verso sinistra
+                                child: const Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.sentiment_very_satisfied,
+                                      color: yellow,
+                                      size: 30,
+                                    ),
+                                    Text(
+                                      'fun!',
+                                      style: TextStyle(
                                         color: yellow,
-                                        size: 30,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
                                       ),
-                                      Text(
-                                        'fun!',
-                                        style: TextStyle(
-                                          color: yellow,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                           ],
@@ -201,4 +197,3 @@ class KebabListItemState extends State<KebabListItem> {
     );
   }
 }
-
