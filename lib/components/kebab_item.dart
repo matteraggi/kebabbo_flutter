@@ -57,7 +57,7 @@ class KebabListItemState extends State<KebabListItem> {
     List<Widget> stars = [];
 
     int fullStars = rating.floor();
-    bool hasHalfStar = rating - fullStars >= 0.5;
+    bool hasHalfStar = rating - fullStars.toDouble() >= 0.5;
 
     for (int i = 0; i < fullStars; i++) {
       stars.add(const Icon(Icons.star, color: yellow, size: 40));
