@@ -40,4 +40,3 @@ flutter:
   assets:
     - assets/images/
     - packages/font_awesome_flutter/fonts/fa-brands-400.ttf
-    - packages/cupertino_icons/assets/CupertinoIcons.ttf
