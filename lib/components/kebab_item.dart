@@ -135,21 +135,22 @@ class KebabListItemState extends State<KebabListItem> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        SingleStat(label: "Qualità", number: widget.quality),
+                        //SingleStat(label: "Qualità", number: widget.quality),
                         const SizedBox(height: 8),
-                        SingleStat(label: "Prezzo", number: widget.price),
+                        //SingleStat(label: "Prezzo", number: widget.price),
                         const SizedBox(height: 8),
-                        SingleStat(
-                            label: "Dimensione", number: widget.dimension),
+                        //SingleStat(label: "Dimensione", number: widget.dimension),
                         const SizedBox(height: 8),
-                        SingleStat(label: "Menu", number: widget.menu),
+                        //SingleStat(label: "Menu", number: widget.menu),
                         const SizedBox(height: 16),
+                        /*
                         SingleChart(
                           meat: widget.meat,
                           yogurt: widget.yogurt,
                           spicy: widget.spicy,
                           onion: widget.onion,
                         ),
+                        */
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
