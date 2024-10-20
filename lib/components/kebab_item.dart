@@ -112,13 +112,7 @@ class KebabListItemState extends State<KebabListItem> {
           trailing: const SizedBox(width: 10),
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
-              ),
+              
               child: Stack(
                 children: [
                   Padding(
