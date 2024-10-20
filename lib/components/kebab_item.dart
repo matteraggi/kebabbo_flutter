@@ -143,7 +143,7 @@ class KebabListItemState extends State<KebabListItem> {
                         const SizedBox(height: 8),
                         SingleStat(label: "Menu", number: widget.menu),
                         const SizedBox(height: 16),
-                        
+                         
                         SingleChart(
                           meat: widget.meat,
                           yogurt: widget.yogurt,
