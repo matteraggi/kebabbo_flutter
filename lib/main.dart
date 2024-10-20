@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/pages/about_page.dart';
-import 'package:kebabbo_flutter/pages/account_page.dart';
-import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/map_page.dart';
 import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
-import 'package:kebabbo_flutter/components/single_chart.dart';
-import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 class KebabListItem extends StatefulWidget {

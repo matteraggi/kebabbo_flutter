@@ -24,7 +24,7 @@ List<Map<String, dynamic>> fuzzySearchAndSort(
     return (a.score).compareTo(b.score);
   });
 
-  return results.map((result) => result.item as Map<String, dynamic>).toList();
+  return results.map((result) => result.item).toList();
 }
 
 List<Map<String, dynamic>> sortKebabs(

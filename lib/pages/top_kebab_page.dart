@@ -5,7 +5,6 @@ import 'package:kebabbo_flutter/components/order_bar.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:postgrest/src/types.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
-import 'package:fuzzy/fuzzy.dart';
 
 
 class TopKebabPage extends StatefulWidget {
@@ -41,6 +40,16 @@ class _TopKebabPageState extends State<TopKebabPage> {
     if (mounted) {
       List<Map<String, dynamic>> kebabs =
       List<Map<String, dynamic>>.from(response as List);
+
+      for (var kebab in kebabs) {
+        double distanceInMeters = Geolocator.distanceBetween(
+          userPosition.latitude,
+          userPosition.longitude,
+          kebab['lat'],
+          kebab['lng'],
+        );
+        kebab['distance'] = distanceInMeters / 1000;
+      }
 
       // Sort the kebabs using the utility function
       kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition);
