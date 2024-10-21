@@ -1,6 +1,6 @@
 ## TODO
 
-Pareggiare Kebabbo Web
+Pareggiare Kebabbo Web:
 
 - [x] maps in homepage
 - [x] user position in homepage
@@ -12,9 +12,8 @@ Pareggiare Kebabbo Web
 
 ---
 
-Ancora non fatte in kebabbo Web
+Ancora non fatte in kebabbo Web:
 
-- [ ] Testare link social in about da android
 - [x] Stella simpatia + rifare tot rating senza simpatia
 - [x] Rimuovere linea sotto tab World-Special
 - [x] Icona app senza sfondo
@@ -23,12 +22,20 @@ Ancora non fatte in kebabbo Web
 - [x] Mettere About da un'altra parte e rimettere sezioni account
 - [x] Spostare special da un'altra parte che tanto viene visto meno (top kebab)
 - [x] gestione tag (panino, kebab, altro,...) (top kebab)
-- [ ] Modulo consigliaci un kebabbaro (-> About)
+- [x] Modulo consigliaci un kebabbaro (-> About)
+- [ ] Creare sezione feed
+- [ ] Testare link social in about da android
+
+
+Hanno senso solo se molti kebabbari hanno le stats fatte bene:
+
 - [ ] Ricerca avanzata (build your kebab in db) (-> Build)
 - [ ] Possibilità di confrontare stats di due kebabbari (top kebab)
-- [ ] Creare sezione feed
+
+
+Extra:
 
 - [ ] Pensare piano marketing con CMO dell'azienda
 
-Schermate Bottom Bar:
+Schermate Bottom Navigation Bar:
 Account - Build - Home(map) - Top Kebab - Feed
