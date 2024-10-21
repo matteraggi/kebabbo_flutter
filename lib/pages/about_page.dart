@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/card_item.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 final matteraggiUrls = [
   Uri.parse("https://www.instagram.com/matteraggiii"),
   Uri.parse("https://www.linkedin.com/in/matteo-raggi"),
   Uri.parse("https://www.github.com/matteraggi"),
-  Uri.parse("https://github.com/matteraggi")
+  Uri.parse("https://www.matteoraggiblog.com")
 ];
 
 final eliaUrls = [
@@ -22,6 +26,68 @@ final francescoUrls = [
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
+
+  void _showSuggestionForm(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final TextEditingController kebabNameController =
+            TextEditingController(); // Controller per il campo di testo
+
+        return AlertDialog(
+          title: const Text("Consigliaci un kebabbaro"),
+          content: TextField(
+            controller: kebabNameController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Nome del kebabbaro',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Chiude il dialog
+              },
+              child: const Text("Annulla"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String kebabName = kebabNameController.text;
+                await sendEmail(kebabName); // Invia l'email
+                Navigator.of(context).pop(); // Chiude il dialog
+              },
+              child: const Text("Invia"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> sendEmail(String kebabName) async {
+    const serviceId = 'service_60j6i59'; // ID del servizio EmailJS
+    const templateId = 'template_3w34spe'; // ID del template EmailJS
+    const userId = 'X8vOilcepKloZtdAE'; // ID utente EmailJS
+
+    // Corpo della richiesta POST
+    final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'service_id': serviceId,
+        'template_id': templateId,
+        'user_id': userId,
+        'template_params': {'message': kebabName},
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Email inviata con successo!');
+    } else {
+      print('Errore nell\'invio dell\'email: ${response.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +183,27 @@ class AboutPage extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () => _showSuggestionForm(context),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: red,
+                    borderRadius: BorderRadius.circular(
+                        12), // Arrotondamento degli angoli
+                  ),
+                  child: const Text(
+                    "Consigliaci un kebabbaro",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               LayoutBuilder(
