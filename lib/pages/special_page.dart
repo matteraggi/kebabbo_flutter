@@ -3,6 +3,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 
+const Color red = Color.fromRGBO(187, 0, 0, 1.0);
+
 class SpecialPage extends StatefulWidget {
   Position? currentPosition;
 
@@ -180,6 +182,7 @@ class _SpecialPageState extends State<SpecialPage> {
                                     yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
                                     spicy: (kebab['spicy'] ?? 0.0).toDouble(),
                                     onion: (kebab['onion'] ?? 0.0).toDouble(),
+                                    tag: (kebab['tag'] ?? ''),
                                   );
                                 },
                               ),

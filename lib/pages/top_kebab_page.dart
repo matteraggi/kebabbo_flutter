@@ -171,6 +171,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                           (kebab['yogurt'] ?? 0.0).toDouble(),
                                       spicy: (kebab['spicy'] ?? 0.0).toDouble(),
                                       onion: (kebab['onion'] ?? 0.0).toDouble(),
+                                      tag: (kebab['tag'] ?? ''),
                                     );
                                   },
                                 ),

@@ -4,6 +4,8 @@ import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 
+const Color red = Color.fromRGBO(187, 0, 0, 1.0);
+
 class KebabListItem extends StatefulWidget {
   final String name;
   final String description;
@@ -21,6 +23,7 @@ class KebabListItem extends StatefulWidget {
   final double yogurt;
   final double spicy;
   final double onion;
+  final String tag;
 
   const KebabListItem({
     super.key,
@@ -40,6 +43,7 @@ class KebabListItem extends StatefulWidget {
     required this.yogurt,
     required this.spicy,
     required this.onion,
+    required this.tag,
   });
 
   @override
@@ -159,6 +163,21 @@ class KebabListItemState extends State<KebabListItem> {
                                 linkMaps: widget.map,
                                 text: "Apri in Maps",
                                 icon: Icons.map),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: red,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Text(
+                                widget.tag, // Testo della scritta
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
                             if (widget.fun >= 3.5)
                               Transform.rotate(
                                 angle: -0.2, // Ruota il badge verso sinistra
