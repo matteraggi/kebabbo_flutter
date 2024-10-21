@@ -22,7 +22,7 @@ Ancora non fatte in kebabbo Web
 - [x] Inserire nella scheda kebab le sue caratteristiche (grafico con livello di salsa yogurt, quantità carne, piccantezza,...)
 - [x] Mettere About da un'altra parte e rimettere sezioni account
 - [x] Spostare special da un'altra parte che tanto viene visto meno (top kebab)
-- [ ] gestione tag (panino, kebab, altro,...) (top kebab)
+- [x] gestione tag (panino, kebab, altro,...) (top kebab)
 - [ ] Modulo consigliaci un kebabbaro (-> About)
 - [ ] Ricerca avanzata (build your kebab in db) (-> Build)
 - [ ] Possibilità di confrontare stats di due kebabbari (top kebab)
