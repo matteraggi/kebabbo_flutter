@@ -7,7 +7,6 @@ import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -21,11 +20,12 @@ class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
 
-    Future<void> _nativeGoogleSignIn() async {
+  Future<void> _nativeGoogleSignIn() async {
     /// TODO: update the Web client ID with your own.
     ///
     /// Web Client ID that you registered with Google Cloud.
-    const webClientId = '1072333391081-jq61dfl6nbvc7qnltcqjf65f7ma7om7n.apps.googleusercontent.com';
+    const webClientId =
+        '1072333391081-jq61dfl6nbvc7qnltcqjf65f7ma7om7n.apps.googleusercontent.com';
 
     /// TODO: update the iOS client ID with your own.
     ///
@@ -54,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
       accessToken: accessToken,
     );
   }
-
 
   Future<void> _signIn() async {
     try {
@@ -126,14 +125,15 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           ElevatedButton(
             onPressed: () async {
-              if(!kIsWeb && (Platform.isAndroid || Platform.isIOS)){
+              if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
                 await _nativeGoogleSignIn();
-              }
-              else{
+              } else {
                 await supabase.auth.signInWithOAuth(
                   OAuthProvider.google,
-                  authScreenLaunchMode:
-                      kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication, // Launch the auth screen in a new webview on mobile.
+                  authScreenLaunchMode: kIsWeb
+                      ? LaunchMode.platformDefault
+                      : LaunchMode
+                          .externalApplication, // Launch the auth screen in a new webview on mobile.
                 );
               }
             },

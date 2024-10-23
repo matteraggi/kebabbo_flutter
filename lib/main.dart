@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/pages/about_page.dart';
 import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:kebabbo_flutter/pages/feed_page.dart';
+import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/map_page.dart';
-import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -151,8 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     switch (selectedIndex) {
       case 0:
-        //page =     supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
-        page = const AccountPage();
+        page =     supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
       case 1:
         page = const ToolsPage();
       case 2:

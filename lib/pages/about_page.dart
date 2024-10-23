@@ -3,6 +3,7 @@ import 'package:kebabbo_flutter/components/card_item.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:kebabbo_flutter/main.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
@@ -92,6 +93,9 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: yellow,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
