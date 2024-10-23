@@ -29,6 +29,7 @@ dependencies:
   postgrest: any
   flutter_map_cancellable_tile_provider: ^3.0.2
   fuzzy: ^0.5.1
+  flutter_svg: ^2.0.10+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
