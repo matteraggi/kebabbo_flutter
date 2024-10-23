@@ -54,6 +54,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _centerMap() {
+    print('Centering map to: ${widget.currentPosition}');
     if (widget.currentPosition != null && _isMapInitialized) {
       _mapController.move(
         LatLng(widget.currentPosition!.latitude,
