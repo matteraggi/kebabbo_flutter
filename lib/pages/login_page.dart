@@ -1,10 +1,12 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,6 +20,41 @@ class _LoginPageState extends State<LoginPage> {
   bool _redirecting = false;
   late final TextEditingController _emailController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
+
+    Future<void> _nativeGoogleSignIn() async {
+    /// TODO: update the Web client ID with your own.
+    ///
+    /// Web Client ID that you registered with Google Cloud.
+    const webClientId = '1072333391081-jq61dfl6nbvc7qnltcqjf65f7ma7om7n.apps.googleusercontent.com';
+
+    /// TODO: update the iOS client ID with your own.
+    ///
+    /// iOS Client ID that you registered with Google Cloud.
+    const iosClientId = 'my-ios.apps.googleusercontent.com';
+
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      clientId: iosClientId,
+      serverClientId: webClientId,
+    );
+    final googleUser = await googleSignIn.signIn();
+    final googleAuth = await googleUser!.authentication;
+    final accessToken = googleAuth.accessToken;
+    final idToken = googleAuth.idToken;
+
+    if (accessToken == null) {
+      throw 'No Access Token found.';
+    }
+    if (idToken == null) {
+      throw 'No ID Token found.';
+    }
+
+    await supabase.auth.signInWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
+      accessToken: accessToken,
+    );
+  }
+
 
   Future<void> _signIn() async {
     try {
@@ -87,6 +124,22 @@ class _LoginPageState extends State<LoginPage> {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         children: [
+          ElevatedButton(
+            onPressed: () async {
+              if(!kIsWeb && (Platform.isAndroid || Platform.isIOS)){
+                await _nativeGoogleSignIn();
+              }
+              else{
+                await supabase.auth.signInWithOAuth(
+                  OAuthProvider.google,
+                  authScreenLaunchMode:
+                      kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication, // Launch the auth screen in a new webview on mobile.
+                );
+              }
+            },
+            child: const Text('Google google google '),
+          ),
+          const SizedBox(height: 18),
           const Text('Sign in via the magic link with your email below'),
           const SizedBox(height: 18),
           TextFormField(
