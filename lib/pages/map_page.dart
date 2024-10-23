@@ -64,16 +64,6 @@ class _MapPageState extends State<MapPage> {
   }
 
   @override
-  void didUpdateWidget(MapPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.currentPosition != null &&
-        oldWidget.currentPosition != widget.currentPosition &&
-        _isMapInitialized) {
-      _centerMap();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (widget.currentPosition == null) {
       return const Center(
