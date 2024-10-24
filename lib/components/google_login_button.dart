@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
@@ -66,6 +65,7 @@ class GoogleLoginButton extends StatelessWidget {
                 ? LaunchMode.platformDefault
                 : LaunchMode
                     .externalApplication,
+            redirectTo: "https://kebabbo-flutter.vercel.app/"
           );
         }
       },
