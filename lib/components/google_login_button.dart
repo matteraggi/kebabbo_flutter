@@ -65,7 +65,7 @@ class GoogleLoginButton extends StatelessWidget {
             authScreenLaunchMode: kIsWeb
                 ? LaunchMode.platformDefault
                 : LaunchMode
-                    .externalApplication, // Launch the auth screen in a new webview on mobile.
+                    .externalApplication,
           );
         }
       },

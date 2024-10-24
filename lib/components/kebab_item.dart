@@ -163,6 +163,7 @@ class KebabListItemState extends State<KebabListItem> {
                                 linkMaps: widget.map,
                                 text: "Apri in Maps",
                                 icon: Icons.map),
+                            /*
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 6),
@@ -178,7 +179,8 @@ class KebabListItemState extends State<KebabListItem> {
                                 ),
                               ),
                             ),
-                            if (widget.fun >= 3.5)
+                            */
+                            if (widget.fun >= 4)
                               Transform.rotate(
                                 angle: -0.2, // Ruota il badge verso sinistra
                                 child: const Column(

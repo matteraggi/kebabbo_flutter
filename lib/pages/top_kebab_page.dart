@@ -37,7 +37,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
     try {
       final PostgrestList response = await supabase
           .from('kebab')
-          .select('*'); // No need for .order here anymore
+          .select('*');
 
       if (mounted) {
         List<Map<String, dynamic>> kebabs =
@@ -196,7 +196,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                 );
                               },
                               child:
-                                  const Icon(Icons.local_play_rounded, color: Colors.white),
+                                  const Icon(Icons.public, color: Colors.white),
                             ),
                           ),
                         ],
