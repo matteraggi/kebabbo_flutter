@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart'; // Importa Supabase per gestire autenticazione e query
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -66,7 +66,6 @@ class _FeedPageState extends State<FeedPage> {
   // Funzione per postare il testo su Supabase
   Future<void> _postFeed() async {
     final user = Supabase.instance.client.auth.currentUser;
-    print(user?.id);
     if (user == null) {
       setState(() {
         errorMessage = "Devi essere autenticato per postare";
@@ -115,30 +114,40 @@ class _FeedPageState extends State<FeedPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Modulo di inserimento testo
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
                             child: Column(
                               children: [
-                                TextField(
-                                  controller: postController,
-                                  decoration: InputDecoration(
-                                    hintText: "Inserisci un post...",
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: postController,
+                                        maxLines:
+                                            null, // Permette l'espansione multilinea
+                                        minLines: 1, // Numero minimo di righe
+                                        decoration: InputDecoration(
+                                          hintText: "Inserisci un post...",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.grey[200],
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 12,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 12,
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: _postFeed,
+                                      child: const Text("Posta"),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                ElevatedButton(
-                                  onPressed: _postFeed,
-                                  child: const Text("Posta"),
+                                  ],
                                 ),
                               ],
                             ),
@@ -151,6 +160,7 @@ class _FeedPageState extends State<FeedPage> {
                                 return FeedListItem(
                                   text: post['text'] ?? 'Testo non disponibile',
                                   createdAt: post['created_at'] ?? '',
+                                  userId: post['user_id'],
                                 );
                               },
                             ),
