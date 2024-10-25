@@ -21,6 +21,7 @@ class FeedListItem extends StatefulWidget {
 
 class _FeedListItemState extends State<FeedListItem> {
   String? userName;
+  String? avatarUrl;
   bool isLoading = true;
 
   @override
@@ -38,25 +39,22 @@ class _FeedListItemState extends State<FeedListItem> {
           .eq('id', userId)
           .single();
 
-      print(response);
-      
       setState(() {
-        userName = response['username']; // Imposta il nome dell'utente
-        isLoading = false; // Segnala che il caricamento è completato
+        userName = response['username'] ?? 'Anonimo';
+        avatarUrl = response['avatar_url'] as String?;
+        isLoading = false;
       });
     } catch (error) {
       setState(() {
-        userName = 'Anonimo'; // In caso di errore, mostra 'Anonimo'
+        userName = 'Anonimo';
         isLoading = false;
       });
     }
   }
 
-    String _formatTimestamp(String createdAt) {
-    // Converti la stringa in DateTime
+  String _formatTimestamp(String createdAt) {
     final DateTime postDate = DateTime.parse(createdAt);
-    // Usa la libreria timeago con il locale italiano
-    return timeago.format(postDate, locale: 'it'); // Locale italiano
+    return timeago.format(postDate, locale: 'it');
   }
 
   @override
@@ -67,14 +65,24 @@ class _FeedListItemState extends State<FeedListItem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Mostra un indicatore di caricamento finché il nome non è disponibile
             isLoading
-                ? const CircularProgressIndicator() 
-                : Text(
-                    userName ?? 'Anonimo',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                ? const CircularProgressIndicator()
+                : Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: avatarUrl != null && avatarUrl!.isNotEmpty
+                            ? NetworkImage(avatarUrl!)
+                            : const AssetImage('images/kebab.png') as ImageProvider,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        userName ?? 'Anonimo',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
             const SizedBox(height: 8),
             Text(widget.text),
