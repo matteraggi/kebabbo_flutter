@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         page = TopKebabPage(currentPosition: _currentPosition!);
       case 4:
-        page = FeedPage();
+        page = const FeedPage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }

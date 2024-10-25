@@ -25,7 +25,7 @@ Ancora non fatte in kebabbo Web:
 - [x] Modulo consigliaci un kebabbaro (-> About)
 - [ ] Creare sezione feed
 - [ ] Testare link social in about da android
-- [ ] Sistemare bug mappa che ritorna alla posizione dell'utente 
+- [ ] Sistemare bug mappa che ritorna alla posizione dell'utente
 
 Hanno senso solo se molti kebabbari hanno le stats fatte bene:
 

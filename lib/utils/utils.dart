@@ -1,5 +1,7 @@
 import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+
 
 List<Map<String, dynamic>> fuzzySearchAndSort(
     List<Map<String, dynamic>> items, String query, String searchKey) {
@@ -59,4 +61,61 @@ List<Map<String, dynamic>> sortKebabs(
   });
 
   return kebabs;
+}
+
+
+
+bool isKebabOpen(Map<String, dynamic>? orariApertura) {
+  if (orariApertura == null) {
+    return false;
+  }
+  // Ottieni l'ora e il giorno corrente
+  DateTime now = DateTime.now();
+  String dayOfWeekEnglish = DateFormat('EEEE').format(now).toLowerCase(); // giorno in minuscolo
+
+  const Map<String, String> daysOfWeek = {
+    'monday': 'lunedì',
+    'tuesday': 'martedì',
+    'wednesday': 'mercoledì',
+    'thursday': 'giovedì',
+    'friday': 'venerdì',
+    'saturday': 'sabato',
+    'sunday': 'domenica',
+  };
+
+  String dayOfWeek = daysOfWeek[dayOfWeekEnglish]!; 
+  // Controlla se il giorno corrente è presente negli orari di apertura
+  if (orariApertura.containsKey(dayOfWeek)) {
+    // Ottieni gli orari di apertura per il giorno corrente
+    String orari = orariApertura[dayOfWeek];
+
+    // Dividi gli orari di apertura per virgola (se ci sono più fasce orarie)
+    List<String> orariList = orari.split(',');
+    for (String orario in orariList) {
+      // Dividi l'orario per trattino per ottenere l'ora di inizio e fine
+      List<String> startEnd = orario.split('-');
+      DateTime startTime = DateFormat('HH:mm').parse(startEnd[0]);
+      DateTime endTime = DateFormat('HH:mm').parse(startEnd[1]);
+
+      // Gestisci il caso in cui l'orario di chiusura sia dopo mezzanotte
+      if (endTime.isBefore(startTime)) {
+        endTime = endTime.add(Duration(days: 1));
+      }
+
+      // Crea un DateTime per l'ora corrente con la stessa data di startTime
+      DateTime nowWithStartTime = DateTime(
+        startTime.year,
+        startTime.month,
+        startTime.day,
+        now.hour,
+        now.minute,
+      );
+      // Controlla se l'ora corrente è compresa tra l'ora di inizio e fine
+      if (nowWithStartTime.isAfter(startTime) &&
+          nowWithStartTime.isBefore(endTime)) {
+        return true; // Il kebabbaro è aperto!
+      }
+    }
+  }
+  return false; // Il kebabbaro è chiuso
 }

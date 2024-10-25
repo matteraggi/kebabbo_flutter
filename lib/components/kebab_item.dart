@@ -24,6 +24,7 @@ class KebabListItem extends StatefulWidget {
   final double spicy;
   final double onion;
   final String tag;
+  final bool isOpen;
 
   const KebabListItem({
     super.key,
@@ -44,6 +45,7 @@ class KebabListItem extends StatefulWidget {
     required this.spicy,
     required this.onion,
     required this.tag,
+    required this.isOpen,
   });
 
   @override
@@ -162,7 +164,8 @@ class KebabListItemState extends State<KebabListItem> {
                             BottomButtonItem(
                                 linkMaps: widget.map,
                                 text: "Apri in Maps",
-                                icon: Icons.map),
+                                icon: Icons.map
+                                ),
                             /*
                             Container(
                               padding: const EdgeInsets.symmetric(

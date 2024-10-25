@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
@@ -45,6 +46,8 @@ class _SpecialPageState extends State<SpecialPage> {
             kebab['lng'],
           );
           kebab['distance'] = distanceInMeters / 1000;
+          kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
+
         }
 
         setState(() {
@@ -183,6 +186,7 @@ class _SpecialPageState extends State<SpecialPage> {
                                     spicy: (kebab['spicy'] ?? 0.0).toDouble(),
                                     onion: (kebab['onion'] ?? 0.0).toDouble(),
                                     tag: (kebab['tag'] ?? ''),
+                                    isOpen: kebab['isOpen'] ?? false,
                                   );
                                 },
                               ),

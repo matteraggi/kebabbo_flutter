@@ -9,11 +9,11 @@ class FeedListItem extends StatefulWidget {
   final String userId;
 
   const FeedListItem({
-    Key? key,
+    super.key,
     required this.text,
     required this.createdAt,
     required this.userId,
-  }) : super(key: key);
+  });
 
   @override
   _FeedListItemState createState() => _FeedListItemState();

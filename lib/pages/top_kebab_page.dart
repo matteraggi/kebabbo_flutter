@@ -51,6 +51,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
             kebab['lng'],
           );
           kebab['distance'] = distanceInMeters / 1000;
+          kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
         }
 
         // Sort the kebabs using the utility function
@@ -172,6 +173,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                       spicy: (kebab['spicy'] ?? 0.0).toDouble(),
                                       onion: (kebab['onion'] ?? 0.0).toDouble(),
                                       tag: (kebab['tag'] ?? ''),
+                                      isOpen: kebab['isOpen'] ?? false,
                                     );
                                   },
                                 ),

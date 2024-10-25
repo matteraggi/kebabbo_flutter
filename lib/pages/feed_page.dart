@@ -4,11 +4,13 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedPage extends StatefulWidget {
+
   const FeedPage({super.key});
 
   @override
   _FeedPageState createState() => _FeedPageState();
 }
+
 
 class _FeedPageState extends State<FeedPage> {
   List<Map<String, dynamic>> feedList = [];
