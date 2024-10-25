@@ -14,7 +14,7 @@ class GoogleLoginButton extends StatelessWidget {
     ///
     /// Web Client ID that you registered with Google Cloud.
     const webClientId =
-        '1072333391081-jq61dfl6nbvc7qnltcqjf65f7ma7om7n.apps.googleusercontent.com';
+        '1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com';
 
     /// TODO: update the iOS client ID with your own.
     ///
@@ -62,12 +62,7 @@ class GoogleLoginButton extends StatelessWidget {
           await _nativeGoogleSignIn();
         } else {
           await supabase.auth.signInWithOAuth(
-            OAuthProvider.google,
-            authScreenLaunchMode: kIsWeb
-                ? LaunchMode.platformDefault
-                : LaunchMode
-                    .externalApplication,
-            redirectTo: "https://kebabbo-flutter.vercel.app/"
+            OAuthProvider.google
           );
         }
       },
