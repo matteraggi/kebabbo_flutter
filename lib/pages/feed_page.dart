@@ -1,24 +1,24 @@
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedPage extends StatefulWidget {
-
   const FeedPage({super.key});
 
   @override
   _FeedPageState createState() => _FeedPageState();
 }
 
-
 class _FeedPageState extends State<FeedPage> {
   List<Map<String, dynamic>> feedList = [];
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
-
-  // Aggiungi un TextEditingController per gestire l'input dell'utente
+  Uint8List? imageBytes; // Variabile per memorizzare l'immagine
+  String? imagePath; // Variabile per il percorso dell'immagine
   final TextEditingController postController = TextEditingController();
 
   @override
@@ -27,7 +27,6 @@ class _FeedPageState extends State<FeedPage> {
     _checkAuthAndFetchFeed();
   }
 
-  // Verifica se l'utente è autenticato e, se sì, fetch del feed
   Future<void> _checkAuthAndFetchFeed() async {
     final session = Supabase.instance.client.auth.currentSession;
     if (session != null) {
@@ -40,15 +39,16 @@ class _FeedPageState extends State<FeedPage> {
     }
   }
 
-  // Fetch dei post da Supabase
   Future<void> _fetchFeed() async {
     try {
-      final PostgrestList response = await supabase.from('posts').select('*');
-
+      final PostgrestList response = await supabase
+          .from('posts')
+          .select('*')
+          .order('created_at',
+              ascending: false); // Ordina per timestamp in ordine decrescente
       if (mounted) {
         List<Map<String, dynamic>> posts =
             List<Map<String, dynamic>>.from(response as List);
-
         setState(() {
           feedList = posts;
           searchResultList = posts;
@@ -65,7 +65,6 @@ class _FeedPageState extends State<FeedPage> {
     }
   }
 
-  // Funzione per postare il testo su Supabase
   Future<void> _postFeed() async {
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) {
@@ -83,18 +82,62 @@ class _FeedPageState extends State<FeedPage> {
       return;
     }
 
-    try {
-      await supabase.from('posts').insert({
-        'text': text,
-        'user_id': user.id, // Aggiungi l'ID dell'utente autenticato
-        'created_at': DateTime.now().toIso8601String(), // Inserisci timestamp
-      });
+    String? imageUrl;
 
-      postController.clear(); // Pulisci il campo di input dopo aver postato
+    if (imageBytes != null) {
+      final filePath =
+          '${user.id}-${DateTime.now().millisecondsSinceEpoch}.png';
+      try {
+        await supabase.storage.from('posts').uploadBinary(
+              filePath,
+              imageBytes!,
+              fileOptions: const FileOptions(upsert: true),
+            );
+        imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
+      } catch (error) {
+        setState(() {
+          errorMessage = "Errore nel caricamento dell'immagine: $error";
+        });
+        return;
+      }
+    }
+
+    // Inserisci il post, includendo `imageUrl` solo se è presente
+    final Map<String, dynamic> postData = {
+      'text': text,
+      'user_id': user.id,
+      'created_at': DateTime.now().toIso8601String(),
+    };
+
+    if (imageUrl != null) {
+      postData['image_url'] = imageUrl;
+    }
+
+    try {
+      await supabase.from('posts').insert(postData);
+      postController.clear();
+      setState(() {
+        imageBytes = null; // Rimuovi l’immagine dopo il post
+        imagePath = null;
+      });
       await _fetchFeed(); // Refresh del feed dopo il post
     } catch (error) {
       setState(() {
         errorMessage = error.toString();
+      });
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      setState(() {
+        imageBytes = result.files.single.bytes;
+        imagePath = result.files.single.name;
       });
     }
   }
@@ -107,10 +150,8 @@ class _FeedPageState extends State<FeedPage> {
           : errorMessage != null
               ? Center(child: Text(errorMessage!))
               : SafeArea(
-                  minimum: const EdgeInsets.symmetric(
-                    vertical: 0,
-                    horizontal: 32,
-                  ),
+                  minimum:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 32),
                   child: Stack(
                     children: [
                       Column(
@@ -125,9 +166,8 @@ class _FeedPageState extends State<FeedPage> {
                                     Expanded(
                                       child: TextField(
                                         controller: postController,
-                                        maxLines:
-                                            null, // Permette l'espansione multilinea
-                                        minLines: 1, // Numero minimo di righe
+                                        maxLines: null,
+                                        minLines: 1,
                                         decoration: InputDecoration(
                                           hintText: "Inserisci un post...",
                                           border: OutlineInputBorder(
@@ -151,6 +191,37 @@ class _FeedPageState extends State<FeedPage> {
                                     ),
                                   ],
                                 ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: _pickImage,
+                                      icon: const Icon(
+                                          Icons.camera_alt), // Icona fotocamera
+                                    ),
+                                    const SizedBox(width: 8),
+                                    if (imagePath != null)
+                                      Text(
+                                        imagePath!,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: _pickImage,
+                                      child: const Text("Aggiungi foto"),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    if (imagePath != null)
+                                      Text(
+                                        imagePath!,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -163,6 +234,7 @@ class _FeedPageState extends State<FeedPage> {
                                   text: post['text'] ?? 'Testo non disponibile',
                                   createdAt: post['created_at'] ?? '',
                                   userId: post['user_id'],
+                                  imageUrl: post['image_url'] ?? '',
                                 );
                               },
                             ),

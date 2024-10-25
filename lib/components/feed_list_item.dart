@@ -7,12 +7,14 @@ class FeedListItem extends StatefulWidget {
   final String text;
   final String createdAt;
   final String userId;
+  final String imageUrl;
 
   const FeedListItem({
     super.key,
     required this.text,
     required this.createdAt,
     required this.userId,
+    required this.imageUrl,
   });
 
   @override
@@ -33,11 +35,8 @@ class _FeedListItemState extends State<FeedListItem> {
 
   Future<void> _fetchUserProfile(String userId) async {
     try {
-      final response = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', userId)
-          .single();
+      final response =
+          await supabase.from('profiles').select('*').eq('id', userId).single();
 
       setState(() {
         userName = response['username'] ?? 'Anonimo';
@@ -71,9 +70,11 @@ class _FeedListItemState extends State<FeedListItem> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: avatarUrl != null && avatarUrl!.isNotEmpty
-                            ? NetworkImage(avatarUrl!)
-                            : const AssetImage('images/kebab.png') as ImageProvider,
+                        backgroundImage:
+                            avatarUrl != null && avatarUrl!.isNotEmpty
+                                ? NetworkImage(avatarUrl!)
+                                : const AssetImage('images/kebab.png')
+                                    as ImageProvider,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -86,6 +87,11 @@ class _FeedListItemState extends State<FeedListItem> {
                   ),
             const SizedBox(height: 8),
             Text(widget.text),
+            const SizedBox(height: 8),
+            widget.imageUrl.isNotEmpty
+                ? Image.network(widget.imageUrl)
+                : const SizedBox
+                    .shrink(),
             const SizedBox(height: 8),
             Text(
               _formatTimestamp(widget.createdAt),
