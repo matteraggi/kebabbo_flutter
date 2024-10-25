@@ -92,17 +92,48 @@ class KebabListItemState extends State<KebabListItem> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                widget.name,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2, // Numero massimo di righe
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 22,
-                ),
-                textAlign: TextAlign.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    widget.tag == "kebab"
+                        ? "assets/images/kebabcolored.png"
+                        : "assets/images/sandwitch.png",
+                    height: 24,
+                    width: 24,
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Flexible(
+                    child: Text(
+                      widget.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 22,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
+              if (widget.isOpen)
+                const Text(
+                  "aperto",
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 37, 154, 41),
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic),
+                )
+              else
+                const Text(
+                  "Chiuso",
+                  style: TextStyle(
+                      color: red, fontSize: 12, fontStyle: FontStyle.italic),
+                ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -164,8 +195,7 @@ class KebabListItemState extends State<KebabListItem> {
                             BottomButtonItem(
                                 linkMaps: widget.map,
                                 text: "Apri in Maps",
-                                icon: Icons.map
-                                ),
+                                icon: Icons.map),
                             /*
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -185,7 +215,7 @@ class KebabListItemState extends State<KebabListItem> {
                             */
                             if (widget.fun >= 4)
                               Transform.rotate(
-                                angle: -0.2, // Ruota il badge verso sinistra
+                                angle: -0.2,
                                 child: const Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
