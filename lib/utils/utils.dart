@@ -4,9 +4,16 @@ import 'package:intl/intl.dart';
 
 
 List<Map<String, dynamic>> fuzzySearchAndSort(
-    List<Map<String, dynamic>> items, String query, String searchKey) {
+    List<Map<String, dynamic>> items, String query, String searchKey, bool showOnlyOpen, bool showOnlyKebab) {
+    List<Map<String, dynamic>> tempList = items;
   if (query.isEmpty) {
-    return items; // Return original list if query is empty
+    if (showOnlyOpen) {
+    tempList.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
+  }
+  if (showOnlyKebab) {
+    tempList.removeWhere((kebab) => kebab['tag'] != 'kebab');
+  }
+    return tempList; // Return original list if query is empty
   }
 
   final fuse = Fuzzy<Map<String, dynamic>>(items, options: FuzzyOptions(
@@ -25,14 +32,26 @@ List<Map<String, dynamic>> fuzzySearchAndSort(
   results.sort((a, b) {
     return (a.score).compareTo(b.score);
   });
-
-  return results.map((result) => result.item).toList();
+  tempList = results.map((result) => result.item).toList();
+  if (showOnlyOpen) {
+    tempList.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
+  }
+  if (showOnlyKebab) {
+    tempList.removeWhere((kebab) => kebab['tag'] != 'kebab');
+  }
+  return tempList;
 }
 
 List<Map<String, dynamic>> sortKebabs(
-    List<Map<String, dynamic>> kebabs, String orderByField, bool orderDirection, Position userPosition) {
+    List<Map<String, dynamic>> kebabs, String orderByField, bool orderDirection, Position userPosition, bool showOnlyOpen, bool showOnlyKebab) {
+  if (showOnlyOpen) {
+    kebabs.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
+  }
 
-  // Calculate distance for each kebab if orderByField is 'distance'
+  // Filtra per "Solo kebab"
+  if (showOnlyKebab) {
+    kebabs.removeWhere((kebab) => kebab['tag'] != 'kebab');
+  }  // Calculate distance for each kebab if orderByField is 'distance'
   if (orderByField == 'distance') {
     for (var kebab in kebabs) {
       double distanceInMeters = Geolocator.distanceBetween(
@@ -99,7 +118,7 @@ bool isKebabOpen(Map<String, dynamic>? orariApertura) {
 
       // Gestisci il caso in cui l'orario di chiusura sia dopo mezzanotte
       if (endTime.isBefore(startTime)) {
-        endTime = endTime.add(Duration(days: 1));
+        endTime = endTime.add(const Duration(days: 1));
       }
 
       // Crea un DateTime per l'ora corrente con la stessa data di startTime

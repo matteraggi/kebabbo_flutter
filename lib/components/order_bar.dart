@@ -6,12 +6,16 @@ class OrderBar extends StatelessWidget {
   final bool orderDirection;
   final Function(String) onChangeOrderByField;
   final Function(bool) onChangeOrderDirection;
+  final Function() changeShowOnlyKebab;
+  final bool showOnlyKebab;
 
   const OrderBar({super.key, 
     required this.orderByField,
     required this.orderDirection,
     required this.onChangeOrderByField,
     required this.onChangeOrderDirection,
+    required this.changeShowOnlyKebab,
+    required this.showOnlyKebab,
   });
 
   @override
@@ -26,14 +30,39 @@ class OrderBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Ordina per:",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+            
+                                  SizedBox(
+  width: 100, // Set a fixed width for the AnimatedSwitcher
+  child: AnimatedSwitcher(
+    duration: const Duration(milliseconds: 300),
+    transitionBuilder: (Widget child, Animation<double> animation) {
+      return  FadeTransition( // Use FadeTransition for animation
+        opacity: animation,
+        child: child,
+      );
+    },
+    child: GestureDetector(
+      onTap: () {
+          changeShowOnlyKebab();
+      },
+      child: Container(
+        key: ValueKey<bool>(showOnlyKebab),
+          width: 100, // Set a fixed width
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+        decoration: BoxDecoration(
+          color: Colors.white,
+
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child:Text(
+                showOnlyKebab ? 'Solo kebab': 'Tutto',
+                          textAlign: TextAlign.center,
+                style: const TextStyle(color: red, fontWeight: FontWeight.bold),
               ),
-            ),
+      ),
+    ),
+  ),
+),
             Row(
               children: [
                 DropdownButtonHideUnderline(

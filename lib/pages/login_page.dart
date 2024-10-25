@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(_isLoading ? 'Sending...' : 'Ricevi Link'),
           ),
           const SizedBox(height: 18),
-          GoogleLoginButton()
+          const GoogleLoginButton()
         ],
       ),
     );
