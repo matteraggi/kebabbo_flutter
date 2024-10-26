@@ -206,7 +206,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                               ),
                                               const SizedBox(width: 6),
                                               Text(
-                                                'Solo aperti',
+                                                'Aperti ora',
                                                 style: TextStyle(
                                                   color: showOnlyOpen
                                                       ? Colors.white

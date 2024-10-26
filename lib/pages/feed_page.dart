@@ -169,7 +169,7 @@ class _FeedPageState extends State<FeedPage> {
                                     maxLines: null,
                                     minLines: 1,
                                     decoration: InputDecoration(
-                                      hintText: "Inserisci un post...",
+                                      hintText: "Scrivi un post...",
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -186,10 +186,6 @@ class _FeedPageState extends State<FeedPage> {
                                           IconButton(
                                             onPressed: _pickImage,
                                             icon: const Icon(Icons.photo),
-                                          ),
-                                          IconButton(
-                                            onPressed: _pickImage,
-                                            icon: const Icon(Icons.camera_alt),
                                           ),
                                         ],
                                       ),
@@ -213,16 +209,6 @@ class _FeedPageState extends State<FeedPage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            // Display selected image path if available
-                            if (imagePath != null)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 16),
-                                child: Text(
-                                  imagePath!,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ),
                           ],
                         ),
                       ),

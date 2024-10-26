@@ -86,20 +86,8 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(title: const Text('Sign In')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          const Text('Sign in con un link alla tua mail'),
-          const SizedBox(height: 18),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-          ),
-          const SizedBox(height: 18),
-          ElevatedButton(
-            onPressed: _isLoading ? null : _signIn,
-            child: Text(_isLoading ? 'Sending...' : 'Ricevi Link'),
-          ),
-          const SizedBox(height: 18),
-          const GoogleLoginButton()
+        children: const [
+          GoogleLoginButton()
         ],
       ),
     );

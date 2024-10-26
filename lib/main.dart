@@ -169,6 +169,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: page,
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
         currentIndex: selectedIndex,
         onTap: (index) {
           setState(() {
