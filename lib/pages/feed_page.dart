@@ -108,7 +108,7 @@ class _FeedPageState extends State<FeedPage> {
       'user_id': user.id,
       'created_at': DateTime.now().toIso8601String(),
     };
-
+ 
     if (imageUrl != null) {
       postData['image_url'] = imageUrl;
     }
