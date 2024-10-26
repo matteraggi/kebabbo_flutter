@@ -1,9 +1,13 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
+import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+
+const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -13,14 +17,18 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  final _usernameController = TextEditingController();
+  String _username = "";
   String? _avatarUrl;
+  int _postCount = 0;
   bool _loading = true;
+  int _favoritesCount = 0;
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getProfile();
+    _getPostCount();
   }
 
   Future<void> _getProfile() async {
@@ -32,8 +40,9 @@ class _AccountPageState extends State<AccountPage> {
       final userId = supabase.auth.currentSession!.user.id;
       final data =
           await supabase.from('profiles').select().eq('id', userId).single();
-      _usernameController.text = (data['username'] ?? '') as String;
+      _username = (data['username'] ?? '') as String;
       _avatarUrl = (data['avatar_url'] ?? '') as String;
+      _favoritesCount = (data['favorites'] as List).length;
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -54,11 +63,10 @@ class _AccountPageState extends State<AccountPage> {
       _loading = true;
     });
 
-    final userName = _usernameController.text.trim();
     final user = supabase.auth.currentUser;
     final updates = {
       'id': user!.id,
-      'username': userName,
+      'username': _username,
       'avatar_url': _avatarUrl,
       'updated_at': DateTime.now().toIso8601String(),
     };
@@ -83,6 +91,44 @@ class _AccountPageState extends State<AccountPage> {
         });
       }
     }
+  }
+
+  Future<void> _changeUsername() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Change Username'),
+          content: TextField(
+            controller: _usernameController,
+            maxLength: 12, // Limite di 12 caratteri
+            decoration: const InputDecoration(
+              hintText: 'Enter new username',
+              counterText: '', // Rimuove il contatore di caratteri visualizzato
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                setState(() {
+                  _username = _usernameController.text.trim();
+                });
+                await _updateProfile();
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _changeAvatar() async {
@@ -121,45 +167,162 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
+  Future<void> _getPostCount() async {
+    try {
+      final userId = supabase.auth.currentSession!.user.id;
+      final postCount = await supabase
+          .from('posts')
+          .select('*')
+          .eq('user_id', userId)
+          .count(CountOption.exact);
+
+      setState(() {
+        _postCount = postCount.count;
+      });
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load post count')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Il tuo profilo')),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          Center(
-            child: Stack(
-              alignment: Alignment.bottomRight,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: (_avatarUrl != null &&
-                          _avatarUrl!.isNotEmpty)
-                      ? NetworkImage(_avatarUrl!)
-                      : const AssetImage('images/kebab.png') as ImageProvider,
+                const SizedBox(height: 30),
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage:
+                          (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                              ? NetworkImage(_avatarUrl!)
+                              : const AssetImage('images/kebab.png')
+                                  as ImageProvider,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.camera_alt),
+                      color: red,
+                      onPressed: _changeAvatar,
+                    ),
+                  ],
                 ),
-                IconButton(
-                  icon: const Icon(Icons.camera_alt),
-                  color: red,
-                  onPressed: _changeAvatar,
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          "assets/images/kebabcolored.png",
+                          height: 24,
+                          width: 24,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _username,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: _changeUsername,
+                          child: const Text('edit'),
+                        ),
+                        const SizedBox(width: 3),
+                        const Text(' | '),
+                        const SizedBox(width: 3),
+                        TextButton(
+                          onPressed: _signOut,
+                          child: const Text('sign out'),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 18),
-          TextFormField(
-            controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'User Name'),
-          ),
-          const SizedBox(height: 18),
-          ElevatedButton(
-            onPressed: _loading ? null : _updateProfile,
-            child: Text(_loading ? 'Saving...' : 'Update'),
-          ),
-          const SizedBox(height: 18),
-          TextButton(onPressed: _signOut, child: const Text('Sign Out')),
-        ],
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      // Azione per la sezione dei post
+                      // Ad esempio, naviga alla pagina dei post dell'utente
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => UserPostsPage()));
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          "$_postCount", // Numero di post
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'Post',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      // Azione per la sezione dei preferiti
+                      // Ad esempio, naviga alla pagina dei preferiti dell'utente
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FavoritesPage()));
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          '$_favoritesCount', // Numero di preferiti
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'Preferiti',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -172,7 +335,7 @@ class _AccountPageState extends State<AccountPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Unexpected error occurred')),
+          const SnackBar(content: Text('Unexpected error occurred')),
         );
       }
     }
