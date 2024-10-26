@@ -90,8 +90,7 @@ class _FeedListItemState extends State<FeedListItem> {
             const SizedBox(height: 8),
             widget.imageUrl.isNotEmpty
                 ? Image.network(widget.imageUrl)
-                : const SizedBox
-                    .shrink(),
+                : const SizedBox.shrink(),
             const SizedBox(height: 8),
             Text(
               _formatTimestamp(widget.createdAt),

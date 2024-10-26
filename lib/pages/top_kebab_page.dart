@@ -37,9 +37,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
 
   Future<void> fetchKebab(Position userPosition) async {
     try {
-      final PostgrestList response = await supabase
-          .from('kebab')
-          .select('*');
+      final PostgrestList response = await supabase.from('kebab').select('*');
 
       if (mounted) {
         List<Map<String, dynamic>> kebabs =
@@ -57,7 +55,8 @@ class _TopKebabPageState extends State<TopKebabPage> {
         }
 
         // Sort the kebabs using the utility function
-        kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition, showOnlyOpen, showOnlyKebab);
+        kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition,
+            showOnlyOpen, showOnlyKebab);
 
         setState(() {
           dashList = kebabs;
@@ -77,7 +76,8 @@ class _TopKebabPageState extends State<TopKebabPage> {
 
   void searchKebab(String query) {
     setState(() {
-      searchResultList = fuzzySearchAndSort(dashList, query, 'name', showOnlyOpen,showOnlyKebab);
+      searchResultList = fuzzySearchAndSort(
+          dashList, query, 'name', showOnlyOpen, showOnlyKebab);
     });
   }
 
@@ -129,84 +129,101 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                 },
                               ),
                               const SizedBox(height: 16),
-Padding(
-  padding: const EdgeInsets.only(bottom: 16.0),
-  child: Row(
-    children: [
-      // Make the TextField take up the maximum available space
-      Expanded(
-        child: TextField(
-          controller: searchController,
-          onChanged: searchKebab,
-          decoration: InputDecoration(
-            hintText: "Cerca un kebabbaro...",
-            hintStyle: const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 0.0,
-              horizontal: 20.0,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide.none,
-            ),
-            prefixIcon: const Icon(Icons.search),
-          ),
-        ),
-      ),
-      const SizedBox(width: 8), // Spacing between TextField and button
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: Row(
+                                  children: [
+                                    // Make the TextField take up the maximum available space
+                                    Expanded(
+                                      child: TextField(
+                                        controller: searchController,
+                                        onChanged: searchKebab,
+                                        decoration: InputDecoration(
+                                          hintText: "Cerca un kebabbaro...",
+                                          hintStyle: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            vertical: 0.0,
+                                            horizontal: 20.0,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          prefixIcon: const Icon(Icons.search),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        width:
+                                            8), // Spacing between TextField and button
 
-      // Set the button to a constrained width and height for consistent sizing
-      ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 120, // Set a max width
-          minWidth: 80,  // Optional: set a minimum width
-        ),
-        child: GestureDetector(
-          onTap: () {
-            setState(() {
-              showOnlyOpen = !showOnlyOpen;
-              fetchKebab(widget.currentPosition);
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16), // Inner padding
-            decoration: BoxDecoration(
-              color: showOnlyOpen ? red : Colors.white,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  showOnlyOpen ? Icons.check : Icons.close,
-                  color: showOnlyOpen ?Colors.white: Colors.black,
-                  size: 20,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Solo aperti',
-                  style: TextStyle(
-                    color: showOnlyOpen ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-                          
-                            Expanded(
+                                    // Set the button to a constrained width and height for consistent sizing
+                                    ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 120, // Set a max width
+                                        minWidth:
+                                            80, // Optional: set a minimum width
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            showOnlyOpen = !showOnlyOpen;
+                                            fetchKebab(widget.currentPosition);
+                                          });
+                                        },
+                                        child: AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 200),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15,
+                                              horizontal: 16), // Inner padding
+                                          decoration: BoxDecoration(
+                                            color: showOnlyOpen
+                                                ? red
+                                                : Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                showOnlyOpen
+                                                    ? Icons.check
+                                                    : Icons.close,
+                                                color: showOnlyOpen
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                size: 20,
+                                              ),
+                                              const SizedBox(width: 6),
+                                              Text(
+                                                'Solo aperti',
+                                                style: TextStyle(
+                                                  color: showOnlyOpen
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
                                 child: ListView.builder(
                                   itemCount: searchResultList.length,
                                   itemBuilder: (context, index) {

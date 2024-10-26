@@ -2,30 +2,30 @@ import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
-
-List<Map<String, dynamic>> fuzzySearchAndSort(
-    List<Map<String, dynamic>> items, String query, String searchKey, bool showOnlyOpen, bool showOnlyKebab) {
-    List<Map<String, dynamic>> tempList = items;
+List<Map<String, dynamic>> fuzzySearchAndSort(List<Map<String, dynamic>> items,
+    String query, String searchKey, bool showOnlyOpen, bool showOnlyKebab) {
+  List<Map<String, dynamic>> tempList = items;
   if (query.isEmpty) {
     if (showOnlyOpen) {
-    tempList.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
-  }
-  if (showOnlyKebab) {
-    tempList.removeWhere((kebab) => kebab['tag'] != 'kebab');
-  }
+      tempList.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
+    }
+    if (showOnlyKebab) {
+      tempList.removeWhere((kebab) => kebab['tag'] != 'kebab');
+    }
     return tempList; // Return original list if query is empty
   }
 
-  final fuse = Fuzzy<Map<String, dynamic>>(items, options: FuzzyOptions(
-    keys: [
-      WeightedKey(
-        name: searchKey,
-        getter: (item) => item[searchKey] ?? '',
-        weight: 1.0,
-      )
-    ],
-    threshold: 1, // You can adjust this threshold
-  ));
+  final fuse = Fuzzy<Map<String, dynamic>>(items,
+      options: FuzzyOptions(
+        keys: [
+          WeightedKey(
+            name: searchKey,
+            getter: (item) => item[searchKey] ?? '',
+            weight: 1.0,
+          )
+        ],
+        threshold: 1, // You can adjust this threshold
+      ));
 
   final results = fuse.search(query);
 
@@ -43,7 +43,12 @@ List<Map<String, dynamic>> fuzzySearchAndSort(
 }
 
 List<Map<String, dynamic>> sortKebabs(
-    List<Map<String, dynamic>> kebabs, String orderByField, bool orderDirection, Position userPosition, bool showOnlyOpen, bool showOnlyKebab) {
+    List<Map<String, dynamic>> kebabs,
+    String orderByField,
+    bool orderDirection,
+    Position userPosition,
+    bool showOnlyOpen,
+    bool showOnlyKebab) {
   if (showOnlyOpen) {
     kebabs.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
   }
@@ -51,7 +56,7 @@ List<Map<String, dynamic>> sortKebabs(
   // Filtra per "Solo kebab"
   if (showOnlyKebab) {
     kebabs.removeWhere((kebab) => kebab['tag'] != 'kebab');
-  }  // Calculate distance for each kebab if orderByField is 'distance'
+  } // Calculate distance for each kebab if orderByField is 'distance'
   if (orderByField == 'distance') {
     for (var kebab in kebabs) {
       double distanceInMeters = Geolocator.distanceBetween(
@@ -82,15 +87,14 @@ List<Map<String, dynamic>> sortKebabs(
   return kebabs;
 }
 
-
-
 bool isKebabOpen(Map<String, dynamic>? orariApertura) {
   if (orariApertura == null) {
     return false;
   }
   // Ottieni l'ora e il giorno corrente
   DateTime now = DateTime.now();
-  String dayOfWeekEnglish = DateFormat('EEEE').format(now).toLowerCase(); // giorno in minuscolo
+  String dayOfWeekEnglish =
+      DateFormat('EEEE').format(now).toLowerCase(); // giorno in minuscolo
 
   const Map<String, String> daysOfWeek = {
     'monday': 'lunedì',
@@ -102,7 +106,7 @@ bool isKebabOpen(Map<String, dynamic>? orariApertura) {
     'sunday': 'domenica',
   };
 
-  String dayOfWeek = daysOfWeek[dayOfWeekEnglish]!; 
+  String dayOfWeek = daysOfWeek[dayOfWeekEnglish]!;
   // Controlla se il giorno corrente è presente negli orari di apertura
   if (orariApertura.containsKey(dayOfWeek)) {
     // Ottieni gli orari di apertura per il giorno corrente

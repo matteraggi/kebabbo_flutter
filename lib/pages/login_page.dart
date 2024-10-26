@@ -19,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
 
-  
   Future<void> _signIn() async {
     try {
       setState(() {

@@ -61,9 +61,7 @@ class GoogleLoginButton extends StatelessWidget {
         if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
           await _nativeGoogleSignIn();
         } else {
-          await supabase.auth.signInWithOAuth(
-            OAuthProvider.google
-          );
+          await supabase.auth.signInWithOAuth(OAuthProvider.google);
         }
       },
       child: Row(

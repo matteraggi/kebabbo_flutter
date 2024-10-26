@@ -47,7 +47,6 @@ class _SpecialPageState extends State<SpecialPage> {
           );
           kebab['distance'] = distanceInMeters / 1000;
           kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
-
         }
 
         setState(() {

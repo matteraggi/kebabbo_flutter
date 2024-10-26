@@ -7,7 +7,7 @@ import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
- 
+
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kebabbo',
@@ -78,7 +77,7 @@ extension ContextExtension on BuildContext {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
- 
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -150,7 +149,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     switch (selectedIndex) {
       case 0:
-        page =     supabase.auth.currentSession == null ? const LoginPage() : const AccountPage();
+        page = supabase.auth.currentSession == null
+            ? const LoginPage()
+            : const AccountPage();
       case 1:
         page = const ToolsPage();
       case 2:
