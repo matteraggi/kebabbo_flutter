@@ -56,7 +56,7 @@ class OrderBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      showOnlyKebab ? 'SOLO KEBAB' : 'TUTTO',
+                      showOnlyKebab ? 'KEBAB' : 'TUTTO',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           color: red, fontWeight: FontWeight.bold),
