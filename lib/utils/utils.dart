@@ -111,6 +111,9 @@ bool isKebabOpen(Map<String, dynamic>? orariApertura) {
   if (orariApertura.containsKey(dayOfWeek)) {
     // Ottieni gli orari di apertura per il giorno corrente
     String orari = orariApertura[dayOfWeek];
+    if (orari == "chiuso") {
+      return false;
+    }
 
     // Dividi gli orari di apertura per virgola (se ci sono più fasce orarie)
     List<String> orariList = orari.split(',');
