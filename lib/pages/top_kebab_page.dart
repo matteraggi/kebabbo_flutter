@@ -58,6 +58,22 @@ class _TopKebabPageState extends State<TopKebabPage> {
         kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition,
             showOnlyOpen, showOnlyKebab);
 
+        // Aggiungi lo stato di "preferito" per ciascun kebab
+        final user = supabase.auth.currentUser;
+        if (user != null) {
+          final userResponse = await supabase
+              .from('profiles')
+              .select('favorites')
+              .eq('id', user.id)
+              .single();
+
+          final List<String> favoriteIds =
+              List<String>.from(userResponse['favorites'] ?? []);
+          for (var kebab in kebabs) {
+            kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
+          }
+        }
+
         setState(() {
           dashList = kebabs;
           searchResultList = kebabs;
@@ -71,6 +87,56 @@ class _TopKebabPageState extends State<TopKebabPage> {
           isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> toggleFavorite(String kebabId) async {
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Preferiti solo per utenti registrati"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final kebabIndex = dashList
+        .indexWhere((kebab) => kebab['id'].toString() == kebabId.toString());
+    if (kebabIndex != -1) {
+      final isCurrentlyFavorite = dashList[kebabIndex]['isFavorite'];
+      final updatedFavorites = List<String>.from(
+        dashList
+            .where((kebab) => kebab['isFavorite'])
+            .map((k) => k['id'].toString()),
+      );
+
+      // Log stato attuale
+      print("Stato preferito attuale per $kebabId: $isCurrentlyFavorite");
+
+      if (isCurrentlyFavorite) {
+        updatedFavorites.remove(kebabId);
+        print("Rimosso $kebabId dai preferiti.");
+      } else {
+        updatedFavorites.add(kebabId);
+        print("Aggiunto $kebabId ai preferiti.");
+      }
+
+      // Effettua aggiornamento su Supabase
+      await supabase
+          .from('profiles')
+          .update({'favorites': updatedFavorites}).eq('id', user.id);
+
+      // Aggiorna lo stato in dashList
+      setState(() {
+        dashList[kebabIndex]['isFavorite'] = !isCurrentlyFavorite;
+      });
+
+      // Log del nuovo stato
+      print("Nuovo stato preferito per $kebabId: ${!isCurrentlyFavorite}");
+    } else {
+      print("Kebab con id $kebabId non trovato in dashList.");
     }
   }
 
@@ -229,6 +295,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                   itemBuilder: (context, index) {
                                     final kebab = searchResultList[index];
                                     return KebabListItem(
+                                      id: kebab['id'].toString(),
                                       name: kebab['name'] ?? '',
                                       description: kebab['description'] ?? '',
                                       rating:
@@ -245,13 +312,17 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                       lng: (kebab['lng'] ?? 0.0).toDouble(),
                                       distance:
                                           (kebab['distance'] ?? 0.0).toDouble(),
-                                      vegetables: (kebab['vegetables'] ?? 0.0).toDouble(),
+                                      vegetables: (kebab['vegetables'] ?? 0.0)
+                                          .toDouble(),
                                       yogurt:
                                           (kebab['yogurt'] ?? 0.0).toDouble(),
                                       spicy: (kebab['spicy'] ?? 0.0).toDouble(),
                                       onion: (kebab['onion'] ?? 0.0).toDouble(),
                                       tag: (kebab['tag'] ?? ''),
                                       isOpen: kebab['isOpen'] ?? false,
+                                      isFavorite: kebab['isFavorite'] ?? false,
+                                      onFavoriteToggle: () => toggleFavorite(
+                                          kebab['id'].toString()),
                                     );
                                   },
                                 ),

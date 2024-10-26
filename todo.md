@@ -25,12 +25,15 @@ Ancora non fatte in kebabbo Web:
 - [x] Modulo consigliaci un kebabbaro (-> About)
 - [x] Creare sezione feed
 - [ ] Testare link social in about da android
+- [ ] Lista kebab preferiti
+- [ ] Commenti post
+- [ ] Reazioni post
+- [ ] Numero di post fatti
 
 Hanno senso solo se molti kebabbari hanno le stats fatte bene:
 
 - [ ] Ricerca avanzata (build your kebab in db) (-> Build)
 - [ ] Possibilità di confrontare stats di due kebabbari (top kebab)
-
 
 Extra:
 

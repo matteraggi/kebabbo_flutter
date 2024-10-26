@@ -49,6 +49,23 @@ class _SpecialPageState extends State<SpecialPage> {
           kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
         }
 
+
+        // Aggiungi lo stato di "preferito" per ciascun kebab
+        final user = supabase.auth.currentUser;
+        if (user != null) {
+          final userResponse = await supabase
+              .from('profiles')
+              .select('favorites')
+              .eq('id', user.id)
+              .single();
+
+          final List<String> favoriteIds =
+              List<String>.from(userResponse['favorites'] ?? []);
+          for (var kebab in kebabs) {
+            kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
+          }
+        }
+
         setState(() {
           dashList = kebabs;
           isLoading = false;
@@ -63,6 +80,34 @@ class _SpecialPageState extends State<SpecialPage> {
       }
     }
   }
+
+    Future<void> toggleFavorite(String kebabId) async {
+    final user = supabase.auth.currentUser;
+    if (user == null) return;
+
+    final kebabIndex = dashList.indexWhere((kebab) => kebab['id'] == kebabId);
+    if (kebabIndex != -1) {
+      final isCurrentlyFavorite = dashList[kebabIndex]['isFavorite'];
+      final updatedFavorites = List<String>.from(
+          dashList.where((kebab) => kebab['isFavorite']).map((k) => k['id'].toString()));
+
+      if (isCurrentlyFavorite) {
+        updatedFavorites.remove(kebabId);
+      } else {
+        updatedFavorites.add(kebabId);
+      }
+
+      await supabase
+          .from('profiles')
+          .update({'favorites': updatedFavorites})
+          .eq('id', user.id);
+
+      setState(() {
+        dashList[kebabIndex]['isFavorite'] = !isCurrentlyFavorite;
+      });
+    }
+  }
+
 
   void onTabChange(String tableName) {
     setState(() {
@@ -151,7 +196,7 @@ class _SpecialPageState extends State<SpecialPage> {
                     : SafeArea(
                         minimum: const EdgeInsets.symmetric(
                           vertical: 0,
-                          horizontal: 32,
+                          horizontal: 16,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,6 +210,7 @@ class _SpecialPageState extends State<SpecialPage> {
                                 itemBuilder: (context, index) {
                                   final kebab = dashList[index];
                                   return KebabListItem(
+                                    id: kebab['id'].toString(),
                                     name: kebab['name'] ?? '',
                                     description: kebab['description'] ?? '',
                                     rating: (kebab['rating'] ?? 0.0).toDouble(),
@@ -186,6 +232,8 @@ class _SpecialPageState extends State<SpecialPage> {
                                     onion: (kebab['onion'] ?? 0.0).toDouble(),
                                     tag: (kebab['tag'] ?? ''),
                                     isOpen: kebab['isOpen'] ?? false,
+                                    isFavorite: kebab['isFavorite'] ?? false,
+                                    onFavoriteToggle: () => toggleFavorite(kebab['id'].toString()),
                                   );
                                 },
                               ),
