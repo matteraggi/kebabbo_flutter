@@ -145,105 +145,108 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : errorMessage != null
-              ? Center(child: Text(errorMessage!))
-              : SafeArea(
-                  minimum:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 32),
-                  child: Stack(
+  body: isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : errorMessage != null
+          ? Center(child: Text(errorMessage!))
+          : SafeArea(
+              minimum: const EdgeInsets.symmetric(vertical: 0, horizontal: 32),
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: Column(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Column(
+                          children: [
+                            // Row containing the TextField and Icons
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: postController,
-                                        maxLines: null,
-                                        minLines: 1,
-                                        decoration: InputDecoration(
-                                          hintText: "Inserisci un post...",
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                Expanded(
+                                  child: TextField(
+                                    controller: postController,
+                                    maxLines: null,
+                                    minLines: 1,
+                                    decoration: InputDecoration(
+                                      hintText: "Inserisci un post...",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.grey[200],
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                      // Trailing icons: Gallery and Camera inside the TextField
+                                      suffixIcon: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            onPressed: _pickImage,
+                                            icon: const Icon(Icons.photo),
                                           ),
-                                          filled: true,
-                                          fillColor: Colors.grey[200],
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 12,
+                                          IconButton(
+                                            onPressed: _pickImage,
+                                            icon: const Icon(Icons.camera_alt),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    ElevatedButton(
-                                      onPressed: _postFeed,
-                                      child: const Text("Posta"),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: _pickImage,
-                                      icon: const Icon(
-                                          Icons.camera_alt), // Icona fotocamera
+                                const SizedBox(width: 8),
+                                // Send IconButton wrapped in a red container
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: red,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: IconButton(
+                                    onPressed: _postFeed,
+                                    icon: const Icon(
+                                      Icons.send,
+                                      color: Colors.white, // White icon inside red container
                                     ),
-                                    const SizedBox(width: 8),
-                                    if (imagePath != null)
-                                      Text(
-                                        imagePath!,
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: _pickImage,
-                                      child: const Text("Aggiungi foto"),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    if (imagePath != null)
-                                      Text(
-                                        imagePath!,
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                  ],
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: searchResultList.length,
-                              itemBuilder: (context, index) {
-                                final post = searchResultList[index];
-                                return FeedListItem(
-                                  text: post['text'] ?? 'Testo non disponibile',
-                                  createdAt: post['created_at'] ?? '',
-                                  userId: post['user_id'],
-                                  imageUrl: post['image_url'] ?? '',
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            // Display selected image path if available
+                            if (imagePath != null)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16),
+                                child: Text(
+                                  imagePath!,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      // Posts list display
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: searchResultList.length,
+                          itemBuilder: (context, index) {
+                            final post = searchResultList[index];
+                            return FeedListItem(
+                              text: post['text'] ?? 'Testo non disponibile',
+                              createdAt: post['created_at'] ?? '',
+                              userId: post['user_id'],
+                              imageUrl: post['image_url'] ?? '',
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
-                ),
-    );
+                ],
+              ),
+            ),
+);
+
   }
 }
