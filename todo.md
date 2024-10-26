@@ -23,9 +23,8 @@ Ancora non fatte in kebabbo Web:
 - [x] Spostare special da un'altra parte che tanto viene visto meno (top kebab)
 - [x] gestione tag (panino, kebab, altro,...) (top kebab)
 - [x] Modulo consigliaci un kebabbaro (-> About)
-- [ ] Creare sezione feed
+- [x] Creare sezione feed
 - [ ] Testare link social in about da android
-- [ ] Sistemare bug mappa che ritorna alla posizione dell'utente
 
 Hanno senso solo se molti kebabbari hanno le stats fatte bene:
 

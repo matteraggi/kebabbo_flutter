@@ -150,7 +150,7 @@ class _FeedPageState extends State<FeedPage> {
       : errorMessage != null
           ? Center(child: Text(errorMessage!))
           : SafeArea(
-              minimum: const EdgeInsets.symmetric(vertical: 0, horizontal: 32),
+              minimum: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
               child: Stack(
                 children: [
                   Column(

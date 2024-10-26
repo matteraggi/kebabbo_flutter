@@ -107,7 +107,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                   : SafeArea(
                       minimum: const EdgeInsets.symmetric(
                         vertical: 0,
-                        horizontal: 32,
+                        horizontal: 16,
                       ),
                       child: Stack(
                         children: [
@@ -245,7 +245,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                       lng: (kebab['lng'] ?? 0.0).toDouble(),
                                       distance:
                                           (kebab['distance'] ?? 0.0).toDouble(),
-                                      meat: (kebab['meat'] ?? 0.0).toDouble(),
+                                      vegetables: (kebab['vegetables'] ?? 0.0).toDouble(),
                                       yogurt:
                                           (kebab['yogurt'] ?? 0.0).toDouble(),
                                       spicy: (kebab['spicy'] ?? 0.0).toDouble(),

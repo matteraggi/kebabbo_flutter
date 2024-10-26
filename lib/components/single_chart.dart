@@ -3,14 +3,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 class SingleChart extends StatefulWidget {
-  final double meat;
+  final double vegetables;
   final double yogurt;
   final double spicy;
   final double onion;
 
   const SingleChart({
     super.key,
-    required this.meat,
+    required this.vegetables,
     required this.yogurt,
     required this.spicy,
     required this.onion,
@@ -28,7 +28,7 @@ class _SingleChartState extends State<SingleChart> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.meat == 0 ||
+    if (widget.vegetables == 0 ||
         widget.yogurt == 0 ||
         widget.spicy == 0 ||
         widget.onion == 0) {
@@ -107,7 +107,7 @@ class _SingleChartState extends State<SingleChart> {
       lineBarsData: [
         LineChartBarData(
           spots: [
-            FlSpot(0, widget.meat),
+            FlSpot(0, widget.vegetables),
             FlSpot(1, widget.yogurt),
             FlSpot(2, widget.spicy),
             FlSpot(3, widget.onion),
@@ -142,7 +142,7 @@ class _SingleChartState extends State<SingleChart> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = const Text('Carne', style: style);
+        text = const Text('Verdura', style: style);
         break;
       case 1:
         text = const Text('Yogurt', style: style);

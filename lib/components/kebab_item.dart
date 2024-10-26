@@ -19,7 +19,7 @@ class KebabListItem extends StatefulWidget {
   final double lat;
   final double lng;
   final double distance;
-  final double meat;
+  final double vegetables;
   final double yogurt;
   final double spicy;
   final double onion;
@@ -40,7 +40,7 @@ class KebabListItem extends StatefulWidget {
     required this.lat,
     required this.lng,
     required this.distance,
-    required this.meat,
+    required this.vegetables,
     required this.yogurt,
     required this.spicy,
     required this.onion,
@@ -183,7 +183,7 @@ class KebabListItemState extends State<KebabListItem> {
                         SingleStat(label: "Menu", number: widget.menu),
                         const SizedBox(height: 16),
                         SingleChart(
-                          meat: widget.meat,
+                          vegetables: widget.vegetables,
                           yogurt: widget.yogurt,
                           spicy: widget.spicy,
                           onion: widget.onion,
