@@ -188,7 +188,8 @@ class _FeedPageState extends State<FeedPage> {
                                             children: [
                                               IconButton(
                                                 onPressed: _pickImage,
-                                                icon: (imagePath != null && imagePath!.isNotEmpty)
+                                                icon: (imagePath != null &&
+                                                        imagePath!.isNotEmpty)
                                                     ? const Icon(Icons.photo,
                                                         color: red)
                                                     : const Icon(Icons.photo),
