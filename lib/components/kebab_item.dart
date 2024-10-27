@@ -29,6 +29,7 @@ class KebabListItem extends StatefulWidget {
   final bool isOpen;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
+  final bool special;
 
   const KebabListItem({
     super.key,
@@ -53,6 +54,7 @@ class KebabListItem extends StatefulWidget {
     required this.isOpen,
     required this.isFavorite,
     required this.onFavoriteToggle,
+    required this.special,
   });
 
   @override
@@ -231,17 +233,18 @@ class KebabListItemState extends State<KebabListItem> {
             onExpansionChanged: (bool expanding) =>
                 setState(() => isExpanded = expanding),
           ),
-          Positioned(
-            top: 8,
-            right: 8,
-            child: IconButton(
-              icon: Icon(
-                widget.isFavorite ? Icons.bookmark : Icons.bookmark_border,
-                color: widget.isFavorite ? red : Colors.grey,
+          if (!widget.special)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                icon: Icon(
+                  widget.isFavorite ? Icons.bookmark : Icons.bookmark_border,
+                  color: widget.isFavorite ? red : Colors.grey,
+                ),
+                onPressed: widget.onFavoriteToggle,
               ),
-              onPressed: widget.onFavoriteToggle,
             ),
-          ),
         ],
       ),
     );

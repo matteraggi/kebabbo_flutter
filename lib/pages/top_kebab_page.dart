@@ -323,6 +323,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                       isFavorite: kebab['isFavorite'] ?? false,
                                       onFavoriteToggle: () => toggleFavorite(
                                           kebab['id'].toString()),
+                                          special: false,
                                     );
                                   },
                                 ),
