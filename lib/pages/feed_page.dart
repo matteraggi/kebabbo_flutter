@@ -44,6 +44,7 @@ class _FeedPageState extends State<FeedPage> {
       final PostgrestList response = await supabase
           .from('posts')
           .select('*')
+          .filter('comment', 'is', null)
           .order('created_at',
               ascending: false); // Ordina per timestamp in ordine decrescente
       if (mounted) {
@@ -233,6 +234,7 @@ class _FeedPageState extends State<FeedPage> {
                                   imageUrl: post['image_url'] ?? '',
                                   postId: post['id'].toString(),
                                   likeList: post['like'] ?? [],
+                                  commentNumber: post['comments_number'] ?? 0,
                                 );
                               },
                             ),

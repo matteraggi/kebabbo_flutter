@@ -36,6 +36,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
           .from('posts')
           .select('*')
           .eq('user_id', userId)
+          .filter('comment', 'is', null)
           .order('created_at', ascending: false);
 
       _userPosts = List<Map<String, dynamic>>.from(postsResponse);
@@ -75,6 +76,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
                           imageUrl: post['image_url'] ?? '',
                           postId: post['id'].toString(),
                           likeList: post['like'] ?? [],
+                          commentNumber: post['comments_number'] ?? 0,
                         );
                       },
                     ),

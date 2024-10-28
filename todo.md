@@ -26,8 +26,8 @@ Ancora non fatte in kebabbo Web:
 - [x] Creare sezione feed
 - [ ] Testare link social in about da android
 - [x] Lista kebab preferiti
-- [ ] Commenti post
-- [ ] Reazioni post
+- [x] Commenti post
+- [x] Reazioni post
 - [x] Numero di post fatti
 
 Hanno senso solo se molti kebabbari hanno le stats fatte bene:

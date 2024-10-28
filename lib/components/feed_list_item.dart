@@ -10,6 +10,7 @@ class FeedListItem extends StatefulWidget {
   final String imageUrl;
   final String postId;
   final List<dynamic> likeList;
+  final int commentNumber;
 
   const FeedListItem({
     super.key,
@@ -19,6 +20,7 @@ class FeedListItem extends StatefulWidget {
     required this.imageUrl,
     required this.postId,
     required this.likeList,
+    required this.commentNumber,
   });
 
   @override
@@ -31,12 +33,18 @@ class _FeedListItemState extends State<FeedListItem> {
   bool isLoading = true;
   bool hasLiked = false;
   int likeCount = 0;
+  final TextEditingController commentController = TextEditingController();
+  List<Map<String, dynamic>> commentsList = [];
+  bool isLoadingComments = false;
+  List<Map<String, dynamic>> userProfiles = [];
+  late int _currentCommentNumber;
 
   @override
   void initState() {
     super.initState();
     _fetchUserProfile(widget.userId);
     _checkIfLiked();
+    _currentCommentNumber = widget.commentNumber;
     timeago_it.setLocaleMessages('it', timeago_it.ItMessages());
   }
 
@@ -65,18 +73,13 @@ class _FeedListItemState extends State<FeedListItem> {
 
   Future<void> _checkIfLiked() async {
     try {
-      // Ottieni l'ID dell'utente attualmente autenticato
       final userId = supabase.auth.currentSession!.user.id;
-
-      // Controlla se l'ID utente è presente nella lista dei like
       bool userLiked = widget.likeList.contains(userId);
 
-      // Aggiorna lo stato
       if (mounted) {
         setState(() {
           hasLiked = userLiked;
-          likeCount = widget.likeList
-              .length; // Il conteggio dei like è semplicemente la lunghezza della lista
+          likeCount = widget.likeList.length;
         });
       }
     } catch (error) {
@@ -85,38 +88,25 @@ class _FeedListItemState extends State<FeedListItem> {
   }
 
   Future<void> _toggleLike(String postId) async {
-    // Ottieni l'ID dell'utente attualmente autenticato
     final userId = supabase.auth.currentSession!.user.id;
-
-    // Crea una copia della lista dei like attuale
     final updatedLikes = List<String>.from(widget.likeList);
 
-    // Verifica se l'utente ha già messo "mi piace" al post
     if (hasLiked) {
       updatedLikes.remove(userId);
-      // Riduci il conteggio dei like di 1
       likeCount--;
     } else {
       updatedLikes.add(userId);
-      // Aumenta il conteggio dei like di 1
       likeCount++;
     }
 
     try {
-      // Aggiorna il database con la nuova lista di like
-      print("Aggiornamento dei like per $postId: $updatedLikes");
       await supabase
           .from('posts')
           .update({'like': updatedLikes}).eq('id', postId);
 
-      // Aggiorna lo stato locale
       setState(() {
-        hasLiked = !hasLiked; // Inverti lo stato di hasLiked
-        // Non è più necessario aggiornare la lista manualmente, perché stiamo usando updatedLikes
+        hasLiked = !hasLiked;
       });
-
-      // Log del nuovo stato
-      print("Nuovo stato like per $postId: ${!hasLiked}");
     } catch (error) {
       print('Errore durante l\'aggiornamento dei like: $error');
     }
@@ -125,6 +115,185 @@ class _FeedListItemState extends State<FeedListItem> {
   String _formatTimestamp(String createdAt) {
     final DateTime postDate = DateTime.parse(createdAt);
     return timeago.format(postDate, locale: 'it');
+  }
+
+  Future<void> _postComment() async {
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      print("Devi essere autenticato per commentare.");
+      return;
+    }
+
+    final String commentText = commentController.text.trim();
+    if (commentText.isEmpty) {
+      print("Il testo del commento non può essere vuoto.");
+      return;
+    }
+
+    final Map<String, dynamic> commentData = {
+      'comment': widget.postId,
+      'user_id': user.id,
+      'text': commentText,
+      'created_at': DateTime.now().toIso8601String(),
+    };
+
+    try {
+      // Inserisce il nuovo commento
+      await supabase.from('posts').insert(commentData);
+
+      await supabase
+          .from('posts')
+          .update({'comments_number': widget.commentNumber + 1}).eq(
+              'id', widget.postId);
+
+      setState(() {
+        _currentCommentNumber++;
+      });
+
+      // Resetta il controller del commento
+      commentController.clear();
+      print("Commento pubblicato con successo.");
+    } catch (error) {
+      print("Errore durante la pubblicazione del commento: $error");
+    }
+  }
+
+  void _showCommentsDialog() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return FractionallySizedBox(
+          heightFactor: 0.7,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 5,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FutureBuilder<List<Map<String, dynamic>>>(
+                  future: _fetchComments(
+                      widget.postId), // Ritorna il Future di commenti
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Errore: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                          child: Text('Nessun commento disponibile'));
+                    } else {
+                      final commentsList =
+                          snapshot.data!; // Usa la lista di commenti qui
+                      return ListView.builder(
+                        itemCount: commentsList.length,
+                        itemBuilder: (context, index) {
+                          final comment = commentsList[index];
+                          final userProfile = comment[
+                              'user_profile']; // Ottieni il profilo dell'utente
+
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: userProfile['avatar_url'] != null
+                                  ? NetworkImage(userProfile['avatar_url'])
+                                  : null,
+                              child: userProfile['avatar_url'] == null
+                                  ? const Icon(Icons.person)
+                                  : null,
+                            ),
+                            title: Text(
+                                comment['text'] ?? 'Commento non disponibile'),
+                            subtitle: Text(
+                              '${userProfile['username'] ?? 'Anonimo'} - ${_formatTimestamp(comment['created_at'])}',
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: commentController,
+                        decoration: InputDecoration(
+                          hintText: "Scrivi un commento...",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () async {
+                        await _postComment();
+                        Navigator.pop(context);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                  "Il commento è stato aggiunto con successo!")),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchComments(String postId) async {
+    try {
+      final comments = await supabase
+          .from('posts')
+          .select('*')
+          .filter('comment', 'eq', postId)
+          .order('created_at', ascending: true);
+
+      userProfiles = [];
+      for (var comment in comments) {
+        final userId = comment['user_id'];
+        final response = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+        userProfiles.add(response);
+      }
+
+      for (var comment in comments) {
+        final userProfile = userProfiles.firstWhere(
+            (profile) => profile['id'] == comment['user_id'],
+            orElse: () => {'username': 'Anonimo', 'avatar_url': null});
+        comment['user_profile'] = userProfile;
+      }
+
+      return List<Map<String, dynamic>>.from(
+          comments); // Restituisci i commenti
+    } catch (error) {
+      print('Errore nel caricamento dei commenti: $error');
+      return []; // Restituisci una lista vuota in caso di errore
+    }
   }
 
   @override
@@ -170,17 +339,15 @@ class _FeedListItemState extends State<FeedListItem> {
                 IconButton(
                   icon: Icon(
                     hasLiked ? Icons.favorite : Icons.favorite_border,
-                    color: hasLiked ? red : Colors.black,
+                    color: hasLiked ? Colors.red : Colors.black,
                   ),
                   onPressed: () => _toggleLike(widget.postId),
                 ),
                 const SizedBox(width: 16),
-                Text("0"), // Numero dei commenti (sostituibile con variabile)
+                Text('$_currentCommentNumber'),
                 IconButton(
                   icon: const Icon(Icons.comment_outlined, color: Colors.black),
-                  onPressed: () {
-                    // Logica per aprire i commenti
-                  },
+                  onPressed: _showCommentsDialog,
                 ),
               ],
             ),
