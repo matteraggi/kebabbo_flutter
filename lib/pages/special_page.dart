@@ -225,7 +225,7 @@ class _SpecialPageState extends State<SpecialPage> {
                                     lat: (kebab['lat'] ?? 0.0).toDouble(),
                                     lng: (kebab['lng'] ?? 0.0).toDouble(),
                                     distance:
-                                        (kebab['distance'] ?? 0.0).toDouble(),
+                                        kebab['distance']?.toDouble(),
                                     vegetables: (kebab['vegetables'] ?? 0.0).toDouble(),
                                     yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
                                     spicy: (kebab['spicy'] ?? 0.0).toDouble(),

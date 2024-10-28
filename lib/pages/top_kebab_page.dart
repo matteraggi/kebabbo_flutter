@@ -312,7 +312,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                       lat: (kebab['lat'] ?? 0.0).toDouble(),
                                       lng: (kebab['lng'] ?? 0.0).toDouble(),
                                       distance:
-                                          (kebab['distance'] ?? 0.0).toDouble(),
+                                          kebab['distance']?.toDouble(),
                                       vegetables: (kebab['vegetables'] ?? 0.0)
                                           .toDouble(),
                                       yogurt:

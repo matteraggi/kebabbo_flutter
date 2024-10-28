@@ -153,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ? const LoginPage()
             : const AccountPage();
       case 1:
-        page = const ToolsPage();
+        page = ToolsPage(currentPosition: _currentPosition,);
       case 2:
         page = MapPage(
           currentPosition: _currentPosition,

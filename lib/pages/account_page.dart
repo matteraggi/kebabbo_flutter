@@ -269,7 +269,7 @@ class _AccountPageState extends State<AccountPage> {
                       // Azione per la sezione dei post
                       // Ad esempio, naviga alla pagina dei post dell'utente
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => UserPostsPage()));
+                          builder: (context) => const UserPostsPage()));
                     },
                     child: Column(
                       children: [
@@ -297,7 +297,7 @@ class _AccountPageState extends State<AccountPage> {
                       // Azione per la sezione dei preferiti
                       // Ad esempio, naviga alla pagina dei preferiti dell'utente
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FavoritesPage()));
+                          builder: (context) => const FavoritesPage()));
                     },
                     child: Column(
                       children: [

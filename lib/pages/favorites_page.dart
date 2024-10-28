@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);

@@ -3,7 +3,6 @@ import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
 import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 

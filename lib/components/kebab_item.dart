@@ -3,9 +3,7 @@ import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
 import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 class KebabListItem extends StatefulWidget {
   final String id;
@@ -20,7 +18,7 @@ class KebabListItem extends StatefulWidget {
   final String map;
   final double lat;
   final double lng;
-  final double distance;
+  final double? distance;
   final double vegetables;
   final double yogurt;
   final double spicy;
@@ -30,6 +28,7 @@ class KebabListItem extends StatefulWidget {
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
   final bool special;
+  final bool initiallyExpanded;
 
   const KebabListItem({
     super.key,
@@ -45,7 +44,7 @@ class KebabListItem extends StatefulWidget {
     required this.map,
     required this.lat,
     required this.lng,
-    required this.distance,
+    this.distance,
     required this.vegetables,
     required this.yogurt,
     required this.spicy,
@@ -55,6 +54,7 @@ class KebabListItem extends StatefulWidget {
     required this.isFavorite,
     required this.onFavoriteToggle,
     required this.special,
+    this.initiallyExpanded= false,
   });
 
   @override
@@ -67,6 +67,7 @@ class KebabListItemState extends State<KebabListItem> {
   @override
   void initState() {
     super.initState();
+    isExpanded = widget.initiallyExpanded;
   }
 
   List<Widget> _buildRatingStars(double rating) {
@@ -97,6 +98,7 @@ class KebabListItemState extends State<KebabListItem> {
       child: Stack(
         children: [
           ExpansionTile(
+            initiallyExpanded: isExpanded,
             leading: const SizedBox(width: 10),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,7 +132,7 @@ class KebabListItemState extends State<KebabListItem> {
                 ),
                 if (widget.isOpen)
                   const Text(
-                    "aperto",
+                    "Aperto",
                     style: TextStyle(
                         color: Color.fromARGB(255, 37, 154, 41),
                         fontSize: 12,
@@ -149,11 +151,16 @@ class KebabListItemState extends State<KebabListItem> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "${widget.distance.toStringAsFixed(2)} km distante da te",
-                  style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic),
+                  widget.distance != null
+                      ? "${widget.distance!.toStringAsFixed(2)} km distante da te"
+                      : "Distanza non disponibile",
+                  style: TextStyle(
+                    color: widget.distance != null
+                        ? Colors.grey
+                        : Colors.transparent,
+                    fontSize: 12,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ],
             ),
