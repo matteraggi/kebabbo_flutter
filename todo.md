@@ -29,6 +29,16 @@ Ancora non fatte in kebabbo Web:
 - [x] Commenti post
 - [x] Reazioni post
 - [x] Numero di post fatti
+- [ ] Comprimere tutte le immagini caricate
+- [ ] Icona kebab-panino in alto a sinistra e non subito prima del nome
+- [ ] Notifiche
+- [ ] Filtro glutine
+- [ ] Gamification: Introduci premi o badge. Potresti collegare questa gamification a sconti con i partner locali
+- [ ] Kebab preferito mostrato nel profilo
+- [ ] Tag luogo kebab nel post
+- [ ] Sezione Offerte e Promozioni Esclusive: Collabora con i locali per offrire promozioni esclusive tramite l’app
+- [ ] Sezione recensioni utenti
+
 
 Hanno senso solo se molti kebabbari hanno le stats fatte bene:
 
