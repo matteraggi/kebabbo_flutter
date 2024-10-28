@@ -73,6 +73,8 @@ class _UserPostsPageState extends State<UserPostsPage> {
                           createdAt: post['created_at'] ?? '',
                           userId: post['user_id'],
                           imageUrl: post['image_url'] ?? '',
+                          postId: post['id'].toString(),
+                          likeList: post['like'] ?? [],
                         );
                       },
                     ),

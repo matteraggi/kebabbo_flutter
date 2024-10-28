@@ -123,6 +123,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
         print("Aggiunto $kebabId ai preferiti.");
       }
 
+      print("Aggiornamento dei preferiti per $kebabId: $updatedFavorites");
       // Effettua aggiornamento su Supabase
       await supabase
           .from('profiles')
