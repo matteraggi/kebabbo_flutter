@@ -4,8 +4,8 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/order_bar.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/pages/special_page.dart';
-import 'package:postgrest/src/types.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
