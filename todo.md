@@ -29,6 +29,7 @@ Ancora non fatte in kebabbo Web:
 - [x] Commenti post
 - [x] Reazioni post
 - [x] Numero di post fatti
+- [ ] Non contare commenti in numero post
 - [ ] Comprimere tutte le immagini caricate
 - [ ] Icona kebab-panino in alto a sinistra e non subito prima del nome
 - [ ] Notifiche

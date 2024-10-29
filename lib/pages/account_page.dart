@@ -174,6 +174,7 @@ class _AccountPageState extends State<AccountPage> {
           .from('posts')
           .select('*')
           .eq('user_id', userId)
+          .filter('comment', 'is', null)
           .count(CountOption.exact);
 
       setState(() {

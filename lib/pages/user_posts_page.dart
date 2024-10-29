@@ -59,7 +59,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : _userPosts.isEmpty

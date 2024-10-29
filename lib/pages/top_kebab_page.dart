@@ -174,7 +174,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                   : SafeArea(
                       minimum: const EdgeInsets.symmetric(
                         vertical: 0,
-                        horizontal: 16,
+                        horizontal: 12,
                       ),
                       child: Stack(
                         children: [

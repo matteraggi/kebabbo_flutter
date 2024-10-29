@@ -98,7 +98,7 @@ class AboutPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
           child: ListView(
             children: [
               const SizedBox(height: 20),

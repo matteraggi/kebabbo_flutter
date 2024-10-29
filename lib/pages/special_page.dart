@@ -196,7 +196,7 @@ class _SpecialPageState extends State<SpecialPage> {
                     : SafeArea(
                         minimum: const EdgeInsets.symmetric(
                           vertical: 0,
-                          horizontal: 16,
+                          horizontal: 12,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

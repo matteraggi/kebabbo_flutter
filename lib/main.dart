@@ -144,66 +144,71 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget page;
+Widget build(BuildContext context) {
+  Widget page;
 
-    switch (selectedIndex) {
-      case 0:
-        page = supabase.auth.currentSession == null
-            ? const LoginPage()
-            : const AccountPage();
-      case 1:
-        page = ToolsPage(currentPosition: _currentPosition,);
-      case 2:
-        page = MapPage(
-          currentPosition: _currentPosition,
-        );
-      case 3:
-        page = TopKebabPage(currentPosition: _currentPosition!);
-      case 4:
-        page = const FeedPage();
-      default:
-        throw UnimplementedError('no widget for $selectedIndex');
-    }
-
-    return Scaffold(
-      body: page,
-      bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: true,
-        showUnselectedLabels: false,
-        currentIndex: selectedIndex,
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Account',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.build),
-            label: 'Build',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.kebab_dining),
-            label: 'Top Kebab',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.comment),
-            label: 'Feed',
-          ),
-        ],
-        backgroundColor: red, // Colore di sfondo della navbar
-        selectedItemColor: yellow,
-        unselectedItemColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-      ),
-    );
+  switch (selectedIndex) {
+    case 0:
+      page = supabase.auth.currentSession == null
+          ? const LoginPage()
+          : const AccountPage();
+      break;
+    case 1:
+      page = ToolsPage(currentPosition: _currentPosition);
+      break;
+    case 2:
+      page = _currentPosition != null
+          ? TopKebabPage(currentPosition: _currentPosition!)
+          : const Center(child: CircularProgressIndicator()); // Mostra un loader o un messaggio temporaneo
+      break;
+    case 3:
+      page = MapPage(currentPosition: _currentPosition);
+      break;
+    case 4:
+      page = const FeedPage();
+      break;
+    default:
+      throw UnimplementedError('no widget for $selectedIndex');
   }
+
+  return Scaffold(
+    body: page,
+    bottomNavigationBar: BottomNavigationBar(
+      showSelectedLabels: true,
+      showUnselectedLabels: false,
+      currentIndex: selectedIndex,
+      onTap: (index) {
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Account',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.build),
+          label: 'Build',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.kebab_dining),
+          label: 'Top Kebab',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.map),
+          label: 'Map',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.comment),
+          label: 'Feed',
+        ),
+      ],
+      backgroundColor: red, // Colore di sfondo della navbar
+      selectedItemColor: yellow,
+      unselectedItemColor: Colors.white,
+      type: BottomNavigationBarType.fixed,
+    ),
+  );
+}
 }
