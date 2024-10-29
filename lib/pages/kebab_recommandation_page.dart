@@ -12,7 +12,6 @@ class KebabRecommendationPage extends StatefulWidget {
   final Map<String, int> ingredients;
   final double maxDistance;
 
-
   const KebabRecommendationPage({
     super.key,
     required this.kebab,
@@ -27,10 +26,14 @@ class KebabRecommendationPage extends StatefulWidget {
       _KebabRecommendationPageState();
 }
 
-class _KebabRecommendationPageState extends State<KebabRecommendationPage> {
+class _KebabRecommendationPageState extends State<KebabRecommendationPage>
+    with TickerProviderStateMixin {
   late Map<String, dynamic> _currentKebab; // State variable for the current kebab
   double? _distanceInKm;
   int rerollCounter = 0;
+  late AnimationController _cloudController;
+  late Animation<Offset> _cloudAnimation;
+  bool showCloud = false; // Controls when to show the cloud
 
   @override
   void initState() {
@@ -39,9 +42,25 @@ class _KebabRecommendationPageState extends State<KebabRecommendationPage> {
     _currentKebab['isFavorite'] = false;
 
     _calculateDistance();
+
+    // Initialize the cloud animation controller
+    _cloudController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1), // Cloud movement duration
+    );
+
+    // Slide animation for the cloud, starting from off-screen (below)
+    _cloudAnimation = Tween<Offset>(
+      begin: const Offset(0, 1.5), // Start below the screen
+      end: Offset.zero, // Cover the screen
+    ).animate(_cloudController);
   }
 
-  
+  @override
+  void dispose() {
+    _cloudController.dispose();
+    super.dispose();
+  }
 
   void _calculateDistance() {
     if (widget.currentPosition != null &&
@@ -66,18 +85,32 @@ class _KebabRecommendationPageState extends State<KebabRecommendationPage> {
   Future<void> _rerollRecommendation() async {
     setState(() {
       rerollCounter++;
+      showCloud = true; // Start showing the cloud
     });
-    Map<String, dynamic>? result = await buildKebab(widget.ingredients, rerollCounter, widget.maxDistance,widget.currentPosition );
+
+    // Trigger the cloud to move up
+    await _cloudController.forward();
+
+    // Get the new kebab recommendation during the cloud animation
+    Map<String, dynamic>? result = await buildKebab(widget.ingredients, rerollCounter, widget.maxDistance, widget.currentPosition);
     if (result != null) {
       setState(() {
-  _currentKebab = result['kebab'];
-  _currentKebab['isFavorite'] = false;
-    // Recalculate the distance for the new kebab
-    _calculateDistance();
+        _currentKebab = result['kebab'];
+        _currentKebab['isFavorite'] = false;
+        _calculateDistance(); // Recalculate the distance for the new kebab
       });
-            setState(() {}); 
+    }
 
-}
+    // Pause for a short time before moving the cloud back down
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Trigger the cloud to move back down
+    await _cloudController.reverse();
+
+    // Hide the cloud after animation
+    setState(() {
+      showCloud = false;
+    });
   }
 
   @override
@@ -86,78 +119,99 @@ class _KebabRecommendationPageState extends State<KebabRecommendationPage> {
       appBar: AppBar(
         title: const Text('Kebab Consigliato'),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Il kebab che ti raccomandiamo è:',
-                      style: TextStyle(fontSize: 32, color: red, fontWeight: FontWeight.bold),
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Il kebab che ti raccomandiamo è:',
+                          style: TextStyle(
+                            fontSize: 32,
+                            color: red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        KebabListItem(
+                          id: _currentKebab['id'].toString(),
+                          name: _currentKebab['name'] ?? 'Kebab Sconosciuto',
+                          description: _currentKebab['description'] ?? 'Descrizione non disponibile',
+                          rating: (_currentKebab['rating'] ?? 0.0).toDouble(),
+                          quality: (_currentKebab['quality'] ?? 0.0).toDouble(),
+                          price: (_currentKebab['price'] ?? 0.0).toDouble(),
+                          dimension: (_currentKebab['dimension'] ?? 0.0).toDouble(),
+                          menu: (_currentKebab['menu'] ?? 0.0).toDouble(),
+                          fun: (_currentKebab['fun'] ?? 0.0).toDouble(),
+                          map: _currentKebab['map'] ?? 'N/A',
+                          lat: (_currentKebab['lat'] ?? 0.0).toDouble(),
+                          lng: (_currentKebab['lng'] ?? 0.0).toDouble(),
+                          distance: _distanceInKm,
+                          vegetables: (_currentKebab['vegetables'] ?? 0.0).toDouble(),
+                          yogurt: (_currentKebab['yogurt'] ?? 0.0).toDouble(),
+                          spicy: (_currentKebab['spicy'] ?? 0.0).toDouble(),
+                          onion: (_currentKebab['onion'] ?? 0.0).toDouble(),
+                          tag: _currentKebab['tag'] ?? 'Generale',
+                          isOpen: isKebabOpen(_currentKebab['orari_apertura']),
+                          isFavorite: _currentKebab['isFavorite'] ?? false,
+                          onFavoriteToggle: () => toggleFavorite(_currentKebab['id'].toString()),
+                          special: false,
+                          initiallyExpanded: true,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                    KebabListItem(
-                      id: _currentKebab['id'].toString(),
-                      name: _currentKebab['name'] ?? 'Kebab Sconosciuto',
-                      description: _currentKebab['description'] ??
-                          'Descrizione non disponibile',
-                      rating: (_currentKebab['rating'] ?? 0.0).toDouble(),
-                      quality: (_currentKebab['quality'] ?? 0.0).toDouble(),
-                      price: (_currentKebab['price'] ?? 0.0).toDouble(),
-                      dimension: (_currentKebab['dimension'] ?? 0.0).toDouble(),
-                      menu: (_currentKebab['menu'] ?? 0.0).toDouble(),
-                      fun: (_currentKebab['fun'] ?? 0.0).toDouble(),
-                      map: _currentKebab['map'] ?? 'N/A',
-                      lat: (_currentKebab['lat'] ?? 0.0).toDouble(),
-                      lng: (_currentKebab['lng'] ?? 0.0).toDouble(),
-                      distance: _distanceInKm,
-                      vegetables:
-                          (_currentKebab['vegetables'] ?? 0.0).toDouble(),
-                      yogurt: (_currentKebab['yogurt'] ?? 0.0).toDouble(),
-                      spicy: (_currentKebab['spicy'] ?? 0.0).toDouble(),
-                      onion: (_currentKebab['onion'] ?? 0.0).toDouble(),
-                      tag: _currentKebab['tag'] ?? 'Generale',
-                      isOpen: isKebabOpen(_currentKebab['orari_apertura']),
-                      isFavorite: _currentKebab['isFavorite'] ?? false,
-                      onFavoriteToggle: () => toggleFavorite(
-                                          _currentKebab['id'].toString()),
-                      special: false,
-                      initiallyExpanded: true,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: rerollCounter < widget.availableKebabs - 1
+                          ? _rerollRecommendation
+                          : null, // Disable if rerollCounter exceeds available kebabs
+                      child: const Text("Reroll"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Go back to previous page
+                      },
+                      child: const Text("Back to Build"),
                     ),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed:
-                      rerollCounter < widget.availableKebabs - 1
-                          ? _rerollRecommendation
-                          : null, // Disable if rerollCounter exceeds available kebabs
-                  child: const Text("Reroll"),
+
+          // Cloud animation transition
+          if (showCloud)
+            SlideTransition(
+              position: _cloudAnimation,
+              child: Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: Image.asset(
+                    'images/loading_cloud.png', // Cloud image asset
+                    fit: BoxFit.cover,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Go back to previous page
-                  },
-                  child: const Text("Back to Build"),
-                ),
-              ],
+              ),
             ),
-          ),
         ],
       ),
     );
   }
-  
+
   Future<void> toggleFavorite(String kebabId) async {
     final user = supabase.auth.currentUser;
     if (user == null) {
@@ -169,38 +223,20 @@ class _KebabRecommendationPageState extends State<KebabRecommendationPage> {
       );
       return;
     }
-      final isCurrentlyFavorite = _currentKebab['isFavorite'];
-      final userResponse = await supabase
-              .from('profiles')
-              .select('favorites')
-              .eq('id', user.id)
-              .single();
+    final isCurrentlyFavorite = _currentKebab['isFavorite'];
+    final userResponse = await supabase.from('profiles').select('favorites').eq('id', user.id).single();
+    final List<String> updatedFavorites = List<String>.from(userResponse['favorites'] ?? []);
 
-          final List<String> updatedFavorites =
-              List<String>.from(userResponse['favorites'] ?? []);
+    if (isCurrentlyFavorite) {
+      updatedFavorites.remove(kebabId);
+    } else {
+      updatedFavorites.add(kebabId);
+    }
 
-      // Log stato attuale
-      print("Stato preferito attuale per $kebabId: $isCurrentlyFavorite");
+    await supabase.from('profiles').update({'favorites': updatedFavorites}).eq('id', user.id);
 
-      if (isCurrentlyFavorite) {
-        updatedFavorites.remove(kebabId);
-        print("Rimosso $kebabId dai preferiti.");
-      } else {
-        updatedFavorites.add(kebabId);
-        print("Aggiunto $kebabId ai preferiti.");
-      }
-
-      // Effettua aggiornamento su Supabase
-      await supabase
-          .from('profiles')
-          .update({'favorites': updatedFavorites}).eq('id', user.id);
-
-      // Aggiorna lo stato in dashList
-      setState(() {
-        _currentKebab['isFavorite'] = !isCurrentlyFavorite;
-      });
-
-      // Log del nuovo stato
-      print("Nuovo stato preferito per $kebabId: ${!isCurrentlyFavorite}");
-}
+    setState(() {
+      _currentKebab['isFavorite'] = !isCurrentlyFavorite;
+    });
+  }
 }
