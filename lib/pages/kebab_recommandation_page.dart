@@ -162,6 +162,7 @@ class _KebabRecommendationPageState extends State<KebabRecommendationPage>
                           onFavoriteToggle: () => toggleFavorite(_currentKebab['id'].toString()),
                           special: false,
                           initiallyExpanded: true,
+                          glutenFree: _currentKebab['gluten_free'] ?? false,
                         ),
                       ],
                     ),

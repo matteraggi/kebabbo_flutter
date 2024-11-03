@@ -28,6 +28,7 @@ class KebabListItem extends StatefulWidget {
   final VoidCallback onFavoriteToggle;
   final bool special;
   final bool initiallyExpanded;
+  final bool glutenFree;
 
   const KebabListItem({
     super.key,
@@ -54,6 +55,7 @@ class KebabListItem extends StatefulWidget {
     required this.onFavoriteToggle,
     required this.special,
     this.initiallyExpanded = false,
+    required this.glutenFree,
   });
 
   @override
@@ -254,6 +256,16 @@ class KebabListItemState extends State<KebabListItem> {
               width: 24,
             ),
           ),
+          if (widget.glutenFree)
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: Image.asset(
+                "assets/images/gluten_free.png",
+                height: 40,
+                width: 40,
+              ),
+            ),
           if (widget.tag == "kebab")
             Positioned(
               top: 8,

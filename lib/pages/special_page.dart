@@ -235,6 +235,7 @@ class _SpecialPageState extends State<SpecialPage> {
                                     isFavorite: kebab['isFavorite'] ?? false,
                                     onFavoriteToggle: () => toggleFavorite(kebab['id'].toString()),
                                     special: true,
+                                    glutenFree: kebab['gluten_free'] ?? false,
                                   );
                                 },
                               ),

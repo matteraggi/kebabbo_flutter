@@ -33,12 +33,13 @@ Ancora non fatte in kebabbo Web:
 - [x] Comprimere tutte le immagini caricate
 - [x] Icona kebab-panino in alto a sinistra e non subito prima del nome
 - [ ] Notifiche
-- [ ] Filtro glutine
+- [x] Filtro glutine
 - [ ] Gamification: Introduci premi o badge. Collegare gamification a sconti con i partner locali
 - [ ] Kebab preferito mostrato nel profilo
 - [ ] Tag luogo kebab nel post
 - [ ] Sezione Offerte e Promozioni Esclusive
 - [ ] Sezione recensioni utenti
+- [ ] Sezione profilo utente
 
 
 Hanno senso solo se molti kebabbari hanno le stats fatte bene:

@@ -325,6 +325,7 @@ class _TopKebabPageState extends State<TopKebabPage> {
                                       onFavoriteToggle: () => toggleFavorite(
                                           kebab['id'].toString()),
                                           special: false,
+                                      glutenFree: kebab['gluten_free'] ?? false,
                                     );
                                   },
                                 ),
