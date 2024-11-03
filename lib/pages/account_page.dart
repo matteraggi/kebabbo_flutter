@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image/image.dart' as img;
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
@@ -150,7 +151,7 @@ class _AccountPageState extends State<AccountPage> {
 
         // Ottieni l'URL pubblico dell'immagine e aggiorna il profilo
         final imageUrlResponse =
-            supabase.storage.from('avatars').getPublicUrl(filePath);
+            supabase.storage.from('avatars').getPublicUrl(filePath, transform: const TransformOptions(height: 200, width: 200, resize: ResizeMode.contain, quality: 60) );
         final imageUrl = imageUrlResponse;
         setState(() {
           _avatarUrl = imageUrl;

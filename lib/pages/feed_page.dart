@@ -94,7 +94,12 @@ class _FeedPageState extends State<FeedPage> {
               imageBytes!,
               fileOptions: const FileOptions(upsert: true),
             );
-        imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
+        imageUrl = supabase.storage.from('posts').getPublicUrl(filePath,
+            transform: const TransformOptions(
+                height: 200,
+                width: 200,
+                resize: ResizeMode.contain,
+                quality: 60));
       } catch (error) {
         setState(() {
           errorMessage = "Errore nel caricamento dell'immagine: $error";

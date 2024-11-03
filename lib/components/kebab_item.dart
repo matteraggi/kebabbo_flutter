@@ -4,7 +4,6 @@ import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 
-
 class KebabListItem extends StatefulWidget {
   final String id;
   final String name;
@@ -54,7 +53,7 @@ class KebabListItem extends StatefulWidget {
     required this.isFavorite,
     required this.onFavoriteToggle,
     required this.special,
-    this.initiallyExpanded= false,
+    this.initiallyExpanded = false,
   });
 
   @override
@@ -107,14 +106,6 @@ class KebabListItemState extends State<KebabListItem> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      widget.tag == "kebab"
-                          ? "assets/images/kebabcolored.png"
-                          : "assets/images/sandwitch.png",
-                      height: 24,
-                      width: 24,
-                    ),
-                    const SizedBox(width: 8),
                     Flexible(
                       child: Text(
                         widget.name,
@@ -241,6 +232,29 @@ class KebabListItemState extends State<KebabListItem> {
                 setState(() => isExpanded = expanding),
           ),
           if (!widget.special)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                icon: Icon(
+                  widget.isFavorite ? Icons.bookmark : Icons.bookmark_border,
+                  color: widget.isFavorite ? red : Colors.grey,
+                ),
+                onPressed: widget.onFavoriteToggle,
+              ),
+            ),
+          Positioned(
+            top: 16,
+            left: 16,
+            child: Image.asset(
+              widget.tag == "kebab"
+                  ? "assets/images/kebabcolored.png"
+                  : "assets/images/sandwitch.png",
+              height: 24,
+              width: 24,
+            ),
+          ),
+          if (widget.tag == "kebab")
             Positioned(
               top: 8,
               right: 8,
