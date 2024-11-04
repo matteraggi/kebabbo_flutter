@@ -123,7 +123,7 @@ class _IngredientControlState extends State<IngredientControl>
               offset: _positionAnimation.value,
               child: spritePath.isNotEmpty
                   ? Image.asset(spritePath, width: 220, height: 100)
-                  : null,
+                  : const SizedBox(width: 220, height: 100),
             );
           },
         ),
