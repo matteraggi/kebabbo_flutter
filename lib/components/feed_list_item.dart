@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart' as timeago_it;
 
@@ -11,6 +12,7 @@ class FeedListItem extends StatefulWidget {
   final String postId;
   final List<dynamic> likeList;
   final int commentNumber;
+  final String kebabTagId;
 
   const FeedListItem({
     super.key,
@@ -21,6 +23,7 @@ class FeedListItem extends StatefulWidget {
     required this.postId,
     required this.likeList,
     required this.commentNumber,
+    required this.kebabTagId,
   });
 
   @override
@@ -38,14 +41,37 @@ class _FeedListItemState extends State<FeedListItem> {
   bool isLoadingComments = false;
   List<Map<String, dynamic>> userProfiles = [];
   late int _currentCommentNumber;
+  List<String> userList = [];
+  String? kebabName;
 
   @override
   void initState() {
     super.initState();
     _fetchUserProfile(widget.userId);
     _checkIfLiked();
+    fetchUserNames();
     _currentCommentNumber = widget.commentNumber;
     timeago_it.setLocaleMessages('it', timeago_it.ItMessages());
+    if (widget.kebabTagId.isNotEmpty) {
+      _fetchKebabName(widget.kebabTagId);
+    }
+  }
+
+  Future<void> _fetchKebabName(String kebabTagId) async {
+    try {
+      final response = await supabase
+          .from('kebab')
+          .select('name')
+          .eq('id', kebabTagId)
+          .single();
+      if (mounted) {
+        setState(() {
+          kebabName = response['name'] ?? 'Kebabbaro';
+        });
+      }
+    } catch (error) {
+      print('Errore nel recupero del nome del kebabbaro: $error');
+    }
   }
 
   Future<void> _fetchUserProfile(String userId) async {
@@ -288,12 +314,95 @@ class _FeedListItemState extends State<FeedListItem> {
         comment['user_profile'] = userProfile;
       }
 
-      return List<Map<String, dynamic>>.from(
-          comments); // Restituisci i commenti
+      return List<Map<String, dynamic>>.from(comments);
     } catch (error) {
       print('Errore nel caricamento dei commenti: $error');
       return []; // Restituisci una lista vuota in caso di errore
     }
+  }
+
+  Future<void> fetchUserNames() async {
+    final PostgrestList response =
+        await supabase.from('profiles').select('username');
+
+    if (mounted) {
+      List<Map<String, dynamic>> users =
+          List<Map<String, dynamic>>.from(response as List);
+
+      setState(() {
+        userList = users
+            .map((user) => user['username'])
+            .where((username) => username != null) // Filtra i valori null
+            .map((username) => username.toString()) // Converte a stringa
+            .toList();
+      });
+    }
+  }
+
+  List<TextSpan> _highlightUserTags(String text) {
+    List<TextSpan> spans = [];
+    int start = 0;
+
+    RegExp exp = RegExp(r'@([\w\s]+)');
+    Iterable<RegExpMatch> matches = exp.allMatches(text);
+
+    for (final match in matches) {
+      String potentialTag = match.group(1)!.trim();
+
+      bool isUsername = false;
+      String textToCompare = '';
+      String beforeTag = text.substring(0, match.start);
+      String afterTag = "";
+
+      for (String userName in userList) {
+        int length = userName.length;
+        if (match.end <= text.length) {
+          afterTag = text.substring(match.start + 1 + length, match.end);
+
+          textToCompare =
+              text.substring(match.start + 1, match.start + 1 + length).trim();
+          if (_compareNames(userName, textToCompare)) {
+            isUsername = true;
+            break;
+          }
+        }
+      }
+
+      if (isUsername) {
+        spans.add(TextSpan(
+          text: beforeTag,
+          style: const TextStyle(color: Colors.black),
+        ));
+        spans.add(TextSpan(
+          text: '@$textToCompare',
+          style: const TextStyle(color: Colors.red),
+        ));
+        spans.add(TextSpan(
+          text: afterTag,
+          style: const TextStyle(color: Colors.black),
+        ));
+      } else {
+        spans.add(TextSpan(text: '@$potentialTag'));
+      }
+      start = match.end;
+    }
+    if (start < text.length) {
+      spans.add(TextSpan(text: text.substring(start)));
+    }
+    return spans;
+  }
+
+// Funzione di normalizzazione e confronto
+  bool _compareNames(String name1, String name2) {
+    // Rimuove spazi multipli e trasforma in minuscolo per confronto
+    String normalized1 =
+        name1.replaceAll(RegExp(r'\s+'), ' ').trim().toLowerCase();
+    String normalized2 =
+        name2.replaceAll(RegExp(r'\s+'), ' ').trim().toLowerCase();
+
+    print("Confronto normalizzato: '$normalized1' vs '$normalized2'");
+
+    return normalized1 == normalized2;
   }
 
   @override
@@ -326,7 +435,26 @@ class _FeedListItemState extends State<FeedListItem> {
                     ],
                   ),
             const SizedBox(height: 8),
-            Text(widget.text),
+            if (kebabName != null) // Mostra il nome del kebabbaro se presente
+              Row(
+                children: [
+                  const Icon(
+                    Icons.place_rounded,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(width: 2),
+                  Text(
+                    kebabName!,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 8),
+            Text.rich(
+              TextSpan(
+                children: _highlightUserTags(widget.text),
+              ),
+            ),
             const SizedBox(height: 8),
             widget.imageUrl.isNotEmpty
                 ? Image.network(widget.imageUrl)

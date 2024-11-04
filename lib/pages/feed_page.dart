@@ -20,11 +20,134 @@ class _FeedPageState extends State<FeedPage> {
   Uint8List? imageBytes; // Variabile per memorizzare l'immagine
   String? imagePath = ""; // Variabile per il percorso dell'immagine
   final TextEditingController postController = TextEditingController();
+  List<String> userList = [];
+  List<String> userSuggestion = [];
+  bool showSuggestions = false;
+  OverlayEntry? suggestionOverlay;
+  String? selectedKebabId;
+  String? selectedKebabName;
+  List<Map<String, dynamic>> kebabbariList = [];
 
   @override
   void initState() {
     super.initState();
     _checkAuthAndFetchFeed();
+    fetchUserNames();
+    postController.addListener(_onTextChanged);
+  }
+
+  @override
+  void dispose() {
+    postController.removeListener(_onTextChanged);
+    postController.dispose();
+    suggestionOverlay?.remove();
+    super.dispose();
+  }
+
+  Future<void> fetchUserNames() async {
+    try {
+      final PostgrestList response =
+          await supabase.from('profiles').select('username');
+
+      if (mounted) {
+        List<Map<String, dynamic>> users =
+            List<Map<String, dynamic>>.from(response as List);
+
+        setState(() {
+          userList = users
+              .map((user) => user['username'])
+              .where((username) => username != null) // Filtra i valori null
+              .map((username) => username.toString()) // Converte a stringa
+              .toList();
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          errorMessage = error.toString();
+        });
+      }
+    }
+  }
+
+  void _showSuggestionOverlay(BuildContext context) {
+    if (suggestionOverlay != null) return; // Non mostrare più volte l'overlay
+
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context);
+    final textFieldSize = renderBox.size;
+    final offset = renderBox.localToGlobal(Offset.zero);
+
+    suggestionOverlay = OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: 70, // Puoi regolare questa posizione come necessario
+        width: textFieldSize.width,
+        child: Material(
+          elevation: 4,
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            height: 200,
+            child: userSuggestion.isEmpty
+                ? const Center(
+                    child: Text("Nessun suggerimento",
+                        style: TextStyle(color: Colors.grey)))
+                : ListView.builder(
+                    itemCount: userSuggestion.length,
+                    itemBuilder: (context, index) {
+                      final suggestion = userSuggestion[index];
+                      return ListTile(
+                        title: Text(suggestion),
+                        onTap: () {
+                          setState(() {
+                            final text = postController.text;
+                            final newText = text.replaceRange(
+                              text.lastIndexOf('@'),
+                              text.length,
+                              '@$suggestion ',
+                            );
+                            postController.text = newText;
+                            postController.selection =
+                                TextSelection.fromPosition(
+                              TextPosition(offset: newText.length),
+                            );
+                            _removeSuggestionOverlay();
+                          });
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(suggestionOverlay!);
+  }
+
+  void _onTextChanged() {
+    final text = postController.text;
+    if (text.contains('@')) {
+      final query = text.split('@').last;
+      setState(() {
+        userSuggestion = userList
+            .where((kebab) => kebab.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        if (userSuggestion.isNotEmpty) {
+          _showSuggestionOverlay(context); // Passa il contesto qui
+        } else {
+          _removeSuggestionOverlay();
+        }
+      });
+    } else {
+      _removeSuggestionOverlay();
+    }
+  }
+
+  void _removeSuggestionOverlay() {
+    if (suggestionOverlay != null) {
+      suggestionOverlay!.remove();
+      suggestionOverlay = null;
+    }
   }
 
   Future<void> _checkAuthAndFetchFeed() async {
@@ -108,7 +231,7 @@ class _FeedPageState extends State<FeedPage> {
       }
     }
 
-    // Inserisci il post, includendo `imageUrl` solo se è presente
+    // Inserisci il post, includendo `imageUrl` e `kebab_tag_id` solo se presenti
     final Map<String, dynamic> postData = {
       'text': text,
       'user_id': user.id,
@@ -118,6 +241,9 @@ class _FeedPageState extends State<FeedPage> {
     if (imageUrl != null) {
       postData['image_url'] = imageUrl;
     }
+    if (selectedKebabId != null) {
+      postData['kebab_tag_id'] = selectedKebabId;
+    }
 
     try {
       await supabase.from('posts').insert(postData);
@@ -125,6 +251,8 @@ class _FeedPageState extends State<FeedPage> {
       setState(() {
         imageBytes = null; // Rimuovi l’immagine dopo il post
         imagePath = null;
+        selectedKebabId = null; // Resetta il tag selezionato
+        selectedKebabName = null;
       });
       await _fetchFeed(); // Refresh del feed dopo il post
     } catch (error) {
@@ -148,6 +276,57 @@ class _FeedPageState extends State<FeedPage> {
     }
   }
 
+  Future<void> _tagKebab() async {
+    await fetchKebabNames(); // Popola la lista dei kebabbari
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ListView.builder(
+          itemCount: kebabbariList.length,
+          itemBuilder: (context, index) {
+            final kebabName = kebabbariList[index]['name'];
+            final kebabId = kebabbariList[index]['id'];
+            return ListTile(
+              title: Text(kebabName),
+              onTap: () {
+                setState(() {
+                  selectedKebabId = kebabId;
+                  selectedKebabName = kebabName;
+                });
+                Navigator.pop(context); // Chiude il modulo
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> fetchKebabNames() async {
+    try {
+      final PostgrestList response =
+          await supabase.from('kebab').select('id, name');
+
+      if (mounted) {
+        List<Map<String, dynamic>> kebabs =
+            List<Map<String, dynamic>>.from(response as List);
+
+        setState(() {
+          kebabbariList = kebabs
+              .map((kebab) => {
+                    'id': kebab['id'].toString(),
+                    'name': kebab['name'].toString()
+                  })
+              .toList();
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        // gestione errori
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,93 +337,88 @@ class _FeedPageState extends State<FeedPage> {
               : SafeArea(
                   minimum:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                  child: Stack(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: Column(
-                              children: [
-                                // Row containing the TextField and Icons
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: postController,
-                                        maxLines: null,
-                                        minLines: 1,
-                                        decoration: InputDecoration(
-                                          hintText: "Scrivi un post...",
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.grey[200],
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 12,
-                                          ),
-                                          // Trailing icons: Gallery and Camera inside the TextField
-                                          suffixIcon: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                onPressed: _pickImage,
-                                                icon: (imagePath != null &&
-                                                        imagePath!.isNotEmpty)
-                                                    ? const Icon(Icons.photo,
-                                                        color: red)
-                                                    : const Icon(Icons.photo),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: postController,
+                                maxLines: 1,
+                                minLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: "Scrivi un post...",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        onPressed: _tagKebab,
+                                        icon: (selectedKebabId != null)
+                                            ? const Icon(
+                                                Icons.place_rounded,
+                                                color: red,
+                                              )
+                                            : const Icon(Icons.place_rounded),
                                       ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    // Send IconButton wrapped in a red container
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: red,
-                                        borderRadius: BorderRadius.circular(12),
+                                      IconButton(
+                                        onPressed: _pickImage,
+                                        icon: (imagePath != null &&
+                                                imagePath!.isNotEmpty)
+                                            ? const Icon(Icons.photo,
+                                                color: red)
+                                            : const Icon(Icons.photo),
                                       ),
-                                      child: IconButton(
-                                        onPressed: _postFeed,
-                                        icon: const Icon(
-                                          Icons.send,
-                                          color: Colors
-                                              .white, // White icon inside red container
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                          // Posts list display
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: searchResultList.length,
-                              itemBuilder: (context, index) {
-                                final post = searchResultList[index];
-                                return FeedListItem(
-                                  text: post['text'] ?? 'Testo non disponibile',
-                                  createdAt: post['created_at'] ?? '',
-                                  userId: post['user_id'],
-                                  imageUrl: post['image_url'] ?? '',
-                                  postId: post['id'].toString(),
-                                  likeList: post['like'] ?? [],
-                                  commentNumber: post['comments_number'] ?? 0,
-                                );
-                              },
+                            const SizedBox(width: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: red,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: IconButton(
+                                onPressed: _postFeed,
+                                icon: const Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: searchResultList.length,
+                          itemBuilder: (context, index) {
+                            final post = searchResultList[index];
+                            return FeedListItem(
+                              text: post['text'] ?? 'Testo non disponibile',
+                              createdAt: post['created_at'] ?? '',
+                              userId: post['user_id'],
+                              imageUrl: post['image_url'] ?? '',
+                              postId: post['id'].toString(),
+                              likeList: post['like'] ?? [],
+                              commentNumber: post['comments_number'] ?? 0,
+                              kebabTagId: post['kebab_tag_id'] ?? '',
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),

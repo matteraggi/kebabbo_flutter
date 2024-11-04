@@ -76,6 +76,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
                           postId: post['id'].toString(),
                           likeList: post['like'] ?? [],
                           commentNumber: post['comments_number'] ?? 0,
+                          kebabTagId: post['kebab_tag_id'] ?? '',
                         );
                       },
                     ),

@@ -36,7 +36,13 @@ Ancora non fatte in kebabbo Web:
 - [x] Filtro glutine
 - [ ] Gamification: Introduci premi o badge. Collegare gamification a sconti con i partner locali
 - [ ] Kebab preferito mostrato nel profilo
-- [ ] Tag luogo kebab nel post
+- [ ] Inserire luogo (kebabbaro)
+- [ ] Tag persona
+    - [ ] Cambiare da tag kebab a tag utente
+    - [ ] Ricerca sulla barra di compilazione tag
+    - [ ] Max 1 tag a post, oppure gestire multipli
+    - [ ] Tag cliccabili per singola pagina utente
+    - [ ] Cambiare grafica tag
 - [ ] Sezione Offerte e Promozioni Esclusive
 - [ ] Sezione recensioni utenti
 - [ ] Sezione profilo utente
