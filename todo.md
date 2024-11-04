@@ -42,8 +42,9 @@ Ancora non fatte in kebabbo Web:
     - [ ] Tag cliccabili per singola pagina utente
     - [ ] Cambiare grafica tag
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
+    - [x] Sistemare caricamento immagini
+    - [ ] Pulsante build non visibile da mobile
     - [ ] Modificare pagina build (renderla pagina con più funzioni tra cui search)
-    - [ ] Sistemare caricamento immagini
 
 - [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
 - [ ] Sezione recensioni utenti -> PAGINA ?

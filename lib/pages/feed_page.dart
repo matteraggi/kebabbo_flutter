@@ -5,6 +5,8 @@ import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+const Color red = Color.fromRGBO(187, 0, 0, 1.0);
+
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
 
@@ -243,6 +245,7 @@ class _FeedPageState extends State<FeedPage> {
     }
     if (selectedKebabId != null) {
       postData['kebab_tag_id'] = selectedKebabId;
+      postData['kebab_tag_name'] = selectedKebabName;
     }
 
     try {
@@ -416,6 +419,7 @@ class _FeedPageState extends State<FeedPage> {
                               likeList: post['like'] ?? [],
                               commentNumber: post['comments_number'] ?? 0,
                               kebabTagId: post['kebab_tag_id'] ?? '',
+                              kebabName: post['kebab_tag_name'] ?? '',
                             );
                           },
                         ),

@@ -25,6 +25,8 @@ class KebabListItemFavorite extends StatefulWidget {
   final double onion;
   final String tag;
   final bool isOpen;
+  final bool glutenFree;
+  final bool expanded;
 
   const KebabListItemFavorite({
     super.key,
@@ -46,11 +48,12 @@ class KebabListItemFavorite extends StatefulWidget {
     required this.onion,
     required this.tag,
     required this.isOpen,
+    required this.glutenFree,
+    required this.expanded,
   });
 
   @override
-  KebabListItemFavoriteState createState() =>
-      KebabListItemFavoriteState(); // Corrected line
+  KebabListItemFavoriteState createState() => KebabListItemFavoriteState();
 }
 
 class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
@@ -59,6 +62,7 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
   @override
   void initState() {
     super.initState();
+    isExpanded = widget.expanded;
   }
 
   List<Widget> _buildRatingStars(double rating) {
@@ -89,6 +93,7 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
       child: Stack(
         children: [
           ExpansionTile(
+            initiallyExpanded: widget.expanded,
             leading: const SizedBox(width: 10),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,13 +102,6 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      widget.tag == "kebab"
-                          ? "assets/images/kebabcolored.png"
-                          : "assets/images/sandwitch.png",
-                      height: 24,
-                      width: 24,
-                    ),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(
@@ -217,6 +215,27 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
             onExpansionChanged: (bool expanding) =>
                 setState(() => isExpanded = expanding),
           ),
+          Positioned(
+            top: 16,
+            left: 16,
+            child: Image.asset(
+              widget.tag == "kebab"
+                  ? "assets/images/kebabcolored.png"
+                  : "assets/images/sandwitch.png",
+              height: 24,
+              width: 24,
+            ),
+          ),
+          if (widget.glutenFree)
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: Image.asset(
+                "assets/images/gluten_free.png",
+                height: 40,
+                width: 40,
+              ),
+            ),
         ],
       ),
     );

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/kebab_single_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart' as timeago_it;
+
+const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 class FeedListItem extends StatefulWidget {
   final String text;
@@ -13,6 +16,7 @@ class FeedListItem extends StatefulWidget {
   final List<dynamic> likeList;
   final int commentNumber;
   final String kebabTagId;
+  final String kebabName;
 
   const FeedListItem({
     super.key,
@@ -24,6 +28,7 @@ class FeedListItem extends StatefulWidget {
     required this.likeList,
     required this.commentNumber,
     required this.kebabTagId,
+    required this.kebabName,
   });
 
   @override
@@ -42,7 +47,6 @@ class _FeedListItemState extends State<FeedListItem> {
   List<Map<String, dynamic>> userProfiles = [];
   late int _currentCommentNumber;
   List<String> userList = [];
-  String? kebabName;
 
   @override
   void initState() {
@@ -52,26 +56,6 @@ class _FeedListItemState extends State<FeedListItem> {
     fetchUserNames();
     _currentCommentNumber = widget.commentNumber;
     timeago_it.setLocaleMessages('it', timeago_it.ItMessages());
-    if (widget.kebabTagId.isNotEmpty) {
-      _fetchKebabName(widget.kebabTagId);
-    }
-  }
-
-  Future<void> _fetchKebabName(String kebabTagId) async {
-    try {
-      final response = await supabase
-          .from('kebab')
-          .select('name')
-          .eq('id', kebabTagId)
-          .single();
-      if (mounted) {
-        setState(() {
-          kebabName = response['name'] ?? 'Kebabbaro';
-        });
-      }
-    } catch (error) {
-      print('Errore nel recupero del nome del kebabbaro: $error');
-    }
   }
 
   Future<void> _fetchUserProfile(String userId) async {
@@ -435,20 +419,32 @@ class _FeedListItemState extends State<FeedListItem> {
                     ],
                   ),
             const SizedBox(height: 8),
-            if (kebabName != null) // Mostra il nome del kebabbaro se presente
-              Row(
-                children: [
-                  const Icon(
-                    Icons.place_outlined,
-                    color: Colors.grey,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 2),
-                  Text(
-                    kebabName!,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
+                        if (widget.kebabName.isNotEmpty)
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => KebabSinglePage(
+                        kebabId: widget.kebabTagId,
+                      ),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.place_outlined,
+                      color: Colors.grey,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      widget.kebabName,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
               ),
             const SizedBox(height: 8),
             Text.rich(
@@ -468,7 +464,7 @@ class _FeedListItemState extends State<FeedListItem> {
                 IconButton(
                   icon: Icon(
                     hasLiked ? Icons.favorite : Icons.favorite_border,
-                    color: hasLiked ?red : Colors.black,
+                    color: hasLiked ? red : Colors.black,
                   ),
                   onPressed: () => _toggleLike(widget.postId),
                 ),

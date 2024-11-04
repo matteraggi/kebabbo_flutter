@@ -77,6 +77,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
                           likeList: post['like'] ?? [],
                           commentNumber: post['comments_number'] ?? 0,
                           kebabTagId: post['kebab_tag_id'] ?? '',
+                          kebabName: post['kebab_name'] ?? '',
                         );
                       },
                     ),

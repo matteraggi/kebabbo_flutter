@@ -6,7 +6,6 @@ import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:image/image.dart' as img;
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
