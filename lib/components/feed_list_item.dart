@@ -439,8 +439,9 @@ class _FeedListItemState extends State<FeedListItem> {
               Row(
                 children: [
                   const Icon(
-                    Icons.place_rounded,
+                    Icons.place_outlined,
                     color: Colors.grey,
+                    size: 16,
                   ),
                   const SizedBox(width: 2),
                   Text(
@@ -467,7 +468,7 @@ class _FeedListItemState extends State<FeedListItem> {
                 IconButton(
                   icon: Icon(
                     hasLiked ? Icons.favorite : Icons.favorite_border,
-                    color: hasLiked ? Colors.red : Colors.black,
+                    color: hasLiked ?red : Colors.black,
                   ),
                   onPressed: () => _toggleLike(widget.postId),
                 ),

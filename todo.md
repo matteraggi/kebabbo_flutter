@@ -32,28 +32,28 @@ Ancora non fatte in kebabbo Web:
 - [x] Non contare commenti in numero post
 - [x] Comprimere tutte le immagini caricate
 - [x] Icona kebab-panino in alto a sinistra e non subito prima del nome
-- [ ] Notifiche
 - [x] Filtro glutine
-- [ ] Gamification: Introduci premi o badge. Collegare gamification a sconti con i partner locali
-- [ ] Kebab preferito mostrato nel profilo
-- [ ] Inserire luogo (kebabbaro)
-- [ ] Tag persona
-    - [ ] Cambiare da tag kebab a tag utente
+- [x] Inserire luogo (kebabbaro)
+    - [ ] Cliccabile tag luogo
+- [x] Tag persona
+    - [x] Cambiare da tag kebab a tag utente
     - [ ] Ricerca sulla barra di compilazione tag
     - [ ] Max 1 tag a post, oppure gestire multipli
     - [ ] Tag cliccabili per singola pagina utente
     - [ ] Cambiare grafica tag
-- [ ] Sezione Offerte e Promozioni Esclusive
-- [ ] Sezione recensioni utenti
-- [ ] Sezione profilo utente
+- [x] Ricerca avanzata (build your kebab in db) (-> Build)
+    - [ ] Modificare pagina build (renderla pagina con più funzioni tra cui search)
+    - [ ] Sistemare caricamento immagini
+
+- [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
+- [ ] Sezione recensioni utenti -> PAGINA ?
+- [ ] Sezione profilo utenti
+- [ ] Kebab preferito mostrato nel profilo -> PAGINA ACCOUNT
+- [ ] Gamification: Introduci premi o badge. Collegare gamification a sconti con i partner locali -> PAGINA ACCOUNT
+- [ ] Notifiche
 
 
-Hanno senso solo se molti kebabbari hanno le stats fatte bene:
-
-- [ ] Ricerca avanzata (build your kebab in db) (-> Build)
-- [ ] Possibilità di confrontare stats di due kebabbari (top kebab)
-
-Extra:
+Marketing:
 
 - [ ] Pensare piano marketing con CMO dell'azienda
 - [ ] Sponsor
