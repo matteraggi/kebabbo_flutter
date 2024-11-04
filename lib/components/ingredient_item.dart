@@ -114,7 +114,7 @@ class _IngredientControlState extends State<IngredientControl>
                 }
               : null,
         ),
-
+/*
         // Sprite (conditionally display if spritePath is not empty)
         AnimatedBuilder(
           animation: _positionAnimation,
@@ -127,7 +127,10 @@ class _IngredientControlState extends State<IngredientControl>
             );
           },
         ),
-
+*/
+        spritePath.isNotEmpty
+            ? Image.asset(spritePath, width: 220, height: 100)
+            : const SizedBox(width: 220, height: 100),
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: _amount < 10
