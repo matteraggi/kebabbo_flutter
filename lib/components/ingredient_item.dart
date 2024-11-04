@@ -4,7 +4,8 @@ class IngredientControl extends StatefulWidget {
   final String ingredientName;
   final int amount; // Amount of the ingredient passed from parent
   final Function(int) onAmountChanged;
-  final Offset targetPosition; // New target position for the convergence animation
+  final Offset
+      targetPosition; // New target position for the convergence animation
   final bool isConverging; // To trigger the movement
   final bool isNavigatingAway; // New flag to check if navigating away
 
@@ -22,7 +23,8 @@ class IngredientControl extends StatefulWidget {
   _IngredientControlState createState() => _IngredientControlState();
 }
 
-class _IngredientControlState extends State<IngredientControl> with SingleTickerProviderStateMixin {
+class _IngredientControlState extends State<IngredientControl>
+    with SingleTickerProviderStateMixin {
   late int _amount;
   late Offset _currentPosition;
   late AnimationController _controller;
@@ -43,7 +45,8 @@ class _IngredientControlState extends State<IngredientControl> with SingleTicker
     );
 
     // Define the position animation
-    _positionAnimation = Tween<Offset>(begin: _currentPosition, end: widget.targetPosition)
+    _positionAnimation = Tween<Offset>(
+            begin: _currentPosition, end: widget.targetPosition)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // If convergence is already triggered, animate
@@ -51,6 +54,7 @@ class _IngredientControlState extends State<IngredientControl> with SingleTicker
       _controller.forward();
     }
   }
+
   @override
   void didUpdateWidget(covariant IngredientControl oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -74,7 +78,6 @@ class _IngredientControlState extends State<IngredientControl> with SingleTicker
     }
   }
 
-
   @override
   void dispose() {
     _controller.dispose();
@@ -96,7 +99,6 @@ class _IngredientControlState extends State<IngredientControl> with SingleTicker
     String spritePath = spriteSize.isEmpty
         ? '' // Empty path if amount is 0
         : 'images/${widget.ingredientName}/$spriteSize.png';
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -119,16 +121,9 @@ class _IngredientControlState extends State<IngredientControl> with SingleTicker
           builder: (context, child) {
             return Transform.translate(
               offset: _positionAnimation.value,
-              child: SizedBox(
-                width: 220, // Increased width
-                height: 100, // Increased height
-                child: spritePath.isNotEmpty
-                    ? Image.asset(
-                        spritePath,
-                        fit: BoxFit.cover, // This makes the image fill the box while preserving aspect ratio
-                      )
-                    : null,
-              ),
+              child: spritePath.isNotEmpty
+                  ? Image.asset(spritePath, width: 220, height: 100)
+                  : null,
             );
           },
         ),
