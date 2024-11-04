@@ -44,5 +44,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/
+    - images/
     - assets/images/
     - packages/font_awesome_flutter/fonts/fa-brands-400.ttf
