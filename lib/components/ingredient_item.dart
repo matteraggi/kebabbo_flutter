@@ -98,7 +98,7 @@ class _IngredientControlState extends State<IngredientControl>
     // Construct the sprite path dynamically
     String spritePath = spriteSize.isEmpty
         ? '' // Empty path if amount is 0
-        : 'images/${widget.ingredientName}/$spriteSize.png';
+        : 'images/gluten_free.png';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
