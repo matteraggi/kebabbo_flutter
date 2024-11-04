@@ -34,7 +34,7 @@ Ancora non fatte in kebabbo Web:
 - [x] Icona kebab-panino in alto a sinistra e non subito prima del nome
 - [x] Filtro glutine
 - [x] Inserire luogo (kebabbaro)
-    - [ ] Cliccabile tag luogo
+    - [x] Cliccabile tag luogo
 - [x] Tag persona
     - [x] Cambiare da tag kebab a tag utente
     - [ ] Ricerca sulla barra di compilazione tag
