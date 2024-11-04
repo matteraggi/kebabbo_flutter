@@ -98,7 +98,7 @@ class _IngredientControlState extends State<IngredientControl>
     // Construct the sprite path dynamically
     String spritePath = spriteSize.isEmpty
         ? '' // Empty path if amount is 0
-        : 'images/gluten_free.png';
+        : 'assets/images/gluten_free.png';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -115,7 +115,6 @@ class _IngredientControlState extends State<IngredientControl>
               : null,
         ),
 
-        // Sprite (conditionally display if spritePath is not empty)
         AnimatedBuilder(
           animation: _positionAnimation,
           builder: (context, child) {
