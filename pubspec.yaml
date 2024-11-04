@@ -44,11 +44,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/lettuce
-    - assets/images/meat
-    - assets/images/onion
-    - assets/images/spicy
-    - assets/images/vegetables
-    - assets/images/yogurt
     - assets/images/
     - packages/font_awesome_flutter/fonts/fa-brands-400.ttf
