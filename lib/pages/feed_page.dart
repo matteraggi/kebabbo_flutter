@@ -5,16 +5,14 @@ import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
-
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
 
   @override
-  _FeedPageState createState() => _FeedPageState();
+  FeedPageState createState() => FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage> {
+class FeedPageState extends State<FeedPage> {
   List<Map<String, dynamic>> feedList = [];
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
@@ -280,30 +278,33 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   Future<void> _tagKebab() async {
-    await fetchKebabNames(); // Popola la lista dei kebabbari
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return ListView.builder(
-          itemCount: kebabbariList.length,
-          itemBuilder: (context, index) {
-            final kebabName = kebabbariList[index]['name'];
-            final kebabId = kebabbariList[index]['id'];
-            return ListTile(
-              title: Text(kebabName),
-              onTap: () {
-                setState(() {
-                  selectedKebabId = kebabId;
-                  selectedKebabName = kebabName;
-                });
-                Navigator.pop(context); // Chiude il modulo
-              },
-            );
-          },
-        );
-      },
-    );
-  }
+  await fetchKebabNames(); // Popola la lista dei kebabbari
+  
+  if (!mounted) return;
+
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return ListView.builder(
+        itemCount: kebabbariList.length,
+        itemBuilder: (context, index) {
+          final kebabName = kebabbariList[index]['name'];
+          final kebabId = kebabbariList[index]['id'];
+          return ListTile(
+            title: Text(kebabName),
+            onTap: () {
+              setState(() {
+                selectedKebabId = kebabId;
+                selectedKebabName = kebabName;
+              });
+              Navigator.pop(context); // Chiude il modulo
+            },
+          );
+        },
+      );
+    },
+  );
+}
 
   Future<void> fetchKebabNames() async {
     try {

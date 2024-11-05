@@ -20,10 +20,10 @@ class IngredientControl extends StatefulWidget {
   });
 
   @override
-  _IngredientControlState createState() => _IngredientControlState();
+  IngredientControlState createState() => IngredientControlState();
 }
 
-class _IngredientControlState extends State<IngredientControl>
+class IngredientControlState extends State<IngredientControl>
     with SingleTickerProviderStateMixin {
   late int _amount;
   late Offset _currentPosition;

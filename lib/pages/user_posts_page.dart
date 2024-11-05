@@ -14,39 +14,43 @@ class _UserPostsPageState extends State<UserPostsPage> {
   List<Map<String, dynamic>> _userPosts = [];
   bool _loading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadUserPosts();
-  }
+ @override
+void initState() {
+  super.initState();
+  _loadUserPosts();
+}
 
-  Future<void> _loadUserPosts() async {
-    setState(() {
-      _loading = true;
-    });
+Future<void> _loadUserPosts() async {
+  setState(() {
+    _loading = true;
+  });
 
-    try {
-      final userId = supabase.auth.currentSession!.user.id;
+  try {
+    final userId = supabase.auth.currentSession!.user.id;
 
-      // Recupera i post dell'utente attuale
-      final postsResponse = await supabase
-          .from('posts')
-          .select('*')
-          .eq('user_id', userId)
-          .filter('comment', 'is', null)
-          .order('created_at', ascending: false);
+    // Recupera i post dell'utente attuale
+    final postsResponse = await supabase
+        .from('posts')
+        .select('*')
+        .eq('user_id', userId)
+        .filter('comment', 'is', null)
+        .order('created_at', ascending: false);
 
-      _userPosts = List<Map<String, dynamic>>.from(postsResponse);
-    } catch (error) {
+    _userPosts = List<Map<String, dynamic>>.from(postsResponse);
+  } catch (error) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to load posts')),
       );
-    } finally {
+    }
+  } finally {
+    if (mounted) {
       setState(() {
         _loading = false;
       });
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

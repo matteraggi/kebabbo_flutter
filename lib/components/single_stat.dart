@@ -12,10 +12,10 @@ class SingleStat extends StatefulWidget {
   });
 
   @override
-  _SingleStatState createState() => _SingleStatState();
+  SingleStatState createState() => SingleStatState();
 }
 
-class _SingleStatState extends State<SingleStat> {
+class SingleStatState extends State<SingleStat> {
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -6,15 +6,15 @@ import 'package:kebabbo_flutter/utils/utils.dart';
 
 
 class SpecialPage extends StatefulWidget {
-  Position? currentPosition;
+  final Position? currentPosition;
 
-  SpecialPage({super.key, required this.currentPosition});
+  const SpecialPage({super.key, required this.currentPosition});
 
   @override
-  _SpecialPageState createState() => _SpecialPageState();
+  SpecialPageState createState() => SpecialPageState();
 }
 
-class _SpecialPageState extends State<SpecialPage> {
+class SpecialPageState extends State<SpecialPage> {
   List<Map<String, dynamic>> dashList = [];
   bool isLoading = true;
   String? errorMessage;

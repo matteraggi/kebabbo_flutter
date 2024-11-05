@@ -8,10 +8,10 @@ class KebabSinglePage extends StatefulWidget {
   const KebabSinglePage({super.key, required this.kebabId});
 
   @override
-  _KebabSinglePageState createState() => _KebabSinglePageState();
+  KebabSinglePageState createState() => KebabSinglePageState();
 }
 
-class _KebabSinglePageState extends State<KebabSinglePage> {
+class KebabSinglePageState extends State<KebabSinglePage> {
   Map<String, dynamic>? kebabData;
 
   @override

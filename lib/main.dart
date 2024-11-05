@@ -86,6 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 2;
   Position? _currentPosition;
   late Stream<Position> _positionStream;
+  
+  // GlobalKey for accessing MapPageState
+  final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
 
   @override
   void initState() {
@@ -101,11 +104,12 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _currentPosition = position;
       });
-      // Se la pagina corrente è la mappa, aggiorna la posizione
-      if (selectedIndex == 2) {
-        (context
-            .findAncestorWidgetOfExactType<MapPage>()
-            ?.updatePosition(position));
+      // If the current page is MapPage (selectedIndex == 3), update position
+      if (selectedIndex == 3) {
+        // Using the GlobalKey to call updatePosition on the MapPageState
+        if (_mapPageKey.currentState != null) {
+          _mapPageKey.currentState!.updatePosition(position);
+        }
       }
     });
   }
@@ -135,80 +139,85 @@ class _MyHomePageState extends State<MyHomePage> {
     Position position = await Geolocator.getCurrentPosition();
     setState(() {
       _currentPosition = position;
-      if (selectedIndex == 2) {
-        (context
-            .findAncestorWidgetOfExactType<MapPage>()
-            ?.updatePosition(position));
+      // If the current page is MapPage, update position
+      if (selectedIndex == 3) {
+        if (_mapPageKey.currentState != null) {
+          _mapPageKey.currentState!.updatePosition(position);
+        }
       }
     });
   }
-  
+
   @override
-Widget build(BuildContext context) {
-  Widget page;
+  Widget build(BuildContext context) {
+    Widget page;
 
-  switch (selectedIndex) {
-    case 0:
-      page = supabase.auth.currentSession == null
-          ? const LoginPage()
-          : const AccountPage();
-      break;
-    case 1:
-      page = ToolsPage(currentPosition: _currentPosition);
-      break;
-    case 2:
-      page = _currentPosition != null
-          ? TopKebabPage(currentPosition: _currentPosition!)
-          : const Center(child: CircularProgressIndicator()); // Mostra un loader o un messaggio temporaneo
-      break;
-    case 3:
-      page = MapPage(currentPosition: _currentPosition);
-      break;
-    case 4:
-      page = const FeedPage();
-      break;
-    default:
-      throw UnimplementedError('no widget for $selectedIndex');
+    switch (selectedIndex) {
+      case 0:
+        page = supabase.auth.currentSession == null
+            ? const LoginPage()
+            : const AccountPage();
+        break;
+      case 1:
+        page = ToolsPage(currentPosition: _currentPosition);
+        break;
+      case 2:
+        page = _currentPosition != null
+            ? TopKebabPage(currentPosition: _currentPosition!)
+            : const Center(child: CircularProgressIndicator());
+        break;
+      case 3:
+        // Pass the GlobalKey to MapPage to access its state
+        page = MapPage(
+          initialPosition: _currentPosition,
+          key: _mapPageKey, // Passing GlobalKey here
+        );
+        break;
+      case 4:
+        page = const FeedPage();
+        break;
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
+
+    return Scaffold(
+      body: page,
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
+        currentIndex: selectedIndex,
+        onTap: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Account',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.build),
+            label: 'Build',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.kebab_dining),
+            label: 'Top Kebab',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.comment),
+            label: 'Feed',
+          ),
+        ],
+        backgroundColor: red, // Colore di sfondo della navbar
+        selectedItemColor: yellow,
+        unselectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
   }
-
-  return Scaffold(
-    body: page,
-    bottomNavigationBar: BottomNavigationBar(
-      showSelectedLabels: true,
-      showUnselectedLabels: false,
-      currentIndex: selectedIndex,
-      onTap: (index) {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Account',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.build),
-          label: 'Build',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.kebab_dining),
-          label: 'Top Kebab',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.map),
-          label: 'Map',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.comment),
-          label: 'Feed',
-        ),
-      ],
-      backgroundColor: red, // Colore di sfondo della navbar
-      selectedItemColor: yellow,
-      unselectedItemColor: Colors.white,
-      type: BottomNavigationBarType.fixed,
-    ),
-  );
-}
 }

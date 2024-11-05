@@ -20,39 +20,46 @@ class _FavoritesPageState extends State<FavoritesPage> {
     _loadFavoriteKebabs();
   }
 
-  Future<void> _loadFavoriteKebabs() async {
+Future<void> _loadFavoriteKebabs() async {
+  if (mounted) {
     setState(() {
       _loading = true;
     });
+  }
 
-    try {
-      final userId = supabase.auth.currentSession!.user.id;
+  try {
+    final userId = supabase.auth.currentSession!.user.id;
 
-      final userData = await supabase
-          .from('profiles')
-          .select('favorites')
-          .eq('id', userId)
-          .single();
+    final userData = await supabase
+        .from('profiles')
+        .select('favorites')
+        .eq('id', userId)
+        .single();
 
-      final favoriteIds = List<String>.from(userData['favorites'] ?? []);
+    final favoriteIds = List<String>.from(userData['favorites'] ?? []);
 
-      if (favoriteIds.isNotEmpty) {
-        // Recupera i kebab utilizzando gli ID preferiti
-        final kebabsResponse =
-            await supabase.from('kebab').select().inFilter('id', favoriteIds);
+    if (favoriteIds.isNotEmpty) {
+      // Recupera i kebab utilizzando gli ID preferiti
+      final kebabsResponse =
+          await supabase.from('kebab').select().inFilter('id', favoriteIds);
 
-        _favoriteKebabs = List<Map<String, dynamic>>.from(kebabsResponse);
-      }
-    } catch (error) {
+      _favoriteKebabs = List<Map<String, dynamic>>.from(kebabsResponse);
+    }
+  } catch (error) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to load favorites')),
       );
-    } finally {
+    }
+  } finally {
+    if (mounted) {
       setState(() {
         _loading = false;
       });
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -50,28 +50,33 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void initState() {
-    _authStateSubscription = supabase.auth.onAuthStateChange.listen(
-      (data) {
-        if (_redirecting) return;
-        final session = data.session;
-        if (session != null) {
-          _redirecting = true;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const AccountPage()),
-          );
-        }
-      },
-      onError: (error) {
+void initState() {
+  super.initState();
+
+  _authStateSubscription = supabase.auth.onAuthStateChange.listen(
+    (data) {
+      if (_redirecting || !mounted) return;
+
+      final session = data.session;
+      if (session != null) {
+        _redirecting = true;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const AccountPage()),
+        );
+      }
+    },
+    onError: (error) {
+      if (mounted) {
         if (error is AuthException) {
           context.showSnackBar(error.message, isError: true);
         } else {
           context.showSnackBar('Unexpected error occurred', isError: true);
         }
-      },
-    );
-    super.initState();
-  }
+      }
+    },
+  );
+}
+
 
   @override
   void dispose() {

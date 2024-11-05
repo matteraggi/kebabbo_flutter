@@ -28,11 +28,11 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
 
   // Define target positions for each ingredient
   Map<String, Offset> ingredientTargets = {
-    'meat': const Offset(300, 200),
-    'onion': const Offset(300, 100),
-    'spicy': const Offset(300, 0),
-    'yogurt': const Offset(300, -100),
-    'vegetables': const Offset(300, -200),
+    'meat': const Offset(0, 200),
+    'onion': const Offset(0, 100),
+    'spicy': const Offset(0, 0),
+    'yogurt': const Offset(0, -100),
+    'vegetables': const Offset(0, -200),
   };
   // State variable for the maximum distance
   double maxDistance = 1; // Initially unlimited
@@ -239,7 +239,7 @@ Widget build(BuildContext context) {
                                 isNavigatingAway: isNavigatingAway,
                               ),
                             );
-                          }).toList(),
+                          }),
 
                           // Add the sliders and the "Build!" button back to mobile view
                           const SizedBox(height: 20),
@@ -300,7 +300,7 @@ Widget build(BuildContext context) {
               color: Colors.transparent,
               child: Center(
                 child: Image.asset(
-                  'images/loading_cloud.png',
+                  'assets/images/loading_cloud.png',
                   fit: BoxFit.cover,
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
@@ -353,43 +353,55 @@ String _getDistanceLabel(double distance) {
 }
 
 
+Widget buildButton() {
+  return ElevatedButton(
+    onPressed: () async {
+      // Check if there are any available kebabs for the selected distance
+      int availableKebabsForDistance = _getAvailableKebabsForCurrentDistance();
 
-  // Widget for the Build button
-  // Widget for the Build button
-  Widget buildButton() {
-    return ElevatedButton(
-      onPressed: () async {
-        setState(() {
-          isConverging = true;
-        });
-        // Trigger ingredient convergence animation
-        _ingredientController.forward();
-
-        // After convergence, show the cloud
-        setState(() {
-          showCloud = true;  // Make the cloud appear
-        });
-        await _cloudController.forward();  // Slide cloud up
-
-        // After the cloud fully appears, process the build
-        Future.delayed(const Duration(seconds: 1), () async {
-          setState(() {
-            isConverging = false;
-            isNavigatingAway = true;
-          });
-
-          Map<String, dynamic>? result = await buildKebab(
-            ingredientAmounts, 0, maxDistance, widget.currentPosition
+      // If no kebabs are available, show a SnackBar and don't trigger the cloud animation
+      if (availableKebabsForDistance == 0) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Nessun kebab corrispondente trovato nel raggio selezionato'),
+            ),
           );
-          Map<String, dynamic>? bestKebab;
-          int availableKebabs = 0;
+        }
+        return; // Don't proceed further, no cloud animation
+      }
 
-          if (result != null) {
-            bestKebab = result['kebab'];
-            availableKebabs = result['availableKebabs'];
-          }
+      // Proceed with the cloud animation and convergence
+      setState(() {
+        isConverging = true;
+      });
+      _ingredientController.forward();
 
-          if (bestKebab != null) {
+      setState(() {
+        showCloud = true;  // Make the cloud appear
+      });
+      await _cloudController.forward();  // Slide cloud up
+
+      // After cloud fully appears, process the build
+      Future.delayed(const Duration(seconds: 1), () async {
+        setState(() {
+          isConverging = false;
+          isNavigatingAway = true;
+        });
+
+        Map<String, dynamic>? result = await buildKebab(
+          ingredientAmounts, 0, maxDistance, widget.currentPosition
+        );
+        Map<String, dynamic>? bestKebab;
+        int availableKebabs = 0;
+
+        if (result != null) {
+          bestKebab = result['kebab'];
+          availableKebabs = result['availableKebabs'];
+        }
+
+        if (bestKebab != null) {
+          if (mounted) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -402,37 +414,56 @@ String _getDistanceLabel(double distance) {
                 ),
               ),
             );
-          } else {
+          }
+        } else {
+          if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Nessun kebab corrispondente trovato nel raggio selezionato'),
               ),
             );
           }
+        }
 
-          // Hide cloud after navigation
-          setState(() {
-            showCloud = false;  // Cloud slides back down
-          });
-          _cloudController.reverse();  // Slide cloud down
+        // Hide cloud after navigation
+        setState(() {
+          showCloud = false;  // Cloud slides back down
         });
-      },
-      style: ElevatedButton.styleFrom(
-        foregroundColor: red, // Red color for the button
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // Pill shape
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        _cloudController.reverse();  // Slide cloud down
+      });
+    },
+    style: ElevatedButton.styleFrom(
+      foregroundColor: red, // Red color for the button
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30), // Pill shape
       ),
-      child: const Text(
-        'Build!',
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.white,
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+    ),
+    child: const Text(
+      'Build!',
+      style: TextStyle(
+        fontSize: 18,
+        color: Colors.white,
       ),
-    );
+    ),
+  );
+}
+
+// Helper function to check available kebabs for the current maxDistance
+int _getAvailableKebabsForCurrentDistance() {
+  if (maxDistance <= 0.2) {
+    return availableKebabs['200m'] ?? 0;
+  } else if (maxDistance <= 0.5) {
+    return availableKebabs['500m'] ?? 0;
+  } else if (maxDistance <= 1) {
+    return availableKebabs['1km'] ?? 0;
+  } else if (maxDistance <= 10) {
+    return availableKebabs['10km'] ?? 0;
+  } else {
+    return availableKebabs['unlimited'] ?? 0;
   }
+}
+
 
 
 

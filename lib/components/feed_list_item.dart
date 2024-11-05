@@ -5,8 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart' as timeago_it;
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
-
 class FeedListItem extends StatefulWidget {
   final String text;
   final String createdAt;
@@ -32,10 +30,10 @@ class FeedListItem extends StatefulWidget {
   });
 
   @override
-  _FeedListItemState createState() => _FeedListItemState();
+  FeedListItemState createState() => FeedListItemState();
 }
 
-class _FeedListItemState extends State<FeedListItem> {
+class FeedListItemState extends State<FeedListItem> {
   String? userName;
   String? avatarUrl;
   bool isLoading = true;
@@ -253,6 +251,7 @@ class _FeedListItemState extends State<FeedListItem> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         await _postComment();
+                        if(mounted){
                         Navigator.pop(context);
 
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -260,6 +259,7 @@ class _FeedListItemState extends State<FeedListItem> {
                               content: Text(
                                   "Il commento è stato aggiunto con successo!")),
                         );
+                        }
                       },
                     ),
                   ],

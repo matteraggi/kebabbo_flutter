@@ -22,11 +22,11 @@ class KebabRecommendationPage extends StatefulWidget {
   });
 
   @override
-  _KebabRecommendationPageState createState() =>
-      _KebabRecommendationPageState();
+  KebabRecommendationPageState createState() =>
+      KebabRecommendationPageState();
 }
 
-class _KebabRecommendationPageState extends State<KebabRecommendationPage>
+class KebabRecommendationPageState extends State<KebabRecommendationPage>
     with TickerProviderStateMixin {
   late Map<String, dynamic> _currentKebab; // State variable for the current kebab
   double? _distanceInKm;

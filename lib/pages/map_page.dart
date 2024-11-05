@@ -10,28 +10,27 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 class MapPage extends StatefulWidget {
-  Position? currentPosition;
+  final Position? initialPosition; // Make it final since the initial position is passed during creation
 
-  MapPage({super.key, required this.currentPosition});
+  const MapPage({super.key, required this.initialPosition});
 
   @override
-  _MapPageState createState() => _MapPageState();
-
-  void updatePosition(Position newPosition) {
-    currentPosition = newPosition;
-  }
+  MapPageState createState() => MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class MapPageState extends State<MapPage> {
   List<Map<String, dynamic>> dashList = [];
   final MapController _mapController = MapController();
   final PopupController _popupController = PopupController();
   bool _isMapInitialized = false;
   String? errorMessage;
 
+  Position? _currentPosition;
+
   @override
   void initState() {
     super.initState();
+    _currentPosition = widget.initialPosition; // Initialize position from widget
     fetchKebab();
   }
 
@@ -53,12 +52,18 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  // Function to update position
+  void updatePosition(Position newPosition) {
+    setState(() {
+      _currentPosition = newPosition;
+    });
+  }
+
   void _centerMap() {
-    print('Centering map to: ${widget.currentPosition}');
-    if (widget.currentPosition != null && _isMapInitialized) {
+    print('Centering map to: ${_currentPosition}');
+    if (_currentPosition != null && _isMapInitialized) {
       _mapController.move(
-        LatLng(widget.currentPosition!.latitude,
-            widget.currentPosition!.longitude),
+        LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
         14,
       );
     }
@@ -66,22 +71,21 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.currentPosition == null) {
+    if (_currentPosition == null) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
 
     LatLng center = LatLng(
-        widget.currentPosition!.latitude, widget.currentPosition!.longitude);
+        _currentPosition!.latitude, _currentPosition!.longitude);
 
     List<Marker> markers = [
-      if (widget.currentPosition != null)
+      if (_currentPosition != null)
         Marker(
           width: 50.0,
           height: 50.0,
-          point: LatLng(widget.currentPosition!.latitude,
-              widget.currentPosition!.longitude),
+          point: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
           child: Image.asset("assets/images/user.png"),
           key: const ValueKey('user_marker'), // Key to identify the user marker
         ),

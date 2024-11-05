@@ -14,10 +14,10 @@ class TopKebabPage extends StatefulWidget {
   const TopKebabPage({super.key, required this.currentPosition});
 
   @override
-  _TopKebabPageState createState() => _TopKebabPageState();
+  TopKebabPageState createState() => TopKebabPageState();
 }
 
-class _TopKebabPageState extends State<TopKebabPage> {
+class TopKebabPageState extends State<TopKebabPage> {
   List<Map<String, dynamic>> dashList = [];
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;

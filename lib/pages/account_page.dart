@@ -92,43 +92,62 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  Future<void> _changeUsername() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Change Username'),
-          content: TextField(
-            controller: _usernameController,
-            maxLength: 12, // Limite di 12 caratteri
-            decoration: const InputDecoration(
-              hintText: 'Enter new username',
-              counterText: '', // Rimuove il contatore di caratteri visualizzato
-            ),
+Future<void> _changeUsername() async {
+  // Ensure the widget is mounted before proceeding
+  if (!mounted) return;
+
+  // Show the dialog
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Change Username'),
+        content: TextField(
+          controller: _usernameController,
+          maxLength: 12, // Limit to 12 characters
+          decoration: const InputDecoration(
+            hintText: 'Enter new username',
+            counterText: '', // Remove the counter text
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (mounted) {
+                Navigator.of(context).pop(); // Close the dialog immediately
+              }
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              // Immediately dismiss the dialog to avoid async gap issues
+              if (mounted) {
                 Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                setState(() {
-                  _username = _usernameController.text.trim();
-                });
-                await _updateProfile();
-                Navigator.of(context).pop();
-                setState(() {});
-              },
-              child: const Text('Update'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+              }
+
+              // Wait for the async update to complete
+              setState(() {
+                _username = _usernameController.text.trim();
+              });
+              
+              // Perform the update operation
+              await _updateProfile();
+
+              // After async operation, ensure widget is still mounted
+              if (mounted) {
+                setState(() {}); // Trigger a UI update if necessary
+              }
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 
   Future<void> _changeAvatar() async {
     // Usa FilePicker per selezionare un’immagine
@@ -326,17 +345,23 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Future<void> _signOut() async {
-    try {
-      await supabase.auth.signOut();
+Future<void> _signOut() async {
+  try {
+    await supabase.auth.signOut();
+
+    // Navigate immediately after sign out
+    if (mounted) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginPage()));
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unexpected error occurred')),
-        );
-      }
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+    }
+  } catch (error) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unexpected error occurred')),
+      );
     }
   }
+}
+
 }
