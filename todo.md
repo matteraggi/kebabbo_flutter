@@ -43,16 +43,30 @@ Ancora non fatte in kebabbo Web:
     - [ ] Cambiare grafica tag
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
     - [x] Sistemare caricamento immagini
-    - [ ] Pulsante build non visibile da mobile
+    - [x] Pulsante build non visibile da mobile
     - [ ] Modificare pagina build (renderla pagina con più funzioni tra cui search)
 
-- [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
-- [ ] Sezione recensioni utenti -> PAGINA ?
-- [ ] Sezione profilo utenti
+Feature lancio:
+- [ ] Sezione recensioni utenti
+- [ ] Build in account
+- [ ] Salvare kebab buildato in db
+- [ ] Pagina feed diventa pagina seguiti
+- [ ] Pagina ricerca e feed globale
+- [ ] Sticker con QR code per recensire
+- [ ] Aggiungere stats a tutti
+- [ ] Pagina profilo utente singolo
 - [ ] Pagine da poter seguire
 - [ ] Kebab preferito mostrato nel profilo -> PAGINA ACCOUNT
-- [ ] Gamification: Introduci premi o badge. Collegare gamification a sconti con i partner locali -> PAGINA ACCOUNT
+- [ ] Rifare design brand (logo, sticker e altro)
+- [ ] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
+
+Feature extra:
+- [ ] Badge del posto quando si mette review
+- [ ] Recensioni utenti postate come post
+- [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
+- [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
+
 
 Marketing:
 
