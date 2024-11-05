@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/pages/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
+import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -24,39 +25,30 @@ class _AccountPageState extends State<AccountPage> {
   int _postCount = 0;
   bool _loading = true;
   int _favoritesCount = 0;
+  List<int> _ingredients = [5, 5, 5, 5, 5];
   final TextEditingController _usernameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _getProfile();
+    _loadProfile();
     _getPostCount();
   }
 
-  Future<void> _getProfile() async {
+  Future<void> _loadProfile() async {
     setState(() {
       _loading = true;
     });
 
-    try {
-      final userId = supabase.auth.currentSession!.user.id;
-      final data =
-          await supabase.from('profiles').select().eq('id', userId).single();
-      _username = (data['username'] ?? '') as String;
-      _avatarUrl = (data['avatar_url'] ?? '') as String;
-      _favoritesCount = (data['favorites'] as List).length;
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unexpected error occurred')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
+    final profileData = await getProfile(context); // Call the utility function
+    if (profileData != null) {
+      setState(() {
+        _username = profileData['username'];
+        _avatarUrl = profileData['avatarUrl'];
+        _favoritesCount = profileData['favoritesCount'];
+        _ingredients = List<int>.from(profileData['ingredients']);
+        _loading = false;
+      });
     }
   }
 
@@ -65,40 +57,18 @@ class _AccountPageState extends State<AccountPage> {
       _loading = true;
     });
 
-    final user = supabase.auth.currentUser;
-    final updates = {
-      'id': user!.id,
-      'username': _username,
-      'avatar_url': _avatarUrl,
-      'updated_at': DateTime.now().toIso8601String(),
-    };
+    await updateProfile(
+        context, _username, _avatarUrl, null); // Call the utility function
 
-    try {
-      await supabase.from('profiles').upsert(updates);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Successfully updated profile!')),
-        );
-      }
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unexpected error occurred')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
-    }
+    setState(() {
+      _loading = false;
+    });
   }
 
   Future<void> _changeUsername() async {
     // Ensure the widget is mounted before proceeding
     if (!mounted) return;
-
+    _usernameController.text= _username;
     // Show the dialog
     showDialog(
       context: context,
@@ -163,10 +133,11 @@ class _AccountPageState extends State<AccountPage> {
       final filePath = '$userId.png';
 
       try {
+        print("got here");
         // Carica l'immagine nel bucket
         await supabase.storage.from('avatars').uploadBinary(filePath, bytes!,
             fileOptions: const FileOptions(upsert: true));
-
+        print("not here ");
         // Ottieni l'URL pubblico dell'immagine e aggiorna il profilo
         final imageUrlResponse = supabase.storage.from('avatars').getPublicUrl(
             filePath,
@@ -352,6 +323,13 @@ class _AccountPageState extends State<AccountPage> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ToolsPage(
                             currentPosition: widget.currentPosition,
+                            ingredients: _ingredients,
+                            onIngredientsUpdated: (updatedIngredients) {
+                              setState(() {
+                                _ingredients =
+                                    updatedIngredients; // Update ingredients locally in AccountPage
+                              });
+                            },
                           )));
                 },
                 child: Padding(

@@ -4,7 +4,6 @@ import 'package:kebabbo_flutter/pages/feed_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/map_page.dart';
 import 'package:kebabbo_flutter/pages/search_page.dart';
-import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';

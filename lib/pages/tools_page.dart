@@ -4,11 +4,15 @@ import 'package:kebabbo_flutter/components/ingredient_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab_recommandation_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:kebabbo_flutter/utils/user_logic.dart';
+import 'package:kebabbo_flutter/utils/ingredients_logic.dart';
 
 class ToolsPage extends StatefulWidget {
   final Position? currentPosition;
+  final List<int> ingredients;
+  final Function(List<int>) onIngredientsUpdated; // Callback for updating ingredients
 
-  const ToolsPage({super.key, required this.currentPosition});
+  const ToolsPage({super.key, required this.currentPosition, required this.ingredients, required this.onIngredientsUpdated});
 
   @override
   State<ToolsPage> createState() => _ToolsPageState();
@@ -35,7 +39,7 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
     'vegetables': const Offset(0, -200),
   };
   // State variable for the maximum distance
-  double maxDistance = 1; // Initially unlimited
+  double maxDistance = -1; // Initially unlimited
   Map<String, int> availableKebabs = {
   '200m': 0,
   '500m': 0,
@@ -54,7 +58,17 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
   @override
 void initState() {
   super.initState();
-
+  List<int> profileIngredients = widget.ingredients ;
+  
+  setState(() {
+    ingredientAmounts = {
+      'meat': profileIngredients[0],
+      'onion': profileIngredients[1],
+      'spicy': profileIngredients[2],
+      'yogurt': profileIngredients[3],
+      'vegetables': profileIngredients[4],
+    };
+  });
   // Ingredient controller (for ingredient converging animation)
   _ingredientController = AnimationController(
     vsync: this,
@@ -150,6 +164,7 @@ Widget build(BuildContext context) {
                                               onAmountChanged: (amount) {
                                                 setState(() {
                                                   ingredientAmounts[ingredient] = amount;
+                                                  widget.onIngredientsUpdated(ingredientAmounts.values.toList());
                                                 });
                                               },
                                               targetPosition: ingredientTargets[ingredient]!,
@@ -193,6 +208,7 @@ Widget build(BuildContext context) {
                                                 onChanged: (value) {
                                                   setState(() {
                                                     ingredientAmounts[ingredient] = value.toInt();
+                                                    widget.onIngredientsUpdated(ingredientAmounts.values.toList());
                                                   });
                                                 },
                                               ),
@@ -232,6 +248,7 @@ Widget build(BuildContext context) {
                                 onAmountChanged: (amount) {
                                   setState(() {
                                     ingredientAmounts[ingredient] = amount;
+                                    widget.onIngredientsUpdated(ingredientAmounts.values.toList());
                                   });
                                 },
                                 targetPosition: ingredientTargets[ingredient]!,
@@ -376,8 +393,9 @@ Widget buildButton() {
         isConverging = true;
       });
       _ingredientController.forward();
-
-      setState(() {
+      await updateProfileIngredients();
+      setState(() {  
+  
         showCloud = true;  // Make the cloud appear
       });
       await _cloudController.forward();  // Slide cloud up
@@ -447,6 +465,19 @@ Widget buildButton() {
       ),
     ),
   );
+}
+
+Future<void> updateProfileIngredients() async {
+  List<int> selectedIngredients = [
+    ingredientAmounts['meat']!,
+    ingredientAmounts['onion']!,
+    ingredientAmounts['spicy']!,
+    ingredientAmounts['yogurt']!,
+    ingredientAmounts['vegetables']!,
+  ];
+
+  // Call your updateProfile function (assuming you already have it in your utils)
+  await updateProfile(context, null, null, selectedIngredients);
 }
 
 // Helper function to check available kebabs for the current maxDistance

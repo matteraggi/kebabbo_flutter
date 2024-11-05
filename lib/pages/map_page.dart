@@ -60,7 +60,7 @@ class MapPageState extends State<MapPage> {
   }
 
   void _centerMap() {
-    print('Centering map to: ${_currentPosition}');
+    print('Centering map to: $_currentPosition');
     if (_currentPosition != null && _isMapInitialized) {
       _mapController.move(
         LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
