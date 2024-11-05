@@ -47,11 +47,11 @@ Ancora non fatte in kebabbo Web:
     - [ ] Modificare pagina build (renderla pagina con più funzioni tra cui search)
 
 Feature lancio:
-- [ ] Sezione recensioni utenti
-- [ ] Build in account
-- [ ] Salvare kebab buildato in db
-- [ ] Pagina feed diventa pagina seguiti
+- [x] Build in account
 - [ ] Pagina ricerca e feed globale
+- [ ] Pagina feed diventa pagina seguiti
+- [ ] Sezione recensioni utenti
+- [ ] Salvare kebab buildato in db
 - [ ] Sticker con QR code per recensire
 - [ ] Aggiungere stats a tutti
 - [ ] Pagina profilo utente singolo

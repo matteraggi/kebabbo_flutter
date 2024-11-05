@@ -1,15 +1,18 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:geolocator_platform_interface/src/models/position.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
+import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 
-
 class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+  const AccountPage({super.key, Position? currentPosition});
+
+  get currentPosition => null;
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -92,62 +95,60 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-Future<void> _changeUsername() async {
-  // Ensure the widget is mounted before proceeding
-  if (!mounted) return;
+  Future<void> _changeUsername() async {
+    // Ensure the widget is mounted before proceeding
+    if (!mounted) return;
 
-  // Show the dialog
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Change Username'),
-        content: TextField(
-          controller: _usernameController,
-          maxLength: 12, // Limit to 12 characters
-          decoration: const InputDecoration(
-            hintText: 'Enter new username',
-            counterText: '', // Remove the counter text
+    // Show the dialog
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Change Username'),
+          content: TextField(
+            controller: _usernameController,
+            maxLength: 12, // Limit to 12 characters
+            decoration: const InputDecoration(
+              hintText: 'Enter new username',
+              counterText: '', // Remove the counter text
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              if (mounted) {
-                Navigator.of(context).pop(); // Close the dialog immediately
-              }
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              // Immediately dismiss the dialog to avoid async gap issues
-              if (mounted) {
-                Navigator.of(context).pop();
-              }
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (mounted) {
+                  Navigator.of(context).pop(); // Close the dialog immediately
+                }
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Immediately dismiss the dialog to avoid async gap issues
+                if (mounted) {
+                  Navigator.of(context).pop();
+                }
 
-              // Wait for the async update to complete
-              setState(() {
-                _username = _usernameController.text.trim();
-              });
-              
-              // Perform the update operation
-              await _updateProfile();
+                // Wait for the async update to complete
+                setState(() {
+                  _username = _usernameController.text.trim();
+                });
 
-              // After async operation, ensure widget is still mounted
-              if (mounted) {
-                setState(() {}); // Trigger a UI update if necessary
-              }
-            },
-            child: const Text('Update'),
-          ),
-        ],
-      );
-    },
-  );
-}
+                // Perform the update operation
+                await _updateProfile();
 
-
+                // After async operation, ensure widget is still mounted
+                if (mounted) {
+                  setState(() {}); // Trigger a UI update if necessary
+                }
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _changeAvatar() async {
     // Usa FilePicker per selezionare un’immagine
@@ -167,8 +168,13 @@ Future<void> _changeUsername() async {
             fileOptions: const FileOptions(upsert: true));
 
         // Ottieni l'URL pubblico dell'immagine e aggiorna il profilo
-        final imageUrlResponse =
-            supabase.storage.from('avatars').getPublicUrl(filePath, transform: const TransformOptions(height: 200, width: 200, resize: ResizeMode.contain, quality: 60) );
+        final imageUrlResponse = supabase.storage.from('avatars').getPublicUrl(
+            filePath,
+            transform: const TransformOptions(
+                height: 200,
+                width: 200,
+                resize: ResizeMode.contain,
+                quality: 60));
         final imageUrl = imageUrlResponse;
         setState(() {
           _avatarUrl = imageUrl;
@@ -228,7 +234,8 @@ Future<void> _changeUsername() async {
                       backgroundImage:
                           (_avatarUrl != null && _avatarUrl!.isNotEmpty)
                               ? NetworkImage(_avatarUrl!)
-                              : const AssetImage('assets/images/kebab.png') as ImageProvider,
+                              : const AssetImage('assets/images/kebab.png')
+                                  as ImageProvider,
                     ),
                     IconButton(
                       icon: const Icon(Icons.camera_alt),
@@ -339,29 +346,42 @@ Future<void> _changeUsername() async {
                 ),
               ],
             ),
+            SizedBox(height: 30),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ToolsPage(
+                            currentPosition: widget.currentPosition,
+                          )));
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+                  child:
+                      Text('Build your Kebab!', style: TextStyle(fontSize: 20)),
+                )),
           ],
         ),
       ),
     );
   }
 
-Future<void> _signOut() async {
-  try {
-    await supabase.auth.signOut();
+  Future<void> _signOut() async {
+    try {
+      await supabase.auth.signOut();
 
-    // Navigate immediately after sign out
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
-    }
-  } catch (error) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unexpected error occurred')),
-      );
+      // Navigate immediately after sign out
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unexpected error occurred')),
+        );
+      }
     }
   }
-}
-
 }

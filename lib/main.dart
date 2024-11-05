@@ -3,6 +3,7 @@ import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:kebabbo_flutter/pages/feed_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/map_page.dart';
+import 'package:kebabbo_flutter/pages/search_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -156,10 +157,10 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         page = supabase.auth.currentSession == null
             ? const LoginPage()
-            : const AccountPage();
+            : AccountPage(currentPosition: _currentPosition);
         break;
       case 1:
-        page = ToolsPage(currentPosition: _currentPosition);
+        page = SearchPage();
         break;
       case 2:
         page = _currentPosition != null
@@ -197,8 +198,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Account',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.build),
-            label: 'Build',
+            icon: Icon(Icons.search),
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.kebab_dining),
