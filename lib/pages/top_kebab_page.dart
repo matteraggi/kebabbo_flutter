@@ -7,7 +7,6 @@ import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 class TopKebabPage extends StatefulWidget {
   final Position currentPosition;

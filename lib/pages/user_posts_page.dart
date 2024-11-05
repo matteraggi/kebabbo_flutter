@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
-const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
 class UserPostsPage extends StatefulWidget {
   const UserPostsPage({super.key});

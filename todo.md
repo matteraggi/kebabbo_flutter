@@ -53,7 +53,6 @@ Ancora non fatte in kebabbo Web:
 - [ ] Gamification: Introduci premi o badge. Collegare gamification a sconti con i partner locali -> PAGINA ACCOUNT
 - [ ] Notifiche
 
-
 Marketing:
 
 - [ ] Pensare piano marketing con CMO dell'azienda

@@ -238,3 +238,63 @@ double calculateIngredientDistance(String ingredient, int userInput, int? kebabV
     return (userInput - kebabValue).abs().toDouble(); // Calculate the absolute difference
   }
 }
+
+
+Future<Map<String, int>> calculateAvailableKebabsPerDistance(
+    Map<String, int> ingredientAmounts,
+    Position? userPosition,
+) async {
+  try {
+    // Fetch all kebabs from Supabase with required ingredient values
+    final PostgrestList response = await supabase
+        .from('kebab')
+        .select('*')
+        .not('meat', 'is', null)
+        .not('onion', 'is', null)
+        .not('spicy', 'is', null)
+        .not('yogurt', 'is', null)
+        .not('vegetables', 'is', null);
+
+    List<Map<String, dynamic>> kebabs =
+        List<Map<String, dynamic>>.from(response as List);
+
+    Map<String, int> kebabsInRange = {
+      '200m': 0,
+      '500m': 0,
+      '1km': 0,
+      '10km': 0,
+      'unlimited': kebabs.length, // All kebabs for unlimited range
+    };
+
+    // If user location is available, calculate the distance
+    if (userPosition != null) {
+      for (var kebab in kebabs) {
+        double distanceInMeters = Geolocator.distanceBetween(
+          userPosition.latitude,
+          userPosition.longitude,
+          kebab['lat'],
+          kebab['lng'],
+        );
+        double distanceInKm = distanceInMeters / 1000;
+
+        if (distanceInKm <= 0.2) {
+          kebabsInRange['200m'] = kebabsInRange['200m']! + 1;
+        }
+        if (distanceInKm <= 0.5) {
+          kebabsInRange['500m'] = kebabsInRange['500m']! + 1;
+        }
+        if (distanceInKm <= 1) {
+          kebabsInRange['1km'] = kebabsInRange['1km']! + 1;
+        }
+        if (distanceInKm <= 10) {
+          kebabsInRange['10km'] = kebabsInRange['10km']! + 1;
+        }
+      }
+    }
+
+    return kebabsInRange; // Return available kebab counts for each range
+  } catch (error) {
+    print('Error calculating kebab distance: $error');
+    return {'200m': 0, '500m': 0, '1km': 0, '10km': 0, 'unlimited': 0};
+  }
+}

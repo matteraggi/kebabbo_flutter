@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
-const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});

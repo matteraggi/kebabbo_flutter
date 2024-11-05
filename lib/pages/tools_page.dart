@@ -36,6 +36,14 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
   };
   // State variable for the maximum distance
   double maxDistance = 1; // Initially unlimited
+  Map<String, int> availableKebabs = {
+  '200m': 0,
+  '500m': 0,
+  '1km': 0,
+  '10km': 0,
+  'unlimited': 0,
+};
+
 
   // State variables for animations
   late AnimationController _ingredientController;
@@ -44,27 +52,53 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
   bool showCloud = false;
 
   @override
-  void initState() {
-    super.initState();
+void initState() {
+  super.initState();
 
-    // Ingredient controller (for ingredient converging animation)
-    _ingredientController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    );
+  // Ingredient controller (for ingredient converging animation)
+  _ingredientController = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  );
 
-    // Cloud controller (for full-screen cloud appearance and movement from bottom)
-    _cloudController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    );
+  // Cloud controller (for full-screen cloud appearance and movement from bottom)
+  _cloudController = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  );
 
-    // Slide animation for the cloud, starting from off-screen (below) to cover the full screen
-    _cloudAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.5), // Start off-screen (below)
-      end: Offset.zero, // End at the center (covering the whole screen)
-    ).animate(_cloudController);
-  }
+  // Slide animation for the cloud, starting from off-screen (below) to cover the full screen
+  _cloudAnimation = Tween<Offset>(
+    begin: const Offset(0, 1.5), // Start off-screen (below)
+    end: Offset.zero, // End at the center (covering the whole screen)
+  ).animate(_cloudController);
+
+  // Fetch kebabs and calculate how many are in each distance range
+  _fetchKebabAvailability();
+}
+
+void _fetchKebabAvailability() async {
+  Map<String, int> availableKebabsPerRange =
+      await calculateAvailableKebabsPerDistance(ingredientAmounts, widget.currentPosition);
+
+  setState(() {
+    availableKebabs = availableKebabsPerRange;
+    
+    // Set maxDistance to the first non-zero range
+    if (availableKebabs['200m']! > 0) {
+      maxDistance = 0.2;
+    } else if (availableKebabs['500m']! > 0) {
+      maxDistance = 0.5;
+    } else if (availableKebabs['1km']! > 0) {
+      maxDistance = 1;
+    } else if (availableKebabs['10km']! > 0) {
+      maxDistance = 10;
+    } else {
+      maxDistance = double.infinity; // Default to unlimited if all are 0
+    }
+  });
+}
+
 
   @override
   void dispose() {
@@ -73,19 +107,20 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Build Your Kebab'),
-      ),
-      body: Stack(
-        children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              bool isDesktop = constraints.maxWidth > 650;
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Build Your Kebab'),
+    ),
+    body: Stack(
+      children: [
+        LayoutBuilder(
+          builder: (context, constraints) {
+            bool isDesktop = constraints.maxWidth > 650;
 
-              return Center(
+            return SingleChildScrollView(
+              child: Center(
                 child: isDesktop
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +139,7 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
                                         tween: Tween<Offset>(
                                           begin: const Offset(0, 0),
                                           end: const Offset(0, 0),
-                                        ), // Adjust the final position to converge towards center
+                                        ),
                                         duration: const Duration(seconds: 1),
                                         builder: (context, value, child) {
                                           return Transform.translate(
@@ -117,9 +152,8 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
                                                   ingredientAmounts[ingredient] = amount;
                                                 });
                                               },
-
                                               targetPosition: ingredientTargets[ingredient]!,
-                                              isConverging: isConverging, // Pass the convergence trigger
+                                              isConverging: isConverging,
                                               isNavigatingAway: isNavigatingAway,
                                             ),
                                           );
@@ -175,8 +209,9 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
                                         textAlign: TextAlign.center,
                                       ),
                                       _buildDistanceSlider(),
-                                      const SizedBox(height: 30),
+                                      const SizedBox(height: 20), // Reduced space above button
                                       buildButton(),
+                                      const SizedBox(height: 40), // Added margin below the button
                                     ],
                                   ),
                                 ),
@@ -185,10 +220,10 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
                           ),
                         ],
                       )
-                    : SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: ingredientAmounts.keys.map((ingredient) {
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ...ingredientAmounts.keys.map((ingredient) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5.0),
                               child: IngredientControl(
@@ -199,40 +234,127 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
                                     ingredientAmounts[ingredient] = amount;
                                   });
                                 },
-
                                 targetPosition: ingredientTargets[ingredient]!,
-                                isConverging: isConverging, // Pass the convergence trigger
+                                isConverging: isConverging,
                                 isNavigatingAway: isNavigatingAway,
                               ),
                             );
                           }).toList(),
-                        ),
-                      ),
-              );
-            },
-          ),
 
-          // Full screen cloud animation
-          if (showCloud)
-            SlideTransition(
-              position: _cloudAnimation,
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: Image.asset(
-                    'images/loading_cloud.png',
-                    fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                  ),
+                          // Add the sliders and the "Build!" button back to mobile view
+                          const SizedBox(height: 20),
+                          for (String ingredient in ingredientAmounts.keys)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    ingredient,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Slider(
+                                    value: ingredientAmounts[ingredient]!.toDouble(),
+                                    min: 0,
+                                    max: 10,
+                                    divisions: 10,
+                                    activeColor: red,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        ingredientAmounts[ingredient] = value.toInt();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Distanza Massima',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          _buildDistanceSlider(),
+                          const SizedBox(height: 20), // Reduced space above button
+                          buildButton(),
+                          const SizedBox(height: 40), // Added margin below the button
+                        ],
+                      ),
+              ),
+            );
+          },
+        ),
+
+        // Full screen cloud animation
+        if (showCloud)
+          SlideTransition(
+            position: _cloudAnimation,
+            child: Container(
+              color: Colors.transparent,
+              child: Center(
+                child: Image.asset(
+                  'images/loading_cloud.png',
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
                 ),
               ),
             ),
-        ],
-      ),
-    );
+          ),
+      ],
+    ),
+  );
   }
 
+  Widget _buildDistanceSlider() {
+  return SliderTheme(
+    data: SliderTheme.of(context).copyWith(
+      valueIndicatorTextStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    child: Slider(
+      value: _mapDistanceToSliderValue(maxDistance),
+      min: 0,
+      max: 4,
+      divisions: 4,
+      label: _getDistanceLabel(maxDistance),
+      activeColor: Colors.white,
+      onChanged: (value) {
+        setState(() {
+          maxDistance = _mapSliderValueToDistance(value);
+        });
+      },
+    ),
+  );
+}
+
+String _getDistanceLabel(double distance) {
+  if (distance <= 0.2) {
+    return '200 metri (${availableKebabs['200m']} risultati)';
+  } else if (distance <= 0.5) {
+    return '500 metri (${availableKebabs['500m']} risultati)';
+  } else if (distance <= 1) {
+    return '1 km (${availableKebabs['1km']} risultati)';
+  } else if (distance <= 10) {
+    return '10 km (${availableKebabs['10km']} risultati)';
+  } else {
+    return 'Illimitato (${availableKebabs['unlimited']} risultati)';
+  }
+}
+
+
+
+  // Widget for the Build button
   // Widget for the Build button
   Widget buildButton() {
     return ElevatedButton(
@@ -244,50 +366,56 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
         _ingredientController.forward();
 
         // After convergence, show the cloud
+        setState(() {
+          showCloud = true;  // Make the cloud appear
+        });
+        await _cloudController.forward();  // Slide cloud up
+
+        // After the cloud fully appears, process the build
+        Future.delayed(const Duration(seconds: 1), () async {
           setState(() {
-            showCloud = true;
+            isConverging = false;
+            isNavigatingAway = true;
           });
-          _cloudController.forward();
 
-          // After cloud fully appears, navigate to the recommendation page
-          Future.delayed(const Duration(seconds: 1), () async {
-            setState(() {
-              isConverging = false;
-              isNavigatingAway = true;
-            });
-            Map<String, dynamic>? result = await buildKebab(ingredientAmounts, 0, maxDistance, widget.currentPosition);
-            Map<String, dynamic>? bestKebab;
-            int availableKebabs = 0;
-            if (result != null) {
-              bestKebab = result['kebab'];
-              availableKebabs = result['availableKebabs'];
-            }
+          Map<String, dynamic>? result = await buildKebab(
+            ingredientAmounts, 0, maxDistance, widget.currentPosition
+          );
+          Map<String, dynamic>? bestKebab;
+          int availableKebabs = 0;
 
-            if (bestKebab != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => KebabRecommendationPage(
-                    kebab: bestKebab!,
-                    availableKebabs: availableKebabs,
-                    ingredients: ingredientAmounts,
-                    maxDistance: maxDistance,
-                    currentPosition: widget.currentPosition,
-                  ),
+          if (result != null) {
+            bestKebab = result['kebab'];
+            availableKebabs = result['availableKebabs'];
+          }
+
+          if (bestKebab != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => KebabRecommendationPage(
+                  kebab: bestKebab!,
+                  availableKebabs: availableKebabs,
+                  ingredients: ingredientAmounts,
+                  maxDistance: maxDistance,
+                  currentPosition: widget.currentPosition,
                 ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Nessun kebab corrispondente trovato nel raggio selezionato')),
-              );
-            }
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Nessun kebab corrispondente trovato nel raggio selezionato'),
+              ),
+            );
+          }
 
-            // Hide cloud after navigation
-            setState(() {
-              showCloud = false;
-            });
-            _cloudController.reverse();
+          // Hide cloud after navigation
+          setState(() {
+            showCloud = false;  // Cloud slides back down
           });
+          _cloudController.reverse();  // Slide cloud down
+        });
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: red, // Red color for the button
@@ -306,30 +434,7 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildDistanceSlider() {
-    return SliderTheme(
-      data: SliderTheme.of(context).copyWith(
-        valueIndicatorTextStyle: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      child: Slider(
-        value: _mapDistanceToSliderValue(maxDistance),
-        min: 0,
-        max: 4,
-        divisions: 4,
-        label: _getDistanceLabel(maxDistance),
-        activeColor: Colors.white,
-        onChanged: (value) {
-          setState(() {
-            maxDistance = _mapSliderValueToDistance(value);
-          });
-        },
-      ),
-    );
-  }
+
 
   double _mapDistanceToSliderValue(double distance) {
     switch (distance) {
@@ -359,21 +464,6 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
         return 10;
       default:
         return double.infinity;
-    }
-  }
-
-  // Helper function to get the distance label
-  String _getDistanceLabel(double distance) {
-    if (distance <= 0.2) {
-      return ' 200 metri ';
-    } else if (distance <= 0.5) {
-      return ' 500 metri ';
-    } else if (distance <= 1) {
-      return ' 1 km ';
-    } else if (distance <= 10) {
-      return ' 10 km ';
-    } else {
-      return ' Illimitato ';
     }
   }
 }

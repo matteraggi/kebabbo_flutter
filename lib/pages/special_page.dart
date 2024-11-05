@@ -4,7 +4,6 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 class SpecialPage extends StatefulWidget {
   Position? currentPosition;

@@ -7,7 +7,6 @@ import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -210,8 +209,7 @@ class _AccountPageState extends State<AccountPage> {
                       backgroundImage:
                           (_avatarUrl != null && _avatarUrl!.isNotEmpty)
                               ? NetworkImage(_avatarUrl!)
-                              : const AssetImage('images/kebab.png')
-                                  as ImageProvider,
+                              : const AssetImage('assets/images/kebab.png') as ImageProvider,
                     ),
                     IconButton(
                       icon: const Icon(Icons.camera_alt),

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class KebabSinglePage extends StatefulWidget {
   final String kebabId;
 
-  const KebabSinglePage({Key? key, required this.kebabId}) : super(key: key);
+  const KebabSinglePage({super.key, required this.kebabId});
 
   @override
   _KebabSinglePageState createState() => _KebabSinglePageState();
