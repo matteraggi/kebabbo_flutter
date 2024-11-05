@@ -45,7 +45,7 @@ Ancora non fatte in kebabbo Web:
     - [x] Sistemare caricamento immagini
     - [ ] Pulsante build non visibile da mobile
     - [ ] Modificare pagina build (renderla pagina con più funzioni tra cui search)
-
+ 
 - [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
 - [ ] Sezione recensioni utenti -> PAGINA ?
 - [ ] Sezione profilo utenti
