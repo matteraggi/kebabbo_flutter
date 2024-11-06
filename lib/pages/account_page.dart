@@ -67,55 +67,75 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<void> _changeUsername() async {
-    // Ensure the widget is mounted before proceeding
     if (!mounted) return;
+
     _usernameController.text = _username;
-    // Show the dialog
+
+    String? errorMessage;
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Change Username'),
-          content: TextField(
-            controller: _usernameController,
-            maxLength: 12, // Limit to 12 characters
-            decoration: const InputDecoration(
-              hintText: 'Enter new username',
-              counterText: '', // Remove the counter text
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (mounted) {
-                  Navigator.of(context).pop(); // Close the dialog immediately
-                }
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                // Immediately dismiss the dialog to avoid async gap issues
-                if (mounted) {
-                  Navigator.of(context).pop();
-                }
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Change Username'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _usernameController,
+                    maxLength: 12,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter new username',
+                      counterText: '',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        errorMessage =
+                            validateUsername(value); // Use the utility function
+                      });
+                    },
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    errorMessage ?? ' \n ',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: errorMessage != null
+                      ? null
+                      : () async {
+                          if (mounted) {
+                            Navigator.of(context).pop();
+                          }
 
-                // Wait for the async update to complete
-                setState(() {
-                  _username = _usernameController.text.trim();
-                });
+                          setState(() {
+                            _username = _usernameController.text.trim();
+                          });
 
-                // Perform the update operation
-                await _updateProfile();
+                          await _updateProfile();
 
-                // After async operation, ensure widget is still mounted
-                if (mounted) {
-                  setState(() {}); // Trigger a UI update if necessary
-                }
-              },
-              child: const Text('Update'),
-            ),
-          ],
+                          if (mounted) {
+                            setState(() {});
+                          }
+                        },
+                  child: const Text('Update'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -197,18 +217,45 @@ class _AccountPageState extends State<AccountPage> {
                 Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage:
-                          (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                              ? NetworkImage(_avatarUrl!)
-                              : const AssetImage('assets/images/kebab.png')
-                                  as ImageProvider,
+                    // Red border around CircleAvatar
+                    Container(
+                      width: 100, // Diameter of the circle
+                      height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: red, width: 3), // Red border
+                      ),
+                      child: CircleAvatar(
+                        radius:
+                            47, // Adjust radius to fit within the red border
+                        backgroundImage:
+                            (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                                ? NetworkImage(_avatarUrl!)
+                                : const AssetImage('assets/images/kebab.png')
+                                    as ImageProvider,
+                      ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.camera_alt),
-                      color: red,
-                      onPressed: _changeAvatar,
+                    // White pill-shaped background for the camera icon
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white, // White background
+                        shape: BoxShape.rectangle,
+                        borderRadius:
+                            BorderRadius.circular(15), // Pill-shaped corners
+                      ),
+                      padding: const EdgeInsets.all(
+                          2), // Adjust padding for smaller pill
+                      child: IconButton(
+                        padding: EdgeInsets
+                            .zero, // Remove extra padding around the icon
+                        constraints: const BoxConstraints(),
+                        icon: const Icon(
+                          Icons.camera_alt,
+                          size: 25, // Smaller icon size
+                          color: red, // Red icon color
+                        ),
+                        onPressed: _changeAvatar, // Added the onPressed action
+                      ),
                     ),
                   ],
                 ),

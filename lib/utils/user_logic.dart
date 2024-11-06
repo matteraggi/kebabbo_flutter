@@ -59,3 +59,25 @@ Future<void> updateProfile(BuildContext context, String? username,
     );
   }
 }
+String? validateUsername(String username) {
+  // Check for whitespace
+  if (username.contains(' ')) {
+    return 'Username cannot contain spaces,\nuse undescores instead!';
+  }
+  
+  // Check for length (min 3, max 12)
+  if (username.length < 3) {
+    return 'Username must be at least 3 \ncharacters long!';
+  }
+  if (username.length > 12) {
+    return 'Username cannot be more than \n12 characters!';
+  }
+  
+  // Check for invalid characters (only letters, numbers, underscores allowed)
+  if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(username)) {
+    return 'Username can only contain letters,\nnumbers, and underscores!';
+  }
+
+  // Return null if there's no error (valid username)
+  return null;
+}

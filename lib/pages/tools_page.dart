@@ -32,11 +32,11 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
 
   // Define target positions for each ingredient
   Map<String, Offset> ingredientTargets = {
-    'meat': const Offset(0, 200),
-    'onion': const Offset(0, 100),
+    'meat': const Offset(0, 250),
+    'onion': const Offset(0, 125),
     'spicy': const Offset(0, 0),
-    'yogurt': const Offset(0, -100),
-    'vegetables': const Offset(0, -200),
+    'yogurt': const Offset(0, -125),
+    'vegetables': const Offset(0, -250),
   };
   // State variable for the maximum distance
   double maxDistance = -1; // Initially unlimited
@@ -240,8 +240,9 @@ Widget build(BuildContext context) {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ...ingredientAmounts.keys.map((ingredient) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            return Column(children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
                               child: IngredientControl(
                                 ingredientName: ingredient,
                                 amount: ingredientAmounts[ingredient]!,
@@ -255,40 +256,19 @@ Widget build(BuildContext context) {
                                 isConverging: isConverging,
                                 isNavigatingAway: isNavigatingAway,
                               ),
-                            );
+                            ),
+                              Text(
+                                ingredientAmounts[ingredient]!.toString(),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              )
+                            ]);
                           }),
 
                           // Add the sliders and the "Build!" button back to mobile view
-                          const SizedBox(height: 20),
-                          for (String ingredient in ingredientAmounts.keys)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    ingredient,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Slider(
-                                    value: ingredientAmounts[ingredient]!.toDouble(),
-                                    min: 0,
-                                    max: 10,
-                                    divisions: 10,
-                                    activeColor: red,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        ingredientAmounts[ingredient] = value.toInt();
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
                           const SizedBox(height: 20),
                           const Text(
                             'Distanza Massima',
