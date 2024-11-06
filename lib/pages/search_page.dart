@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
     suggestionOverlay?.remove();
     super.dispose();
   }
-
+ 
   void _onSearchTextChanged() {}
 
   Future<void> fetchUserNames() async {
