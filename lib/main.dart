@@ -198,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Search',
+            label: 'Explore',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.kebab_dining),
@@ -210,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.comment),
-            label: 'Feed',
+            label: 'Followed',
           ),
         ],
         backgroundColor: red, // Colore di sfondo della navbar

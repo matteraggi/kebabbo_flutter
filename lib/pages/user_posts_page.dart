@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 
-
 class UserPostsPage extends StatefulWidget {
-  const UserPostsPage({super.key});
+  final String userId; // Aggiungiamo il parametro userId
+
+  const UserPostsPage(
+      {super.key, required this.userId}); // Modificato per accettare userId
 
   @override
   State<UserPostsPage> createState() => _UserPostsPageState();
@@ -14,43 +16,43 @@ class _UserPostsPageState extends State<UserPostsPage> {
   List<Map<String, dynamic>> _userPosts = [];
   bool _loading = true;
 
- @override
-void initState() {
-  super.initState();
-  _loadUserPosts();
-}
+  @override
+  void initState() {
+    super.initState();
+    _loadUserPosts();
+  }
 
-Future<void> _loadUserPosts() async {
-  setState(() {
-    _loading = true;
-  });
+  Future<void> _loadUserPosts() async {
+    setState(() {
+      _loading = true;
+    });
 
-  try {
-    final userId = supabase.auth.currentSession!.user.id;
+    try {
+      final userId = widget.userId; // Usando userId passato al widget
 
-    // Recupera i post dell'utente attuale
-    final postsResponse = await supabase
-        .from('posts')
-        .select('*')
-        .eq('user_id', userId)
-        .filter('comment', 'is', null)
-        .order('created_at', ascending: false);
+      // Recupera i post dell'utente specificato
+      final postsResponse = await supabase
+          .from('posts')
+          .select('*')
+          .eq('user_id', userId)
+          .filter('comment', 'is', null)
+          .order('created_at', ascending: false);
 
-    _userPosts = List<Map<String, dynamic>>.from(postsResponse);
-  } catch (error) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to load posts')),
-      );
-    }
-  } finally {
-    if (mounted) {
-      setState(() {
-        _loading = false;
-      });
+      _userPosts = List<Map<String, dynamic>>.from(postsResponse);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load posts')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ Future<void> _loadUserPosts() async {
                           likeList: post['like'] ?? [],
                           commentNumber: post['comments_number'] ?? 0,
                           kebabTagId: post['kebab_tag_id'] ?? '',
-                          kebabName: post['kebab_name'] ?? '',
+                          kebabName: post['kebab_tag_name'] ?? '',
                         );
                       },
                     ),

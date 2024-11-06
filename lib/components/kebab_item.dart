@@ -98,6 +98,16 @@ class KebabListItemState extends State<KebabListItem> {
       shadowColor: Colors.grey,
       child: Stack(
         children: [
+          if (widget.glutenFree)
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: Image.asset(
+                "assets/images/gluten_free.png",
+                height: 40,
+                width: 40,
+              ),
+            ),
           ExpansionTile(
             initiallyExpanded: isExpanded,
             leading: const SizedBox(width: 10),
@@ -201,6 +211,11 @@ class KebabListItemState extends State<KebabListItem> {
                               linkMaps: widget.map,
                               text: "Apri in Maps",
                               icon: Icons.map),
+                          Image.asset(
+                            "assets/images/gluten_free.png",
+                            height: 40,
+                            width: 40,
+                          ),
                           if (widget.fun >= 4)
                             Transform.rotate(
                               angle: -0.2,
@@ -256,16 +271,6 @@ class KebabListItemState extends State<KebabListItem> {
               width: 24,
             ),
           ),
-          if (widget.glutenFree)
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: Image.asset(
-                "assets/images/gluten_free.png",
-                height: 40,
-                width: 40,
-              ),
-            ),
           if (widget.tag == "kebab")
             Positioned(
               top: 8,

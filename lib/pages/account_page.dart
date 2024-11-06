@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/favorites_page.dart';
+import 'package:kebabbo_flutter/pages/followers_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
+import 'package:kebabbo_flutter/pages/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
@@ -22,18 +24,41 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   String _username = "";
+  final String _id = Supabase.instance.client.auth.currentSession!.user.id;
   String? _avatarUrl;
   int _postCount = 0;
   bool _loading = true;
   int _favoritesCount = 0;
   List<int> _ingredients = [5, 5, 5, 5, 5];
   final TextEditingController _usernameController = TextEditingController();
+  int _followersCount = 0;
+  int _seguitiCount = 0;
 
   @override
   void initState() {
     super.initState();
     _loadProfile();
     _getPostCount();
+    _getFollowerCount(); // Passa l'ID utente anche qui
+  }
+
+
+  Future<void> _getFollowerCount() async {
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select('id')
+          .contains('followed_users', [supabase.auth.currentUser!.id]);
+      setState(() {
+        _followersCount = response.length;
+      });
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load follower count')),
+        );
+      }
+    }
   }
 
   Future<void> _loadProfile() async {
@@ -41,13 +66,16 @@ class _AccountPageState extends State<AccountPage> {
       _loading = true;
     });
 
-    final profileData = await getProfile(context); // Call the utility function
+    final profileData = await getProfile(context);
     if (profileData != null) {
       setState(() {
         _username = profileData['username'];
         _avatarUrl = profileData['avatarUrl'];
         _favoritesCount = profileData['favoritesCount'];
         _ingredients = List<int>.from(profileData['ingredients']);
+        _seguitiCount = (profileData['seguitiCount'] != null)
+            ? profileData['seguitiCount'].length
+            : 0;
         _loading = false;
       });
     }
@@ -306,10 +334,8 @@ class _AccountPageState extends State<AccountPage> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      // Azione per la sezione dei post
-                      // Ad esempio, naviga alla pagina dei post dell'utente
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const UserPostsPage()));
+                          builder: (context) => UserPostsPage(userId: _id)));
                     },
                     child: Column(
                       children: [
@@ -321,7 +347,7 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                         const Text(
-                          'Post',
+                          'post',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -334,10 +360,8 @@ class _AccountPageState extends State<AccountPage> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      // Azione per la sezione dei preferiti
-                      // Ad esempio, naviga alla pagina dei preferiti dell'utente
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const FavoritesPage()));
+                          builder: (context) => FavoritesPage(userId: _id)));
                     },
                     child: Column(
                       children: [
@@ -349,7 +373,59 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                         const Text(
-                          'Preferiti',
+                          'preferiti',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SeguitiPage(userId: _id)));
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          '$_seguitiCount', // Numero di preferiti
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'seguiti',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FollowersPage(userId: _id)));
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          '$_followersCount', // Numero di preferiti
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'followers',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,

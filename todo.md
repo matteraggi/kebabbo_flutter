@@ -48,6 +48,7 @@ Ancora non fatte in kebabbo Web:
 
 Feature lancio:
 - [x] Build in account
+- [ ] UI before position access
 - [ ] Pagina ricerca e feed globale
 - [ ] Pagina feed diventa pagina seguiti
 - [ ] Sezione recensioni utenti

@@ -15,6 +15,7 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
       'avatarUrl': data['avatar_url'] ?? '',
       'favoritesCount': (data['favorites'] as List).length,
       'ingredients': data['ingredients'] ?? [],
+      'seguitiCount': data['followed_users'] ?? [],
     };
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(

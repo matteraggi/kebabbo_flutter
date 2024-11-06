@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab_single_page.dart';
+import 'package:kebabbo_flutter/pages/single_user_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart' as timeago_it;
@@ -251,14 +252,14 @@ class FeedListItemState extends State<FeedListItem> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         await _postComment();
-                        if(mounted){
-                        Navigator.pop(context);
+                        if (mounted) {
+                          Navigator.pop(context);
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  "Il commento è stato aggiunto con successo!")),
-                        );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text(
+                                    "Il commento è stato aggiunto con successo!")),
+                          );
                         }
                       },
                     ),
@@ -399,27 +400,40 @@ class FeedListItemState extends State<FeedListItem> {
           children: [
             isLoading
                 ? const CircularProgressIndicator()
-                : Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage:
-                            avatarUrl != null && avatarUrl!.isNotEmpty
-                                ? NetworkImage(avatarUrl!)
-                                : const AssetImage('images/kebab.png')
-                                    as ImageProvider,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        userName ?? 'Anonimo',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                : InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SingleUserPage(
+                            userId: widget
+                                .userId, // Passa l'ID dell'utente alla SingleUserPage
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage:
+                              avatarUrl != null && avatarUrl!.isNotEmpty
+                                  ? NetworkImage(avatarUrl!)
+                                  : const AssetImage('images/kebab.png')
+                                      as ImageProvider,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          userName ?? 'Anonimo',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
             const SizedBox(height: 8),
-                        if (widget.kebabName.isNotEmpty)
+            if (widget.kebabName.isNotEmpty)
               InkWell(
                 onTap: () {
                   Navigator.push(

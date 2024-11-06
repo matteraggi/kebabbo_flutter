@@ -165,18 +165,44 @@ class FeedPageState extends State<FeedPage> {
 
   Future<void> _fetchFeed() async {
     try {
-      final PostgrestList response = await supabase
-          .from('posts')
-          .select('*')
-          .filter('comment', 'is', null)
-          .order('created_at',
-              ascending: false); // Ordina per timestamp in ordine decrescente
-      if (mounted) {
-        List<Map<String, dynamic>> posts =
-            List<Map<String, dynamic>>.from(response as List);
+      // Recupera la lista degli utenti seguiti
+      final profileResponse = await supabase
+          .from('profiles')
+          .select('followed_users')
+          .eq('id', supabase.auth.currentSession!.user.id)
+          .single();
+
+      final followedUsers =
+          List<String>.from(profileResponse['followed_users'] ?? []);
+
+      followedUsers.add(supabase.auth.currentSession!.user.id);
+
+      if (followedUsers.isNotEmpty) {
+        final String orCondition =
+            followedUsers.map((userId) => 'user_id.eq.$userId').join(',');
+
+        // Recupera i post solo dagli utenti seguiti usando la condizione 'or'
+        final PostgrestList response = await supabase
+            .from('posts')
+            .select('*')
+            .or(orCondition)
+            .filter('comment', 'is', null)
+            .order('created_at',
+                ascending: false); // Ordina per timestamp in ordine decrescente
+
+        if (mounted) {
+          List<Map<String, dynamic>> posts =
+              List<Map<String, dynamic>>.from(response as List);
+          setState(() {
+            feedList = posts;
+            searchResultList = posts;
+            isLoading = false;
+          });
+        }
+      } else {
         setState(() {
-          feedList = posts;
-          searchResultList = posts;
+          feedList = [];
+          searchResultList = [];
           isLoading = false;
         });
       }
