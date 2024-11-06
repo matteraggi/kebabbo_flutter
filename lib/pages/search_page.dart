@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
+import 'package:kebabbo_flutter/components/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,7 +19,7 @@ class _SearchPageState extends State<SearchPage> {
   String? errorMessage;
   Uint8List? imageBytes;
   String? imagePath = "";
-  List<String> userList = [];
+  List<Map<String, dynamic>> userList = [];
   List<String> userSuggestion = [];
   bool showSuggestions = false;
   OverlayEntry? suggestionOverlay;
@@ -42,24 +43,35 @@ class _SearchPageState extends State<SearchPage> {
     suggestionOverlay?.remove();
     super.dispose();
   }
- 
-  void _onSearchTextChanged() {}
+
+  void _onSearchTextChanged() {
+    final query = searchController.text.toLowerCase();
+
+    setState(() {
+      if (query.isEmpty) {
+        // Se non c'è testo nella barra di ricerca, mostra i post
+        searchResultList = feedList;
+      } else {
+        // Se c'è testo nella barra di ricerca, mostra i profili utente corrispondenti
+        searchResultList = userList
+            .where((user) =>
+                user['username'] != null &&
+                user['username'].toString().toLowerCase().contains(query))
+            .toList();
+      }
+    });
+  }
 
   Future<void> fetchUserNames() async {
     try {
       final PostgrestList response =
-          await supabase.from('profiles').select('username');
-
+          await supabase.from('profiles').select('id, username, avatar_url');
       if (mounted) {
         List<Map<String, dynamic>> users =
             List<Map<String, dynamic>>.from(response as List);
 
         setState(() {
-          userList = users
-              .map((user) => user['username'])
-              .where((username) => username != null) // Filtra i valori null
-              .map((username) => username.toString()) // Converte a stringa
-              .toList();
+          userList = users;
         });
       }
     } catch (error) {
@@ -174,18 +186,31 @@ class _SearchPageState extends State<SearchPage> {
                         child: ListView.builder(
                           itemCount: searchResultList.length,
                           itemBuilder: (context, index) {
-                            final post = searchResultList[index];
-                            return FeedListItem(
-                              text: post['text'] ?? 'Testo non disponibile',
-                              createdAt: post['created_at'] ?? '',
-                              userId: post['user_id'],
-                              imageUrl: post['image_url'] ?? '',
-                              postId: post['id'].toString(),
-                              likeList: post['like'] ?? [],
-                              commentNumber: post['comments_number'] ?? 0,
-                              kebabTagId: post['kebab_tag_id'] ?? '',
-                              kebabName: post['kebab_tag_name'] ?? '',
-                            );
+                            // Gestisci i dati in base al tipo di risultato
+                            final item = searchController.text.isEmpty
+                                ? searchResultList[index] // Post
+                                : searchResultList[index]; // Utente
+
+                            if (searchController.text.isEmpty) {
+                              // Se non c'è testo, visualizza i post
+                              return FeedListItem(
+                                text: item['text'] ?? 'Testo non disponibile',
+                                createdAt: item['created_at'] ?? '',
+                                userId: item['user_id'] ?? '',
+                                imageUrl: item['image_url'] ?? '',
+                                postId: item['id']?.toString() ?? '',
+                                likeList: item['like'] ?? [],
+                                commentNumber: item['comments_number'] ?? 0,
+                                kebabTagId: item['kebab_tag_id'] ?? '',
+                                kebabName: item['kebab_tag_name'] ?? '',
+                              );
+                            } else {
+                              // Se c'è testo, visualizza gli utenti
+                              return UserItem(
+                                  userId: item['id'] ?? "",
+                                  username: item["username"] ?? "Anonimo",
+                                  avatarUrl: item["avatar_url"] ?? "");
+                            }
                           },
                         ),
                       ),

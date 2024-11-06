@@ -53,7 +53,7 @@ Feature lancio:
 - [x] Pagina profilo utente singolo
 - [x] Salvare kebab buildato in db
 - [x] Aggiungere stats a tutti
-- [ ] Pagina ricerca e feed globale
+- [x] Pagina ricerca e feed globale
 - [ ] Sezione recensioni utenti
 - [ ] Kebab preferito mostrato nel profilo
 - [ ] Bottom Navbar in tutte le schermate
