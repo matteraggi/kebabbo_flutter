@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -207,3 +210,16 @@ Future<Map<String, int>> calculateAvailableKebabsPerDistance(
     return {'200m': 0, '500m': 0, '1km': 0, '10km': 0, 'unlimited': 0};
   }
 }
+
+
+  Future<Uint8List?> compressImage(Uint8List imageData) async {
+    // Decodifica l'immagine dal byte array
+    img.Image? image = img.decodeImage(imageData);
+    if (image == null) return null;
+
+    // Ridimensiona l'immagine mantenendo il rapporto di aspetto
+    img.Image resizedImage = img.copyResize(image, width: 400);
+
+    // Codifica nuovamente l'immagine in JPEG con qualità ridotta
+    return Uint8List.fromList(img.encodeJpg(resizedImage, quality: 60));
+  }

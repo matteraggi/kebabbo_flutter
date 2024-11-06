@@ -9,6 +9,7 @@ import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key, Position? currentPosition});
@@ -68,7 +69,7 @@ class _AccountPageState extends State<AccountPage> {
   Future<void> _changeUsername() async {
     // Ensure the widget is mounted before proceeding
     if (!mounted) return;
-    _usernameController.text= _username;
+    _usernameController.text = _username;
     // Show the dialog
     showDialog(
       context: context,
@@ -124,34 +125,30 @@ class _AccountPageState extends State<AccountPage> {
     // Usa FilePicker per selezionare un’immagine
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
+      allowCompression: true,
       allowMultiple: false,
     );
 
     if (result != null) {
-      final Uint8List? bytes = result.files.single.bytes;
+      final Uint8List bytes = result.files.single.bytes!;
+      Uint8List? compressedImage = await compressImage(bytes);
       final userId = supabase.auth.currentSession!.user.id;
       final filePath = '$userId.png';
 
+      print("Uploading image to $filePath");
+
       try {
-        print("got here");
-        // Carica l'immagine nel bucket
-        await supabase.storage.from('avatars').uploadBinary(filePath, bytes!,
+        await supabase.storage.from('avatars').uploadBinary(
+            filePath, compressedImage!,
             fileOptions: const FileOptions(upsert: true));
-        print("not here ");
         // Ottieni l'URL pubblico dell'immagine e aggiorna il profilo
-        final imageUrlResponse = supabase.storage.from('avatars').getPublicUrl(
-            filePath,
-            transform: const TransformOptions(
-                height: 200,
-                width: 200,
-                resize: ResizeMode.contain,
-                quality: 60));
-        final imageUrl = imageUrlResponse;
+        final imageUrlResponse =
+            supabase.storage.from('avatars').getPublicUrl(filePath);
         setState(() {
-          _avatarUrl = imageUrl;
+          _avatarUrl = imageUrlResponse;
         });
 
-        await _updateProfile(); // Aggiorna il profilo con il nuovo avatar URL
+        await _updateProfile();
       } catch (error) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

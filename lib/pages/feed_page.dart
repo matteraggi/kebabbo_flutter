@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -17,8 +18,8 @@ class FeedPageState extends State<FeedPage> {
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
-  Uint8List? imageBytes; // Variabile per memorizzare l'immagine
-  String? imagePath = ""; // Variabile per il percorso dell'immagine
+  Uint8List? imageBytes;
+  String? imagePath = "";
   final TextEditingController postController = TextEditingController();
   List<String> userList = [];
   List<String> userSuggestion = [];
@@ -217,12 +218,7 @@ class FeedPageState extends State<FeedPage> {
               imageBytes!,
               fileOptions: const FileOptions(upsert: true),
             );
-        imageUrl = supabase.storage.from('posts').getPublicUrl(filePath,
-            transform: const TransformOptions(
-                height: 200,
-                width: 200,
-                resize: ResizeMode.contain,
-                quality: 60));
+        imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
       } catch (error) {
         setState(() {
           errorMessage = "Errore nel caricamento dell'immagine: $error";
@@ -266,45 +262,50 @@ class FeedPageState extends State<FeedPage> {
   Future<void> _pickImage() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
+      allowCompression: true,
       allowMultiple: false,
     );
 
     if (result != null) {
+      // Ottiene i bytes dell'immagine e la comprime
+      Uint8List imageData = result.files.single.bytes!;
+      Uint8List? compressedImage = await compressImage(imageData);
+
       setState(() {
-        imageBytes = result.files.single.bytes;
+        imageBytes = compressedImage;
         imagePath = result.files.single.name;
       });
     }
   }
 
   Future<void> _tagKebab() async {
-  await fetchKebabNames(); // Popola la lista dei kebabbari
-  
-  if (!mounted) return;
+    await fetchKebabNames(); // Popola la lista dei kebabbari
 
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return ListView.builder(
-        itemCount: kebabbariList.length,
-        itemBuilder: (context, index) {
-          final kebabName = kebabbariList[index]['name'];
-          final kebabId = kebabbariList[index]['id'];
-          return ListTile(
-            title: Text(kebabName),
-            onTap: () {
-              setState(() {
-                selectedKebabId = kebabId;
-                selectedKebabName = kebabName;
-              });
-              Navigator.pop(context); // Chiude il modulo
-            },
-          );
-        },
-      );
-    },
-  );
-}
+    if (!mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ListView.builder(
+          itemCount: kebabbariList.length,
+          itemBuilder: (context, index) {
+            final kebabName = kebabbariList[index]['name'];
+            final kebabId = kebabbariList[index]['id'];
+            return ListTile(
+              title: Text(kebabName),
+              onTap: () {
+                setState(() {
+                  selectedKebabId = kebabId;
+                  selectedKebabName = kebabName;
+                });
+                Navigator.pop(context); // Chiude il modulo
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 
   Future<void> fetchKebabNames() async {
     try {

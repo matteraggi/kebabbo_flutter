@@ -16,8 +16,8 @@ class _SearchPageState extends State<SearchPage> {
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
-  Uint8List? imageBytes; // Variabile per memorizzare l'immagine
-  String? imagePath = ""; // Variabile per il percorso dell'immagine
+  Uint8List? imageBytes;
+  String? imagePath = "";
   List<String> userList = [];
   List<String> userSuggestion = [];
   bool showSuggestions = false;
