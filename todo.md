@@ -48,16 +48,18 @@ Ancora non fatte in kebabbo Web:
 
 Feature lancio:
 - [x] Build in account
-- [ ] UI before position access
+- [x] Utenti si possono seguire
+- [x] Pagina feed diventa pagina seguiti
+- [x] Pagina profilo utente singolo
+- [x] Salvare kebab buildato in db
+- [x] Aggiungere stats a tutti
 - [ ] Pagina ricerca e feed globale
-- [ ] Pagina feed diventa pagina seguiti
 - [ ] Sezione recensioni utenti
-- [ ] Salvare kebab buildato in db
+- [ ] Kebab preferito mostrato nel profilo
+- [ ] Bottom Navbar in tutte le schermate
+- [ ] UI before position access
 - [ ] Sticker con QR code per recensire
-- [ ] Aggiungere stats a tutti
-- [ ] Pagina profilo utente singolo
-- [ ] Pagine da poter seguire
-- [ ] Kebab preferito mostrato nel profilo -> PAGINA ACCOUNT
+
 - [ ] Rifare design brand (logo, sticker e altro)
 - [ ] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
 

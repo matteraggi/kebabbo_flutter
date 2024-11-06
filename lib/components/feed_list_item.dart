@@ -301,7 +301,6 @@ class FeedListItemState extends State<FeedListItem> {
 
       return List<Map<String, dynamic>>.from(comments);
     } catch (error) {
-      print('Errore nel caricamento dei commenti: $error');
       return []; // Restituisci una lista vuota in caso di errore
     }
   }
@@ -328,66 +327,36 @@ class FeedListItemState extends State<FeedListItem> {
     List<TextSpan> spans = [];
     int start = 0;
 
-    RegExp exp = RegExp(r'@([\w\s]+)');
+    // Aggiorna la regex per fermarsi allo spazio dopo il simbolo "@"
+    RegExp exp = RegExp(r'@(\S+)');
     Iterable<RegExpMatch> matches = exp.allMatches(text);
 
     for (final match in matches) {
-      String potentialTag = match.group(1)!.trim();
+      String tagText = match.group(1)!; // Prende il testo dopo "@"
 
-      bool isUsername = false;
-      String textToCompare = '';
-      String beforeTag = text.substring(0, match.start);
-      String afterTag = "";
+      bool isUsername = userList.contains(tagText); // Confronta direttamente
 
-      for (String userName in userList) {
-        int length = userName.length;
-        if (match.end <= text.length) {
-          afterTag = text.substring(match.start + 1 + length, match.end);
+      // Aggiunge il testo prima del tag
+      spans.add(TextSpan(
+        text: text.substring(start, match.start),
+        style: const TextStyle(color: Colors.black),
+      ));
 
-          textToCompare =
-              text.substring(match.start + 1, match.start + 1 + length).trim();
-          if (_compareNames(userName, textToCompare)) {
-            isUsername = true;
-            break;
-          }
-        }
-      }
+      // Colora il tag se è un username valido
+      spans.add(TextSpan(
+        text: '@$tagText',
+        style: TextStyle(color: isUsername ? red : Colors.black),
+      ));
 
-      if (isUsername) {
-        spans.add(TextSpan(
-          text: beforeTag,
-          style: const TextStyle(color: Colors.black),
-        ));
-        spans.add(TextSpan(
-          text: '@$textToCompare',
-          style: const TextStyle(color: Colors.red),
-        ));
-        spans.add(TextSpan(
-          text: afterTag,
-          style: const TextStyle(color: Colors.black),
-        ));
-      } else {
-        spans.add(TextSpan(text: '@$potentialTag'));
-      }
-      start = match.end;
+      start = match.end; // Aggiorna l'inizio del prossimo segmento
     }
+
+    // Aggiunge il testo rimanente dopo l'ultimo tag
     if (start < text.length) {
       spans.add(TextSpan(text: text.substring(start)));
     }
+
     return spans;
-  }
-
-// Funzione di normalizzazione e confronto
-  bool _compareNames(String name1, String name2) {
-    // Rimuove spazi multipli e trasforma in minuscolo per confronto
-    String normalized1 =
-        name1.replaceAll(RegExp(r'\s+'), ' ').trim().toLowerCase();
-    String normalized2 =
-        name2.replaceAll(RegExp(r'\s+'), ' ').trim().toLowerCase();
-
-    print("Confronto normalizzato: '$normalized1' vs '$normalized2'");
-
-    return normalized1 == normalized2;
   }
 
   @override
