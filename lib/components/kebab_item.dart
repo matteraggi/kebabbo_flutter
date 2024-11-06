@@ -211,11 +211,12 @@ class KebabListItemState extends State<KebabListItem> {
                               linkMaps: widget.map,
                               text: "Apri in Maps",
                               icon: Icons.map),
-                          Image.asset(
-                            "assets/images/gluten_free.png",
-                            height: 40,
-                            width: 40,
-                          ),
+                          if (widget.glutenFree)
+                            Image.asset(
+                              "assets/images/gluten_free.png",
+                              height: 40,
+                              width: 40,
+                            ),
                           if (widget.fun >= 4)
                             Transform.rotate(
                               angle: -0.2,
@@ -271,18 +272,6 @@ class KebabListItemState extends State<KebabListItem> {
               width: 24,
             ),
           ),
-          if (widget.tag == "kebab")
-            Positioned(
-              top: 8,
-              right: 8,
-              child: IconButton(
-                icon: Icon(
-                  widget.isFavorite ? Icons.bookmark : Icons.bookmark_border,
-                  color: widget.isFavorite ? red : Colors.grey,
-                ),
-                onPressed: widget.onFavoriteToggle,
-              ),
-            ),
         ],
       ),
     );
