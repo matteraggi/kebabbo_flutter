@@ -36,6 +36,8 @@ dependencies:
   image: ^4.3.0
   http: ^1.2.2
   flip_card: ^0.7.0
+  crypto: ^3.0.6
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:

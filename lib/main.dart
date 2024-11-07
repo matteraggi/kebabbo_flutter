@@ -3,6 +3,7 @@ import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:kebabbo_flutter/pages/feed_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/map_page.dart';
+import 'package:kebabbo_flutter/pages/review_page.dart'; // Import ReviewPage
 import 'package:kebabbo_flutter/pages/search_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,28 +13,25 @@ const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
 Future<void> main() async {
-  /*
-  await dotenv.load(fileName: ".env");
-
-  final supabaseUrl = dotenv.env['SUPABASE_URL'];
-  final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'];
-
-  if (supabaseUrl == null || supabaseAnonKey == null) {
-    throw Exception("Supabase URL and Anon Key must be set in .env file");
-  }
-  */
-
   await Supabase.initialize(
       url: "https://ntrxsuhmslsvlflwbizb.supabase.co",
       anonKey:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
-  runApp(const MyApp());
+  
+  String? reviewHash;
+  if (Uri.base.pathSegments.isNotEmpty && Uri.base.pathSegments[0] == 'reviews') {
+    reviewHash = Uri.base.pathSegments[1];
+    print('reviewHash: $reviewHash');
+  }
+  runApp(MyApp(reviewHash: reviewHash));
 }
 
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+    final String? reviewHash;
+
+  const MyApp({super.key, this.reviewHash});
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +54,9 @@ class MyApp extends StatelessWidget {
             backgroundColor: red,
           ),
         ),
-      ),
-      home: const MyHomePage(),
+      ), 
+      home: MyHomePage(reviewHash: reviewHash), // Set MyHomePage as the home
+      
     );
   }
 }
@@ -76,7 +75,9 @@ extension ContextExtension on BuildContext {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  String? reviewHash;
+
+  MyHomePage({super.key, this.reviewHash});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -86,8 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 2;
   Position? _currentPosition;
   late Stream<Position> _positionStream;
-  
-  // GlobalKey for accessing MapPageState
+
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
 
   @override
@@ -104,16 +104,11 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _currentPosition = position;
       });
-      // If the current page is MapPage (selectedIndex == 3), update position
-      if (selectedIndex == 3) {
-        // Using the GlobalKey to call updatePosition on the MapPageState
-        if (_mapPageKey.currentState != null) {
-          _mapPageKey.currentState!.updatePosition(position);
-        }
+      if (selectedIndex == 3 && _mapPageKey.currentState != null) {
+        _mapPageKey.currentState!.updatePosition(position);
       }
     });
   }
-
   Future<void> _getLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -139,19 +134,21 @@ class _MyHomePageState extends State<MyHomePage> {
     Position position = await Geolocator.getCurrentPosition();
     setState(() {
       _currentPosition = position;
-      // If the current page is MapPage, update position
-      if (selectedIndex == 3) {
-        if (_mapPageKey.currentState != null) {
-          _mapPageKey.currentState!.updatePosition(position);
-        }
+      if (selectedIndex == 3 && _mapPageKey.currentState != null) {
+        _mapPageKey.currentState!.updatePosition(position);
       }
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Widget page;
+@override
+Widget build(BuildContext context) {
+  Widget page;
 
+  // Show ReviewPage if there's a reviewHash, otherwise use selectedIndex
+  if (widget.reviewHash != null) {
+    page = ReviewPage(hash: widget.reviewHash!);
+  } else {
+    // Use selectedIndex to set the page based on the current tab
     switch (selectedIndex) {
       case 0:
         page = supabase.auth.currentSession == null
@@ -167,57 +164,58 @@ class _MyHomePageState extends State<MyHomePage> {
             : const Center(child: CircularProgressIndicator());
         break;
       case 3:
-        // Pass the GlobalKey to MapPage to access its state
         page = MapPage(
           initialPosition: _currentPosition,
-          key: _mapPageKey, // Passing GlobalKey here
+          key: _mapPageKey,
         );
         break;
       case 4:
         page = const FeedPage();
         break;
       default:
-        throw UnimplementedError('no widget for $selectedIndex');
+        throw UnimplementedError('No widget for $selectedIndex');
     }
-
-    return Scaffold(
-      body: page,
-      bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: true,
-        showUnselectedLabels: false,
-        currentIndex: selectedIndex,
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Account',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.kebab_dining),
-            label: 'Top Kebab',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.comment),
-            label: 'Followed',
-          ),
-        ],
-        backgroundColor: red, // Colore di sfondo della navbar
-        selectedItemColor: yellow,
-        unselectedItemColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-      ),
-    );
   }
+
+  return Scaffold(
+    body: page,
+    bottomNavigationBar: BottomNavigationBar(
+      showSelectedLabels: true,
+      showUnselectedLabels: false,
+      currentIndex: selectedIndex == -1 ? 0 : selectedIndex,
+      onTap: (index) {
+        setState(() {
+          selectedIndex = index;
+          widget.reviewHash = null;  // Reset reviewHash so the nav bar takes control
+        });
+      },
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Account',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Explore',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.kebab_dining),
+          label: 'Top Kebab',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.map),
+          label: 'Map',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.comment),
+          label: 'Followed',
+        ),
+      ],
+      backgroundColor: red,
+      selectedItemColor: yellow,
+      unselectedItemColor: Colors.white,
+      type: BottomNavigationBarType.fixed,
+    ),
+  );
+}
 }

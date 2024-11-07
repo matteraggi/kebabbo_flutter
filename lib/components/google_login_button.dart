@@ -57,13 +57,20 @@ class GoogleLoginButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
             horizontal: 20, vertical: 10), // Padding interno
       ),
-      onPressed: () async {
-        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-          await _nativeGoogleSignIn();
-        } else {
-          await supabase.auth.signInWithOAuth(OAuthProvider.google);
-        }
-      },
+onPressed: () async {
+  String redirectUrl = Uri.base.toString(); // Current URL including the hash
+  print('redirectUrl: $redirectUrl');
+  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    await _nativeGoogleSignIn();
+  } else {
+    await supabase.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: redirectUrl,
+
+    );
+  }
+},
+
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
