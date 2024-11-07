@@ -7,18 +7,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleLoginButton extends StatelessWidget {
-  const GoogleLoginButton({super.key});
+  final String redirectUrl;
+
+  const GoogleLoginButton({super.key, required this.redirectUrl});
 
   Future<void> _nativeGoogleSignIn() async {
-    /// TODO: update the Web client ID with your own.
-    ///
-    /// Web Client ID that you registered with Google Cloud.
-    const webClientId =
-        '1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com';
-
-    /// TODO: update the iOS client ID with your own.
-    ///
-    /// iOS Client ID that you registered with Google Cloud.
+    const webClientId = '1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com';
     const iosClientId = 'my-ios.apps.googleusercontent.com';
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
@@ -30,11 +24,8 @@ class GoogleLoginButton extends StatelessWidget {
     final accessToken = googleAuth.accessToken;
     final idToken = googleAuth.idToken;
 
-    if (accessToken == null) {
-      throw 'No Access Token found.';
-    }
-    if (idToken == null) {
-      throw 'No ID Token found.';
+    if (accessToken == null || idToken == null) {
+      throw 'Missing token(s) for authentication.';
     }
 
     await supabase.auth.signInWithIdToken(
@@ -48,29 +39,24 @@ class GoogleLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white, // Sfondo bianco
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // Bordi rotondi
-          side: BorderSide(color: Colors.grey.shade300), // Bordo leggero
+          borderRadius: BorderRadius.circular(30),
+          side: BorderSide(color: Colors.grey.shade300),
         ),
-        elevation: 2, // Leggera ombra per effetto "pulsante"
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 10), // Padding interno
+        elevation: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       ),
-onPressed: () async {
-  String redirectUrl = Uri.base.toString(); // Current URL including the hash
-  print('redirectUrl: $redirectUrl');
-  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    await _nativeGoogleSignIn();
-  } else {
-    await supabase.auth.signInWithOAuth(
-      OAuthProvider.google,
-      redirectTo: redirectUrl,
-
-    );
-  }
-},
-
+      onPressed: () async {
+        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+          await _nativeGoogleSignIn();
+        } else {
+          await supabase.auth.signInWithOAuth(
+            OAuthProvider.google,
+            redirectTo: redirectUrl,  // Use the provided redirect URL here
+          );
+        }
+      },
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

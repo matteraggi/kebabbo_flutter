@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/components/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SearchPage extends StatefulWidget {
@@ -45,21 +46,22 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _onSearchTextChanged() {
-    final query = searchController.text.toLowerCase();
-
-    setState(() {
-      if (query.isEmpty) {
+  final query = searchController.text.toLowerCase();
+  
+  setState(() {
+          if (query.isEmpty) {
         // Se non c'è testo nella barra di ricerca, mostra i post
         searchResultList = feedList;
       } else {
-        // Se c'è testo nella barra di ricerca, mostra i profili utente corrispondenti
-        searchResultList = userList
-            .where((user) =>
-                user['username'] != null &&
-                user['username'].toString().toLowerCase().contains(query))
-            .toList();
+    searchResultList = fuzzySearchAndSort(
+      userList,
+      query,
+      'username', // Search key for usernames
+      false,      // Set `showOnlyOpen` to false if not relevant
+      false,      // Set `showOnlyKebab` to false if not relevant
+    );
       }
-    });
+  });
   }
 
   Future<void> fetchUserNames() async {

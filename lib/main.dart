@@ -145,8 +145,11 @@ Widget build(BuildContext context) {
   Widget page;
 
   // Show ReviewPage if there's a reviewHash, otherwise use selectedIndex
-  if (widget.reviewHash != null) {
-    page = ReviewPage(hash: widget.reviewHash!);
+    if (widget.reviewHash != null) {
+      page = ReviewPage(
+        hash: widget.reviewHash!,
+      );
+    
   } else {
     // Use selectedIndex to set the page based on the current tab
     switch (selectedIndex) {

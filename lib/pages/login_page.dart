@@ -18,6 +18,12 @@ class _LoginPageState extends State<LoginPage> {
   bool _redirecting = false;
   late final TextEditingController _emailController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
+  final redirectUrl =  Uri(
+  scheme: Uri.base.scheme,
+  host: Uri.base.host,
+  port: Uri.base.port,
+).toString();
+
 
   Future<void> _signIn() async {
     try {
@@ -91,8 +97,8 @@ void initState() {
       appBar: AppBar(title: const Text('Sign In')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: const [
-          GoogleLoginButton()
+        children: [
+          GoogleLoginButton(redirectUrl: redirectUrl)
         ],
       ),
     );

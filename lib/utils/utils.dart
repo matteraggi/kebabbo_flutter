@@ -223,3 +223,6 @@ Future<Map<String, int>> calculateAvailableKebabsPerDistance(
     // Codifica nuovamente l'immagine in JPEG con qualità ridotta
     return Uint8List.fromList(img.encodeJpg(resizedImage, quality: 60));
   }
+
+
+  
