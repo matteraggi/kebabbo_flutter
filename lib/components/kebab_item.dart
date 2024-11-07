@@ -220,52 +220,61 @@ class KebabListItemState extends State<KebabListItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                BottomButtonItem(
-                    linkMaps: widget.map,
-                    text: "Apri in Maps",
-                    icon: Icons.map),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _controller.toggleCard();
-                    });
-                  },
-                  child: Row(
-                    children: const [
-                      Icon(Icons.person),
-                      SizedBox(width: 8),
-                      Text("Review"),
-                    ],
-                  ),
-                ),
-                if (widget.glutenFree)
-                  Image.asset(
-                    "assets/images/gluten_free.png",
-                    height: 40,
-                    width: 40,
-                  ),
-                if (widget.fun >= 4)
-                  Transform.rotate(
-                    angle: -0.2,
-                    child: const Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.sentiment_very_satisfied,
-                          color: yellow,
-                          size: 30,
-                        ),
-                        Text(
-                          'fun!',
-                          style: TextStyle(
-                            color: yellow,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                Row(
+                  children: [
+                    BottomButtonItem(
+                      linkMaps: widget.map,
+                      icon: Icons.map,
+                      isFront: true,
                     ),
-                  ),
+                    const SizedBox(width: 16),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _controller.toggleCard();
+                        });
+                      },
+                      icon: Icon(
+                        Icons.cached,
+                        color: Colors.black,
+                        size: 30,
+                      ), // Icona con colore a tua scelta
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    if (widget.glutenFree)
+                      Image.asset(
+                        "assets/images/gluten_free.png",
+                        height: 40,
+                        width: 40,
+                      ),
+                    const SizedBox(width: 16),
+                    if (widget.fun >= 4)
+                      Transform.rotate(
+                        angle: -0.2,
+                        child: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.sentiment_very_satisfied,
+                              color: yellow,
+                              size: 30,
+                            ),
+                            Text(
+                              'fun!',
+                              style: TextStyle(
+                                color: yellow,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                )
               ],
             ),
           ],
@@ -324,53 +333,61 @@ class KebabListItemState extends State<KebabListItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                BottomButtonItem(
-                  linkMaps: widget.map,
-                  text: "Apri in Maps",
-                  icon: Icons.map,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _controller.toggleCard();
-                    });
-                  },
-                  child: Row(
-                    children: const [
-                      Icon(Icons.kebab_dining_outlined),
-                      SizedBox(width: 8),
-                      Text("Review"),
-                    ],
-                  ),
-                ),
-                if (widget.glutenFree)
-                  Image.asset(
-                    "assets/images/gluten_free.png",
-                    height: 40,
-                    width: 40,
-                  ),
-                if (widget.fun >= 4)
-                  Transform.rotate(
-                    angle: -0.2,
-                    child: const Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.sentiment_very_satisfied,
-                          color: yellow,
-                          size: 30,
-                        ),
-                        Text(
-                          'fun!',
-                          style: TextStyle(
-                            color: yellow,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                Row(
+                  children: [
+                    BottomButtonItem(
+                      linkMaps: widget.map,
+                      icon: Icons.map,
+                      isFront: false,
                     ),
-                  ),
+                    SizedBox(width: 16),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _controller.toggleCard();
+                        });
+                      },
+                      icon: Icon(
+                        Icons.cached,
+                        color: Colors.white,
+                        size: 30,
+                      ), // Icona con colore a tua scelta
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    if (widget.glutenFree)
+                      Image.asset(
+                        "assets/images/gluten_free.png",
+                        height: 40,
+                        width: 40,
+                      ),
+                    const SizedBox(width: 16),
+                    if (widget.fun >= 4)
+                      Transform.rotate(
+                        angle: -0.2,
+                        child: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.sentiment_very_satisfied,
+                              color: yellow,
+                              size: 30,
+                            ),
+                            Text(
+                              'fun!',
+                              style: TextStyle(
+                                color: yellow,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                )
               ],
             ),
           ],

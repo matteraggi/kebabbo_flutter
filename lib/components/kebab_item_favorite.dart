@@ -182,8 +182,8 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                         children: [
                           BottomButtonItem(
                               linkMaps: widget.map,
-                              text: "Apri in Maps",
-                              icon: Icons.map),
+                              icon: Icons.map,
+                              isFront: true,),
                           if (widget.fun >= 4)
                             Transform.rotate(
                               angle: -0.2,

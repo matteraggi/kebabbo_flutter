@@ -65,7 +65,7 @@ Feature lancio:
 - [x] kebab favorite visibile nel profilo di altri
 - [x] review visibili da account + profilo di altri
 
-- [ ] design account e signle user page
+- [ ] design account e single user page
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
 
 Feature extra:

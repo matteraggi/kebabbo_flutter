@@ -43,9 +43,6 @@ class TopKebabPageState extends State<TopKebabPage> {
   }
 
   Future<void> fetchKebab(Position? userPosition) async {
-    setState(() {
-      isLoading = true;
-    });
     try {
       final PostgrestList response = await supabase.from('kebab').select('*');
 

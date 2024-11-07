@@ -3,27 +3,24 @@ import 'package:url_launcher/url_launcher.dart';
 
 class BottomButtonItem extends StatelessWidget {
   final String linkMaps;
-  final String text;
   final IconData icon;
+  bool isFront;
 
-  const BottomButtonItem(
+  BottomButtonItem(
       {super.key,
       required this.linkMaps,
-      required this.text,
-      required this.icon});
+      required this.icon,
+      required this.isFront});
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return IconButton(
       onPressed: _launchMaps,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.white),
-          const SizedBox(width: 5),
-          Text(text),
-        ],
-      ),
+      icon: Icon(
+        icon,
+        color: isFront ? Colors.black : Colors.white,
+        size: 30,
+      ), // Icona con colore a tua scelta
     );
   }
 
