@@ -56,12 +56,12 @@ Feature lancio:
 - [x] Pagina ricerca e feed globale
 - [ ] Sezione recensioni utenti -> icona cambiogiro che gira la carta e dalla parte opposta ci sono recensioni utenti
 - [ ] Kebab preferito mostrato nel profilo
+
 - [ ] Bottom Navbar in tutte le schermate
 - [ ] UI before position access
 - [ ] Sticker con QR code per recensire
-
-- [ ] Rifare design brand (logo, sticker e altro)
 - [ ] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
+- [ ] Rifare design brand (logo, sticker e altro)
 
 Feature extra:
 - [ ] Badge del posto quando si mette review
