@@ -36,7 +36,8 @@ class TopKebabPageState extends State<TopKebabPage> {
   @override
   void didUpdateWidget(TopKebabPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.currentPosition != oldWidget.currentPosition) {
+    if (widget.currentPosition != oldWidget.currentPosition &&
+        oldWidget.currentPosition == null) {
       fetchKebab(widget.currentPosition);
     }
   }

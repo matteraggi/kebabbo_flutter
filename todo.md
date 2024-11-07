@@ -38,13 +38,11 @@ Ancora non fatte in kebabbo Web:
 - [x] Tag persona
     - [x] Cambiare da tag kebab a tag utente
     - [ ] Ricerca sulla barra di compilazione tag
-    - [ ] Max 1 tag a post, oppure gestire multipli
+    - [x] Max 1 tag a post, oppure gestire multipli
     - [ ] Tag cliccabili per singola pagina utente
-    - [ ] Cambiare grafica tag
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
     - [x] Sistemare caricamento immagini
     - [x] Pulsante build non visibile da mobile
-    - [ ] Modificare pagina build (renderla pagina con più funzioni tra cui search)
 
 Feature lancio:
 - [x] Build in account
@@ -57,10 +55,11 @@ Feature lancio:
 - [x] Card Reverse
 - [x] Kebab preferito mostrato nel profilo
 - [x] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
+- [x] UI before position access
 
-- [ ] Sticker con QR code per recensire
+- [x] Sticker con QR code per recensire
     - [ ] Sezione recensioni utenti dietro card
-- [ ] UI before position access
+- [ ] kebab favorite visibile nel profilo
 - [ ] Rifare design brand (logo, sticker e UI)
 
 Feature extra:
