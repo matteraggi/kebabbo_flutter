@@ -17,9 +17,10 @@ Future<void> main() async {
       url: "https://ntrxsuhmslsvlflwbizb.supabase.co",
       anonKey:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
-  
+
   String? reviewHash;
-  if (Uri.base.pathSegments.isNotEmpty && Uri.base.pathSegments[0] == 'reviews') {
+  if (Uri.base.pathSegments.isNotEmpty &&
+      Uri.base.pathSegments[0] == 'reviews') {
     reviewHash = Uri.base.pathSegments[1];
     print('reviewHash: $reviewHash');
   }
@@ -29,7 +30,7 @@ Future<void> main() async {
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
-    final String? reviewHash;
+  final String? reviewHash;
 
   const MyApp({super.key, this.reviewHash});
 
@@ -54,9 +55,8 @@ class MyApp extends StatelessWidget {
             backgroundColor: red,
           ),
         ),
-      ), 
+      ),
       home: MyHomePage(reviewHash: reviewHash), // Set MyHomePage as the home
-      
     );
   }
 }
@@ -85,7 +85,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 2;
-  Position? _currentPosition;
+  ValueNotifier<Position?> _currentPositionNotifier =
+      ValueNotifier<Position?>(null);
   late Stream<Position> _positionStream;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
@@ -101,124 +102,127 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
     _positionStream.listen((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
+      _currentPositionNotifier.value = position;
       if (selectedIndex == 3 && _mapPageKey.currentState != null) {
         _mapPageKey.currentState!.updatePosition(position);
       }
     });
   }
+
   Future<void> _getLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      _currentPositionNotifier.value = null;
+      return;
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        _currentPositionNotifier.value = null;
+        return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      _currentPositionNotifier.value = null;
+      return;
     }
 
     Position position = await Geolocator.getCurrentPosition();
-    setState(() {
-      _currentPosition = position;
-      if (selectedIndex == 3 && _mapPageKey.currentState != null) {
-        _mapPageKey.currentState!.updatePosition(position);
-      }
-    });
-  }
-
-@override
-Widget build(BuildContext context) {
-  Widget page;
-
-  // Show ReviewPage if there's a reviewHash, otherwise use selectedIndex
-    if (widget.reviewHash != null) {
-      page = ReviewPage(
-        hash: widget.reviewHash!,
-      );
-    
-  } else {
-    // Use selectedIndex to set the page based on the current tab
-    switch (selectedIndex) {
-      case 0:
-        page = supabase.auth.currentSession == null
-            ? const LoginPage()
-            : AccountPage(currentPosition: _currentPosition);
-        break;
-      case 1:
-        page = SearchPage();
-        break;
-      case 2:
-        page = _currentPosition != null
-            ? TopKebabPage(currentPosition: _currentPosition!)
-            : const Center(child: CircularProgressIndicator());
-        break;
-      case 3:
-        page = MapPage(
-          initialPosition: _currentPosition,
-          key: _mapPageKey,
-        );
-        break;
-      case 4:
-        page = const FeedPage();
-        break;
-      default:
-        throw UnimplementedError('No widget for $selectedIndex');
+    _currentPositionNotifier.value = position;
+    if (selectedIndex == 3 && _mapPageKey.currentState != null) {
+      _mapPageKey.currentState!.updatePosition(position);
     }
   }
 
-  return Scaffold(
-    body: page,
-    bottomNavigationBar: BottomNavigationBar(
-      showSelectedLabels: true,
-      showUnselectedLabels: false,
-      currentIndex: selectedIndex == -1 ? 0 : selectedIndex,
-      onTap: (index) {
-        setState(() {
-          selectedIndex = index;
-          widget.reviewHash = null;  // Reset reviewHash so the nav bar takes control
-        });
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Account',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Explore',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.kebab_dining),
-          label: 'Top Kebab',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.map),
-          label: 'Map',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.comment),
-          label: 'Followed',
-        ),
-      ],
-      backgroundColor: red,
-      selectedItemColor: yellow,
-      unselectedItemColor: Colors.white,
-      type: BottomNavigationBarType.fixed,
-    ),
-  );
-}
+  @override
+  Widget build(BuildContext context) {
+    Widget page;
+
+    // Show ReviewPage if there's a reviewHash, otherwise use selectedIndex
+      if (widget.reviewHash != null) {
+        page = ReviewPage(
+        hash: widget.reviewHash!,
+      );
+      
+  } else {
+      // Use selectedIndex to set the page based on the current tab
+      switch (selectedIndex) {
+        case 0:
+          page = supabase.auth.currentSession == null
+              ? const LoginPage()
+              : AccountPage(currentPosition: _currentPositionNotifier.value);
+          break;
+        case 1:
+          page = SearchPage();
+          break;
+        case 2:
+          page = ValueListenableBuilder<Position?>(
+            valueListenable: _currentPositionNotifier,
+            builder: (context, currentPosition, child) {
+              return TopKebabPage(currentPosition: currentPosition);
+            },
+          );
+          break;
+        case 3:
+          page = MapPage(
+            initialPosition: _currentPositionNotifier.value,
+            key: _mapPageKey,
+          );
+          break;
+        case 4:
+          page = const FeedPage();
+          break;
+        default:
+          throw UnimplementedError('No widget for $selectedIndex');
+      }
+    }
+
+    return Scaffold(
+      body: page,
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
+        currentIndex: selectedIndex == -1 ? 0 : selectedIndex,
+        onTap: (index) {
+          setState(() {
+            selectedIndex = index;
+            widget.reviewHash =
+                null; // Reset reviewHash so the nav bar takes control
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Account',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.kebab_dining),
+            label: 'Top Kebab',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.comment),
+            label: 'Followed',
+          ),
+        ],
+        backgroundColor: red,
+        selectedItemColor: yellow,
+        unselectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
+  }
 }

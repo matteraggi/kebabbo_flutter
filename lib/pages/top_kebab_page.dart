@@ -7,9 +7,8 @@ import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 class TopKebabPage extends StatefulWidget {
-  final Position currentPosition;
+  final Position? currentPosition;
 
   const TopKebabPage({super.key, required this.currentPosition});
 
@@ -34,7 +33,18 @@ class TopKebabPageState extends State<TopKebabPage> {
     fetchKebab(widget.currentPosition);
   }
 
-  Future<void> fetchKebab(Position userPosition) async {
+  @override
+  void didUpdateWidget(TopKebabPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currentPosition != oldWidget.currentPosition) {
+      fetchKebab(widget.currentPosition);
+    }
+  }
+
+  Future<void> fetchKebab(Position? userPosition) async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final PostgrestList response = await supabase.from('kebab').select('*');
 
@@ -43,13 +53,15 @@ class TopKebabPageState extends State<TopKebabPage> {
             List<Map<String, dynamic>>.from(response as List);
 
         for (var kebab in kebabs) {
-          double distanceInMeters = Geolocator.distanceBetween(
-            userPosition.latitude,
-            userPosition.longitude,
-            kebab['lat'],
-            kebab['lng'],
-          );
-          kebab['distance'] = distanceInMeters / 1000;
+          if (userPosition != null) {
+            double distanceInMeters = Geolocator.distanceBetween(
+              userPosition.latitude,
+              userPosition.longitude,
+              kebab['lat'],
+              kebab['lng'],
+            );
+            kebab['distance'] = distanceInMeters / 1000;
+          }
           kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
         }
 
@@ -78,6 +90,8 @@ class TopKebabPageState extends State<TopKebabPage> {
           searchResultList = kebabs;
           isLoading = false;
         });
+
+        print("end loading");
       }
     } catch (error) {
       if (mounted) {
@@ -310,8 +324,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                       map: kebab['map'] ?? '',
                                       lat: (kebab['lat'] ?? 0.0).toDouble(),
                                       lng: (kebab['lng'] ?? 0.0).toDouble(),
-                                      distance:
-                                          kebab['distance']?.toDouble(),
+                                      distance: kebab['distance']?.toDouble(),
                                       vegetables: (kebab['vegetables'] ?? 0.0)
                                           .toDouble(),
                                       yogurt:
@@ -323,7 +336,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                       isFavorite: kebab['isFavorite'] ?? false,
                                       onFavoriteToggle: () => toggleFavorite(
                                           kebab['id'].toString()),
-                                          special: false,
+                                      special: false,
                                       glutenFree: kebab['gluten_free'] ?? false,
                                     );
                                   },

@@ -54,14 +54,14 @@ Feature lancio:
 - [x] Salvare kebab buildato in db
 - [x] Aggiungere stats a tutti
 - [x] Pagina ricerca e feed globale
-- [ ] Sezione recensioni utenti -> icona cambiogiro che gira la carta e dalla parte opposta ci sono recensioni utenti
+- [x] Card Reverse
 - [x] Kebab preferito mostrato nel profilo
+- [x] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
 
-- [ ] Bottom Navbar in tutte le schermate
-- [ ] UI before position access
 - [ ] Sticker con QR code per recensire
-- [ ] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
-- [ ] Rifare design brand (logo, sticker e altro)
+    - [ ] Sezione recensioni utenti dietro card
+- [ ] UI before position access
+- [ ] Rifare design brand (logo, sticker e UI)
 
 Feature extra:
 - [ ] Badge del posto quando si mette review

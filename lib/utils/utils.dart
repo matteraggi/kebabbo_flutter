@@ -51,7 +51,7 @@ List<Map<String, dynamic>> sortKebabs(
     List<Map<String, dynamic>> kebabs,
     String orderByField,
     bool orderDirection,
-    Position userPosition,
+    Position? userPosition,
     bool showOnlyOpen,
     bool showOnlyKebab) {
   if (showOnlyOpen) {
@@ -64,13 +64,15 @@ List<Map<String, dynamic>> sortKebabs(
   } // Calculate distance for each kebab if orderByField is 'distance'
   if (orderByField == 'distance') {
     for (var kebab in kebabs) {
-      double distanceInMeters = Geolocator.distanceBetween(
-        userPosition.latitude,
-        userPosition.longitude,
-        kebab['lat'],
-        kebab['lng'],
-      );
-      kebab['distance'] = distanceInMeters / 1000;
+      if (userPosition != null) {
+        double distanceInMeters = Geolocator.distanceBetween(
+          userPosition.latitude,
+          userPosition.longitude,
+          kebab['lat'],
+          kebab['lng'],
+        );
+        kebab['distance'] = distanceInMeters / 1000;
+      }
     }
   }
 
@@ -151,10 +153,9 @@ bool isKebabOpen(Map<String, dynamic>? orariApertura) {
   return false; // Il kebabbaro è chiuso
 }
 
-
 Future<Map<String, int>> calculateAvailableKebabsPerDistance(
-    Map<String, int> ingredientAmounts,
-    Position? userPosition,
+  Map<String, int> ingredientAmounts,
+  Position? userPosition,
 ) async {
   try {
     // Fetch all kebabs from Supabase with required ingredient values
@@ -211,18 +212,14 @@ Future<Map<String, int>> calculateAvailableKebabsPerDistance(
   }
 }
 
+Future<Uint8List?> compressImage(Uint8List imageData) async {
+  // Decodifica l'immagine dal byte array
+  img.Image? image = img.decodeImage(imageData);
+  if (image == null) return null;
 
-  Future<Uint8List?> compressImage(Uint8List imageData) async {
-    // Decodifica l'immagine dal byte array
-    img.Image? image = img.decodeImage(imageData);
-    if (image == null) return null;
-
-    // Ridimensiona l'immagine mantenendo il rapporto di aspetto
-    img.Image resizedImage = img.copyResize(image, width: 400);
+  // Ridimensiona l'immagine mantenendo il rapporto di aspetto
+  img.Image resizedImage = img.copyResize(image, width: 400);
 
     // Codifica nuovamente l'immagine in JPEG con qualità ridotta
     return Uint8List.fromList(img.encodeJpg(resizedImage, quality: 60));
   }
-
-
-  
