@@ -106,12 +106,17 @@ class _SingleUserPageState extends State<SingleUserPage> {
 
   Future<void> _toggleFollow() async {
     final currentUserId = supabase.auth.currentSession!.user.id;
+    final userIdToFollow = widget.userId;
+
+    // Verifica se l'utente è già seguito
     if (_isFollowing) {
       // Se già seguito, rimuovi l'ID dell'utente dalla lista dei seguiti
-      _followed.remove(widget.userId);
+      _followed.remove(userIdToFollow);
     } else {
-      // Aggiungi l'ID dell'utente alla lista dei seguiti
-      _followed.add(widget.userId);
+      // Aggiungi l'ID dell'utente alla lista dei seguiti solo se non è già presente
+      if (!_followed.contains(userIdToFollow)) {
+        _followed.add(userIdToFollow);
+      }
     }
 
     try {
@@ -122,7 +127,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
 
       setState(() {
         _isFollowing = !_isFollowing; // Cambia lo stato
-        _seguitiCount = _followed.length; // Aggiorna il numero di follower
+        _seguitiCount = _followed.length; // Aggiorna il numero di seguiti
       });
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
