@@ -1,4 +1,4 @@
-## TODO
+# TODO
 
 Pareggiare Kebabbo Web:
 
@@ -33,20 +33,22 @@ Ancora non fatte in kebabbo Web:
 - [x] Icona kebab-panino in alto a sinistra e non subito prima del nome
 - [x] Filtro glutine
 - [x] Inserire luogo (kebabbaro)
-    - [x] Cliccabile tag luogo
+- [x] Cliccabile tag luogo
 - [x] Tag persona
-    - [x] Cambiare da tag kebab a tag utente
-    - [x] Ricerca sulla barra di compilazione tag
-    - [x] Max 1 tag a post, oppure gestire multipli
-    - [x] Tag cliccabili per singola pagina utente
-    - [x] Ricerca sulla barra di compilazione tag
-    - [x] Max 1 tag a post, oppure gestire multipli
-    - [x] Tag cliccabili per singola pagina utente
+- [x] Cambiare da tag kebab a tag utente
+- [x] Ricerca sulla barra di compilazione tag
+- [x] Max 1 tag a post, oppure gestire multipli
+- [x] Tag cliccabili per singola pagina utente
+- [x] Ricerca sulla barra di compilazione tag
+- [x] Max 1 tag a post, oppure gestire multipli
+- [x] Tag cliccabili per singola pagina utente
+- [x] Cambiare grafica tag
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
-    - [x] Sistemare caricamento immagini
-    - [x] Pulsante build non visibile da mobile
+- [x] Sistemare caricamento immagini
+- [x] Pulsante build non visibile da mobile
 
 Feature lancio:
+
 - [x] Build in account
 - [x] Utenti si possono seguire
 - [x] Pagina feed diventa pagina seguiti
@@ -59,7 +61,7 @@ Feature lancio:
 - [x] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
 - [x] UI before position access
 - [x] Sticker con QR code per recensire
-    - [x] Sezione recensioni utenti dietro card
+- [ ] Sezione recensioni utenti dietro card
 - [x] kebab favorite visibile nel profilo di altri
 - [x] review visibili da account + profilo di altri
 
@@ -67,12 +69,14 @@ Feature lancio:
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
 
 Feature extra:
+
 - [ ] Badge del posto quando si mette review
 - [ ] Recensioni utenti postate come post
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
-
+- [ ] traduzioni stringhe
+- [ ] pallini informativi
 
 Non dev:
 
