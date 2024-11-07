@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -71,85 +72,114 @@ class FeedPageState extends State<FeedPage> {
     }
   }
 
-  void _showSuggestionOverlay(BuildContext context) {
-    if (suggestionOverlay != null) return; // Non mostrare più volte l'overlay
+// Function to fetch top 3 fuzzy matches or random users
+List<String> getTopUserSuggestions(String query, List<String> userList) {
+  if (query.isEmpty) {
+    // If no query, return 3 random users
+    userList.shuffle();
+    return userList.take(3).toList();
+  } else {
+    // Perform fuzzy search for top 3 matches
+    List<Map<String, dynamic>> fuzzyResults = fuzzySearchAndSort(
+      userList.map((user) => {'username': user}).toList(),
+      query,
+      'username',
+      false, // showOnlyOpen
+      false, // showOnlyKebab
+    );
+    return fuzzyResults
+        .map((result) => result['username'].toString())
+        .take(3)
+        .toList(); // Take top 3 matches sorted by closest score
+  }
+}
 
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final overlay = Overlay.of(context);
-    final textFieldSize = renderBox.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
+// Show overlay with suggestions below the text field
+void _showSuggestionOverlay(BuildContext context) {
+  if (suggestionOverlay != null) _removeSuggestionOverlay(); // Remove existing overlay before showing a new one
 
-    suggestionOverlay = OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        top: 70, // Puoi regolare questa posizione come necessario
-        width: textFieldSize.width,
-        child: Material(
-          elevation: 4,
-          borderRadius: BorderRadius.circular(8),
-          child: SizedBox(
-            height: 200,
-            child: userSuggestion.isEmpty
-                ? const Center(
-                    child: Text("Nessun suggerimento",
-                        style: TextStyle(color: Colors.grey)))
-                : ListView.builder(
-                    itemCount: userSuggestion.length,
-                    itemBuilder: (context, index) {
-                      final suggestion = userSuggestion[index];
-                      return ListTile(
-                        title: Text(suggestion),
-                        onTap: () {
-                          setState(() {
-                            final text = postController.text;
-                            final newText = text.replaceRange(
-                              text.lastIndexOf('@'),
-                              text.length,
-                              '@$suggestion ',
-                            );
-                            postController.text = newText;
-                            postController.selection =
-                                TextSelection.fromPosition(
-                              TextPosition(offset: newText.length),
-                            );
-                            _removeSuggestionOverlay();
-                          });
-                        },
-                      );
-                    },
+  final RenderBox renderBox = context.findRenderObject() as RenderBox;
+  final overlay = Overlay.of(context);
+  final textFieldSize = renderBox.size;
+  final offset = renderBox.localToGlobal(Offset.zero);
+
+  suggestionOverlay = OverlayEntry(
+    builder: (context) => Positioned(
+      left: offset.dx,
+      top: offset.dy + 70, // Adjust position below the text field
+      width: textFieldSize.width,
+      child: Material(
+        elevation: 4,
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox(
+          height: min(180, 200), // Height to fit up to 4 items, with each ListTile about 48px in height
+          child: userSuggestion.isEmpty
+              ? const Center(
+                  child: Text("No suggestions available",
+                      style: TextStyle(color: Colors.grey)),
+                )
+              : ListView.separated(
+                  itemCount: userSuggestion.length,
+                  separatorBuilder: (context, index) => Divider(
+                    color: Colors.grey[300],
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 20,
                   ),
-          ),
+                  itemBuilder: (context, index) {
+                    final suggestion = userSuggestion[index];
+                    return ListTile(
+                      title: Text(suggestion),
+                      onTap: () {
+                        setState(() {
+                          final text = postController.text;
+                          final newText = text.replaceRange(
+                            text.lastIndexOf('@'),
+                            text.length,
+                            '@$suggestion ',
+                          );
+                          postController.text = newText;
+                          postController.selection = TextSelection.fromPosition(
+                            TextPosition(offset: newText.length),
+                          );
+                          _removeSuggestionOverlay();
+                        });
+                      },
+                    );
+                  },
+                ),
         ),
       ),
-    );
-    overlay.insert(suggestionOverlay!);
-  }
+    ),
+  );
+  overlay.insert(suggestionOverlay!);
+}
 
-  void _onTextChanged() {
-    final text = postController.text;
-    if (text.contains('@')) {
-      final query = text.split('@').last;
-      setState(() {
-        userSuggestion = userList
-            .where((kebab) => kebab.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-        if (userSuggestion.isNotEmpty) {
-          _showSuggestionOverlay(context); // Passa il contesto qui
-        } else {
-          _removeSuggestionOverlay();
-        }
-      });
-    } else {
-      _removeSuggestionOverlay();
-    }
+// Update suggestions when text changes
+void _onTextChanged() {
+  final text = postController.text;
+  if (text.contains('@')) {
+    final match = RegExp(r'@(\S*)').firstMatch(text.substring(text.lastIndexOf('@')));
+    final query = match?.group(1) ?? '';     setState(() {
+      userSuggestion = getTopUserSuggestions(query, userList);
+      if (userSuggestion.isNotEmpty) {
+        _showSuggestionOverlay(context); // Pass context
+      } else {
+        _removeSuggestionOverlay();
+      }
+    });
+  } else {
+    _removeSuggestionOverlay();
   }
+}
 
-  void _removeSuggestionOverlay() {
-    if (suggestionOverlay != null) {
-      suggestionOverlay!.remove();
-      suggestionOverlay = null;
-    }
+// Remove overlay
+void _removeSuggestionOverlay() {
+  if (suggestionOverlay != null) {
+    suggestionOverlay!.remove();
+    suggestionOverlay = null;
   }
+}
 
   Future<void> _checkAuthAndFetchFeed() async {
     final session = Supabase.instance.client.auth.currentSession;

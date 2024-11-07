@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab_single_page.dart';
@@ -346,7 +347,26 @@ class FeedListItemState extends State<FeedListItem> {
       spans.add(TextSpan(
         text: '@$tagText',
         style: TextStyle(color: isUsername ? red : Colors.black),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () async {
+            final userId = await _fetchUserIdByUsername(tagText); // Fetch user ID
+            if (userId != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SingleUserPage(
+                    userId: userId, // Pass the fetched user ID
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("User not found")),
+              );
+            }
+          },
       ));
+
 
       start = match.end; // Aggiorna l'inizio del prossimo segmento
     }
@@ -469,4 +489,17 @@ class FeedListItemState extends State<FeedListItem> {
       ),
     );
   }
+}
+
+
+Future<String?> _fetchUserIdByUsername(String username) async {
+  final response = await supabase
+      .from('profiles') // Replace with your actual users table
+      .select('id')
+      .eq('username', username)
+      .single();
+
+    
+  
+  return response['id'] as String?;
 }

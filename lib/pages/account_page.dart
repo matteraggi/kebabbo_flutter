@@ -11,6 +11,7 @@ import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
+import 'package:kebabbo_flutter/pages/user_reviews_page.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -36,6 +37,7 @@ class _AccountPageState extends State<AccountPage> {
   final TextEditingController _usernameController = TextEditingController();
   int _followersCount = 0;
   int _seguitiCount = 0;
+  int _reviewsCount = 0;
   String? _favoriteKebabId;
   Map<String, dynamic>? _favoriteKebab;
 
@@ -45,6 +47,7 @@ class _AccountPageState extends State<AccountPage> {
     _loadProfile();
     _getPostCount();
     _getFollowerCount();
+    _getReviewsCount();
   }
 
   Future<void> _getFollowerCount() async {
@@ -60,6 +63,24 @@ class _AccountPageState extends State<AccountPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to load follower count')),
+        );
+      }
+    }
+  }
+  
+  Future<void> _getReviewsCount() async {
+    try {
+      final response = await supabase
+          .from('reviews')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      setState(() {
+        _reviewsCount = response.length;
+      });
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load reviews count')),
         );
       }
     }
@@ -505,6 +526,33 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         const Text(
                           'followers',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                        
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => UserReviewsPage(userId: _id)));
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          '$_reviewsCount', // Numero di preferiti
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'Reviews',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,

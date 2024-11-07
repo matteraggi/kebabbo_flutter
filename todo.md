@@ -40,6 +40,10 @@ Ancora non fatte in kebabbo Web:
     - [ ] Ricerca sulla barra di compilazione tag
     - [x] Max 1 tag a post, oppure gestire multipli
     - [ ] Tag cliccabili per singola pagina utente
+    - [x] Ricerca sulla barra di compilazione tag
+    - [x] Max 1 tag a post, oppure gestire multipli
+    - [x] Tag cliccabili per singola pagina utente
+    - [ ] Cambiare grafica tag
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
     - [x] Sistemare caricamento immagini
     - [x] Pulsante build non visibile da mobile
