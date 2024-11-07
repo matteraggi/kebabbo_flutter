@@ -83,10 +83,85 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign In')),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [GoogleLoginButton(redirectUrl: redirectUrl)],
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Sign In',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Logo or Icon
+            AnimatedOpacity(
+              opacity: 1.0,
+              duration: const Duration(seconds: 1),
+              child: Image.asset(
+                'assets/images/kebab.png', // Use your logo here
+                height: 160,
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // Google Login Button with Custom Icon
+            GoogleLoginButton(redirectUrl: redirectUrl),
+            const SizedBox(height: 20),
+
+            // Optional Terms and Privacy Text
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.0),
+              child: Text(
+                'By signing in, you agree to our terms and privacy policy.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+
+            // Decorative Element (Divider or Animated Element)
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+              indent: 40,
+              endIndent: 40,
+            ),
+            const SizedBox(height: 20),
+
+            // Aesthetic Section: Inspirational Quote or Design
+            const Text(
+              '"Prendete,	e	mangiatene	tutti: questo	è il	Kebab offerto	in	sacrificio	per	voi."',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontSize: 16,
+                color: Colors.blueGrey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+
+            // Simple Footer Text (Optional)
+            const Text(
+              'Kebabbo App - All Rights Reserved',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
