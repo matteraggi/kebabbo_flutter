@@ -1,6 +1,9 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
+import 'package:kebabbo_flutter/components/kebab_item_clickable.dart';
+import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
+import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/followers_page.dart';
@@ -33,15 +36,16 @@ class _AccountPageState extends State<AccountPage> {
   final TextEditingController _usernameController = TextEditingController();
   int _followersCount = 0;
   int _seguitiCount = 0;
+  String? _favoriteKebabId;
+  Map<String, dynamic>? _favoriteKebab;
 
   @override
   void initState() {
     super.initState();
     _loadProfile();
     _getPostCount();
-    _getFollowerCount(); // Passa l'ID utente anche qui
+    _getFollowerCount();
   }
-
 
   Future<void> _getFollowerCount() async {
     try {
@@ -67,6 +71,7 @@ class _AccountPageState extends State<AccountPage> {
     });
 
     final profileData = await getProfile(context);
+    fetchSelectedKebab(profileData!['favoriteKebab'].toString());
     if (profileData != null) {
       setState(() {
         _username = profileData['username'];
@@ -229,6 +234,79 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
+/*
+  Future<Map<String, dynamic>>? _fetchFavoriteKebab() async {
+    if (_favoriteKebab == null || _favoriteKebab!.isEmpty) return {};
+
+    final response = await supabase
+        .from('kebab')
+        .select('name')
+        .eq('id', _favoriteKebab!)
+        .single();
+
+    return response;
+  }
+*/
+  Future<void> _openFavoriteKebabSelection() async {
+    List<Map<String, dynamic>> kebabItems = await fetchKebab();
+
+    showModalBottomSheet(
+      backgroundColor: yellow,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 18.0),
+          child: ListView.builder(
+            itemCount: kebabItems.length,
+            itemBuilder: (context, index) {
+              final kebab = kebabItems[index];
+              return Column(children: [
+                KebabListItemClickable(
+                  id: kebab['id'].toString(),
+                  name: kebab['name'] ?? '',
+                  rating: (kebab['rating'] ?? 0.0).toDouble(),
+                  tag: (kebab['tag'] ?? ''),
+                  isOpen: kebab['isOpen'] ?? false,
+                  glutenFree: kebab['gluten_free'] ?? false,
+                  onKebabSelected: (selectedKebabId) {
+                    fetchSelectedKebab(selectedKebabId);
+                  },
+                ),
+                SizedBox(height: 8),
+              ]);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> fetchKebab() async {
+    final response = await supabase.from('kebab').select();
+
+    if (response != null) {
+      return List<Map<String, dynamic>>.from(response as List);
+    } else {
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchSelectedKebab(String id) async {
+    final response =
+        await supabase.from('kebab').select().eq('id', id).single();
+
+    if (response != null && response['name'] != null) {
+      print("Selected kebab: ${response['name']}");
+      setState(() {
+        _favoriteKebab = response;
+      });
+    } else {
+      print("Error: No valid response or name found.");
+    }
+
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,7 +329,8 @@ class _AccountPageState extends State<AccountPage> {
                       height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: red, width: 3), // Red border
+                        border:
+                            Border.all(color: main.red, width: 3), // Red border
                       ),
                       child: CircleAvatar(
                         radius:
@@ -277,10 +356,10 @@ class _AccountPageState extends State<AccountPage> {
                         padding: EdgeInsets
                             .zero, // Remove extra padding around the icon
                         constraints: const BoxConstraints(),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.camera_alt,
                           size: 25, // Smaller icon size
-                          color: red, // Red icon color
+                          color: main.red, // Red icon color
                         ),
                         onPressed: _changeAvatar, // Added the onPressed action
                       ),
@@ -458,6 +537,32 @@ class _AccountPageState extends State<AccountPage> {
                   child:
                       Text('Build your Kebab!', style: TextStyle(fontSize: 20)),
                 )),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
+                  ElevatedButton(
+                    onPressed: () {
+                      _openFavoriteKebabSelection();
+                    },
+                    child: const Text("Scegli il tuo kebab preferito"),
+                  )
+                else
+                  Column(
+                    children: [
+                      Text(
+                          "${_favoriteKebab?["name"] ?? 'Nome non disponibile'}"),
+                      ElevatedButton(
+                        onPressed: () {
+                          _openFavoriteKebabSelection();
+                        },
+                        child: const Text("Cambia kebabbaro preferito"),
+                      ),
+                    ],
+                  )
+              ],
+            ),
           ],
         ),
       ),
