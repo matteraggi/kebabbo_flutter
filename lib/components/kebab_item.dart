@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class KebabListItem extends StatefulWidget {
   final String id;
@@ -68,12 +69,63 @@ class KebabListItemState extends State<KebabListItem> {
   bool isExpanded = false;
   late FlipCardController _controller;
   bool isFront = true;
+  double avgQuality = 0.0;
+  double avgQuantity = 0.0;
+  double avgMenu = 0.0;
+  double avgPrice = 0.0;
+  double avgFun = 0.0;
+  double overallAvgRating = 0.0;
 
   @override
   void initState() {
     super.initState();
     isExpanded = widget.initiallyExpanded;
     _controller = FlipCardController();
+    getUsersReviews();
+  }
+
+  Future<void> getUsersReviews() async {
+    try {
+      // Recupera tutte le recensioni per questo kebabbaro
+      final response = await supabase
+          .from('reviews')
+          .select('quality, quantity, menu, price, fun')
+          .eq('kebabber_id', widget.id);
+
+      // Otteniamo i dati delle recensioni
+      List<dynamic> reviews = response;
+      if (reviews.isEmpty) return;
+
+      double totalQuality = 0;
+      double totalQuantity = 0;
+      double totalMenu = 0;
+      double totalPrice = 0;
+      double totalFun = 0;
+
+      for (var review in reviews) {
+        totalQuality += review['quality'] ?? 0;
+        totalQuantity += review['quantity'] ?? 0;
+        totalMenu += review['menu'] ?? 0;
+        totalPrice += review['price'] ?? 0;
+        totalFun += review['fun'] ?? 0;
+      }
+
+      // Calcoliamo la media di ogni campo
+      avgQuality = totalQuality / reviews.length;
+      avgQuantity = totalQuantity / reviews.length;
+      avgMenu = totalMenu / reviews.length;
+      avgPrice = totalPrice / reviews.length;
+      avgFun = totalFun / reviews.length;
+
+      // Calcoliamo la media tra le medie
+      overallAvgRating =
+          (avgQuality + avgQuantity + avgMenu + avgPrice + avgFun) / 5;
+
+      // Aggiorniamo lo stato per ricalcolare l'interfaccia
+      setState(() {});
+    } catch (e) {
+      print("Errore durante il recupero delle recensioni: $e");
+    }
   }
 
   List<Widget> _buildRatingStars(double rating) {
@@ -99,9 +151,27 @@ class KebabListItemState extends State<KebabListItem> {
   List<Widget> _buildUserRatingStars() {
     List<Widget> stars = [];
 
-    for (int i = 0; i < 4; i++) {
+    // Usa la media globale calcolata per generare le stelle
+    double rating = overallAvgRating;
+
+    int fullStars = rating.floor();
+    bool hasHalfStar = rating - fullStars.toDouble() >= 0.5;
+
+    // Aggiungi le stelle complete
+    for (int i = 0; i < fullStars; i++) {
       stars.add(const Icon(Icons.star, color: yellow, size: 40));
     }
+
+    // Aggiungi una mezza stella se necessario
+    if (hasHalfStar) {
+      stars.add(const Icon(Icons.star_half, color: yellow, size: 40));
+    }
+
+    // Aggiungi le stelle vuote
+    while (stars.length < 5) {
+      stars.add(const Icon(Icons.star_border, color: yellow, size: 40));
+    }
+
     return stars;
   }
 
@@ -218,38 +288,47 @@ class KebabListItemState extends State<KebabListItem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.description,
-              style: const TextStyle(
-                color: Colors.white,
+            if (avgMenu == 0 &&
+                avgPrice == 0 &&
+                avgQuality == 0 &&
+                avgQuantity == 0)
+              Text("Nessuna recensione disponibile",
+                  style: TextStyle(color: Colors.white))
+            else
+              Column(
+                children: [
+                  SingleStat(
+                      label: "Qualità", number: avgQuality, isFront: false),
+                  const SizedBox(height: 8),
+                  SingleStat(label: "Prezzo", number: avgPrice, isFront: false),
+                  const SizedBox(height: 8),
+                  SingleStat(
+                      label: "Dimensione", number: avgQuantity, isFront: false),
+                  const SizedBox(height: 8),
+                  SingleStat(label: "Menu", number: avgMenu, isFront: false),
+                  const SizedBox(height: 16),
+                  SingleChart(
+                    vegetables: widget.vegetables,
+                    yogurt: widget.yogurt,
+                    spicy: widget.spicy,
+                    onion: widget.onion,
+                    isFront: false,
+                  ),
+                  const SizedBox(height: 16),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-            SingleStat(
-                label: "Qualità", number: widget.quality, isFront: false),
-            const SizedBox(height: 8),
-            SingleStat(label: "Prezzo", number: widget.price, isFront: false),
-            const SizedBox(height: 8),
-            SingleStat(
-                label: "Dimensione", number: widget.dimension, isFront: false),
-            const SizedBox(height: 8),
-            SingleStat(label: "Menu", number: widget.menu, isFront: false),
-            const SizedBox(height: 16),
-            SingleChart(
-              vegetables: widget.vegetables,
-              yogurt: widget.yogurt,
-              spicy: widget.spicy,
-              onion: widget.onion,
-              isFront: false,
-            ),
-            const SizedBox(height: 16),
+
+            // Expanded per spingere i bottoni verso il fondo
+            const Spacer(), // Si assicura che i bottoni siano sempre in basso
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 BottomButtonItem(
-                    linkMaps: widget.map,
-                    text: "Apri in Maps",
-                    icon: Icons.map),
+                  linkMaps: widget.map,
+                  text: "Apri in Maps",
+                  icon: Icons.map,
+                ),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {

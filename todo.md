@@ -24,7 +24,6 @@ Ancora non fatte in kebabbo Web:
 - [x] gestione tag (panino, kebab, altro,...) (top kebab)
 - [x] Modulo consigliaci un kebabbaro (-> About)
 - [x] Creare sezione feed
-- [ ] Testare link social in about da android
 - [x] Lista kebab preferiti
 - [x] Commenti post
 - [x] Reazioni post
@@ -37,13 +36,12 @@ Ancora non fatte in kebabbo Web:
     - [x] Cliccabile tag luogo
 - [x] Tag persona
     - [x] Cambiare da tag kebab a tag utente
-    - [ ] Ricerca sulla barra di compilazione tag
-    - [x] Max 1 tag a post, oppure gestire multipli
-    - [ ] Tag cliccabili per singola pagina utente
     - [x] Ricerca sulla barra di compilazione tag
     - [x] Max 1 tag a post, oppure gestire multipli
     - [x] Tag cliccabili per singola pagina utente
-    - [ ] Cambiare grafica tag
+    - [x] Ricerca sulla barra di compilazione tag
+    - [x] Max 1 tag a post, oppure gestire multipli
+    - [x] Tag cliccabili per singola pagina utente
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
     - [x] Sistemare caricamento immagini
     - [x] Pulsante build non visibile da mobile
@@ -60,11 +58,11 @@ Feature lancio:
 - [x] Kebab preferito mostrato nel profilo
 - [x] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
 - [x] UI before position access
-
 - [x] Sticker con QR code per recensire
-    - [ ] Sezione recensioni utenti dietro card
+    - [x] Sezione recensioni utenti dietro card
 - [x] kebab favorite visibile nel profilo di altri
-- [ ] review visibili da account + profilo di altri
+- [x] review visibili da account + profilo di altri
+
 - [ ] Rifare design brand (logo, sticker e UI)
 
 Feature extra:
