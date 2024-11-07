@@ -25,6 +25,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
   bool _isFollowing = false; // Variabile per controllare se l'utente è seguito
   int _seguitiCount = 0; // Variabile per il conteggio dei follower
   int _followerCount = 0;
+  Map<String, dynamic> _favoriteKebab = {};
 
   @override
   void initState() {
@@ -56,30 +57,51 @@ class _SingleUserPageState extends State<SingleUserPage> {
     setState(() {
       _loading = true;
     });
-    // Usa l'ID dell'utente per recuperare i dati del profilo da Supabase
-    final profileData =
-        await supabase.from('profiles').select('').eq('id', userId).single();
 
-    // Recupera anche il profilo dell'utente loggato per controllare il follow
-    final currentUserProfile = await supabase
-        .from('profiles')
-        .select('followed_users')
-        .eq('id', supabase.auth.currentUser!.id)
-        .single();
+    try {
+      // Usa l'ID dell'utente per recuperare i dati del profilo da Supabase
+      final profileData =
+          await supabase.from('profiles').select().eq('id', userId).single();
 
-    setState(() {
-      _username = profileData['username'];
-      _avatarUrl = profileData['avatar_url'];
-      _favoritesCount = (profileData['favorites'] is List)
-          ? profileData['favorites'].length
-          : 0;
-      _followed = currentUserProfile['followed_users'] ?? [];
-      _isFollowing = _followed.contains(userId);
-      _seguitiCount = (profileData['followed_users'] != null)
-          ? profileData['followed_users'].length
-          : 0;
-      _loading = false;
-    });
+      // Recupera anche il profilo dell'utente loggato per controllare il follow
+      final currentUserProfile = await supabase
+          .from('profiles')
+          .select('followed_users')
+          .eq('id', supabase.auth.currentUser!.id)
+          .single();
+
+      // Verifica se l'utente ha un kebab preferito
+      Map<String, dynamic>? favoriteKebab;
+      if (profileData['favorite_kebab'] != null) {
+        // Ottieni i dettagli del kebab preferito
+        favoriteKebab = await supabase
+            .from('kebab')
+            .select('name, description')
+            .eq('id', profileData['favorite_kebab'])
+            .single();
+      }
+
+      setState(() {
+        _username = profileData['username'];
+        _avatarUrl = profileData['avatar_url'];
+        _favoritesCount = (profileData['favorites'] is List)
+            ? profileData['favorites'].length
+            : 0;
+        _followed = currentUserProfile['followed_users'] ?? [];
+        _isFollowing = _followed.contains(userId);
+        _seguitiCount = (profileData['followed_users'] != null)
+            ? profileData['followed_users'].length
+            : 0;
+        _favoriteKebab = favoriteKebab ?? {};
+        _loading = false;
+      });
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load profile')),
+        );
+      }
+    }
   }
 
   Future<void> _toggleFollow() async {
@@ -188,6 +210,13 @@ class _SingleUserPageState extends State<SingleUserPage> {
                       ),
                       child: Text(_isFollowing ? 'Segui già' : 'Segui'),
                     ),
+                    const SizedBox(height: 16),
+                    if (_favoriteKebab.isNotEmpty)
+                      Text(
+                        "Kebab preferito: ${_favoriteKebab['name']}",
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.black),
+                      ),
                   ],
                 ),
               ],
@@ -255,7 +284,8 @@ class _SingleUserPageState extends State<SingleUserPage> {
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SeguitiPage(userId: widget.userId)));
+                          builder: (context) =>
+                              SeguitiPage(userId: widget.userId)));
                     },
                     child: Column(
                       children: [
@@ -281,7 +311,8 @@ class _SingleUserPageState extends State<SingleUserPage> {
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FollowersPage(userId: widget.userId)));
+                          builder: (context) =>
+                              FollowersPage(userId: widget.userId)));
                     },
                     child: Column(
                       children: [

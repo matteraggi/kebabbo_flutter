@@ -59,7 +59,8 @@ Feature lancio:
 
 - [x] Sticker con QR code per recensire
     - [ ] Sezione recensioni utenti dietro card
-- [ ] kebab favorite visibile nel profilo
+- [x] kebab favorite visibile nel profilo di altri
+- [ ] review visibili da account + profilo di altri
 - [ ] Rifare design brand (logo, sticker e UI)
 
 Feature extra:
