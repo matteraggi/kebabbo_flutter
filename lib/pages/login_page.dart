@@ -18,12 +18,11 @@ class _LoginPageState extends State<LoginPage> {
   bool _redirecting = false;
   late final TextEditingController _emailController = TextEditingController();
   late final StreamSubscription<AuthState> _authStateSubscription;
-  final redirectUrl =  Uri(
-  scheme: Uri.base.scheme,
-  host: Uri.base.host,
-  port: Uri.base.port,
-).toString();
-
+  final redirectUrl = Uri(
+    scheme: Uri.base.scheme,
+    host: Uri.base.host,
+    port: Uri.base.port,
+  ).toString();
 
   Future<void> _signIn() async {
     try {
@@ -56,33 +55,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  _authStateSubscription = supabase.auth.onAuthStateChange.listen(
-    (data) {
-      if (_redirecting || !mounted) return;
+    _authStateSubscription = supabase.auth.onAuthStateChange.listen(
+      (data) {
+        if (_redirecting || !mounted) return;
 
-      final session = data.session;
-      if (session != null) {
-        _redirecting = true;
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const AccountPage()),
-        );
-      }
-    },
-    onError: (error) {
-      if (mounted) {
-        if (error is AuthException) {
-          context.showSnackBar(error.message, isError: true);
-        } else {
-          context.showSnackBar('Unexpected error occurred', isError: true);
+        final session = data.session;
+        if (session != null) {
+          _redirecting = true;
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const AccountPage()),
+          );
         }
-      }
-    },
-  );
-}
-
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -97,9 +86,7 @@ void initState() {
       appBar: AppBar(title: const Text('Sign In')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          GoogleLoginButton(redirectUrl: redirectUrl)
-        ],
+        children: [GoogleLoginButton(redirectUrl: redirectUrl)],
       ),
     );
   }

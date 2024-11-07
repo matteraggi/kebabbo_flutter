@@ -63,7 +63,8 @@ Feature lancio:
 - [x] kebab favorite visibile nel profilo di altri
 - [x] review visibili da account + profilo di altri
 
-- [ ] Rifare design brand (logo, sticker e UI)
+- [ ] design account e signle user page
+- [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
 
 Feature extra:
 - [ ] Badge del posto quando si mette review
@@ -73,7 +74,8 @@ Feature extra:
 - [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
 
 
-Marketing:
+Non dev:
 
+- [ ] design loghi vari da mettere in giro
 - [ ] Pensare piano marketing con CMO dell'azienda
 - [ ] Sponsor
