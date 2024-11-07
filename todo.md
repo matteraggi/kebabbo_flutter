@@ -54,7 +54,7 @@ Feature lancio:
 - [x] Salvare kebab buildato in db
 - [x] Aggiungere stats a tutti
 - [x] Pagina ricerca e feed globale
-- [ ] Sezione recensioni utenti
+- [ ] Sezione recensioni utenti -> icona cambiogiro che gira la carta e dalla parte opposta ci sono recensioni utenti
 - [ ] Kebab preferito mostrato nel profilo
 - [ ] Bottom Navbar in tutte le schermate
 - [ ] UI before position access

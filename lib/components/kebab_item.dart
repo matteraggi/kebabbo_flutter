@@ -1,8 +1,10 @@
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
 import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:flip_card/flip_card.dart';
 
 class KebabListItem extends StatefulWidget {
   final String id;
@@ -64,11 +66,14 @@ class KebabListItem extends StatefulWidget {
 
 class KebabListItemState extends State<KebabListItem> {
   bool isExpanded = false;
+  late FlipCardController _controller;
+  bool isFront = true;
 
   @override
   void initState() {
     super.initState();
     isExpanded = widget.initiallyExpanded;
+    _controller = FlipCardController();
   }
 
   List<Widget> _buildRatingStars(double rating) {
@@ -91,10 +96,215 @@ class KebabListItemState extends State<KebabListItem> {
     return stars;
   }
 
+  List<Widget> _buildUserRatingStars() {
+    List<Widget> stars = [];
+
+    for (int i = 0; i < 4; i++) {
+      stars.add(const Icon(Icons.star, color: yellow, size: 40));
+    }
+    return stars;
+  }
+
+  Widget _buildFront() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.description,
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SingleStat(
+              label: "Qualità",
+              number: widget.quality,
+              isFront: true,
+            ),
+            const SizedBox(height: 8),
+            SingleStat(label: "Prezzo", number: widget.price, isFront: true),
+            const SizedBox(height: 8),
+            SingleStat(
+                label: "Dimensione", number: widget.dimension, isFront: true),
+            const SizedBox(height: 8),
+            SingleStat(label: "Menu", number: widget.menu, isFront: true),
+            const SizedBox(height: 16),
+            SingleChart(
+              vegetables: widget.vegetables,
+              yogurt: widget.yogurt,
+              spicy: widget.spicy,
+              onion: widget.onion,
+              isFront: true,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BottomButtonItem(
+                    linkMaps: widget.map,
+                    text: "Apri in Maps",
+                    icon: Icons.map),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _controller.toggleCard();
+                    });
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(Icons.person),
+                      SizedBox(width: 8),
+                      Text("Review"),
+                    ],
+                  ),
+                ),
+                if (widget.glutenFree)
+                  Image.asset(
+                    "assets/images/gluten_free.png",
+                    height: 40,
+                    width: 40,
+                  ),
+                if (widget.fun >= 4)
+                  Transform.rotate(
+                    angle: -0.2,
+                    child: const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.sentiment_very_satisfied,
+                          color: yellow,
+                          size: 30,
+                        ),
+                        Text(
+                          'fun!',
+                          style: TextStyle(
+                            color: yellow,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBack() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[800],
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.description,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SingleStat(
+                label: "Qualità", number: widget.quality, isFront: false),
+            const SizedBox(height: 8),
+            SingleStat(label: "Prezzo", number: widget.price, isFront: false),
+            const SizedBox(height: 8),
+            SingleStat(
+                label: "Dimensione", number: widget.dimension, isFront: false),
+            const SizedBox(height: 8),
+            SingleStat(label: "Menu", number: widget.menu, isFront: false),
+            const SizedBox(height: 16),
+            SingleChart(
+              vegetables: widget.vegetables,
+              yogurt: widget.yogurt,
+              spicy: widget.spicy,
+              onion: widget.onion,
+              isFront: false,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BottomButtonItem(
+                    linkMaps: widget.map,
+                    text: "Apri in Maps",
+                    icon: Icons.map),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _controller.toggleCard();
+                    });
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(Icons.kebab_dining_outlined),
+                      SizedBox(width: 8),
+                      Text("Review"),
+                    ],
+                  ),
+                ),
+                if (widget.glutenFree)
+                  Image.asset(
+                    "assets/images/gluten_free.png",
+                    height: 40,
+                    width: 40,
+                  ),
+                if (widget.fun >= 4)
+                  Transform.rotate(
+                    angle: -0.2,
+                    child: const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.sentiment_very_satisfied,
+                          color: yellow,
+                          size: 30,
+                        ),
+                        Text(
+                          'fun!',
+                          style: TextStyle(
+                            color: yellow,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
+      color: isFront ? Colors.white : Colors.grey[800],
       shadowColor: Colors.grey,
       child: Stack(
         children: [
@@ -123,8 +333,8 @@ class KebabListItemState extends State<KebabListItem> {
                         widget.name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0),
+                        style: TextStyle(
+                          color: isFront ? Colors.black : Colors.white,
                           fontWeight: FontWeight.w800,
                           fontSize: 22,
                         ),
@@ -150,7 +360,9 @@ class KebabListItemState extends State<KebabListItem> {
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: _buildRatingStars(widget.rating),
+                  children: isFront
+                      ? _buildRatingStars(widget.rating)
+                      : _buildUserRatingStars(),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -169,85 +381,35 @@ class KebabListItemState extends State<KebabListItem> {
             ),
             trailing: const SizedBox(width: 10),
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.description,
-                        style: const TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SingleStat(label: "Qualità", number: widget.quality),
-                      const SizedBox(height: 8),
-                      SingleStat(label: "Prezzo", number: widget.price),
-                      const SizedBox(height: 8),
-                      SingleStat(label: "Dimensione", number: widget.dimension),
-                      const SizedBox(height: 8),
-                      SingleStat(label: "Menu", number: widget.menu),
-                      const SizedBox(height: 16),
-                      SingleChart(
-                        vegetables: widget.vegetables,
-                        yogurt: widget.yogurt,
-                        spicy: widget.spicy,
-                        onion: widget.onion,
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          BottomButtonItem(
-                              linkMaps: widget.map,
-                              text: "Apri in Maps",
-                              icon: Icons.map),
-                          if (widget.glutenFree)
-                            Image.asset(
-                              "assets/images/gluten_free.png",
-                              height: 40,
-                              width: 40,
-                            ),
-                          if (widget.fun >= 4)
-                            Transform.rotate(
-                              angle: -0.2,
-                              child: const Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.sentiment_very_satisfied,
-                                    color: yellow,
-                                    size: 30,
-                                  ),
-                                  Text(
-                                    'fun!',
-                                    style: TextStyle(
-                                      color: yellow,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 600),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    final rotate =
+                        Tween(begin: 1.0, end: 0.0).animate(animation);
+                    return RotationTransition(turns: rotate, child: child);
+                  },
+                  child: FlipCard(
+                      fill: Fill.fillBack,
+                      side: CardSide.FRONT,
+                      controller: _controller,
+                      flipOnTouch: false,
+                      onFlipDone: (status) {
+                        setState(() {
+                          isFront = !isFront;
+                        });
+                      },
+                      front: _buildFront(),
+                      back: _buildBack())),
             ],
-            onExpansionChanged: (bool expanding) =>
-                setState(() => isExpanded = expanding),
+            onExpansionChanged: (bool expanding) {
+              setState(() {
+                isExpanded = expanding;
+                if (!expanding) {
+                  isFront = true;
+                }
+              });
+            },
           ),
           if (!widget.special)
             Positioned(

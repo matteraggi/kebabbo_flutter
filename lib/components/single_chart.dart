@@ -7,6 +7,7 @@ class SingleChart extends StatefulWidget {
   final double yogurt;
   final double spicy;
   final double onion;
+  final bool isFront;
 
   const SingleChart({
     super.key,
@@ -14,6 +15,7 @@ class SingleChart extends StatefulWidget {
     required this.yogurt,
     required this.spicy,
     required this.onion,
+    required this.isFront,
   });
 
   @override
@@ -135,26 +137,27 @@ class _SingleChartState extends State<SingleChart> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
+    var style = TextStyle(
+      color: widget.isFront ? Colors.black : Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = const Text('Verdura', style: style);
+        text = Text('Verdura', style: style);
         break;
       case 1:
-        text = const Text('Yogurt', style: style);
+        text = Text('Yogurt', style: style);
         break;
       case 2:
-        text = const Text('Spicy', style: style);
+        text = Text('Spicy', style: style);
         break;
       case 3:
-        text = const Text('Cipolla', style: style);
+        text = Text('Cipolla', style: style);
         break;
       default:
-        text = const Text('', style: style);
+        text = Text('', style: style);
         break;
     }
 
@@ -165,7 +168,8 @@ class _SingleChartState extends State<SingleChart> {
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
+    var style = TextStyle(
+      color: widget.isFront ? Colors.black : Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: 15,
     );
