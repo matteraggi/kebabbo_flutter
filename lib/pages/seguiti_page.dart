@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SeguitiPage extends StatefulWidget {
   final String userId;
 
-  const SeguitiPage({Key? key, required this.userId}) : super(key: key);
+  const SeguitiPage({super.key, required this.userId});
 
   @override
   _SeguitiPageState createState() => _SeguitiPageState();

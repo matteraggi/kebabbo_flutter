@@ -85,7 +85,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 2;
-  ValueNotifier<Position?> _currentPositionNotifier =
+  final ValueNotifier<Position?> _currentPositionNotifier =
       ValueNotifier<Position?>(null);
   late Stream<Position> _positionStream;
 

@@ -7,11 +7,10 @@ class UserItem extends StatefulWidget {
   final String avatarUrl;
 
   const UserItem(
-      {Key? key,
+      {super.key,
       required this.userId,
       required this.username,
-      required this.avatarUrl})
-      : super(key: key);
+      required this.avatarUrl});
 
   @override
   _UserItemState createState() => _UserItemState();

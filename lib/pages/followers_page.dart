@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class FollowersPage extends StatefulWidget {
   final String userId;
 
-  const FollowersPage({Key? key, required this.userId}) : super(key: key);
+  const FollowersPage({super.key, required this.userId});
 
   @override
   _FollowersPageState createState() => _FollowersPageState();

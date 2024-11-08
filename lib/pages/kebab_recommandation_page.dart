@@ -201,7 +201,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                 color: Colors.transparent,
                 child: Center(
                   child: Image.asset(
-                    'images/loading_cloud.png', // Cloud image asset
+                    'assets/images/loading_cloud.png', // Cloud image asset
                     fit: BoxFit.cover,
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,

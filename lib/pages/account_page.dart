@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kebabbo_flutter/components/kebab_item_clickable.dart';
 import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
@@ -96,19 +97,17 @@ class _AccountPageState extends State<AccountPage> {
 
     final profileData = await getProfile(context);
     fetchSelectedKebab(profileData!['favoriteKebab'].toString());
-    if (profileData != null) {
-      setState(() {
-        _username = profileData['username'];
-        _avatarUrl = profileData['avatarUrl'];
-        _favoritesCount = profileData['favoritesCount'];
-        _ingredients = List<int>.from(profileData['ingredients']);
-        _seguitiCount = (profileData['seguitiCount'] != null)
-            ? profileData['seguitiCount'].length
-            : 0;
-        _loading = false;
-      });
+    setState(() {
+      _username = profileData['username'];
+      _avatarUrl = profileData['avatarUrl'];
+      _favoritesCount = profileData['favoritesCount'];
+      _ingredients = List<int>.from(profileData['ingredients']);
+      _seguitiCount = (profileData['seguitiCount'] != null)
+          ? profileData['seguitiCount'].length
+          : 0;
+      _loading = false;
+    });
     }
-  }
 
   Future<void> _updateProfile() async {
     setState(() {
@@ -306,18 +305,17 @@ class _AccountPageState extends State<AccountPage> {
   Future<List<Map<String, dynamic>>> fetchKebab() async {
     final response = await supabase.from('kebab').select();
 
-    if (response != null) {
-      return List<Map<String, dynamic>>.from(response as List);
-    } else {
-      return [];
+    return List<Map<String, dynamic>>.from(response as List);
     }
-  }
 
   Future<Map<String, dynamic>> fetchSelectedKebab(String id) async {
+    print ("Selected kebab: $id");
     final response =
         await supabase.from('kebab').select().eq('id', id).single();
+      
+      print("Selected kebab: ${response['name']}");
 
-    if (response != null && response['name'] != null) {
+    if (response['name'] != null) {
       print("Selected kebab: ${response['name']}");
       setState(() {
         _favoriteKebab = response;
@@ -348,72 +346,89 @@ class _AccountPageState extends State<AccountPage> {
                     final position = renderBox.localToGlobal(Offset.zero);
 
                     showMenu(
-                      context: context,
-                      position: RelativeRect.fromLTRB(
-                        position.dx + 10, // posiziona orizzontalmente all'icona
-                        position.dy +
-                            60, // posiziona verticalmente 50px sotto l'icona
-                        position.dx + renderBox.size.width,
-                        position.dy + 60, // aggiungi offset anche qui
-                      ),
-                      items: [
-                        PopupMenuItem<int>(
-                          value: 1,
-                          height:
-                              40, // Altezza del menu per dare un po' più di spazio
-                          child: Row(
-                            children: [
-                              Icon(Icons.settings, color: Colors.black),
-                              SizedBox(width: 8),
-                              Text(
-                                'Edit profile',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem<int>(
-                          value: 2,
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Icon(Icons.logout, color: Colors.black),
-                              SizedBox(width: 8),
-                              Text(
-                                'Logout',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), // Menu arrotondato
-                      ),
-                      elevation: 5, // Ombra per far sembrare il menu "sospeso"
-                      color: Colors.white, // Colore di sfondo del menu
-                    ).then((value) {
-                      if (value != null) {
-                        // Gestisci la selezione del menu
-                        if (value == 1) {
-                          // Usa Future.delayed per ritardare l'apertura della finestra di dialogo
-                          Future.delayed(Duration(milliseconds: 100), () {
-                            _changeUsername(); // Apri il modulo di cambio username
-                          });
-                        } else if (value == 2) {
-                          _signOut(); // Esegui il logout
-                        }
-                      }
-                    });
+  context: context,
+  position: RelativeRect.fromLTRB(
+    position.dx + 10, 
+    position.dy + 60, 
+    position.dx + renderBox.size.width,
+    position.dy + 60,
+  ),
+  items: [
+    PopupMenuItem<int>(
+      value: 1,
+      height: 40,
+      child: Row(
+        children: [
+          Icon(Icons.settings, color: Colors.black),
+          SizedBox(width: 8),
+          Text(
+            'Edit profile',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    ),
+    PopupMenuItem<int>(
+      value: 2,
+      height: 40,
+      child: Row(
+        children: [
+          Icon(Icons.logout, color: Colors.black),
+          SizedBox(width: 8),
+          Text(
+            'Logout',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    ),
+    // Add "Delete account" button in red
+    PopupMenuItem<int>(
+      value: 3,
+      height: 40,
+      child: Row(
+        children: [
+          Icon(Icons.delete, color: Colors.red),
+          SizedBox(width: 8),
+          Text(
+            'Delete account',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
+    ),
+  ],
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10),
+  ),
+  elevation: 5,
+  color: Colors.white,
+).then((value) {
+  if (value != null) {
+    if (value == 1) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        _changeUsername();
+      });
+    } else if (value == 2) {
+      _signOut();
+    } else if (value == 3) {
+      // Show confirmation dialog for account deletion
+      _showDeleteAccountDialog(context);
+    }
+  }
+});
                   },
                   child: Icon(Icons.menu, color: Colors.black, size: 24),
                 ),
@@ -663,4 +678,115 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
   }
+  
+}
+Future<void> _deleteAccount( BuildContext context) async {
+  // Invoke the 'delete_own_user' Edge Function
+    await supabase.from('profiles').delete().eq('id', supabase.auth.currentUser!.id); 
+
+    await supabase.auth.signOut();  // Sign out the user after deletion
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+}
+
+void _showDeleteAccountDialog(BuildContext context) {
+  bool showConfirmButton = false; // Track state for the second button
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: Text(
+              "Delete Account",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Are you sure you want to delete your account? This action cannot be undone.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                ),
+                SizedBox(height: 20),
+                // First Delete Account Button
+                if (!showConfirmButton)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showConfirmButton = true; // Show confirm button
+                      });
+                    },
+                    child: Text(
+                      "Delete Account",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                // Second Confirm Button
+                if (showConfirmButton)
+                  Column(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                          backgroundColor: Colors.redAccent, // Different color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          _deleteAccount(context); // Call your delete function
+                          Navigator.of(context).pop(); // Close dialog
+                        },
+                        child: Text(
+                          "Confirm Delete",
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 10),
+              ],
+            ),
+            actionsAlignment: MainAxisAlignment.center, // Center cancel button
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.grey[700],
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(fontSize: 16),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+
 }

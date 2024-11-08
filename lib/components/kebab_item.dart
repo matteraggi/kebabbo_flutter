@@ -5,7 +5,6 @@ import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:flip_card/flip_card.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class KebabListItem extends StatefulWidget {
   final String id;

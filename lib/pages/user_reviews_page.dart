@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
-import 'package:kebabbo_flutter/components/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/pages/single_user_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserReviewsPage extends StatefulWidget {
   final String userId;

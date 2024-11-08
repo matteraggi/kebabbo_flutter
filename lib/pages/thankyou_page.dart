@@ -3,7 +3,7 @@ import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
 
 class ThankYouPage extends StatelessWidget {
   
-  ThankYouPage({super.key});
+  const ThankYouPage({super.key});
 
   @override
   Widget build(BuildContext context) {

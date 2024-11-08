@@ -477,11 +477,12 @@ String generateHash(String kebabberName) {
 
 Future<Map<String, dynamic>?> validateHash(String hash) async {
   // Fetch all names from the kebabbers table
-  final List<dynamic>? response =
-      await Supabase.instance.client.from('kebab').select("name , id");
+  final List<dynamic> response = await Supabase.instance.client
+      .from('kebab')
+      .select("name , id");
 
   // Ensure response is not null or empty
-  if (response == null || response.isEmpty) {
+  if (response.isEmpty) {
     print('No data returned from query or error occurred.');
     return null;
   }

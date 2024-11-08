@@ -13,12 +13,13 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
     return {
       'username': data['username'] ?? '',
       'avatarUrl': data['avatar_url'] ?? '',
-      'favoritesCount': (data['favorites'] as List).length,
+      'favoritesCount': (data['favorites'] as List?)?.length ?? 0,
       'ingredients': data['ingredients'] ?? [],
       'seguitiCount': data['followed_users'] ?? [],
       'favoriteKebab': data['favorite_kebab'] ?? 0,
     };
   } catch (error) {
+    print (error);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Unexpected error occurred')),
     );
