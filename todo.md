@@ -61,16 +61,17 @@ Feature lancio:
 - [x] Recensioni più professionali (sennò quando chiediamo per sticker ci mandano a fanculo)
 - [x] UI before position access
 - [x] Sticker con QR code per recensire
-- [ ] Sezione recensioni utenti dietro card
+- [x] Sezione recensioni utenti dietro card
 - [x] kebab favorite visibile nel profilo di altri
 - [x] review visibili da account + profilo di altri
 
-- [ ] design account e single user page
+- [x] design account e single user page
+- [ ] aggiornare numero commenti e like quando viene messo un'altro post (il post appena messo prende già il numero di commenti e like del precedente, perché non viene aggiornata la UI)
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
 
 Feature extra:
 
-- [ ] Badge del posto quando si mette review
+- [x] Badge del posto quando si mette review
 - [ ] Recensioni utenti postate come post
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche

@@ -88,8 +88,6 @@ class TopKebabPageState extends State<TopKebabPage> {
           searchResultList = kebabs;
           isLoading = false;
         });
-
-        print("end loading");
       }
     } catch (error) {
       if (mounted) {
@@ -122,9 +120,6 @@ class TopKebabPageState extends State<TopKebabPage> {
             .where((kebab) => kebab['isFavorite'])
             .map((k) => k['id'].toString()),
       );
-
-      // Log stato attuale
-      print("Stato preferito attuale per $kebabId: $isCurrentlyFavorite");
 
       if (isCurrentlyFavorite) {
         updatedFavorites.remove(kebabId);

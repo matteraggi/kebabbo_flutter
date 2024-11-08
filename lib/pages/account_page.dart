@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
 import 'package:kebabbo_flutter/components/kebab_item_clickable.dart';
@@ -8,6 +9,8 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/followers_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
+import 'package:kebabbo_flutter/pages/medal_page.dart';
+import 'package:kebabbo_flutter/pages/review_page.dart';
 import 'package:kebabbo_flutter/pages/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
@@ -67,7 +70,7 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
   }
-  
+
   Future<void> _getReviewsCount() async {
     try {
       final response = await supabase
@@ -133,7 +136,7 @@ class _AccountPageState extends State<AccountPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text('Change Username'),
+              title: const Text('Cambia Username'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -141,7 +144,7 @@ class _AccountPageState extends State<AccountPage> {
                     controller: _usernameController,
                     maxLength: 12,
                     decoration: const InputDecoration(
-                      hintText: 'Enter new username',
+                      hintText: 'Nuovo username...',
                       counterText: '',
                     ),
                     onChanged: (value) {
@@ -208,8 +211,6 @@ class _AccountPageState extends State<AccountPage> {
       Uint8List? compressedImage = await compressImage(bytes);
       final userId = supabase.auth.currentSession!.user.id;
       final filePath = '$userId.png';
-
-      print("Uploading image to $filePath");
 
       try {
         await supabase.storage.from('avatars').uploadBinary(
@@ -334,100 +335,157 @@ class _AccountPageState extends State<AccountPage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(height: 30),
-                Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    // Red border around CircleAvatar
-                    Container(
-                      width: 100, // Diameter of the circle
-                      height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border:
-                            Border.all(color: main.red, width: 3), // Red border
+                InkWell(
+                  onTap: () {
+                    // Posiziona il menu un po' più in basso rispetto all'icona
+                    final RenderBox renderBox =
+                        context.findRenderObject() as RenderBox;
+                    final position = renderBox.localToGlobal(Offset.zero);
+
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        position.dx + 10, // posiziona orizzontalmente all'icona
+                        position.dy +
+                            60, // posiziona verticalmente 50px sotto l'icona
+                        position.dx + renderBox.size.width,
+                        position.dy + 60, // aggiungi offset anche qui
                       ),
-                      child: CircleAvatar(
-                        radius:
-                            47, // Adjust radius to fit within the red border
-                        backgroundImage:
-                            (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                                ? NetworkImage(_avatarUrl!)
-                                : const AssetImage('assets/images/kebab.png')
-                                    as ImageProvider,
-                      ),
-                    ),
-                    // White pill-shaped background for the camera icon
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white, // White background
-                        shape: BoxShape.rectangle,
-                        borderRadius:
-                            BorderRadius.circular(15), // Pill-shaped corners
-                      ),
-                      padding: const EdgeInsets.all(
-                          2), // Adjust padding for smaller pill
-                      child: IconButton(
-                        padding: EdgeInsets
-                            .zero, // Remove extra padding around the icon
-                        constraints: const BoxConstraints(),
-                        icon: Icon(
-                          Icons.camera_alt,
-                          size: 25, // Smaller icon size
-                          color: main.red, // Red icon color
+                      items: [
+                        PopupMenuItem<int>(
+                          value: 1,
+                          height:
+                              40, // Altezza del menu per dare un po' più di spazio
+                          child: Row(
+                            children: [
+                              Icon(Icons.settings, color: Colors.black),
+                              SizedBox(width: 8),
+                              Text(
+                                'Edit profile',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        onPressed: _changeAvatar, // Added the onPressed action
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset(
-                          "assets/images/kebabcolored.png",
-                          height: 24,
-                          width: 24,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _username,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
+                        PopupMenuItem<int>(
+                          value: 2,
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Icon(Icons.logout, color: Colors.black),
+                              SizedBox(width: 8),
+                              Text(
+                                'Logout',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: _changeUsername,
-                          child: const Text('edit'),
-                        ),
-                        const SizedBox(width: 3),
-                        const Text(' | '),
-                        const SizedBox(width: 3),
-                        TextButton(
-                          onPressed: _signOut,
-                          child: const Text('sign out'),
-                        ),
-                      ],
-                    )
-                  ],
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // Menu arrotondato
+                      ),
+                      elevation: 5, // Ombra per far sembrare il menu "sospeso"
+                      color: Colors.white, // Colore di sfondo del menu
+                    ).then((value) {
+                      if (value != null) {
+                        // Gestisci la selezione del menu
+                        if (value == 1) {
+                          // Usa Future.delayed per ritardare l'apertura della finestra di dialogo
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            _changeUsername(); // Apri il modulo di cambio username
+                          });
+                        } else if (value == 2) {
+                          _signOut(); // Esegui il logout
+                        }
+                      }
+                    });
+                  },
+                  child: Icon(Icons.menu, color: Colors.black, size: 24),
+                ),
+                Text(
+                  _username,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ToolsPage(
+                              currentPosition: widget.currentPosition,
+                              ingredients: _ingredients,
+                              onIngredientsUpdated: (updatedIngredients) {
+                                setState(() {
+                                  _ingredients =
+                                      updatedIngredients; // Update ingredients locally in AccountPage
+                                });
+                              },
+                            )));
+                  },
+                  child: Icon(Icons.build, color: Colors.black, size: 22),
                 ),
               ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: main.red, width: 3),
+                  ),
+                  child: CircleAvatar(
+                    radius: 47,
+                    backgroundImage:
+                        (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                            ? NetworkImage(_avatarUrl!)
+                            : const AssetImage('assets/images/kebab.png')
+                                as ImageProvider,
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white, // White background
+                    shape: BoxShape.rectangle,
+                    borderRadius:
+                        BorderRadius.circular(15), // Pill-shaped corners
+                  ),
+                  padding: const EdgeInsets.all(
+                      2), // Adjust padding for smaller pill
+                  child: IconButton(
+                    padding:
+                        EdgeInsets.zero, // Remove extra padding around the icon
+                    constraints: const BoxConstraints(),
+                    icon: Icon(
+                      Icons.camera_alt,
+                      size: 25, // Smaller icon size
+                      color: main.red, // Red icon color
+                    ),
+                    onPressed: _changeAvatar, // Added the onPressed action
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -440,70 +498,15 @@ class _AccountPageState extends State<AccountPage> {
                     child: Column(
                       children: [
                         Text(
-                          "$_postCount", // Numero di post
+                          "$_postCount",
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Text(
-                          'post',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FavoritesPage(userId: _id)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          '$_favoritesCount', // Numero di preferiti
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Text(
-                          'preferiti',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SeguitiPage(userId: _id)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          '$_seguitiCount', // Numero di preferiti
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Text(
-                          'seguiti',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                          'Posts',
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
@@ -518,45 +521,38 @@ class _AccountPageState extends State<AccountPage> {
                     child: Column(
                       children: [
                         Text(
-                          '$_followersCount', // Numero di preferiti
+                          '$_followersCount',
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Text(
-                          'followers',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                          'Followers',
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
                   ),
                 ),
-                        
                 Expanded(
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => UserReviewsPage(userId: _id)));
+                          builder: (context) => SeguitiPage(userId: _id)));
                     },
                     child: Column(
                       children: [
                         Text(
-                          '$_reviewsCount', // Numero di preferiti
+                          '$_seguitiCount',
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Text(
-                          'Reviews',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                          'Seguiti',
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
@@ -564,52 +560,84 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ],
             ),
-            SizedBox(height: 30),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ToolsPage(
-                            currentPosition: widget.currentPosition,
-                            ingredients: _ingredients,
-                            onIngredientsUpdated: (updatedIngredients) {
-                              setState(() {
-                                _ingredients =
-                                    updatedIngredients; // Update ingredients locally in AccountPage
-                              });
-                            },
-                          )));
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-                  child:
-                      Text('Build your Kebab!', style: TextStyle(fontSize: 20)),
-                )),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
-                  ElevatedButton(
-                    onPressed: () {
+            const SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 6,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
+                    Text("Seleziona il tuo kebab preferito")
+                  else
+                    Row(
+                      children: [
+                        Image.asset(
+                          _favoriteKebab?["tag"] == "kebab"
+                              ? "assets/images/kebabcolored.png"
+                              : "assets/images/sandwitch.png",
+                          height: 24,
+                          width: 24,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "${_favoriteKebab?["name"] ?? 'Nome non disponibile'}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  InkWell(
+                    onTap: () {
                       _openFavoriteKebabSelection();
                     },
-                    child: const Text("Scegli il tuo kebab preferito"),
-                  )
-                else
-                  Column(
-                    children: [
-                      Text(
-                          "${_favoriteKebab?["name"] ?? 'Nome non disponibile'}"),
-                      ElevatedButton(
-                        onPressed: () {
-                          _openFavoriteKebabSelection();
-                        },
-                        child: const Text("Cambia kebabbaro preferito"),
-                      ),
+                    child:
+                        Icon(Icons.border_color, color: Colors.black, size: 22),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            DefaultTabController(
+              length: 3,
+              child: Column(
+                children: [
+                  TabBar(
+                    physics: const BouncingScrollPhysics(),
+                    indicatorColor: Colors.black,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(icon: Icon(Icons.emoji_events)),
+                      Tab(icon: Icon(Icons.star)),
+                      Tab(icon: Icon(Icons.bookmark)),
                     ],
-                  )
-              ],
+                  ),
+                  SizedBox(
+                    height: 370, // Or any other height that suits your content
+                    child: TabBarView(
+                      children: [
+                        MedalPage(userId: _id),
+                        UserReviewsPage(userId: _id),
+                        FavoritesPage(userId: _id),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

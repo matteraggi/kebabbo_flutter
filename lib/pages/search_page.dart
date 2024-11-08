@@ -46,22 +46,22 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _onSearchTextChanged() {
-  final query = searchController.text.toLowerCase();
-  
-  setState(() {
-          if (query.isEmpty) {
+    final query = searchController.text.toLowerCase();
+
+    setState(() {
+      if (query.isEmpty) {
         // Se non c'è testo nella barra di ricerca, mostra i post
         searchResultList = feedList;
       } else {
-    searchResultList = fuzzySearchAndSort(
-      userList,
-      query,
-      'username', // Search key for usernames
-      false,      // Set `showOnlyOpen` to false if not relevant
-      false,      // Set `showOnlyKebab` to false if not relevant
-    );
+        searchResultList = fuzzySearchAndSort(
+          userList,
+          query,
+          'username', // Search key for usernames
+          false, // Set `showOnlyOpen` to false if not relevant
+          false, // Set `showOnlyKebab` to false if not relevant
+        );
       }
-  });
+    });
   }
 
   Future<void> fetchUserNames() async {
@@ -99,12 +99,23 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> _fetchFeed() async {
     try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+
+      if (userId == null) {
+        setState(() {
+          isLoading = false;
+        });
+        return; // No user is logged in, exit early
+      }
+
       final PostgrestList response = await supabase
           .from('posts')
           .select('*')
           .filter('comment', 'is', null)
+          .neq('user_id', userId) // Escludi i post con il tuo user_id
           .order('created_at',
               ascending: false); // Ordina per timestamp in ordine decrescente
+
       if (mounted) {
         List<Map<String, dynamic>> posts =
             List<Map<String, dynamic>>.from(response as List);
@@ -198,7 +209,7 @@ class _SearchPageState extends State<SearchPage> {
                               return FeedListItem(
                                 text: item['text'] ?? 'Testo non disponibile',
                                 createdAt: item['created_at'] ?? '',
-                                userId: item['user_id'] ?? '',
+                                userId: item['user_id'].toString(),
                                 imageUrl: item['image_url'] ?? '',
                                 postId: item['id']?.toString() ?? '',
                                 likeList: item['like'] ?? [],

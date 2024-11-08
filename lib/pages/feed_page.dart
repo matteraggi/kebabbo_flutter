@@ -73,113 +73,118 @@ class FeedPageState extends State<FeedPage> {
   }
 
 // Function to fetch top 3 fuzzy matches or random users
-List<String> getTopUserSuggestions(String query, List<String> userList) {
-  if (query.isEmpty) {
-    // If no query, return 3 random users
-    userList.shuffle();
-    return userList.take(3).toList();
-  } else {
-    // Perform fuzzy search for top 3 matches
-    List<Map<String, dynamic>> fuzzyResults = fuzzySearchAndSort(
-      userList.map((user) => {'username': user}).toList(),
-      query,
-      'username',
-      false, // showOnlyOpen
-      false, // showOnlyKebab
-    );
-    return fuzzyResults
-        .map((result) => result['username'].toString())
-        .take(3)
-        .toList(); // Take top 3 matches sorted by closest score
+  List<String> getTopUserSuggestions(String query, List<String> userList) {
+    if (query.isEmpty) {
+      // If no query, return 3 random users
+      userList.shuffle();
+      return userList.take(3).toList();
+    } else {
+      // Perform fuzzy search for top 3 matches
+      List<Map<String, dynamic>> fuzzyResults = fuzzySearchAndSort(
+        userList.map((user) => {'username': user}).toList(),
+        query,
+        'username',
+        false, // showOnlyOpen
+        false, // showOnlyKebab
+      );
+      return fuzzyResults
+          .map((result) => result['username'].toString())
+          .take(3)
+          .toList(); // Take top 3 matches sorted by closest score
+    }
   }
-}
 
 // Show overlay with suggestions below the text field
-void _showSuggestionOverlay(BuildContext context) {
-  if (suggestionOverlay != null) _removeSuggestionOverlay(); // Remove existing overlay before showing a new one
+  void _showSuggestionOverlay(BuildContext context) {
+    if (suggestionOverlay != null)
+      _removeSuggestionOverlay(); // Remove existing overlay before showing a new one
 
-  final RenderBox renderBox = context.findRenderObject() as RenderBox;
-  final overlay = Overlay.of(context);
-  final textFieldSize = renderBox.size;
-  final offset = renderBox.localToGlobal(Offset.zero);
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context);
+    final textFieldSize = renderBox.size;
+    final offset = renderBox.localToGlobal(Offset.zero);
 
-  suggestionOverlay = OverlayEntry(
-    builder: (context) => Positioned(
-      left: offset.dx,
-      top: offset.dy + 70, // Adjust position below the text field
-      width: textFieldSize.width,
-      child: Material(
-        elevation: 4,
-        borderRadius: BorderRadius.circular(8),
-        child: SizedBox(
-          height: min(180, 200), // Height to fit up to 4 items, with each ListTile about 48px in height
-          child: userSuggestion.isEmpty
-              ? const Center(
-                  child: Text("No suggestions available",
-                      style: TextStyle(color: Colors.grey)),
-                )
-              : ListView.separated(
-                  itemCount: userSuggestion.length,
-                  separatorBuilder: (context, index) => Divider(
-                    color: Colors.grey[300],
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
+    suggestionOverlay = OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + 70, // Adjust position below the text field
+        width: textFieldSize.width,
+        child: Material(
+          elevation: 4,
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            height: min(180,
+                200), // Height to fit up to 4 items, with each ListTile about 48px in height
+            child: userSuggestion.isEmpty
+                ? const Center(
+                    child: Text("No suggestions available",
+                        style: TextStyle(color: Colors.grey)),
+                  )
+                : ListView.separated(
+                    itemCount: userSuggestion.length,
+                    separatorBuilder: (context, index) => Divider(
+                      color: Colors.grey[300],
+                      thickness: 1,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    itemBuilder: (context, index) {
+                      final suggestion = userSuggestion[index];
+                      return ListTile(
+                        title: Text(suggestion),
+                        onTap: () {
+                          setState(() {
+                            final text = postController.text;
+                            final newText = text.replaceRange(
+                              text.lastIndexOf('@'),
+                              text.length,
+                              '@$suggestion ',
+                            );
+                            postController.text = newText;
+                            postController.selection =
+                                TextSelection.fromPosition(
+                              TextPosition(offset: newText.length),
+                            );
+                            _removeSuggestionOverlay();
+                          });
+                        },
+                      );
+                    },
                   ),
-                  itemBuilder: (context, index) {
-                    final suggestion = userSuggestion[index];
-                    return ListTile(
-                      title: Text(suggestion),
-                      onTap: () {
-                        setState(() {
-                          final text = postController.text;
-                          final newText = text.replaceRange(
-                            text.lastIndexOf('@'),
-                            text.length,
-                            '@$suggestion ',
-                          );
-                          postController.text = newText;
-                          postController.selection = TextSelection.fromPosition(
-                            TextPosition(offset: newText.length),
-                          );
-                          _removeSuggestionOverlay();
-                        });
-                      },
-                    );
-                  },
-                ),
+          ),
         ),
       ),
-    ),
-  );
-  overlay.insert(suggestionOverlay!);
-}
+    );
+    overlay.insert(suggestionOverlay!);
+  }
 
 // Update suggestions when text changes
-void _onTextChanged() {
-  final text = postController.text;
-  if (text.contains('@')) {
-    final match = RegExp(r'@(\S*)').firstMatch(text.substring(text.lastIndexOf('@')));
-    final query = match?.group(1) ?? '';     setState(() {
-      userSuggestion = getTopUserSuggestions(query, userList);
-      if (userSuggestion.isNotEmpty) {
-        _showSuggestionOverlay(context); // Pass context
-      } else {
-        _removeSuggestionOverlay();
-      }
-    });
-  } else {
-    _removeSuggestionOverlay();
+  void _onTextChanged() {
+    final text = postController.text;
+    if (text.contains('@')) {
+      final match =
+          RegExp(r'@(\S*)').firstMatch(text.substring(text.lastIndexOf('@')));
+      final query = match?.group(1) ?? '';
+      setState(() {
+        userSuggestion = getTopUserSuggestions(query, userList);
+        if (userSuggestion.isNotEmpty) {
+          _showSuggestionOverlay(context); // Pass context
+        } else {
+          _removeSuggestionOverlay();
+        }
+      });
+    } else {
+      _removeSuggestionOverlay();
+    }
   }
-}
 
 // Remove overlay
-void _removeSuggestionOverlay() {
-  if (suggestionOverlay != null) {
-    suggestionOverlay!.remove();
-    suggestionOverlay = null;
+  void _removeSuggestionOverlay() {
+    if (suggestionOverlay != null) {
+      suggestionOverlay!.remove();
+      suggestionOverlay = null;
+    }
   }
-}
 
   Future<void> _checkAuthAndFetchFeed() async {
     final session = Supabase.instance.client.auth.currentSession;
@@ -307,6 +312,42 @@ void _removeSuggestionOverlay() {
         selectedKebabId = null; // Resetta il tag selezionato
         selectedKebabName = null;
       });
+
+      // Controlla il numero di post dell'utente
+      final response = await supabase
+          .from('posts')
+          .select('*')
+          .eq('user_id', user.id)
+          .filter('comment', 'is', null)
+          .count(CountOption.exact);
+
+      final postCount = response.count;
+
+      if (postCount > 0) {
+        final profileResponse = await supabase
+            .from('profiles')
+            .select('medals')
+            .eq('id', user.id)
+            .single();
+
+        List<dynamic> medals = List.from(profileResponse['medals'] ?? []);
+        if (!medals.contains(5)) {
+          medals.add(5);
+        }
+        if (postCount > 4 && !medals.contains(6)) {
+          medals.add(6);
+        }
+        if (postCount > 9 && !medals.contains(7)) {
+          medals.add(7);
+        }
+        if (postCount > 49 && !medals.contains(8)) {
+          medals.add(8);
+        }
+        await supabase
+            .from('profiles')
+            .update({'medals': medals}).eq('id', user.id);
+      }
+
       await _fetchFeed(); // Refresh del feed dopo il post
     } catch (error) {
       setState(() {
@@ -471,7 +512,7 @@ void _removeSuggestionOverlay() {
                             return FeedListItem(
                               text: post['text'] ?? 'Testo non disponibile',
                               createdAt: post['created_at'] ?? '',
-                              userId: post['user_id'],
+                              userId: post['user_id'].toString(),
                               imageUrl: post['image_url'] ?? '',
                               postId: post['id'].toString(),
                               likeList: post['like'] ?? [],

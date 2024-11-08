@@ -3,7 +3,7 @@ import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 class FavoritesPage extends StatefulWidget {
-  final String userId; 
+  final String userId;
 
   const FavoritesPage({super.key, required this.userId});
 
@@ -65,10 +65,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: yellow,
-        title: const Text('Kebab Preferiti'),
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),

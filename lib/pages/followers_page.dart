@@ -51,7 +51,7 @@ class _FollowersPageState extends State<FollowersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Follower'),
+        title: const Text('Followers'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

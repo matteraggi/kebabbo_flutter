@@ -10,7 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ReviewPage extends StatefulWidget {
   final String hash;
   const ReviewPage({super.key, required this.hash});
-  
+
   @override
   ReviewPageState createState() => ReviewPageState();
 }
@@ -29,14 +29,13 @@ class ReviewPageState extends State<ReviewPage> {
   bool isSubmitting = false;
   bool thankYouActive = false;
 
-
   @override
   void initState() {
     super.initState();
     _validateHash();
-      descriptionController.addListener(() {
-    setState(() {}); // Rebuild UI whenever the description changes
-  });
+    descriptionController.addListener(() {
+      setState(() {}); // Rebuild UI whenever the description changes
+    });
   }
 
   Future<void> _validateHash() async {
@@ -64,7 +63,7 @@ class ReviewPageState extends State<ReviewPage> {
         .eq('kebabber_id', kebabber!['id'])
         .maybeSingle(); // Retrieve single review or null
 
-    print ('response: $response');
+    print('response: $response');
     if (response != null) {
       setState(() {
         existingReview = response;
@@ -82,6 +81,7 @@ class ReviewPageState extends State<ReviewPage> {
     setState(() {
       isSubmitting = true;
     });
+
     if (!isValidHash || kebabber == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Invalid hash")),
@@ -103,8 +103,8 @@ class ReviewPageState extends State<ReviewPage> {
 
     try {
       if (existingReview != null) {
-        print ('existingReview: $existingReview');
-        print ('reviewData: $reviewData');
+        print('existingReview: $existingReview');
+        print('reviewData: $reviewData');
         // Update existing review
         await Supabase.instance.client
             .from('reviews')
@@ -120,16 +120,71 @@ class ReviewPageState extends State<ReviewPage> {
           const SnackBar(content: Text("Review submitted successfully")),
         );
       }
+
+      // Call the function to check and update medals
+      await checkAndUpdateMedals();
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Unexpected error: $error")),
       );
     } finally {
-  setState(() {
-    isSubmitting = false;
-      thankYouActive = true;
-  });
-}
+      setState(() {
+        isSubmitting = false;
+        thankYouActive = true;
+      });
+    }
+  }
+
+  Future<void> checkAndUpdateMedals() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+
+    if (userId == null) {
+      return; // No user is logged in
+    }
+
+    try {
+      // Count the number of reviews by the current user
+      final response = await Supabase.instance.client
+          .from('reviews')
+          .select()
+          .eq('user_id', userId);
+
+      final reviews = response as List<dynamic>;
+
+      if (reviews.length > 0) {
+        // Retrieve the current 'medals' array from the user's profile
+        final profileResponse = await Supabase.instance.client
+            .from('profiles')
+            .select('medals')
+            .eq('user_id', userId)
+            .single();
+
+        final currentMedals = profileResponse['medals'] as List<dynamic>?;
+        List<dynamic> updatedMedals = currentMedals ?? [];
+
+        // Check if the user has more than 1 review
+        if (!updatedMedals.contains(0)) {
+          updatedMedals.add(0);
+        }
+        if (reviews.length > 4 && !updatedMedals.contains(1)) {
+          updatedMedals.add(1);
+        }
+        if (reviews.length > 9 && !updatedMedals.contains(2)) {
+          updatedMedals.add(2);
+        }
+        if (reviews.length > 19 && !updatedMedals.contains(3)) {
+          updatedMedals.add(3);
+        }
+        if (reviews.length > 29 && !updatedMedals.contains(4)) {
+          updatedMedals.add(4);
+        }
+        await Supabase.instance.client
+            .from('profiles')
+            .update({'medals': updatedMedals}).eq('user_id', userId);
+      }
+    } catch (error) {
+      print("Error checking or updating medals: $error");
+    }
   }
 
   @override
@@ -149,7 +204,8 @@ class ReviewPageState extends State<ReviewPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 50),
+                  const Icon(Icons.warning_amber_rounded,
+                      color: Colors.red, size: 50),
                   const SizedBox(height: 16),
                   const Text(
                     'Oops! Review Not Found',
@@ -171,21 +227,23 @@ class ReviewPageState extends State<ReviewPage> {
 
     if (Supabase.instance.client.auth.currentSession == null) {
       return Scaffold(
-        appBar: AppBar(title: RichText(
-  text: TextSpan(
-    style: const TextStyle(fontSize: 18.0, color: Colors.black), // Base style
-    children: [
-      const TextSpan(text: 'Review '), // Regular text
-      TextSpan(
-        text: kebabber!['name'], // The name
-        style: const TextStyle(
-          fontSize: 22.0, // Make the name bigger
-          fontWeight: FontWeight.bold, // Make the name bold
-        ),
-      ),
-    ],
-  ),
-)),
+        appBar: AppBar(
+            title: RichText(
+          text: TextSpan(
+            style: const TextStyle(
+                fontSize: 18.0, color: Colors.black), // Base style
+            children: [
+              const TextSpan(text: 'Review '), // Regular text
+              TextSpan(
+                text: kebabber!['name'], // The name
+                style: const TextStyle(
+                  fontSize: 22.0, // Make the name bigger
+                  fontWeight: FontWeight.bold, // Make the name bold
+                ),
+              ),
+            ],
+          ),
+        )),
         body: Center(
           child: Card(
             margin: const EdgeInsets.all(16.0),
@@ -217,21 +275,23 @@ class ReviewPageState extends State<ReviewPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: RichText(
-  text: TextSpan(
-    style: const TextStyle(fontSize: 18.0, color: Colors.black), // Base style
-    children: [
-      const TextSpan(text: 'Review '), // Regular text
-      TextSpan(
-        text: kebabber!['name'], // The name
-        style: const TextStyle(
-          fontSize: 22.0, // Make the name bigger
-          fontWeight: FontWeight.bold, // Make the name bold
+      appBar: AppBar(
+          title: RichText(
+        text: TextSpan(
+          style: const TextStyle(
+              fontSize: 18.0, color: Colors.black), // Base style
+          children: [
+            const TextSpan(text: 'Review '), // Regular text
+            TextSpan(
+              text: kebabber!['name'], // The name
+              style: const TextStyle(
+                fontSize: 22.0, // Make the name bigger
+                fontWeight: FontWeight.bold, // Make the name bold
+              ),
+            ),
+          ],
         ),
-      ),
-    ],
-  ),
-)),
+      )),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -251,7 +311,9 @@ class ReviewPageState extends State<ReviewPage> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text('Rate the Kebab', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            const Text('Rate the Kebab',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 16),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,15 +321,31 @@ class ReviewPageState extends State<ReviewPage> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      buildCenteredRatingBar('Quality', (rating) => qualityRating = rating, qualityRating),
-                                      const SizedBox(height: 8), // Small padding
-                                      buildCenteredRatingBar('Quantity', (rating) => quantityRating = rating, quantityRating),
+                                      buildCenteredRatingBar(
+                                          'Quality',
+                                          (rating) => qualityRating = rating,
+                                          qualityRating),
+                                      const SizedBox(
+                                          height: 8), // Small padding
+                                      buildCenteredRatingBar(
+                                          'Quantity',
+                                          (rating) => quantityRating = rating,
+                                          quantityRating),
                                       const SizedBox(height: 8),
-                                      buildCenteredRatingBar('Menu', (rating) => menuRating = rating, menuRating),
+                                      buildCenteredRatingBar(
+                                          'Menu',
+                                          (rating) => menuRating = rating,
+                                          menuRating),
                                       const SizedBox(height: 8),
-                                      buildCenteredRatingBar('Price', (rating) => priceRating = rating, priceRating),
+                                      buildCenteredRatingBar(
+                                          'Price',
+                                          (rating) => priceRating = rating,
+                                          priceRating),
                                       const SizedBox(height: 8),
-                                      buildCenteredRatingBar('Fun', (rating) => funRating = rating, funRating),
+                                      buildCenteredRatingBar(
+                                          'Fun',
+                                          (rating) => funRating = rating,
+                                          funRating),
                                     ],
                                   ),
                                 ),
@@ -281,10 +359,13 @@ class ReviewPageState extends State<ReviewPage> {
                                           labelText: 'Description',
                                           alignLabelWithHint: true,
                                           border: OutlineInputBorder(),
-                                            errorText: descriptionController.text.isEmpty ? 'Description is required' : null, // Show error if empty
-
+                                          errorText:
+                                              descriptionController.text.isEmpty
+                                                  ? 'Description is required'
+                                                  : null, // Show error if empty
                                         ),
-                                        maxLines: 8, // Taller textbox for desktop
+                                        maxLines:
+                                            8, // Taller textbox for desktop
                                       ),
                                     ],
                                   ),
@@ -294,7 +375,10 @@ class ReviewPageState extends State<ReviewPage> {
                             const SizedBox(height: 24),
                             Center(
                               child: ElevatedButton(
-                                onPressed: isSubmitting || descriptionController.text.isEmpty ? null :submitReview,
+                                onPressed: isSubmitting ||
+                                        descriptionController.text.isEmpty
+                                    ? null
+                                    : submitReview,
                                 child: const Text('Submit Review'),
                               ),
                             ),
@@ -302,17 +386,28 @@ class ReviewPageState extends State<ReviewPage> {
                         )
                       : Column(
                           children: [
-                            const Text('Rate the Kebab', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            const Text('Rate the Kebab',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 16),
-                            buildCenteredRatingBar('Quality', (rating) => qualityRating = rating, qualityRating),
+                            buildCenteredRatingBar(
+                                'Quality',
+                                (rating) => qualityRating = rating,
+                                qualityRating),
                             const SizedBox(height: 8), // Small padding
-                            buildCenteredRatingBar('Quantity', (rating) => quantityRating = rating, quantityRating),
+                            buildCenteredRatingBar(
+                                'Quantity',
+                                (rating) => quantityRating = rating,
+                                quantityRating),
                             const SizedBox(height: 8),
-                            buildCenteredRatingBar('Menu', (rating) => menuRating = rating, menuRating),
+                            buildCenteredRatingBar('Menu',
+                                (rating) => menuRating = rating, menuRating),
                             const SizedBox(height: 8),
-                            buildCenteredRatingBar('Price', (rating) => priceRating = rating, priceRating),
+                            buildCenteredRatingBar('Price',
+                                (rating) => priceRating = rating, priceRating),
                             const SizedBox(height: 8),
-                            buildCenteredRatingBar('Fun', (rating) => funRating = rating, funRating),
+                            buildCenteredRatingBar('Fun',
+                                (rating) => funRating = rating, funRating),
                             const SizedBox(height: 16),
                             TextField(
                               controller: descriptionController,
@@ -320,15 +415,19 @@ class ReviewPageState extends State<ReviewPage> {
                                 labelText: 'Description',
                                 alignLabelWithHint: true,
                                 border: OutlineInputBorder(),
-                                 errorText: descriptionController.text.isEmpty ? 'Description is required' : null, // Show error if empty
-
+                                errorText: descriptionController.text.isEmpty
+                                    ? 'Description is required'
+                                    : null, // Show error if empty
                               ),
                               maxLines: 5,
                             ),
                             const SizedBox(height: 16),
                             Center(
                               child: ElevatedButton(
-                                onPressed: isSubmitting || descriptionController.text.isEmpty ? null :submitReview,
+                                onPressed: isSubmitting ||
+                                        descriptionController.text.isEmpty
+                                    ? null
+                                    : submitReview,
                                 child: const Text('Submit Review'),
                               ),
                             ),
@@ -343,11 +442,14 @@ class ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget buildCenteredRatingBar(String label, Function(double) onRatingUpdate,double initialRating) {
+  Widget buildCenteredRatingBar(
+      String label, Function(double) onRatingUpdate, double initialRating) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(label, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         RatingBar.builder(
           initialRating: initialRating,
           minRating: 0,
@@ -367,7 +469,6 @@ class ReviewPageState extends State<ReviewPage> {
   }
 }
 
-
 String generateHash(String kebabberName) {
   final bytes = utf8.encode(kebabberName);
   final digest = sha256.convert(bytes);
@@ -376,9 +477,8 @@ String generateHash(String kebabberName) {
 
 Future<Map<String, dynamic>?> validateHash(String hash) async {
   // Fetch all names from the kebabbers table
-  final List<dynamic>? response = await Supabase.instance.client
-      .from('kebab')
-      .select("name , id");
+  final List<dynamic>? response =
+      await Supabase.instance.client.from('kebab').select("name , id");
 
   // Ensure response is not null or empty
   if (response == null || response.isEmpty) {

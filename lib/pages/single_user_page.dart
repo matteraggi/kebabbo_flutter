@@ -169,64 +169,43 @@ class _SingleUserPageState extends State<SingleUserPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Text(
+              _username,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: red, width: 3),
+              ),
+              child: CircleAvatar(
+                radius: 47,
+                backgroundImage: (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                    ? NetworkImage(_avatarUrl!)
+                    : const AssetImage('assets/images/kebab.png')
+                        as ImageProvider,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 30),
-                Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage:
-                          (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                              ? NetworkImage(_avatarUrl!)
-                              : const AssetImage('assets/images/kebab.png')
-                                  as ImageProvider,
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset(
-                          "assets/images/kebabcolored.png",
-                          height: 24,
-                          width: 24,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _username,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _toggleFollow,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _isFollowing ? Colors.black12 : red,
-                      ),
-                      child: Text(_isFollowing ? 'Segui già' : 'Segui'),
-                    ),
-                    const SizedBox(height: 16),
-                    if (_favoriteKebab.isNotEmpty)
-                      Text(
-                        "Kebab preferito: ${_favoriteKebab['name']}",
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                  ],
+                ElevatedButton(
+                  onPressed: _toggleFollow,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isFollowing ? Colors.black12 : red,
+                  ),
+                  child: Text(_isFollowing ? 'Segui già' : 'Segui'),
                 ),
               ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -240,18 +219,15 @@ class _SingleUserPageState extends State<SingleUserPage> {
                     child: Column(
                       children: [
                         Text(
-                          "$_postCount", // Numero di post
+                          "$_postCount",
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Text(
-                          'post',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                          'Posts',
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
@@ -261,25 +237,22 @@ class _SingleUserPageState extends State<SingleUserPage> {
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FavoritesPage(
+                          builder: (context) => FollowersPage(
                                 userId: widget.userId,
                               )));
                     },
                     child: Column(
                       children: [
                         Text(
-                          '$_favoritesCount', // Numero di preferiti
+                          '$_followerCount',
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Text(
-                          'preferiti',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                          'Followers',
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
@@ -295,45 +268,15 @@ class _SingleUserPageState extends State<SingleUserPage> {
                     child: Column(
                       children: [
                         Text(
-                          '$_seguitiCount', // Numero di follower
+                          '$_seguitiCount',
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Text(
-                          'seguiti',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              FollowersPage(userId: widget.userId)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          '$_followerCount', // Numero di follower
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Text(
-                          'followers',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                          'Seguiti',
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
@@ -341,6 +284,49 @@ class _SingleUserPageState extends State<SingleUserPage> {
                 ),
               ],
             ),
+            SizedBox(height: 20),
+            if (_favoriteKebab.isNotEmpty)
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.star, color: yellow, size: 24),
+                    Row(
+                      children: [
+                        Image.asset(
+                          _favoriteKebab["tag"] == "kebab"
+                              ? "assets/images/kebabcolored.png"
+                              : "assets/images/sandwitch.png",
+                          height: 24,
+                          width: 24,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "${_favoriteKebab["name"] ?? 'Nome non disponibile'}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.star, color: yellow, size: 24),
+                  ],
+                ),
+              ),
           ],
         ),
       ),

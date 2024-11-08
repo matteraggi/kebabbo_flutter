@@ -64,9 +64,6 @@ class UserReviewsState extends State<UserReviewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recensioni'),
-      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : reviews.isEmpty
