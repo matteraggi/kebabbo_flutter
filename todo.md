@@ -64,10 +64,11 @@ Feature lancio:
 - [x] Sezione recensioni utenti dietro card
 - [x] kebab favorite visibile nel profilo di altri
 - [x] review visibili da account + profilo di altri
-
+- [x] aggiornare numero commenti e like quando viene messo un'altro post (il post appena messo prende già il numero di commenti e like del precedente, perché non viene aggiornata la UI)
 - [x] design account e single user page
+
 - [ ] delete cascade da followed_user quando un utente viene eliminato
-- [ ] aggiornare numero commenti e like quando viene messo un'altro post (il post appena messo prende già il numero di commenti e like del precedente, perché non viene aggiornata la UI)
+- [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
 
 Feature extra:

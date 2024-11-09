@@ -48,6 +48,7 @@ class FeedPageState extends State<FeedPage> {
     super.dispose();
   }
 
+
   Future<void> fetchUserNames() async {
     try {
       final PostgrestList response =
@@ -358,7 +359,13 @@ class FeedPageState extends State<FeedPage> {
         }
       }
 
-      await _fetchFeed();
+      // Aggiungi il nuovo post alla lista dei post in memoria
+      setState(() {
+        feedList.insert(
+            0, postData); // Aggiungi il nuovo post in cima alla lista
+      });
+
+      //await _fetchFeed();
     } catch (error) {
       setState(() {
         errorMessage = error.toString();
@@ -548,6 +555,7 @@ class FeedPageState extends State<FeedPage> {
                           itemBuilder: (context, index) {
                             final post = searchResultList[index];
                             return FeedListItem(
+                              key: ValueKey(post['created_at']), 
                               text: post['text'] ?? 'Testo non disponibile',
                               createdAt: post['created_at'] ?? '',
                               userId: post['user_id'].toString(),
