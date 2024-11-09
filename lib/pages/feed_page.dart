@@ -6,6 +6,8 @@ import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -288,7 +290,6 @@ class FeedPageState extends State<FeedPage> {
       }
     }
 
-    // Inserisci il post, includendo `imageUrl` e `kebab_tag_id` solo se presenti
     final Map<String, dynamic> postData = {
       'text': text,
       'user_id': user.id,
@@ -307,13 +308,12 @@ class FeedPageState extends State<FeedPage> {
       await supabase.from('posts').insert(postData);
       postController.clear();
       setState(() {
-        imageBytes = null; // Rimuovi l’immagine dopo il post
+        imageBytes = null;
         imagePath = null;
-        selectedKebabId = null; // Resetta il tag selezionato
+        selectedKebabId = null;
         selectedKebabName = null;
       });
 
-      // Controlla il numero di post dell'utente
       final response = await supabase
           .from('posts')
           .select('*')
@@ -331,29 +331,67 @@ class FeedPageState extends State<FeedPage> {
             .single();
 
         List<dynamic> medals = List.from(profileResponse['medals'] ?? []);
+        bool newMedal = false;
+
         if (!medals.contains(5)) {
           medals.add(5);
+          newMedal = true;
         }
         if (postCount > 4 && !medals.contains(6)) {
           medals.add(6);
+          newMedal = true;
         }
         if (postCount > 9 && !medals.contains(7)) {
           medals.add(7);
+          newMedal = true;
         }
         if (postCount > 49 && !medals.contains(8)) {
           medals.add(8);
+          newMedal = true;
         }
         await supabase
             .from('profiles')
             .update({'medals': medals}).eq('id', user.id);
+
+        if (newMedal) {
+          _showMedalDialog();
+        }
       }
 
-      await _fetchFeed(); // Refresh del feed dopo il post
+      await _fetchFeed();
     } catch (error) {
       setState(() {
         errorMessage = error.toString();
       });
     }
+  }
+
+// Funzione per mostrare la modale della medaglia
+  void _showMedalDialog() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.scale,
+      title: 'Congratulazioni!',
+      desc: 'Hai raggiunto un nuovo traguardo e ottenuto una nuova medaglia!',
+      btnOkOnPress: () {},
+      customHeader: Icon(
+        Icons.emoji_events,
+        color: Colors.orange,
+        size: 100,
+      )
+          .animate(
+            onComplete: (controller) =>
+                controller.repeat(), // Ripeti l'animazione
+          )
+          .scaleXY(
+            begin: 0.5,
+            end: 1.1,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.elasticInOut,
+          )
+          .fadeIn(duration: Duration(milliseconds: 300)),
+    ).show();
   }
 
   Future<void> _pickImage() async {

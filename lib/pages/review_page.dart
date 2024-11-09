@@ -6,6 +6,8 @@ import 'package:kebabbo_flutter/components/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class ReviewPage extends StatefulWidget {
   final String hash;
@@ -103,9 +105,6 @@ class ReviewPageState extends State<ReviewPage> {
 
     try {
       if (existingReview != null) {
-        print('existingReview: $existingReview');
-        print('reviewData: $reviewData');
-        // Update existing review
         await Supabase.instance.client
             .from('reviews')
             .update(reviewData)
@@ -114,15 +113,13 @@ class ReviewPageState extends State<ReviewPage> {
           const SnackBar(content: Text("Review updated successfully")),
         );
       } else {
-        // Insert new review
         await Supabase.instance.client.from('reviews').insert(reviewData);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Review submitted successfully")),
         );
       }
 
-      // Call the function to check and update medals
-      await checkAndUpdateMedals();
+      await checkAndUpdateMedals(); // Verifica e aggiorna le medaglie
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Unexpected error: $error")),
@@ -139,11 +136,10 @@ class ReviewPageState extends State<ReviewPage> {
     final userId = Supabase.instance.client.auth.currentUser?.id;
 
     if (userId == null) {
-      return; // No user is logged in
+      return;
     }
 
     try {
-      // Count the number of reviews by the current user
       final response = await Supabase.instance.client
           .from('reviews')
           .select()
@@ -152,7 +148,6 @@ class ReviewPageState extends State<ReviewPage> {
       final reviews = response as List<dynamic>;
 
       if (reviews.length > 0) {
-        // Retrieve the current 'medals' array from the user's profile
         final profileResponse = await Supabase.instance.client
             .from('profiles')
             .select('medals')
@@ -161,30 +156,66 @@ class ReviewPageState extends State<ReviewPage> {
 
         final currentMedals = profileResponse['medals'] as List<dynamic>?;
         List<dynamic> updatedMedals = currentMedals ?? [];
+        bool newMedalAwarded = false;
 
-        // Check if the user has more than 1 review
         if (!updatedMedals.contains(0)) {
           updatedMedals.add(0);
+          newMedalAwarded = true;
         }
         if (reviews.length > 4 && !updatedMedals.contains(1)) {
           updatedMedals.add(1);
+          newMedalAwarded = true;
         }
         if (reviews.length > 9 && !updatedMedals.contains(2)) {
           updatedMedals.add(2);
+          newMedalAwarded = true;
         }
         if (reviews.length > 19 && !updatedMedals.contains(3)) {
           updatedMedals.add(3);
+          newMedalAwarded = true;
         }
         if (reviews.length > 29 && !updatedMedals.contains(4)) {
           updatedMedals.add(4);
+          newMedalAwarded = true;
         }
+
         await Supabase.instance.client
             .from('profiles')
             .update({'medals': updatedMedals}).eq('user_id', userId);
+
+        if (newMedalAwarded) {
+          _showMedalDialog();
+        }
       }
     } catch (error) {
       print("Error checking or updating medals: $error");
     }
+  }
+
+  void _showMedalDialog() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.scale,
+      title: 'Nuova Medaglia!',
+      desc: 'Hai ricevuto una nuova medaglia per il tuo contributo!',
+      btnOkOnPress: () {},
+      customHeader: Icon(
+        Icons.emoji_events,
+        color: Colors.amber,
+        size: 100,
+      )
+          .animate(
+            onComplete: (controller) => controller.repeat(),
+          )
+          .scaleXY(
+            begin: 0.5,
+            end: 1.2,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.elasticInOut,
+          )
+          .fadeIn(duration: Duration(milliseconds: 300)),
+    ).show();
   }
 
   @override
@@ -477,9 +508,8 @@ String generateHash(String kebabberName) {
 
 Future<Map<String, dynamic>?> validateHash(String hash) async {
   // Fetch all names from the kebabbers table
-  final List<dynamic> response = await Supabase.instance.client
-      .from('kebab')
-      .select("name , id");
+  final List<dynamic> response =
+      await Supabase.instance.client.from('kebab').select("name , id");
 
   // Ensure response is not null or empty
   if (response.isEmpty) {

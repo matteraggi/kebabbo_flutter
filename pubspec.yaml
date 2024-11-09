@@ -38,6 +38,8 @@ dependencies:
   flip_card: ^0.7.0
   crypto: ^3.0.6
   flutter_rating_bar: ^4.0.1
+  awesome_dialog: ^3.2.1
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_test:
