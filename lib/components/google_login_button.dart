@@ -33,6 +33,19 @@ class GoogleLoginButton extends StatelessWidget {
       idToken: idToken,
       accessToken: accessToken,
     );
+    /*
+    final userExists = await supabase.from('users').select().eq('email', googleUser.email);
+    print(userExists);
+    if (userExists.isEmpty) {
+      print('User does not exist, creating new user...');
+      final a= await supabase.from('users').upsert({
+        'email': googleUser.email,
+        'name': googleUser.displayName,
+        'avatar_url': googleUser.photoUrl,
+      });
+      print(a);
+    }
+    */
   }
 
   @override

@@ -20,6 +20,12 @@ import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'dart:convert';
+
+void printObject(Object object) {
+  final prettyPrint = JsonEncoder.withIndent('  ').convert(object);
+  print(prettyPrint);
+}
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key, Position? currentPosition});
@@ -333,8 +339,7 @@ class _AccountPageState extends State<AccountPage> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     // Calcola l'altezza dinamica per la TabBarView
-    final tabBarViewHeight =
-        screenHeight - 410;
+    final tabBarViewHeight = screenHeight - 410;
 
     return Scaffold(
       body: Padding(
@@ -647,7 +652,8 @@ class _AccountPageState extends State<AccountPage> {
                     ],
                   ),
                   SizedBox(
-                    height: tabBarViewHeight, // Or any other height that suits your content
+                    height:
+                        tabBarViewHeight, // Or any other height that suits your content
                     child: TabBarView(
                       children: [
                         MedalPage(userId: _id),
@@ -683,121 +689,171 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
   }
+
+  Future<void> _deleteAccount(BuildContext context) async {
+  final userId = supabase.auth.currentUser!.id;
+  final allMyPosts = await supabase
+      .from('posts')
+      .select('image_url') // Select only the image_url
+      .eq('user_id', userId);
+
+    // Fetch all posts made by the current user
+    final postFiles = await supabase.storage.from('posts').list();
+
+  for (var post in allMyPosts) {
+    final imageUrl = post['image_url'] as String?; // Get the image URL
+
+    // Check if imageUrl is not null and not empty
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      final imageName = imageUrl.split('/').last; // Extract the image name
+
+      for (var postFile in postFiles) {
+        if (postFile.name == imageName) {
+          await supabase.storage.from('posts').remove([postFile.name]);
+          break; // Exit the inner loop after deleting the image
+        }
+      }
+    }
+  }
+
+
+    // 2. Delete avatar from 'avatars' bucket (assuming one avatar per user)
+    final avatarFiles = await supabase.storage.from('avatars').list();
+    avatarFiles.forEach((file) => print(file.name));
+  if (_avatarUrl != null && _avatarUrl!.isNotEmpty) {  
+    final avatarName = _avatarUrl!.split('/').last;
+
+    for (var file in avatarFiles) {
+      if (file.name == avatarName) {
+        print("Deleting avatar: $avatarName");
+        final response = await supabase.storage.from('avatars').remove([file.name]);
+        print(response);
+        break; // Exit the loop after deleting the avatar
+      }
+    }
+  }
+
+    // Delete the user profile from the 'profiles' table
+    await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+    print ("User profile deleted");
+
+    // Sign out the user after deletion
+    _signOut();
+    print("User signed out");
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+    );
+
 }
 
-Future<void> _deleteAccount(BuildContext context) async {
-  // Invoke the 'delete_own_user' Edge Function
-  await supabase
-      .from('profiles')
-      .delete()
-      .eq('id', supabase.auth.currentUser!.id);
 
-  await supabase.auth.signOut(); // Sign out the user after deletion
-  Navigator.of(context).pushReplacement(
-    MaterialPageRoute(builder: (_) => const LoginPage()),
-  );
-}
+  void _showDeleteAccountDialog(BuildContext context) {
+    bool showConfirmButton = false; // Track state for the second button
 
-void _showDeleteAccountDialog(BuildContext context) {
-  bool showConfirmButton = false; // Track state for the second button
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            title: Text(
-              "Delete Account",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Are you sure you want to delete your account? This action cannot be undone.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+              title: Text(
+                "Delete Account",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
                 ),
-                SizedBox(height: 20),
-                // First Delete Account Button
-                if (!showConfirmButton)
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Are you sure you want to delete your account? This action cannot be undone.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.black87),
+                  ),
+                  SizedBox(height: 20),
+                  // First Delete Account Button
+                  if (!showConfirmButton)
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          showConfirmButton = true; // Show confirm button
+                        });
+                      },
+                      child: Text(
+                        "Delete Account",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        showConfirmButton = true; // Show confirm button
-                      });
-                    },
-                    child: Text(
-                      "Delete Account",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                // Second Confirm Button
-                if (showConfirmButton)
-                  Column(
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 14),
-                          backgroundColor: Colors.redAccent, // Different color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                  // Second Confirm Button
+                  if (showConfirmButton)
+                    Column(
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 14),
+                            backgroundColor:
+                                Colors.redAccent, // Different color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            _deleteAccount(
+                                context); // Call your delete function
+                            Navigator.of(context).pop(); // Close dialog
+                          },
+                          child: Text(
+                            "Confirm Delete",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        onPressed: () {
-                          _deleteAccount(context); // Call your delete function
-                          Navigator.of(context).pop(); // Close dialog
-                        },
-                        child: Text(
-                          "Confirm Delete",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                SizedBox(height: 10),
-              ],
-            ),
-            actionsAlignment: MainAxisAlignment.center, // Center cancel button
-            actions: [
-              TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.grey[700],
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(fontSize: 16),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
-                },
+                      ],
+                    ),
+                  SizedBox(height: 10),
+                ],
               ),
-            ],
-          );
-        },
-      );
-    },
-  );
+              actionsAlignment:
+                  MainAxisAlignment.center, // Center cancel button
+              actions: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.grey[700],
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 }
