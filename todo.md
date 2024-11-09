@@ -66,6 +66,7 @@ Feature lancio:
 - [x] review visibili da account + profilo di altri
 
 - [x] design account e single user page
+- [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] aggiornare numero commenti e like quando viene messo un'altro post (il post appena messo prende già il numero di commenti e like del precedente, perché non viene aggiornata la UI)
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
 
