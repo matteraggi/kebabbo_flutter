@@ -70,7 +70,7 @@ Feature lancio:
 - [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
-
+ 
 Feature extra:
 
 - [x] Badge del posto quando si mette review
