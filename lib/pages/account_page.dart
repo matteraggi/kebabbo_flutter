@@ -334,7 +334,6 @@ class _AccountPageState extends State<AccountPage> {
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
         child: Column(
           children: [
-            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -457,7 +456,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Stack(
               alignment: Alignment.bottomRight,
               children: [
@@ -480,12 +479,11 @@ class _AccountPageState extends State<AccountPage> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white, // White background
-                    shape: BoxShape.rectangle,
                     borderRadius:
                         BorderRadius.circular(15), // Pill-shaped corners
                   ),
                   padding: const EdgeInsets.all(
-                      2), // Adjust padding for smaller pill
+                      1), // Adjust padding for smaller pill
                   child: IconButton(
                     padding:
                         EdgeInsets.zero, // Remove extra padding around the icon
@@ -500,7 +498,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -515,7 +513,7 @@ class _AccountPageState extends State<AccountPage> {
                         Text(
                           "$_postCount",
                           style: const TextStyle(
-                            fontSize: 28,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -538,7 +536,7 @@ class _AccountPageState extends State<AccountPage> {
                         Text(
                           '$_followersCount',
                           style: const TextStyle(
-                            fontSize: 28,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -561,7 +559,7 @@ class _AccountPageState extends State<AccountPage> {
                         Text(
                           '$_seguitiCount',
                           style: const TextStyle(
-                            fontSize: 28,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -575,7 +573,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16),
               padding: EdgeInsets.all(12),
@@ -625,7 +623,7 @@ class _AccountPageState extends State<AccountPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             DefaultTabController(
               length: 3,
               child: Column(

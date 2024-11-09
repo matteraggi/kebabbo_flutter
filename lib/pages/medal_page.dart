@@ -28,9 +28,7 @@ class _MedalPageState extends State<MedalPage> {
     }
 
     try {
-      // Usa l'ID utente passato nel widget
       final userId = widget.userId;
-
       final userData = await supabase
           .from('profiles')
           .select('medals')
@@ -60,11 +58,11 @@ class _MedalPageState extends State<MedalPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : Column(
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+          child: _loading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -80,10 +78,9 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 'prima review',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
@@ -96,10 +93,9 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 '5 review',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
@@ -112,18 +108,15 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 '10 review',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
-                      SizedBox(
-                        height: 32,
-                      ),
+                      const SizedBox(height: 32),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -137,10 +130,9 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 '20 review',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
@@ -153,10 +145,9 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 '30 review',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
@@ -169,18 +160,15 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 'primo post',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 32,
-                      ),
+                      const SizedBox(height: 32),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -194,10 +182,9 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 '5 post',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
@@ -210,10 +197,9 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 '10 post',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
@@ -226,17 +212,18 @@ class _MedalPageState extends State<MedalPage> {
                                 height: 70,
                                 width: 70,
                               ),
-                              Text(
+                              const Text(
                                 '50 post',
-                                style: TextStyle(
-                                    fontSize: 12),
+                                style: TextStyle(fontSize: 12),
                               ),
                             ],
-                          )
+                          ),
                         ],
-                      )
+                      ),
                     ],
-                  )),
+                  ),
+                ),
+        ),
       ),
     );
   }
