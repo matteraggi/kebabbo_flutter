@@ -328,52 +328,56 @@ class FeedListItemState extends State<FeedListItem> {
     List<TextSpan> spans = [];
     int start = 0;
 
-    // Aggiorna la regex per fermarsi allo spazio dopo il simbolo "@"
     RegExp exp = RegExp(r'@(\S+)');
     Iterable<RegExpMatch> matches = exp.allMatches(text);
 
     for (final match in matches) {
-      String tagText = match.group(1)!; // Prende il testo dopo "@"
+      String tagText = match.group(1)!;
 
-      bool isUsername = userList.contains(tagText); // Confronta direttamente
+      bool isUsername = userList?.contains(tagText) ?? false;
 
-      // Aggiunge il testo prima del tag
       spans.add(TextSpan(
         text: text.substring(start, match.start),
         style: const TextStyle(color: Colors.black),
       ));
 
-      // Colora il tag se è un username valido
       spans.add(TextSpan(
         text: '@$tagText',
         style: TextStyle(color: isUsername ? red : Colors.black),
         recognizer: TapGestureRecognizer()
           ..onTap = () async {
-            final userId = await _fetchUserIdByUsername(tagText); // Fetch user ID
-            if (userId != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SingleUserPage(
-                    userId: userId, // Pass the fetched user ID
+            try {
+              final userId = await _fetchUserIdByUsername(tagText);
+              if (userId != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SingleUserPage(
+                      userId: userId,
+                    ),
                   ),
-                ),
-              );
-            } else {
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("User not found")),
+                );
+              }
+            } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("User not found")),
+                const SnackBar(content: Text("An error occurred")),
               );
             }
           },
       ));
 
-
-      start = match.end; // Aggiorna l'inizio del prossimo segmento
+      start = match.end;
     }
 
-    // Aggiunge il testo rimanente dopo l'ultimo tag
     if (start < text.length) {
-      spans.add(TextSpan(text: text.substring(start)));
+      spans.add(TextSpan(
+        text: text.substring(start),
+        style: const TextStyle(color: Colors.black),
+      ));
     }
 
     return spans;
@@ -491,7 +495,6 @@ class FeedListItemState extends State<FeedListItem> {
   }
 }
 
-
 Future<String?> _fetchUserIdByUsername(String username) async {
   final response = await supabase
       .from('profiles') // Replace with your actual users table
@@ -499,7 +502,5 @@ Future<String?> _fetchUserIdByUsername(String username) async {
       .eq('username', username)
       .single();
 
-    
-  
-  return response['id'] as String?;
+  return response['id'].toString();
 }

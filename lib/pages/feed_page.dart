@@ -424,16 +424,16 @@ class FeedPageState extends State<FeedPage> {
         return ListView.builder(
           itemCount: kebabbariList.length,
           itemBuilder: (context, index) {
-            final kebabName = kebabbariList[index]['name'];
-            final kebabId = kebabbariList[index]['id'];
+            final kebab = kebabbariList[index];
+            final kebabName = kebab['name'];
             return ListTile(
               title: Text(kebabName),
               onTap: () {
                 setState(() {
-                  selectedKebabId = kebabId;
+                  selectedKebabId = kebab['id'];
                   selectedKebabName = kebabName;
                 });
-                Navigator.pop(context); // Chiude il modulo
+                Navigator.pop(context); // Chiude il modal dopo la selezione
               },
             );
           },
@@ -555,7 +555,7 @@ class FeedPageState extends State<FeedPage> {
                               postId: post['id'].toString(),
                               likeList: post['like'] ?? [],
                               commentNumber: post['comments_number'] ?? 0,
-                              kebabTagId: post['kebab_tag_id'] ?? '',
+                              kebabTagId: post['kebab_tag_id'].toString(),
                               kebabName: post['kebab_tag_name'] ?? '',
                             );
                           },
