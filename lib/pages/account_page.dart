@@ -107,7 +107,7 @@ class _AccountPageState extends State<AccountPage> {
           : 0;
       _loading = false;
     });
-    }
+  }
 
   Future<void> _updateProfile() async {
     setState(() {
@@ -306,14 +306,14 @@ class _AccountPageState extends State<AccountPage> {
     final response = await supabase.from('kebab').select();
 
     return List<Map<String, dynamic>>.from(response as List);
-    }
+  }
 
   Future<Map<String, dynamic>> fetchSelectedKebab(String id) async {
-    print ("Selected kebab: $id");
+    print("Selected kebab: $id");
     final response =
         await supabase.from('kebab').select().eq('id', id).single();
-      
-      print("Selected kebab: ${response['name']}");
+
+    print("Selected kebab: ${response['name']}");
 
     if (response['name'] != null) {
       print("Selected kebab: ${response['name']}");
@@ -329,6 +329,13 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Ottieni l'altezza dello schermo
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Calcola l'altezza dinamica per la TabBarView
+    final tabBarViewHeight =
+        screenHeight - 410;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
@@ -345,89 +352,89 @@ class _AccountPageState extends State<AccountPage> {
                     final position = renderBox.localToGlobal(Offset.zero);
 
                     showMenu(
-  context: context,
-  position: RelativeRect.fromLTRB(
-    position.dx + 10, 
-    position.dy + 60, 
-    position.dx + renderBox.size.width,
-    position.dy + 60,
-  ),
-  items: [
-    PopupMenuItem<int>(
-      value: 1,
-      height: 40,
-      child: Row(
-        children: [
-          Icon(Icons.settings, color: Colors.black),
-          SizedBox(width: 8),
-          Text(
-            'Edit profile',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    ),
-    PopupMenuItem<int>(
-      value: 2,
-      height: 40,
-      child: Row(
-        children: [
-          Icon(Icons.logout, color: Colors.black),
-          SizedBox(width: 8),
-          Text(
-            'Logout',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    ),
-    // Add "Delete account" button in red
-    PopupMenuItem<int>(
-      value: 3,
-      height: 40,
-      child: Row(
-        children: [
-          Icon(Icons.delete, color: Colors.red),
-          SizedBox(width: 8),
-          Text(
-            'Delete account',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.red,
-            ),
-          ),
-        ],
-      ),
-    ),
-  ],
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10),
-  ),
-  elevation: 5,
-  color: Colors.white,
-).then((value) {
-  if (value != null) {
-    if (value == 1) {
-      Future.delayed(Duration(milliseconds: 100), () {
-        _changeUsername();
-      });
-    } else if (value == 2) {
-      _signOut();
-    } else if (value == 3) {
-      // Show confirmation dialog for account deletion
-      _showDeleteAccountDialog(context);
-    }
-  }
-});
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        position.dx + 10,
+                        position.dy + 60,
+                        position.dx + renderBox.size.width,
+                        position.dy + 60,
+                      ),
+                      items: [
+                        PopupMenuItem<int>(
+                          value: 1,
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Icon(Icons.settings, color: Colors.black),
+                              SizedBox(width: 8),
+                              Text(
+                                'Edit profile',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem<int>(
+                          value: 2,
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Icon(Icons.logout, color: Colors.black),
+                              SizedBox(width: 8),
+                              Text(
+                                'Logout',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Add "Delete account" button in red
+                        PopupMenuItem<int>(
+                          value: 3,
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Icon(Icons.delete, color: Colors.red),
+                              SizedBox(width: 8),
+                              Text(
+                                'Delete account',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 5,
+                      color: Colors.white,
+                    ).then((value) {
+                      if (value != null) {
+                        if (value == 1) {
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            _changeUsername();
+                          });
+                        } else if (value == 2) {
+                          _signOut();
+                        } else if (value == 3) {
+                          // Show confirmation dialog for account deletion
+                          _showDeleteAccountDialog(context);
+                        }
+                      }
+                    });
                   },
                   child: Icon(Icons.menu, color: Colors.black, size: 24),
                 ),
@@ -640,7 +647,7 @@ class _AccountPageState extends State<AccountPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 370, // Or any other height that suits your content
+                    height: tabBarViewHeight, // Or any other height that suits your content
                     child: TabBarView(
                       children: [
                         MedalPage(userId: _id),
@@ -676,16 +683,19 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
   }
-  
 }
-Future<void> _deleteAccount( BuildContext context) async {
-  // Invoke the 'delete_own_user' Edge Function
-    await supabase.from('profiles').delete().eq('id', supabase.auth.currentUser!.id); 
 
-    await supabase.auth.signOut();  // Sign out the user after deletion
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginPage()),
-        );
+Future<void> _deleteAccount(BuildContext context) async {
+  // Invoke the 'delete_own_user' Edge Function
+  await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', supabase.auth.currentUser!.id);
+
+  await supabase.auth.signOut(); // Sign out the user after deletion
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (_) => const LoginPage()),
+  );
 }
 
 void _showDeleteAccountDialog(BuildContext context) {
@@ -723,7 +733,8 @@ void _showDeleteAccountDialog(BuildContext context) {
                 if (!showConfirmButton)
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                       backgroundColor: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -736,7 +747,8 @@ void _showDeleteAccountDialog(BuildContext context) {
                     },
                     child: Text(
                       "Delete Account",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                 // Second Confirm Button
@@ -745,7 +757,8 @@ void _showDeleteAccountDialog(BuildContext context) {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 14),
                           backgroundColor: Colors.redAccent, // Different color
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -757,7 +770,8 @@ void _showDeleteAccountDialog(BuildContext context) {
                         },
                         child: Text(
                           "Confirm Delete",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -786,5 +800,4 @@ void _showDeleteAccountDialog(BuildContext context) {
       );
     },
   );
-
 }
