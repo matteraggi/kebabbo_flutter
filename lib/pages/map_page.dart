@@ -121,6 +121,19 @@ class MapPageState extends State<MapPage> {
               onTap: (_, __) {
                 _popupController.hideAllPopups();
               },
+              /*
+              provare questo per rotazione ma meno sensibile e non mentre zoommi
+
+              interactionOptions: const InteractionOptions(
+                enableMultiFingerGestureRace: true,
+                flags: InteractiveFlag.doubleTapDragZoom |
+                    InteractiveFlag.doubleTapZoom |
+                    InteractiveFlag.drag |
+                    InteractiveFlag.flingAnimation |
+                    InteractiveFlag.pinchZoom |
+                    InteractiveFlag.scrollWheelZoom,
+              ),
+              */
               interactionOptions: const InteractionOptions(
                   flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag),
             ),

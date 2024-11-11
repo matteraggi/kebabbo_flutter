@@ -31,39 +31,27 @@ class OrderBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 100, // Set a fixed width for the AnimatedSwitcher
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(
-                    // Use FadeTransition for animation
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-                child: GestureDetector(
-                  onTap: () {
+            Row(
+              children: [
+                Icon(Icons.fastfood,
+                    color: showOnlyKebab
+                        ? const Color.fromARGB(255, 185, 184, 184)
+                        : yellow),
+                SizedBox(width: 8),
+                Switch(
+                  value: showOnlyKebab,
+                  onChanged: (bool value) {
                     changeShowOnlyKebab();
                   },
-                  child: Container(
-                    key: ValueKey<bool>(showOnlyKebab),
-                    width: 100, // Set a fixed width
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      showOnlyKebab ? 'KEBAB' : 'TUTTO',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: red, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  activeColor: Colors.white,
+                  activeTrackColor: yellow,
                 ),
-              ),
+                SizedBox(width: 8),
+                Icon(Icons.kebab_dining,
+                    color: showOnlyKebab
+                        ? yellow
+                        : const Color.fromARGB(255, 185, 184, 184)),
+              ],
             ),
             Row(
               children: [
@@ -93,13 +81,13 @@ class OrderBar extends StatelessWidget {
                       ),
                       style: const TextStyle(color: red),
                       items: <String>[
-                        'rating',
-                        'quality',
-                        'price',
-                        'dimension',
+                        'stelle',
+                        'qualità',
+                        'prezzo',
+                        'dimensione',
                         'menu',
-                        'name',
-                        'distance',
+                        'nome',
+                        'distanza',
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           alignment: Alignment.center,

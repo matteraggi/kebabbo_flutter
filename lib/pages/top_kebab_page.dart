@@ -21,10 +21,10 @@ class TopKebabPageState extends State<TopKebabPage> {
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
-  String orderByField = 'rating';
+  String orderByField = 'stelle';
   bool orderDirection = true;
   bool showOnlyOpen = false;
-  bool showOnlyKebab = false;
+  bool showOnlyKebab = true;
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -168,6 +168,13 @@ class TopKebabPageState extends State<TopKebabPage> {
     });
   }
 
+  void toggleShowOnlyKebab() {
+    setState(() {
+      showOnlyKebab = !showOnlyKebab;
+      fetchKebab(widget.currentPosition);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,18 +196,12 @@ class TopKebabPageState extends State<TopKebabPage> {
                             children: [
                               const SizedBox(height: 16),
                               OrderBar(
-                                orderByField: orderByField,
-                                orderDirection: orderDirection,
-                                onChangeOrderByField: changeOrderByField,
-                                onChangeOrderDirection: changeOrderDirection,
-                                showOnlyKebab: showOnlyKebab,
-                                changeShowOnlyKebab: () {
-                                  setState(() {
-                                    showOnlyKebab = !showOnlyKebab;
-                                    fetchKebab(widget.currentPosition);
-                                  });
-                                },
-                              ),
+                                  orderByField: orderByField,
+                                  orderDirection: orderDirection,
+                                  onChangeOrderByField: changeOrderByField,
+                                  onChangeOrderDirection: changeOrderDirection,
+                                  showOnlyKebab: showOnlyKebab,
+                                  changeShowOnlyKebab: toggleShowOnlyKebab),
                               const SizedBox(height: 16),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),

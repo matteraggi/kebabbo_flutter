@@ -202,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Explore',
+            label: 'Esplora',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.kebab_dining),
@@ -210,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
-            label: 'Map',
+            label: 'Mappa',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

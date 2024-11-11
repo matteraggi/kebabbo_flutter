@@ -58,11 +58,28 @@ List<Map<String, dynamic>> sortKebabs(
     kebabs.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
   }
 
+  if (orderByField == 'stelle') {
+    orderByField = 'rating';
+  } else if (orderByField == 'prezzo') {
+    orderByField = 'price';
+  } else if (orderByField == 'qualità') {
+    orderByField = 'quality';
+  } else if (orderByField == 'dimensione') {
+    orderByField = 'dimension';
+  } else if (orderByField == 'nome') {
+    orderByField = 'name';
+  } else if (orderByField == 'distanza') {
+    orderByField = 'distance';
+  }
+
   // Filtra per "Solo kebab"
   if (showOnlyKebab) {
     kebabs.removeWhere((kebab) => kebab['tag'] != 'kebab');
-  } // Calculate distance for each kebab if orderByField is 'distance'
+  } else {
+    kebabs.removeWhere((kebab) => kebab['tag'] == 'kebab');
+  }
   if (orderByField == 'distance') {
+    orderDirection = !orderDirection;
     for (var kebab in kebabs) {
       if (userPosition != null) {
         double distanceInMeters = Geolocator.distanceBetween(
@@ -71,24 +88,19 @@ List<Map<String, dynamic>> sortKebabs(
           kebab['lat'],
           kebab['lng'],
         );
-        kebab['distance'] = distanceInMeters / 1000;
+        kebab[orderByField] = distanceInMeters / 1000;
       }
     }
+  }
+  if (orderByField == 'name') {
+    orderDirection = !orderDirection;
   }
 
   // Sort kebabs based on orderByField and orderDirection
   kebabs.sort((a, b) {
-    if (orderByField == 'distance') {
-      // Special handling for distance sorting
-      return orderDirection
-          ? b['distance'].compareTo(a['distance'])
-          : a['distance'].compareTo(b['distance']);
-    } else {
-      // Generic sorting for other fields
-      return orderDirection
-          ? b[orderByField].compareTo(a[orderByField])
-          : a[orderByField].compareTo(b[orderByField]);
-    }
+    return orderDirection
+        ? b[orderByField].compareTo(a[orderByField])
+        : a[orderByField].compareTo(b[orderByField]);
   });
 
   return kebabs;
@@ -220,6 +232,6 @@ Future<Uint8List?> compressImage(Uint8List imageData) async {
   // Ridimensiona l'immagine mantenendo il rapporto di aspetto
   img.Image resizedImage = img.copyResize(image, width: 400);
 
-    // Codifica nuovamente l'immagine in JPEG con qualità ridotta
-    return Uint8List.fromList(img.encodeJpg(resizedImage, quality: 60));
-  }
+  // Codifica nuovamente l'immagine in JPEG con qualità ridotta
+  return Uint8List.fromList(img.encodeJpg(resizedImage, quality: 60));
+}
