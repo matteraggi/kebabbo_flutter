@@ -111,19 +111,19 @@ class MapPageState extends State<MapPage> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-                initialCenter: center,
-                initialZoom: 14,
-                onMapReady: () {
-                  setState(() {
-                    _isMapInitialized = true;
-                  });
-                },
-                onTap: (_, __) {
-                  _popupController.hideAllPopups();
-                },
-                interactionOptions: InteractionOptions(
-                  enableMultiFingerGestureRace: false,
-                )),
+              initialCenter: center,
+              initialZoom: 14,
+              onMapReady: () {
+                setState(() {
+                  _isMapInitialized = true;
+                });
+              },
+              onTap: (_, __) {
+                _popupController.hideAllPopups();
+              },
+              interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag),
+            ),
             children: [
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
