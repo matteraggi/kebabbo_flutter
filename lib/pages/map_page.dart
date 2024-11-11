@@ -122,8 +122,7 @@ class MapPageState extends State<MapPage> {
                   _popupController.hideAllPopups();
                 },
                 interactionOptions: InteractionOptions(
-                  rotationThreshold: 40.0,
-                  rotationWinGestures: 100,
+                  enableMultiFingerGestureRace: false,
                 )),
             children: [
               TileLayer(

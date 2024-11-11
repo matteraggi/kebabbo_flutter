@@ -69,7 +69,9 @@ Feature lancio:
 
 - [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
+    - [ ] pallini informativi
  
 Feature extra:
 
@@ -77,9 +79,8 @@ Feature extra:
 - [ ] Recensioni utenti postate come post
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
-- [ ] Sezione Offerte e Promozioni Esclusive -> PAGINA ACCOUNT
+- [ ] Sezione Offerte e Promozioni Esclusive
 - [ ] traduzioni stringhe
-- [ ] pallini informativi
 
 Non dev:
 

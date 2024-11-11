@@ -145,18 +145,15 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
 
     // Show ReviewPage if there's a reviewHash, otherwise use selectedIndex
-      if (widget.reviewHash != null) {
-        page = ReviewPage(
+    if (widget.reviewHash != null) {
+      page = ReviewPage(
         hash: widget.reviewHash!,
       );
-      
-  } else {
+    } else {
       // Use selectedIndex to set the page based on the current tab
       switch (selectedIndex) {
         case 0:
-          page = supabase.auth.currentSession == null
-              ? const LoginPage()
-              : AccountPage(currentPosition: _currentPositionNotifier.value);
+          page = const FeedPage();
           break;
         case 1:
           page = SearchPage();
@@ -176,7 +173,9 @@ class _MyHomePageState extends State<MyHomePage> {
           );
           break;
         case 4:
-          page = const FeedPage();
+          page = supabase.auth.currentSession == null
+              ? const LoginPage()
+              : AccountPage(currentPosition: _currentPositionNotifier.value);
           break;
         default:
           throw UnimplementedError('No widget for $selectedIndex');
@@ -198,8 +197,8 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Account',
+            icon: Icon(Icons.comment),
+            label: 'Seguiti',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
@@ -207,15 +206,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.kebab_dining),
-            label: 'Top Kebab',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Map',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.comment),
-            label: 'Followed',
+            icon: Icon(Icons.person),
+            label: 'Account',
           ),
         ],
         backgroundColor: red,
