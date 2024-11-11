@@ -10,7 +10,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 class MapPage extends StatefulWidget {
-  final Position? initialPosition; // Make it final since the initial position is passed during creation
+  final Position?
+      initialPosition; // Make it final since the initial position is passed during creation
 
   const MapPage({super.key, required this.initialPosition});
 
@@ -30,7 +31,8 @@ class MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    _currentPosition = widget.initialPosition; // Initialize position from widget
+    _currentPosition =
+        widget.initialPosition; // Initialize position from widget
     fetchKebab();
   }
 
@@ -77,15 +79,16 @@ class MapPageState extends State<MapPage> {
       );
     }
 
-    LatLng center = LatLng(
-        _currentPosition!.latitude, _currentPosition!.longitude);
+    LatLng center =
+        LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
 
     List<Marker> markers = [
       if (_currentPosition != null)
         Marker(
           width: 50.0,
           height: 50.0,
-          point: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+          point:
+              LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
           child: Image.asset("assets/images/user.png"),
           key: const ValueKey('user_marker'), // Key to identify the user marker
         ),
@@ -94,7 +97,9 @@ class MapPageState extends State<MapPage> {
           width: 40.0,
           height: 40.0,
           point: LatLng(item['lat'], item['lng']),
-          child: Image.asset("assets/images/kebab.png"),
+          child: Image.asset(item['tag'] == 'kebab'
+              ? "assets/images/kebab.png"
+              : "assets/images/sandwitch.png"),
           key: ValueKey('kebab_marker_${item['id']}'),
         );
       })
@@ -106,17 +111,20 @@ class MapPageState extends State<MapPage> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: center,
-              initialZoom: 14,
-              onMapReady: () {
-                setState(() {
-                  _isMapInitialized = true;
-                });
-              },
-              onTap: (_, __) {
-                _popupController.hideAllPopups();
-              },
-            ),
+                initialCenter: center,
+                initialZoom: 14,
+                onMapReady: () {
+                  setState(() {
+                    _isMapInitialized = true;
+                  });
+                },
+                onTap: (_, __) {
+                  _popupController.hideAllPopups();
+                },
+                interactionOptions: InteractionOptions(
+                  rotationThreshold: 40.0,
+                  rotationWinGestures: 100,
+                )),
             children: [
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
