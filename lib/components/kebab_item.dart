@@ -276,6 +276,16 @@ class KebabListItemState extends State<KebabListItem> {
                 )
               ],
             ),
+            Divider(
+              color: Colors.grey[300], // Colore della linea grigio chiaro
+              thickness: 1, // Spessore della linea
+              indent: 0, // Spazio a sinistra
+              endIndent: 0, // Spazio a destra
+            ),
+            Center(
+                child: Text("Kebabbo Review",
+                    style:
+                        TextStyle(fontStyle: FontStyle.italic, fontSize: 12))),
           ],
         ),
       ),
@@ -389,6 +399,16 @@ class KebabListItemState extends State<KebabListItem> {
                 )
               ],
             ),
+            Divider(
+              color: Colors.grey[300], // Colore della linea grigio chiaro
+              thickness: 1, // Spessore della linea
+              indent: 0, // Spazio a sinistra
+              endIndent: 0, // Spazio a destra
+            ),
+            Center(
+                child: Text("Users Review",
+                    style:
+                        TextStyle(fontStyle: FontStyle.italic, fontSize: 12, color: Colors.white))),
           ],
         ),
       ),
@@ -399,7 +419,7 @@ class KebabListItemState extends State<KebabListItem> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      color: isFront ? Colors.white : Colors.grey[800],
+      color: isFront ? Colors.white : Colors.grey[700],
       shadowColor: Colors.grey,
       child: Stack(
         children: [
