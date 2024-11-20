@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.canny.kebabbo"
+    package="com.canny.kebabbologna"
     android:versionCode="1"
     android:versionName="0.0.1" >
 
@@ -27,10 +27,10 @@
     </queries>
 
     <permission
-        android:name="com.canny.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.canny.kebabbologna.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.canny.kebabbo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="com.canny.kebabbologna.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
         android:name="android.app.Application"
@@ -38,7 +38,7 @@
         android:icon="@mipmap/launcher_icon"
         android:label="kebabbo_flutter" >
         <activity
-            android:name="com.canny.kebabbo.MainActivity"
+            android:name="com.canny.kebabbologna.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -83,7 +83,7 @@
 
         <provider
             android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
-            android:authorities="com.canny.kebabbo.flutter.image_provider"
+            android:authorities="com.canny.kebabbologna.flutter.image_provider"
             android:exported="false"
             android:grantUriPermissions="true" >
             <meta-data

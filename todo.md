@@ -69,10 +69,14 @@ Feature lancio:
 
 - [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+- [ ] Togliere compilato da github
+- [x] Gluten free tag metterlo in tutti i kebab item come in quello principale della home
+- [x] Badge sezione troppo lunga
+- [x] Grafico kebabbari con scritte asse x troppo grandi e tagliate sotto
 
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
     - [ ] pallini informativi
- 
+
 Feature extra:
 
 - [x] Badge del posto quando si mette review

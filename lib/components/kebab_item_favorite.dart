@@ -92,6 +92,16 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
       shadowColor: Colors.grey,
       child: Stack(
         children: [
+          if (widget.glutenFree)
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: Image.asset(
+                "assets/images/gluten_free.png",
+                height: 40,
+                width: 40,
+              ),
+            ),
           ExpansionTile(
             initiallyExpanded: widget.expanded,
             leading: const SizedBox(width: 10),
@@ -161,13 +171,21 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      SingleStat(label: "Qualità", number: widget.quality, isFront: true),
+                      SingleStat(
+                          label: "Qualità",
+                          number: widget.quality,
+                          isFront: true),
                       const SizedBox(height: 8),
-                      SingleStat(label: "Prezzo", number: widget.price, isFront: true),
+                      SingleStat(
+                          label: "Prezzo", number: widget.price, isFront: true),
                       const SizedBox(height: 8),
-                      SingleStat(label: "Dimensione", number: widget.dimension, isFront: true),
+                      SingleStat(
+                          label: "Dimensione",
+                          number: widget.dimension,
+                          isFront: true),
                       const SizedBox(height: 8),
-                      SingleStat(label: "Menu", number: widget.menu, isFront: true),
+                      SingleStat(
+                          label: "Menu", number: widget.menu, isFront: true),
                       const SizedBox(height: 16),
                       SingleChart(
                         vegetables: widget.vegetables,
@@ -181,31 +199,43 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           BottomButtonItem(
-                              linkMaps: widget.map,
-                              icon: Icons.map,
-                              isFront: true,),
-                          if (widget.fun >= 4)
-                            Transform.rotate(
-                              angle: -0.2,
-                              child: const Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.sentiment_very_satisfied,
-                                    color: yellow,
-                                    size: 30,
+                            linkMaps: widget.map,
+                            icon: Icons.map,
+                            isFront: true,
+                          ),
+                          Row(
+                            children: [
+                              if (widget.glutenFree)
+                                Image.asset(
+                                  "assets/images/gluten_free.png",
+                                  height: 40,
+                                  width: 40,
+                                ),
+                              const SizedBox(width: 16),
+                              if (widget.fun >= 4)
+                                Transform.rotate(
+                                  angle: -0.2,
+                                  child: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.sentiment_very_satisfied,
+                                        color: yellow,
+                                        size: 30,
+                                      ),
+                                      Text(
+                                        'fun!',
+                                        style: TextStyle(
+                                          color: yellow,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    'fun!',
-                                    style: TextStyle(
-                                      color: yellow,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                ),
+                            ],
+                          )
                         ],
                       ),
                     ],
@@ -227,16 +257,6 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
               width: 24,
             ),
           ),
-          if (widget.glutenFree)
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: Image.asset(
-                "assets/images/gluten_free.png",
-                height: 40,
-                width: 40,
-              ),
-            ),
         ],
       ),
     );

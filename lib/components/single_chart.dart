@@ -84,7 +84,7 @@ class _SingleChartState extends State<SingleChart> {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
+            reservedSize: 42,
             interval: 1,
             getTitlesWidget: bottomTitleWidgets,
           ),
@@ -140,7 +140,7 @@ class _SingleChartState extends State<SingleChart> {
     var style = TextStyle(
       color: widget.isFront ? Colors.black : Colors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: 14,
     );
     Widget text;
     switch (value.toInt()) {
@@ -171,7 +171,7 @@ class _SingleChartState extends State<SingleChart> {
     var style = TextStyle(
       color: widget.isFront ? Colors.black : Colors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontSize: 14,
     );
     return Text(
       value.toInt().toString(),
