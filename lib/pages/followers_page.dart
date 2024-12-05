@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/pages/single_user_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FollowersPage extends StatefulWidget {
   final String userId;
@@ -10,10 +8,10 @@ class FollowersPage extends StatefulWidget {
   const FollowersPage({super.key, required this.userId});
 
   @override
-  _FollowersPageState createState() => _FollowersPageState();
+  FollowersPageState createState() => FollowersPageState();
 }
 
-class _FollowersPageState extends State<FollowersPage> {
+class FollowersPageState extends State<FollowersPage> {
   List<Map<String, dynamic>> followers = [];
   bool isLoading = true;
 

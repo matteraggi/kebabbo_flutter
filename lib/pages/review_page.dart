@@ -147,7 +147,7 @@ class ReviewPageState extends State<ReviewPage> {
 
       final reviews = response as List<dynamic>;
 
-      if (reviews.length > 0) {
+      if (reviews.isNotEmpty) {
         final profileResponse = await Supabase.instance.client
             .from('profiles')
             .select('medals')

@@ -1,17 +1,13 @@
 import 'dart:typed_data';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kebabbo_flutter/components/kebab_item_clickable.dart';
-import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/followers_page.dart';
 import 'package:kebabbo_flutter/pages/login_page.dart';
 import 'package:kebabbo_flutter/pages/medal_page.dart';
-import 'package:kebabbo_flutter/pages/review_page.dart';
 import 'package:kebabbo_flutter/pages/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/tools_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
@@ -315,6 +311,10 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<Map<String, dynamic>> fetchSelectedKebab(String id) async {
+    if (id.isEmpty || id=="0"){
+      print("Error: No valid kebab id found.");
+      return {};
+    }
     print("Selected kebab: $id");
     final response =
         await supabase.from('kebab').select().eq('id', id).single();
@@ -402,24 +402,7 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                         // Add "Delete account" button in red
-                        PopupMenuItem<int>(
-                          value: 3,
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Icon(Icons.delete, color: Colors.red),
-                              SizedBox(width: 8),
-                              Text(
-                                'Delete account',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+
                       ],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -434,9 +417,6 @@ class _AccountPageState extends State<AccountPage> {
                           });
                         } else if (value == 2) {
                           _signOut();
-                        } else if (value == 3) {
-                          // Show confirmation dialog for account deletion
-                          _showDeleteAccountDialog(context);
                         }
                       }
                     });
@@ -690,7 +670,7 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  Future<void> _deleteAccount(BuildContext context) async {
+ /* Future<void> _deleteAccount(BuildContext context) async {
   final userId = supabase.auth.currentUser!.id;
   final allMyPosts = await supabase
       .from('posts')
@@ -719,7 +699,9 @@ class _AccountPageState extends State<AccountPage> {
 
     // 2. Delete avatar from 'avatars' bucket (assuming one avatar per user)
     final avatarFiles = await supabase.storage.from('avatars').list();
-    avatarFiles.forEach((file) => print(file.name));
+    for (var file in avatarFiles) {
+      print(file.name);
+    }
   if (_avatarUrl != null && _avatarUrl!.isNotEmpty) {  
     final avatarName = _avatarUrl!.split('/').last;
 
@@ -856,4 +838,5 @@ class _AccountPageState extends State<AccountPage> {
       },
     );
   }
+  */
 }

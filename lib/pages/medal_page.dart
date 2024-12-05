@@ -36,6 +36,10 @@ class _MedalPageState extends State<MedalPage> {
           .single();
 
       setState(() {
+        if (userData["medals"] == null) {
+          _medals = [];
+          return;
+        }
         _medals = List<int>.from(userData["medals"]);
       });
     } catch (error) {

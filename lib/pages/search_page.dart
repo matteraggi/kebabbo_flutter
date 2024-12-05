@@ -147,7 +147,7 @@ class _SearchPageState extends State<SearchPage> {
         setState(() {
           kebabbariList = kebabs
               .map((kebab) => {
-                    'id': kebab['id'].toString(),
+                    'id': kebab['id'],
                     'name': kebab['name'].toString()
                   })
               .toList();
@@ -214,7 +214,7 @@ class _SearchPageState extends State<SearchPage> {
                                 postId: item['id']?.toString() ?? '',
                                 likeList: item['like'] ?? [],
                                 commentNumber: item['comments_number'] ?? 0,
-                                kebabTagId: item['kebab_tag_id'] ?? '',
+                                kebabTagId: item['kebab_tag_id']?.toString() ?? '',
                                 kebabName: item['kebab_tag_name'] ?? '',
                               );
                             } else {

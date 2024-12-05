@@ -99,8 +99,9 @@ class FeedPageState extends State<FeedPage> {
 
 // Show overlay with suggestions below the text field
   void _showSuggestionOverlay(BuildContext context) {
-    if (suggestionOverlay != null)
+    if (suggestionOverlay != null) {
       _removeSuggestionOverlay(); // Remove existing overlay before showing a new one
+    }
 
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final overlay = Overlay.of(context);
@@ -550,7 +551,9 @@ class FeedPageState extends State<FeedPage> {
                         ),
                       ),
                       Expanded(
-                        child: ListView.builder(
+                        child: searchResultList.isNotEmpty
+                            ?
+                          ListView.builder(
                           itemCount: searchResultList.length,
                           itemBuilder: (context, index) {
                             final post = searchResultList[index];
@@ -567,7 +570,10 @@ class FeedPageState extends State<FeedPage> {
                               kebabName: post['kebab_tag_name'] ?? '',
                             );
                           },
-                        ),
+                        )
+                            : const Center(
+                                child: Text('Non segui ancora nessuno'),
+                              ),
                       ),
                     ],
                   ),

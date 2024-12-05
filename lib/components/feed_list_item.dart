@@ -335,7 +335,7 @@ class FeedListItemState extends State<FeedListItem> {
     for (final match in matches) {
       String tagText = match.group(1)!;
 
-      bool isUsername = userList?.contains(tagText) ?? false;
+      bool isUsername = userList.contains(tagText) ?? false;
 
       spans.add(TextSpan(
         text: text.substring(start, match.start),
