@@ -1,0 +1,18 @@
+{
+    "@@locale": "en",
+    "title": "Welcome",
+    "description": "Welcome to Flutter",
+    "nome_non_disponibile": "Name not available",
+    "seleziona_il_tuo_kebab_preferito": "Select your favorite kebab",
+    "consigliaci_un_kebabbaro": "Recommend a kebab place",
+    "nome_del_kebabbaro": "Name of the kebab place",
+    "annulla": "Cancel",
+    "invia": "Send",
+    "la_tua_soluzione_per_il_pranzo_universitario": "Your solution for university lunch",
+    "in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google": "In Italy, the world of Kebab is still a dark world. The best places are underrated, and the worst ones get high reviews on Google.",
+    "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab": "That's why we are here: university students, like you, with years of experience as Kebab eaters.",
+    "testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo": "We test and review Kebab places and Street Food for you. Welcome to Kebabbo.",
+    "failed_to_load_reviews_count": "Failed to load reviews count",
+    "failed_to_load_follower_count": "Failed to load follower count"
+  }
+  

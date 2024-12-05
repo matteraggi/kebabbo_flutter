@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
 import 'package:kebabbo_flutter/components/kebab_item_clickable.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/favorites_page.dart';
@@ -68,7 +69,7 @@ class _AccountPageState extends State<AccountPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load follower count')),
+          SnackBar(content: Text(S.of(context).failed_to_load_follower_count)),
         );
       }
     }
@@ -86,7 +87,7 @@ class _AccountPageState extends State<AccountPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load reviews count')),
+          SnackBar(content: Text(S.of(context).failed_to_load_reviews_count)),
         );
       }
     }
@@ -584,7 +585,7 @@ class _AccountPageState extends State<AccountPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
-                    Text("Seleziona il tuo kebab preferito")
+                    Text(S.of(context).seleziona_il_tuo_kebab_preferito)
                   else
                     Row(
                       children: [
@@ -597,7 +598,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          "${_favoriteKebab?["name"] ?? 'Nome non disponibile'}",
+                          "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

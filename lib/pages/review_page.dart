@@ -104,11 +104,22 @@ class ReviewPageState extends State<ReviewPage> {
     };
 
     try {
+      var newPost ={
+        'user_id': Supabase.instance.client.auth.currentUser?.id,
+        'kebab_tag_id': kebabber!['id'],
+        'kebab_tag_name': kebabber!['name'],
+        'text': "Ho appena recensito il kebab di ${kebabber!['name']}!\n\nQualità: $qualityRating\nQuantità: $quantityRating\nMenu: $menuRating\nPrezzo: $priceRating\nDivertimento: $funRating\n\n${descriptionController.text}",
+        'created_at': DateTime.now().toIso8601String(),
+      };
       if (existingReview != null) {
-        await Supabase.instance.client
+        print('Updating existing review ${existingReview!['id']}');
+        print("Review data: ${reviewData['quality']}");
+        final response= await Supabase.instance.client
             .from('reviews')
             .update(reviewData)
             .eq('id', existingReview!['id']);
+        print('Response from Supabase: ${response.toString()}');
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Review updated successfully")),
         );
@@ -117,9 +128,13 @@ class ReviewPageState extends State<ReviewPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Review submitted successfully")),
         );
-      }
 
+      }
+      await Supabase.instance.client
+            .from('posts')
+            .insert(newPost);
       await checkAndUpdateMedals(); // Verifica e aggiorna le medaglie
+
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Unexpected error: $error")),
@@ -151,7 +166,7 @@ class ReviewPageState extends State<ReviewPage> {
         final profileResponse = await Supabase.instance.client
             .from('profiles')
             .select('medals')
-            .eq('user_id', userId)
+            .eq('id', userId)
             .single();
 
         final currentMedals = profileResponse['medals'] as List<dynamic>?;
@@ -181,7 +196,7 @@ class ReviewPageState extends State<ReviewPage> {
 
         await Supabase.instance.client
             .from('profiles')
-            .update({'medals': updatedMedals}).eq('user_id', userId);
+            .update({'medals': updatedMedals}).eq('id', userId);
 
         if (newMedalAwarded) {
           _showMedalDialog();

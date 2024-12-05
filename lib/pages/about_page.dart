@@ -3,6 +3,7 @@ import 'package:kebabbo_flutter/components/card_item.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 final matteraggiUrls = [
@@ -36,12 +37,12 @@ class AboutPageState extends State<AboutPage> {
         final TextEditingController kebabNameController = TextEditingController();
 
         return AlertDialog(
-          title: const Text("Consigliaci un kebabbaro"),
+          title: Text( S.of(context).consigliaci_un_kebabbaro),
           content: TextField(
             controller: kebabNameController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Nome del kebabbaro',
+              labelText: S.of(context).nome_del_kebabbaro,
             ),
           ),
           actions: [
@@ -49,7 +50,7 @@ class AboutPageState extends State<AboutPage> {
               onPressed: () {
                 Navigator.of(dialogContext).pop(); // Close the dialog
               },
-              child: const Text("Annulla"),
+              child: Text(S.of(context).annulla),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -61,7 +62,7 @@ class AboutPageState extends State<AboutPage> {
                 // Perform the async email operation
                 await sendEmail(kebabName);
               },
-              child: const Text("Invia"),
+              child: Text(S.of(context).invia),
             ),
           ],
         );
@@ -103,26 +104,26 @@ class AboutPageState extends State<AboutPage> {
           child: ListView(
             children: [
               const SizedBox(height: 20),
-              const Text(
-                'La tua soluzione per il pranzo universitario',
+               Text(
+                S.of(context).la_tua_soluzione_per_il_pranzo_universitario,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "In Italia il mondo del Kebab è ancora un mondo oscuro. I migliori locali sono sottovalutati, e i peggiori ricevono recensioni alte su Google.",
+              Text(
+                S.of(context).in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Per questo ci siamo noi: studenti universitari, come voi, con anni di esperienza come mangiatori di Kebab.",
+               Text(
+                S.of(context).per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Testiamo e recensiamo Kebabbari e Street Food per voi. Benvenuti su Kebabbo.",
+              Text(
+                S.of(context).testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
@@ -198,8 +199,8 @@ class AboutPageState extends State<AboutPage> {
                     color: red,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
-                    "Consigliaci un kebabbaro",
+                  child: Text(
+                    S.of(context).consigliaci_un_kebabbaro,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

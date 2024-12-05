@@ -8,6 +8,8 @@ import 'package:kebabbo_flutter/pages/search_page.dart';
 import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'generated/l10n.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
@@ -56,6 +58,26 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+            localizationsDelegates: [
+        AppLocalizationDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // English
+        const Locale('it', ''), // Italian
+      ],
+      // Locale resolution for user-preferred language
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode &&
+              supportedLocale.countryCode == locale?.countryCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
       home: MyHomePage(reviewHash: reviewHash), // Set MyHomePage as the home
     );
   }

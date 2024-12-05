@@ -75,12 +75,12 @@ Feature lancio:
 - [x] Grafico kebabbari con scritte asse x troppo grandi e tagliate sotto
 
 - [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
-    - [ ] pallini informativi
+- [ ] pallini informativi
 
 Feature extra:
 
 - [x] Badge del posto quando si mette review
-- [ ] Recensioni utenti postate come post
+- [x] Recensioni utenti postate come post
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
