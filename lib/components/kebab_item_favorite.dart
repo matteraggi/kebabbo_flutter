@@ -3,6 +3,7 @@ import 'package:kebabbo_flutter/components/bottom_kebab_buttons.dart';
 import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
@@ -129,16 +130,16 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                   ],
                 ),
                 if (widget.isOpen)
-                  const Text(
-                    "aperto",
+                  Text(
+                    S.of(context).aperto,
                     style: TextStyle(
                         color: Color.fromARGB(255, 37, 154, 41),
                         fontSize: 12,
                         fontStyle: FontStyle.italic),
                   )
                 else
-                  const Text(
-                    "Chiuso",
+                  Text(
+                    S.of(context).chiuso,
                     style: TextStyle(
                         color: red, fontSize: 12, fontStyle: FontStyle.italic),
                   ),
@@ -172,20 +173,20 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                       ),
                       const SizedBox(height: 16),
                       SingleStat(
-                          label: "Qualità",
+                          label: S.of(context).quality,
                           number: widget.quality,
                           isFront: true),
                       const SizedBox(height: 8),
                       SingleStat(
-                          label: "Prezzo", number: widget.price, isFront: true),
+                          label: S.of(context).price, number: widget.price, isFront: true),
                       const SizedBox(height: 8),
                       SingleStat(
-                          label: "Dimensione",
+                          label: S.of(context).quantity,
                           number: widget.dimension,
                           isFront: true),
                       const SizedBox(height: 8),
                       SingleStat(
-                          label: "Menu", number: widget.menu, isFront: true),
+                          label: S.of(context).menu, number: widget.menu, isFront: true),
                       const SizedBox(height: 16),
                       SingleChart(
                         vegetables: widget.vegetables,

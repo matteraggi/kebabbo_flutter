@@ -32,7 +32,7 @@ class KebabSinglePageState extends State<KebabSinglePage> {
         kebabData = response;
       });
     } catch (error) {
-      print('Errore nel caricamento dei dati del kebabbaro: $error');
+      print('errore_nel_caricamento_dei_dati_del_kebabbaro:$error');
     }
   }
 

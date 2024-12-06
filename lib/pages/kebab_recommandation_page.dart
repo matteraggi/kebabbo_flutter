@@ -4,6 +4,7 @@ import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/utils/ingredients_logic.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class KebabRecommendationPage extends StatefulWidget {
   final Position? currentPosition;
@@ -118,7 +119,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kebab Consigliato'),
+        title:  Text(S.of(context).kebab_consigliato),
       ),
       body: Stack(
         children: [
@@ -130,8 +131,8 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        const Text(
-                          'Il kebab che ti raccomandiamo è:',
+                        Text(
+                          S.of(context).il_kebab_che_ti_raccomandiamo_e,
                           style: TextStyle(
                             fontSize: 32,
                             color: red,
@@ -141,8 +142,8 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                         const SizedBox(height: 20),
                         KebabListItem(
                           id: _currentKebab['id'].toString(),
-                          name: _currentKebab['name'] ?? 'Kebab Sconosciuto',
-                          description: _currentKebab['description'] ?? 'Descrizione non disponibile',
+                          name: _currentKebab['name'] ?? S.of(context).kebab_sconosciuto,
+                          description: _currentKebab['description'] ?? S.of(context).descrizione_non_disponibile,
                           rating: (_currentKebab['rating'] ?? 0.0).toDouble(),
                           quality: (_currentKebab['quality'] ?? 0.0).toDouble(),
                           price: (_currentKebab['price'] ?? 0.0).toDouble(),
@@ -185,7 +186,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                       onPressed: () {
                         Navigator.of(context).pop(); // Go back to previous page
                       },
-                      child: const Text("Back to Build"),
+                      child: Text(S.of(context).back_to_build),
                     ),
                   ],
                 ),
@@ -218,8 +219,8 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
     final user = supabase.auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Preferiti solo per utenti registrati"),
+         SnackBar(
+          content: Text(S.of(context).preferiti_solo_per_utenti_registrati),
           duration: Duration(seconds: 2),
         ),
       );

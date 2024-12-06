@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/pages/single_user_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart' as timeago_it;
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class FeedListItem extends StatefulWidget {
   final String text;
@@ -66,7 +67,7 @@ class FeedListItemState extends State<FeedListItem> {
 
       if (mounted) {
         setState(() {
-          userName = response['username'] ?? 'Anonimo';
+          userName = response['username'] ?? S.of(context).anonimo;
           avatarUrl = response['avatar_url'] as String?;
           isLoading = false;
         });
@@ -74,7 +75,7 @@ class FeedListItemState extends State<FeedListItem> {
     } catch (error) {
       if (mounted) {
         setState(() {
-          userName = 'Anonimo';
+          userName = S.of(context).anonimo;
           isLoading = false;
         });
       }
@@ -200,10 +201,10 @@ class FeedListItemState extends State<FeedListItem> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      return Center(child: Text('Errore: ${snapshot.error}'));
+                      return Center(child: Text(S.of(context).errore +snapshot.error.toString()));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                          child: Text('Nessun commento disponibile'));
+                      return Center(
+                          child: Text(S.of(context).nessun_commento_disponibile));
                     } else {
                       final commentsList =
                           snapshot.data!; // Usa la lista di commenti qui
@@ -224,7 +225,7 @@ class FeedListItemState extends State<FeedListItem> {
                                   : null,
                             ),
                             title: Text(
-                                comment['text'] ?? 'Commento non disponibile'),
+                                comment['text'] ?? S.of(context).commento_non_disponibile),
                             subtitle: Text(
                               '${userProfile['username'] ?? 'Anonimo'} - ${_formatTimestamp(comment['created_at'])}',
                             ),
@@ -243,7 +244,7 @@ class FeedListItemState extends State<FeedListItem> {
                       child: TextField(
                         controller: commentController,
                         decoration: InputDecoration(
-                          hintText: "Scrivi un commento...",
+                          hintText: S.of(context).scrivi_un_commento,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -258,9 +259,9 @@ class FeedListItemState extends State<FeedListItem> {
                           Navigator.pop(context);
 
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
+                            SnackBar(
                                 content: Text(
-                                    "Il commento è stato aggiunto con successo!")),
+                                    S.of(context).il_commento_e_stato_aggiunto_con_successo)),
                           );
                         }
                       },
@@ -335,7 +336,7 @@ class FeedListItemState extends State<FeedListItem> {
     for (final match in matches) {
       String tagText = match.group(1)!;
 
-      bool isUsername = userList.contains(tagText) ?? false;
+      bool isUsername = userList.contains(tagText);
 
       spans.add(TextSpan(
         text: text.substring(start, match.start),
@@ -360,12 +361,12 @@ class FeedListItemState extends State<FeedListItem> {
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("User not found")),
+                  SnackBar(content: Text(S.of(context).user_not_found)),
                 );
               }
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("An error occurred")),
+                SnackBar(content: Text(S.of(context).an_error_occurred)),
               );
             }
           },
@@ -418,7 +419,7 @@ class FeedListItemState extends State<FeedListItem> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          userName ?? 'Anonimo',
+                          userName ?? S.of(context).anonimo,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),

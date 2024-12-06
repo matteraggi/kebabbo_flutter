@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class PopupKebabItem extends StatelessWidget {
   final String name;
@@ -71,13 +72,13 @@ class PopupKebabItem extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(description, style: const TextStyle(fontSize: 14)),
                 const Divider(), // Linea divisoria
-                SingleStat(label: "Qualità", number: quality, isFront: true,),
+                SingleStat(label: S.of(context).quality, number: quality, isFront: true,),
                 const SizedBox(height: 8),
-                SingleStat(label: "Prezzo", number: price, isFront: true,),
+                SingleStat(label: S.of(context).price, number: price, isFront: true,),
                 const SizedBox(height: 8),
-                SingleStat(label: "Dimensione", number: dimension, isFront: true,),
+                SingleStat(label: S.of(context).quantity, number: dimension, isFront: true,),
                 const SizedBox(height: 8),
-                SingleStat(label: "Menu", number: menu, isFront: true,),
+                SingleStat(label: S.of(context).menu, number: menu, isFront: true,),
                 const SizedBox(height: 8),
               ],
             ),

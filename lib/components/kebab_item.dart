@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/components/single_chart.dart';
 import 'package:kebabbo_flutter/components/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class KebabListItem extends StatefulWidget {
   final String id;
@@ -196,17 +197,17 @@ class KebabListItemState extends State<KebabListItem> {
             ),
             const SizedBox(height: 16),
             SingleStat(
-              label: "Qualità",
+              label: S.of(context).quality,
               number: widget.quality,
               isFront: true,
             ),
             const SizedBox(height: 8),
-            SingleStat(label: "Prezzo", number: widget.price, isFront: true),
+            SingleStat(label: S.of(context).price, number: widget.price, isFront: true),
             const SizedBox(height: 8),
             SingleStat(
-                label: "Dimensione", number: widget.dimension, isFront: true),
+                label: S.of(context).quantity, number: widget.dimension, isFront: true),
             const SizedBox(height: 8),
-            SingleStat(label: "Menu", number: widget.menu, isFront: true),
+            SingleStat(label: S.of(context).menu, number: widget.menu, isFront: true),
             const SizedBox(height: 16),
             SingleChart(
               vegetables: widget.vegetables,
@@ -310,20 +311,20 @@ class KebabListItemState extends State<KebabListItem> {
                 avgPrice == 0 &&
                 avgQuality == 0 &&
                 avgQuantity == 0)
-              Text("Nessuna recensione disponibile",
+              Text(S.of(context).nessuna_recensione_disponibile,
                   style: TextStyle(color: Colors.white))
             else
               Column(
                 children: [
                   SingleStat(
-                      label: "Qualità", number: avgQuality, isFront: false),
+                      label: S.of(context).quality, number: avgQuality, isFront: false),
                   const SizedBox(height: 8),
-                  SingleStat(label: "Prezzo", number: avgPrice, isFront: false),
+                  SingleStat(label: S.of(context).price, number: avgPrice, isFront: false),
                   const SizedBox(height: 8),
                   SingleStat(
-                      label: "Dimensione", number: avgQuantity, isFront: false),
+                      label: S.of(context).quantity, number: avgQuantity, isFront: false),
                   const SizedBox(height: 8),
-                  SingleStat(label: "Menu", number: avgMenu, isFront: false),
+                  SingleStat(label: S.of(context).menu, number: avgMenu, isFront: false),
                   const SizedBox(height: 16),
                   SingleChart(
                     vegetables: widget.vegetables,
@@ -406,7 +407,7 @@ class KebabListItemState extends State<KebabListItem> {
               endIndent: 0, // Spazio a destra
             ),
             Center(
-                child: Text("Users Review",
+                child: Text(S.of(context).users_review,
                     style:
                         TextStyle(fontStyle: FontStyle.italic, fontSize: 12, color: Colors.white))),
           ],
@@ -459,16 +460,16 @@ class KebabListItemState extends State<KebabListItem> {
                   ],
                 ),
                 if (widget.isOpen)
-                  const Text(
-                    "Aperto",
+                   Text(
+                    S.of(context).aperto,
                     style: TextStyle(
                         color: Color.fromARGB(255, 37, 154, 41),
                         fontSize: 12,
                         fontStyle: FontStyle.italic),
                   )
                 else
-                  const Text(
-                    "Chiuso",
+                  Text(
+                    S.of(context).chiuso,
                     style: TextStyle(
                         color: red, fontSize: 12, fontStyle: FontStyle.italic),
                   ),
@@ -482,8 +483,8 @@ class KebabListItemState extends State<KebabListItem> {
                 const SizedBox(height: 8),
                 Text(
                   widget.distance != null
-                      ? "${widget.distance!.toStringAsFixed(2)} km distante da te"
-                      : "Distanza non disponibile",
+                      ? widget.distance!.toStringAsFixed(2)+ S.of(context).km_distante_da_te
+                      : S.of(context).distanza_non_disponibile,
                   style: TextStyle(
                     color: widget.distance != null
                         ? Colors.grey

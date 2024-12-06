@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class GoogleLoginButton extends StatelessWidget {
   final String redirectUrl;
@@ -79,8 +80,8 @@ class GoogleLoginButton extends StatelessWidget {
             width: 24,
           ),
           const SizedBox(width: 10),
-          const Text(
-            "Log In con Google",
+          Text(
+            S.of(context).log_in_con_google,
             style: TextStyle(
               color: Colors.black,
               fontSize: 20,

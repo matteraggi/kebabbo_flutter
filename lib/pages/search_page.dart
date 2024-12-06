@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/components/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -92,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       setState(() {
         isLoading = false;
-        errorMessage = "Registrati per poter visualizzare il feed";
+        errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
       });
     }
   }
@@ -181,7 +182,7 @@ class _SearchPageState extends State<SearchPage> {
                               child: TextField(
                                 controller: searchController,
                                 decoration: InputDecoration(
-                                  hintText: 'Cerca utenti...',
+                                  hintText: S.of(context).cerca_utenti,
                                   prefixIcon: Icon(Icons.search),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -207,7 +208,7 @@ class _SearchPageState extends State<SearchPage> {
                             if (searchController.text.isEmpty) {
                               // Se non c'è testo, visualizza i post
                               return FeedListItem(
-                                text: item['text'] ?? 'Testo non disponibile',
+                                text: item['text'] ?? S.of(context).testo_non_disponibile,
                                 createdAt: item['created_at'] ?? '',
                                 userId: item['user_id'].toString(),
                                 imageUrl: item['image_url'] ?? '',
@@ -221,7 +222,7 @@ class _SearchPageState extends State<SearchPage> {
                               // Se c'è testo, visualizza gli utenti
                               return UserItem(
                                   userId: item['id'] ?? "",
-                                  username: item["username"] ?? "Anonimo",
+                                  username: item["username"] ?? S.of(context).anonimo,
                                   avatarUrl: item["avatar_url"] ?? "");
                             }
                           },

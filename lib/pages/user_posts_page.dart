@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class UserPostsPage extends StatefulWidget {
   final String userId; // Aggiungiamo il parametro userId
@@ -42,7 +43,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load posts')),
+          SnackBar(content: Text(S.of(context).failed_to_load_posts)),
         );
       }
     } finally {
@@ -59,7 +60,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: yellow,
-        title: const Text('I tuoi Post'),
+        title: Text(S.of(context).i_tuoi_post),
       ),
       body: SafeArea(
         child: Padding(
@@ -67,13 +68,13 @@ class _UserPostsPageState extends State<UserPostsPage> {
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : _userPosts.isEmpty
-                  ? const Center(child: Text("Nessun post trovato"))
+                  ? Center(child: Text(S.of(context).nessun_post_trovato))
                   : ListView.builder(
                       itemCount: _userPosts.length,
                       itemBuilder: (context, index) {
                         final post = _userPosts[index];
                         return FeedListItem(
-                          text: post['text'] ?? 'Testo non disponibile',
+                          text: post['text'] ?? S.of(context).testo_non_disponibile,
                           createdAt: post['created_at'] ?? '',
                           userId: post['user_id'],
                           imageUrl: post['image_url'] ?? '',

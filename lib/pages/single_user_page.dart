@@ -4,6 +4,7 @@ import 'package:kebabbo_flutter/pages/followers_page.dart';
 import 'package:kebabbo_flutter/pages/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/user_posts_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class SingleUserPage extends StatefulWidget {
   final String userId; // Aggiungi il parametro per l'ID dell'utente
@@ -46,7 +47,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load follower count')),
+          SnackBar(content: Text(S.of(context).failed_to_load_follower_count)),
         );
       }
     }
@@ -97,7 +98,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load profile')),
+          SnackBar(content: Text(S.of(context).failed_to_load_profile)),
         );
       }
     }
@@ -130,7 +131,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
       });
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update follow status')),
+        SnackBar(content: Text(S.of(context).failed_to_update_follow_status)),
       );
     }
   }
@@ -150,7 +151,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load post count')),
+          SnackBar(content: Text(S.of(context).failed_to_load_post_count)),
         );
       }
     }
@@ -200,7 +201,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isFollowing ? Colors.black12 : red,
                   ),
-                  child: Text(_isFollowing ? 'Segui già' : 'Segui'),
+                  child: Text(_isFollowing ? S.of(context).segui_gia : S.of(context).segui),
                 ),
               ],
             ),
@@ -273,8 +274,8 @@ class _SingleUserPageState extends State<SingleUserPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const Text(
-                          'Seguiti',
+                        Text(
+                          S.of(context).seguiti,
                           style: TextStyle(fontSize: 14),
                         ),
                       ],
@@ -314,7 +315,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          "${_favoriteKebab["name"] ?? 'Nome non disponibile'}",
+                          "${_favoriteKebab["name"] ?? S.of(context).nome_non_disponibile}",
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

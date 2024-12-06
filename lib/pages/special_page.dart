@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 
 class SpecialPage extends StatefulWidget {
@@ -153,7 +154,7 @@ class SpecialPageState extends State<SpecialPage> {
                       vertical: 8,
                       horizontal:
                           16), // Aggiungi padding intorno al contenuto della scheda
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -161,7 +162,7 @@ class SpecialPageState extends State<SpecialPage> {
                         size: 24,
                       ),
                       SizedBox(width: 8),
-                      Text('World'),
+                      Text(S.of(context).world),
                     ],
                   ),
                 ),
@@ -170,7 +171,7 @@ class SpecialPageState extends State<SpecialPage> {
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: const Row(
+                  child:  Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -178,7 +179,7 @@ class SpecialPageState extends State<SpecialPage> {
                         size: 24,
                       ),
                       SizedBox(width: 8),
-                      Text('Legends'),
+                      Text(S.of(context).legends),
                     ],
                   ),
                 ),
@@ -189,9 +190,9 @@ class SpecialPageState extends State<SpecialPage> {
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : errorMessage != null
-                ? Center(child: Text('Errore: $errorMessage'))
+                ? Center(child: Text(S.of(context).errore +errorMessage.toString()))
                 : dashList.isEmpty
-                    ? const Center(child: Text('Nessun Kebabbaro presente :('))
+                    ?  Center(child: Text(S.of(context).nessun_kebabbaro_presente))
                     : SafeArea(
                         minimum: const EdgeInsets.symmetric(
                           vertical: 0,

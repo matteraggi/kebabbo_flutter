@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
   try {
@@ -53,33 +54,33 @@ Future<void> updateProfile(BuildContext context, String? username,
     await Supabase.instance.client.from('profiles').upsert(updates);
     if (username != null || avatarUrl != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully updated profile!')),
+        SnackBar(content: Text(S.of(context).successfully_updated_profile)),
       );
     }
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Unexpected error occurred')),
+      SnackBar(content: Text(S.of(context).unexpected_error_occurred)),
     );
   }
 }
 
-String? validateUsername(String username) {
+String? validateUsername(String username, BuildContext context) {
   // Check for whitespace
   if (username.contains(' ')) {
-    return 'Username cannot contain spaces,\nuse undescores instead!';
+    return S.of(context).username_cannot_contain_spaces_use_undescores_instead;
   }
 
   // Check for length (min 3, max 12)
   if (username.length < 3) {
-    return 'Username must be at least 3 \ncharacters long!';
+    return S.of(context).username_must_be_at_least_3_characters_long;
   }
   if (username.length > 12) {
-    return 'Username cannot be more than \n12 characters!';
+    return S.of(context).username_cannot_be_more_than_12_characters;
   }
 
   // Check for invalid characters (only letters, numbers, underscores allowed)
   if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(username)) {
-    return 'Username can only contain letters,\nnumbers, and underscores!';
+    return S.of(context).username_can_only_contain_letters_numbers_and_underscores;
   }
 
   // Return null if there's no error (valid username)

@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/pages/special_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class TopKebabPage extends StatefulWidget {
   final Position? currentPosition;
@@ -103,8 +104,8 @@ class TopKebabPageState extends State<TopKebabPage> {
     final user = supabase.auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Preferiti solo per utenti registrati"),
+        SnackBar(
+          content: Text(S.of(context).preferiti_solo_per_utenti_registrati),
           duration: Duration(seconds: 2),
         ),
       );
@@ -181,7 +182,7 @@ class TopKebabPageState extends State<TopKebabPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : errorMessage != null
-              ? Center(child: Text('Errore: $errorMessage'))
+              ? Center(child: Text(S.of(context).errore +errorMessage.toString()))
               : SafeArea(
                   minimum: const EdgeInsets.symmetric(
                     vertical: 0,
@@ -211,7 +212,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                     controller: searchController,
                                     onChanged: searchKebab,
                                     decoration: InputDecoration(
-                                      hintText: "Cerca un kebabbaro...",
+                                      hintText: S.of(context).cerca_un_kebabbaro,
                                       hintStyle: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.black,
@@ -276,7 +277,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            'Aperti ora',
+                                            S.of(context).aperti_ora,
                                             style: TextStyle(
                                               color: showOnlyOpen
                                                   ? Colors.white
@@ -294,8 +295,8 @@ class TopKebabPageState extends State<TopKebabPage> {
                             ),
                           ),
                           dashList.isEmpty
-                              ? const Center(
-                                  child: Text('Nessun Kebabbaro presente :('))
+                              ? Center(
+                                  child: Text(S.of(context).nessun_kebabbaro_presente))
                               : Expanded(
                                   child: ListView.builder(
                                     itemCount: searchResultList.length,

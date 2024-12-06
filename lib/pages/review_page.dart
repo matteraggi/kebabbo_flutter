@@ -8,6 +8,7 @@ import 'package:kebabbo_flutter/pages/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class ReviewPage extends StatefulWidget {
   final String hash;
@@ -108,7 +109,15 @@ class ReviewPageState extends State<ReviewPage> {
         'user_id': Supabase.instance.client.auth.currentUser?.id,
         'kebab_tag_id': kebabber!['id'],
         'kebab_tag_name': kebabber!['name'],
-        'text': "Ho appena recensito il kebab di ${kebabber!['name']}!\n\nQualità: $qualityRating\nQuantità: $quantityRating\nMenu: $menuRating\nPrezzo: $priceRating\nDivertimento: $funRating\n\n${descriptionController.text}",
+        'text': S.of(context).reviewMessage(
+            kebabber!['name'],
+            qualityRating.toString(),
+            quantityRating.toString(),
+            menuRating.toString(),
+            priceRating.toString(),
+            funRating.toString(),
+            descriptionController.text,
+          ),
         'created_at': DateTime.now().toIso8601String(),
       };
       if (existingReview != null) {
@@ -121,12 +130,12 @@ class ReviewPageState extends State<ReviewPage> {
         print('Response from Supabase: ${response.toString()}');
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Review updated successfully")),
+          SnackBar(content: Text(S.of(context).review_updated_successfully)),
         );
       } else {
         await Supabase.instance.client.from('reviews').insert(reviewData);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Review submitted successfully")),
+          SnackBar(content: Text(S.of(context).review_submitted_successfully)),
         );
 
       }
@@ -137,7 +146,7 @@ class ReviewPageState extends State<ReviewPage> {
 
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Unexpected error: $error")),
+        SnackBar(content: Text(S.of(context).unexpected_error_occurred + error.toString())),
       );
     } finally {
       setState(() {
@@ -212,8 +221,8 @@ class ReviewPageState extends State<ReviewPage> {
       context: context,
       dialogType: DialogType.success,
       animType: AnimType.scale,
-      title: 'Nuova Medaglia!',
-      desc: 'Hai ricevuto una nuova medaglia per il tuo contributo!',
+      title: S.of(context).nuova_medaglia,
+      desc: S.of(context).hai_ricevuto_una_nuova_medaglia_per_il_tuo_contributo,
       btnOkOnPress: () {},
       customHeader: Icon(
         Icons.emoji_events,
@@ -237,7 +246,7 @@ class ReviewPageState extends State<ReviewPage> {
   Widget build(BuildContext context) {
     if (!isValidHash || kebabber == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Review')),
+        appBar: AppBar(title: Text(S.of(context).review)),
         body: Center(
           child: Card(
             margin: const EdgeInsets.all(16.0),
@@ -253,14 +262,14 @@ class ReviewPageState extends State<ReviewPage> {
                   const Icon(Icons.warning_amber_rounded,
                       color: Colors.red, size: 50),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Oops! Review Not Found',
+                  Text(
+                    S.of(context).oops_review_not_found,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'It looks like the review you are trying to access does not exist. Please check the link and try again.',
+                  Text(
+                    S.of(context).it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again,
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -279,7 +288,7 @@ class ReviewPageState extends State<ReviewPage> {
             style: const TextStyle(
                 fontSize: 18.0, color: Colors.black), // Base style
             children: [
-              const TextSpan(text: 'Review '), // Regular text
+              TextSpan(text: S.of(context).review), // Regular text
               TextSpan(
                 text: kebabber!['name'], // The name
                 style: const TextStyle(
@@ -302,8 +311,8 @@ class ReviewPageState extends State<ReviewPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Please Log In to Submit Your Review',
+                  Text(
+                    S.of(context).please_log_in_to_submit_your_review,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
@@ -327,7 +336,7 @@ class ReviewPageState extends State<ReviewPage> {
           style: const TextStyle(
               fontSize: 18.0, color: Colors.black), // Base style
           children: [
-            const TextSpan(text: 'Review '), // Regular text
+            TextSpan(text: S.of(context).review), // Regular text
             TextSpan(
               text: kebabber!['name'], // The name
               style: const TextStyle(
@@ -357,7 +366,7 @@ class ReviewPageState extends State<ReviewPage> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text('Rate the Kebab',
+                            Text(S.of(context).rate_the_kebab,
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 16),
@@ -368,28 +377,28 @@ class ReviewPageState extends State<ReviewPage> {
                                   child: Column(
                                     children: [
                                       buildCenteredRatingBar(
-                                          'Quality',
+                                          S.of(context).quality,
                                           (rating) => qualityRating = rating,
                                           qualityRating),
                                       const SizedBox(
                                           height: 8), // Small padding
                                       buildCenteredRatingBar(
-                                          'Quantity',
+                                          S.of(context).quantity,
                                           (rating) => quantityRating = rating,
                                           quantityRating),
                                       const SizedBox(height: 8),
                                       buildCenteredRatingBar(
-                                          'Menu',
+                                          S.of(context).menu,
                                           (rating) => menuRating = rating,
                                           menuRating),
                                       const SizedBox(height: 8),
                                       buildCenteredRatingBar(
-                                          'Price',
+                                          S.of(context).price,
                                           (rating) => priceRating = rating,
                                           priceRating),
                                       const SizedBox(height: 8),
                                       buildCenteredRatingBar(
-                                          'Fun',
+                                          S.of(context).fun,
                                           (rating) => funRating = rating,
                                           funRating),
                                     ],
@@ -402,12 +411,12 @@ class ReviewPageState extends State<ReviewPage> {
                                       TextField(
                                         controller: descriptionController,
                                         decoration: InputDecoration(
-                                          labelText: 'Description',
+                                          labelText: S.of(context).description,
                                           alignLabelWithHint: true,
                                           border: OutlineInputBorder(),
                                           errorText:
                                               descriptionController.text.isEmpty
-                                                  ? 'Description is required'
+                                                  ? S.of(context).description_is_required
                                                   : null, // Show error if empty
                                         ),
                                         maxLines:
@@ -425,44 +434,44 @@ class ReviewPageState extends State<ReviewPage> {
                                         descriptionController.text.isEmpty
                                     ? null
                                     : submitReview,
-                                child: const Text('Submit Review'),
+                                child: Text(S.of(context).submit_review),
                               ),
                             ),
                           ],
                         )
                       : Column(
                           children: [
-                            const Text('Rate the Kebab',
+                             Text(S.of(context).rate_the_kebab,
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 16),
                             buildCenteredRatingBar(
-                                'Quality',
+                                S.of(context).quality,
                                 (rating) => qualityRating = rating,
                                 qualityRating),
                             const SizedBox(height: 8), // Small padding
                             buildCenteredRatingBar(
-                                'Quantity',
+                                S.of(context).quantity,
                                 (rating) => quantityRating = rating,
                                 quantityRating),
                             const SizedBox(height: 8),
-                            buildCenteredRatingBar('Menu',
+                            buildCenteredRatingBar(S.of(context).menu,
                                 (rating) => menuRating = rating, menuRating),
                             const SizedBox(height: 8),
-                            buildCenteredRatingBar('Price',
+                            buildCenteredRatingBar(S.of(context).price,
                                 (rating) => priceRating = rating, priceRating),
                             const SizedBox(height: 8),
-                            buildCenteredRatingBar('Fun',
+                            buildCenteredRatingBar(S.of(context).fun,
                                 (rating) => funRating = rating, funRating),
                             const SizedBox(height: 16),
                             TextField(
                               controller: descriptionController,
                               decoration: InputDecoration(
-                                labelText: 'Description',
+                                labelText: S.of(context).description,
                                 alignLabelWithHint: true,
                                 border: OutlineInputBorder(),
                                 errorText: descriptionController.text.isEmpty
-                                    ? 'Description is required'
+                                    ? S.of(context).description_is_required
                                     : null, // Show error if empty
                               ),
                               maxLines: 5,
@@ -474,7 +483,7 @@ class ReviewPageState extends State<ReviewPage> {
                                         descriptionController.text.isEmpty
                                     ? null
                                     : submitReview,
-                                child: const Text('Submit Review'),
+                                child:  Text(S.of(context).submit_review),
                               ),
                             ),
                           ],

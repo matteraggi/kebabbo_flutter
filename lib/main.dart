@@ -67,6 +67,10 @@ class MyApp extends StatelessWidget {
       supportedLocales: [
         const Locale('en', ''), // English
         const Locale('it', ''), // Italian
+        const Locale('es', ''), // Spanish
+        const Locale('fr', ''), // French
+        const Locale('de', ''), // German
+        const Locale('pt', ''), // Portuguese
       ],
       // Locale resolution for user-preferred language
       localeResolutionCallback: (locale, supportedLocales) {
@@ -217,14 +221,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 null; // Reset reviewHash so the nav bar takes control
           });
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.comment),
-            label: 'Seguiti',
+            label: S.of(context).seguiti,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Esplora',
+            label: S.of(context).esplora,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.kebab_dining),
@@ -232,7 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
-            label: 'Mappa',
+            label: S.of(context).mappa,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

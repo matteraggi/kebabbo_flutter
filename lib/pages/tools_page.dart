@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/pages/kebab_recommandation_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:kebabbo_flutter/utils/ingredients_logic.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class ToolsPage extends StatefulWidget {
   final Position? currentPosition;
@@ -125,7 +126,7 @@ void _fetchKebabAvailability() async {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
-      title: const Text('Build Your Kebab'),
+      title: Text(S.of(context).build_your_kebab),
     ),
     body: Stack(
       children: [
@@ -216,8 +217,8 @@ Widget build(BuildContext context) {
                                           ),
                                         ),
                                       const SizedBox(height: 20),
-                                      const Text(
-                                        'Distanza Massima',
+                                      Text(
+                                        S.of(context).distanza_massima,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -270,8 +271,8 @@ Widget build(BuildContext context) {
 
                           // Add the sliders and the "Build!" button back to mobile view
                           const SizedBox(height: 20),
-                          const Text(
-                            'Distanza Massima',
+                          Text(
+                            S.of(context).distanza_massima,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -337,18 +338,17 @@ Widget build(BuildContext context) {
 
 String _getDistanceLabel(double distance) {
   if (distance <= 0.2) {
-    return '200 metri (${availableKebabs['200m']} risultati)';
+    return S.of(context).distanceLabel200m(availableKebabs['200m'].toString());
   } else if (distance <= 0.5) {
-    return '500 metri (${availableKebabs['500m']} risultati)';
+    return S.of(context).distanceLabel500m(availableKebabs['500m'].toString());
   } else if (distance <= 1) {
-    return '1 km (${availableKebabs['1km']} risultati)';
+    return S.of(context).distanceLabel1km(availableKebabs['1km'].toString());
   } else if (distance <= 10) {
-    return '10 km (${availableKebabs['10km']} risultati)';
+    return S.of(context).distanceLabel10km(availableKebabs['10km'].toString());
   } else {
-    return 'Illimitato (${availableKebabs['unlimited']} risultati)';
+    return S.of(context).distanceLabelUnlimited(availableKebabs['unlimited'].toString());
   }
 }
-
 
 Widget buildButton() {
   return ElevatedButton(
@@ -360,8 +360,8 @@ Widget buildButton() {
       if (availableKebabsForDistance == 0) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Nessun kebab corrispondente trovato nel raggio selezionato'),
+            SnackBar(
+              content: Text(S.of(context).nessun_kebab_corrispondente_trovato_nel_raggio_selezionato),
             ),
           );
         }
@@ -416,8 +416,8 @@ Widget buildButton() {
         } else {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Nessun kebab corrispondente trovato nel raggio selezionato'),
+              SnackBar(
+                content: Text(S.of(context).nessun_kebab_corrispondente_trovato_nel_raggio_selezionato)
               ),
             );
           }

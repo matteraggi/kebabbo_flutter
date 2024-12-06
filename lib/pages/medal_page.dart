@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class MedalPage extends StatefulWidget {
   final String userId;
@@ -45,7 +46,7 @@ class _MedalPageState extends State<MedalPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load medals')),
+          SnackBar(content: Text(S.of(context).failed_to_load_medals)),
         );
       }
     } finally {
@@ -79,8 +80,8 @@ class _MedalPageState extends State<MedalPage> {
                               height: 70,
                               width: 70,
                             ),
-                            const Text(
-                              'prima review',
+                            Text(
+                              S.of(context).prima_review,
                               style: TextStyle(fontSize: 12),
                             ),
                           ],
@@ -160,8 +161,8 @@ class _MedalPageState extends State<MedalPage> {
                               height: 70,
                               width: 70,
                             ),
-                            const Text(
-                              'primo post',
+                            Text(
+                              S.of(context).primo_post,
                               style: TextStyle(fontSize: 12),
                             ),
                           ],

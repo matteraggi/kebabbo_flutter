@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class SingleChart extends StatefulWidget {
   final double vegetables;
@@ -145,16 +146,16 @@ class _SingleChartState extends State<SingleChart> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text('Verdura', style: style);
+        text = Text(S.of(context).verdura, style: style);
         break;
       case 1:
-        text = Text('Yogurt', style: style);
+        text = Text(S.of(context).yogurt, style: style);
         break;
       case 2:
-        text = Text('Spicy', style: style);
+        text = Text(S.of(context).spicy, style: style);
         break;
       case 3:
-        text = Text('Cipolla', style: style);
+        text = Text(S.of(context).cipolla, style: style);
         break;
       default:
         text = Text('', style: style);

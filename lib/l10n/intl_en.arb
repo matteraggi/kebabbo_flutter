@@ -1,7 +1,5 @@
 {
     "@@locale": "en",
-    "title": "Welcome",
-    "description": "Welcome to Flutter",
     "nome_non_disponibile": "Name not available",
     "seleziona_il_tuo_kebab_preferito": "Select your favorite kebab",
     "consigliaci_un_kebabbaro": "Recommend a kebab place",
@@ -35,7 +33,134 @@
     "testo_non_disponibile": "Text not available",
     "non_segui_ancora_nessuno": "You are not following anyone yet",
     "errore_nel_caricamento_dei_follower": "Error loading followers",
-    "nessun_utente_ti_segue": "No users follow you" 
+    "nessun_utente_ti_segue": "No users follow you" ,
+    "il_kebab_che_ti_raccomandiamo_e": "The kebab we recommend is:",
+    "kebab_consigliato": "Recommended Kebab",
+    "kebab_sconosciuto": "Unknown Kebab",
+    "descrizione_non_disponibile": "Description not available",
+    "back_to_build": "Back to Build",
+    "check_your_email_for_a_login_link": "Check your email for a login link!",
+    "by_signing_in_you_agree_to_our_terms_and_privacy_policy": "By signing in, you agree to our terms and privacy policy.",
+    "prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi": "\"Take, and eat of this, all of you: this is the Kebab offered in sacrifice for you.\"", 
+    "failed_to_load_medals": "Failed to load medals",
+    "prima_review": "first review",
+    "primo_post": "first post",
+    "reviewMessage": "I just reviewed the kebab at {kebabName}!\n\nQuality: {qualityRating}\nQuantity: {quantityRating}\nMenu: {menuRating}\nPrice: {priceRating}\nFun: {funRating}\n\n{description}",
+    "@reviewMessage": {
+      "description": "A message when a user reviews a kebab",
+      "placeholders": {
+        "kebabName": {},
+        "qualityRating": {},
+        "quantityRating": {},
+        "menuRating": {},
+        "priceRating": {},
+        "funRating": {},
+        "description": {}
+      }
+    },
+    "review_updated_successfully": "Review updated successfully",
+    "review_submitted_successfully": "Review submitted successfully",
+    "nuova_medaglia": "New Medal!",
+    "hai_ricevuto_una_nuova_medaglia_per_il_tuo_contributo": "You received a new medal for your contribution!",
+    "review": "Review",
+    "oops_review_not_found": "Oops! Review Not Found",
+    "please_log_in_to_submit_your_review": "Please Log In to Submit Your Review",
+    "rate_the_kebab": "Rate the Kebab",
+    "quality": "Quality",
+    "quantity": "Quantity",
+    "menu": "Menu",
+    "price": "Price",
+    "fun": "Fun", 
+    "description_is_required": "Description is required",
+    "submit_review": "Submit Review",
+    "cerca_utenti": "Search users...",
+    "anonimo": "Anonymous",
+    "nessun_utente_seguito": "No users followed",
+    "failed_to_load_profile": "Failed to load profile",
+    "failed_to_update_follow_status": "Failed to update follow status",
+    "segui_gia": "Already following",
+    "segui": "Follow",
+    "seguiti": "Followed",
+    "world": "World",
+    "legends": "Legends",
+    "errore": "Error:",
+    "nessun_kebabbaro_presente": "No Kebab places present :(",
+    "thank_you": "Thank You",
+    "thank_you_for_your_review": "Thank you for your review!",
+    "you_can_access_reviews_at_any_time_from_your_account": "You can access reviews at any time from your account.",
+    "build_your_kebab": "Build Your Kebab",
+    "distanza_massima": "Maximum Distance",
+    "preferiti_solo_per_utenti_registrati": "Favorites only for registered users",
+    "it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again": "It looks like the review you are trying to access does not exist. Please check the link and try again." ,
+    "distanceLabel200m": "200 meters ({results} results)",
+    "distanceLabel500m": "500 meters ({results} results)",
+    "distanceLabel1km": "1 km ({results} results)",
+    "distanceLabel10km": "10 km ({results} results)",
+    "distanceLabelUnlimited": "Unlimited ({results} results)",
+    "@distanceLabel200m": {
+      "description": "Label for distances within 200 meters with dynamic results count",
+      "placeholders": {
+        "results": {}
+      }
+    },
+    "@distanceLabel500m": {
+      "description": "Label for distances within 500 meters with dynamic results count",
+      "placeholders": {
+        "results": {}
+      }
+    },
+    "@distanceLabel1km": {
+      "description": "Label for distances within 1 km with dynamic results count",
+      "placeholders": {
+        "results": {}
+      }
+    },
+    "@distanceLabel10km": {
+      "description": "Label for distances within 10 km with dynamic results count",
+      "placeholders": {
+        "results": {}
+      }
+    },
+    "@distanceLabelUnlimited": {
+      "description": "Label for unlimited distance with dynamic results count",
+      "placeholders": {
+        "results": {}
+      }
+    },
+    "nessun_kebab_corrispondente_trovato_nel_raggio_selezionato": "No matching kebab found within the selected radius",
+  "cerca_un_kebabbaro": "Search for a kebab place...",
+  "aperti_ora": "Open now",
+  "failed_to_load_posts": "Failed to load posts",
+  "i_tuoi_post": "Your Posts",
+  "nessun_post_trovato": "No posts found",
+  "nessuna_recensione_ancora": "No reviews yet",
+  "successfully_updated_profile": "Successfully updated profile!",
+  "username_cannot_contain_spaces_use_undescores_instead": "Username cannot contain spaces,\nuse underscores instead!",
+  "username_must_be_at_least_3_characters_long": "Username must be at least 3 \ncharacters long!",
+  "username_cannot_be_more_than_12_characters": "Username cannot be more than \n12 characters!",
+  "username_can_only_contain_letters_numbers_and_underscores": "Username can only contain letters,\nnumbers, and underscores!",
+  "esplora": "Explore",
+  "mappa": "Map",
+  "no_image": "No Image",
+  "nessun_commento_disponibile": "No comments available",
+  "commento_non_disponibile": "Comment not available",
+  "scrivi_un_commento": "Write a comment...",
+  "il_commento_e_stato_aggiunto_con_successo": "The comment was added successfully!",
+  "user_not_found": "User not found",
+  "an_error_occurred": "An error occurred",
+  "log_in_con_google": "Log In with Google",
+  "aperto": "Open",
+  "chiuso": "Closed",
+  "nessuna_recensione_disponibile": "No reviews available",
+  "users_review": "Users Review",
+  "km_distante_da_te": "km away from you",
+  "distanza_non_disponibile": "Distance not available",
+  "verdura": "Vegetables",
+  "yogurt": "Yogurt",
+  "spicy": "Spicy",
+  "cipolla": "Onion",
+  "description": "Description"
+  
 
   }
   

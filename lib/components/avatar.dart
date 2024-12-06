@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class Avatar extends StatefulWidget {
   const Avatar({
@@ -29,8 +30,8 @@ class _AvatarState extends State<Avatar> {
             width: 150,
             height: 150,
             color: Colors.grey,
-            child: const Center(
-              child: Text('No Image'),
+            child: Center(
+              child: Text(S.of(context).no_image),
             ),
           )
         else
@@ -80,7 +81,7 @@ class _AvatarState extends State<Avatar> {
       }
     } catch (error) {
       if (mounted) {
-        context.showSnackBar('Unexpected error occurred', isError: true);
+        context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
       }
     }
 

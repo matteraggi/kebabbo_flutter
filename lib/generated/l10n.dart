@@ -50,26 +50,6 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Welcome`
-  String get title {
-    return Intl.message(
-      'Welcome',
-      name: 'title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Welcome to Flutter`
-  String get description {
-    return Intl.message(
-      'Welcome to Flutter',
-      name: 'description',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Name not available`
   String get nome_non_disponibile {
     return Intl.message(
@@ -415,6 +395,865 @@ class S {
       args: [],
     );
   }
+
+  /// `The kebab we recommend is:`
+  String get il_kebab_che_ti_raccomandiamo_e {
+    return Intl.message(
+      'The kebab we recommend is:',
+      name: 'il_kebab_che_ti_raccomandiamo_e',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommended Kebab`
+  String get kebab_consigliato {
+    return Intl.message(
+      'Recommended Kebab',
+      name: 'kebab_consigliato',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown Kebab`
+  String get kebab_sconosciuto {
+    return Intl.message(
+      'Unknown Kebab',
+      name: 'kebab_sconosciuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description not available`
+  String get descrizione_non_disponibile {
+    return Intl.message(
+      'Description not available',
+      name: 'descrizione_non_disponibile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back to Build`
+  String get back_to_build {
+    return Intl.message(
+      'Back to Build',
+      name: 'back_to_build',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check your email for a login link!`
+  String get check_your_email_for_a_login_link {
+    return Intl.message(
+      'Check your email for a login link!',
+      name: 'check_your_email_for_a_login_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By signing in, you agree to our terms and privacy policy.`
+  String get by_signing_in_you_agree_to_our_terms_and_privacy_policy {
+    return Intl.message(
+      'By signing in, you agree to our terms and privacy policy.',
+      name: 'by_signing_in_you_agree_to_our_terms_and_privacy_policy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `"Take, and eat of this, all of you: this is the Kebab offered in sacrifice for you."`
+  String
+      get prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi {
+    return Intl.message(
+      '"Take, and eat of this, all of you: this is the Kebab offered in sacrifice for you."',
+      name:
+          'prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load medals`
+  String get failed_to_load_medals {
+    return Intl.message(
+      'Failed to load medals',
+      name: 'failed_to_load_medals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `first review`
+  String get prima_review {
+    return Intl.message(
+      'first review',
+      name: 'prima_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `first post`
+  String get primo_post {
+    return Intl.message(
+      'first post',
+      name: 'primo_post',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I just reviewed the kebab at {kebabName}!\n\nQuality: {qualityRating}\nQuantity: {quantityRating}\nMenu: {menuRating}\nPrice: {priceRating}\nFun: {funRating}\n\n{description}`
+  String reviewMessage(
+      Object kebabName,
+      Object qualityRating,
+      Object quantityRating,
+      Object menuRating,
+      Object priceRating,
+      Object funRating,
+      Object description) {
+    return Intl.message(
+      'I just reviewed the kebab at $kebabName!\n\nQuality: $qualityRating\nQuantity: $quantityRating\nMenu: $menuRating\nPrice: $priceRating\nFun: $funRating\n\n$description',
+      name: 'reviewMessage',
+      desc: 'A message when a user reviews a kebab',
+      args: [
+        kebabName,
+        qualityRating,
+        quantityRating,
+        menuRating,
+        priceRating,
+        funRating,
+        description
+      ],
+    );
+  }
+
+  /// `Review updated successfully`
+  String get review_updated_successfully {
+    return Intl.message(
+      'Review updated successfully',
+      name: 'review_updated_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review submitted successfully`
+  String get review_submitted_successfully {
+    return Intl.message(
+      'Review submitted successfully',
+      name: 'review_submitted_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Medal!`
+  String get nuova_medaglia {
+    return Intl.message(
+      'New Medal!',
+      name: 'nuova_medaglia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You received a new medal for your contribution!`
+  String get hai_ricevuto_una_nuova_medaglia_per_il_tuo_contributo {
+    return Intl.message(
+      'You received a new medal for your contribution!',
+      name: 'hai_ricevuto_una_nuova_medaglia_per_il_tuo_contributo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review`
+  String get review {
+    return Intl.message(
+      'Review',
+      name: 'review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Oops! Review Not Found`
+  String get oops_review_not_found {
+    return Intl.message(
+      'Oops! Review Not Found',
+      name: 'oops_review_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please Log In to Submit Your Review`
+  String get please_log_in_to_submit_your_review {
+    return Intl.message(
+      'Please Log In to Submit Your Review',
+      name: 'please_log_in_to_submit_your_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rate the Kebab`
+  String get rate_the_kebab {
+    return Intl.message(
+      'Rate the Kebab',
+      name: 'rate_the_kebab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quality`
+  String get quality {
+    return Intl.message(
+      'Quality',
+      name: 'quality',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quantity`
+  String get quantity {
+    return Intl.message(
+      'Quantity',
+      name: 'quantity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Menu`
+  String get menu {
+    return Intl.message(
+      'Menu',
+      name: 'menu',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get price {
+    return Intl.message(
+      'Price',
+      name: 'price',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fun`
+  String get fun {
+    return Intl.message(
+      'Fun',
+      name: 'fun',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description is required`
+  String get description_is_required {
+    return Intl.message(
+      'Description is required',
+      name: 'description_is_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submit Review`
+  String get submit_review {
+    return Intl.message(
+      'Submit Review',
+      name: 'submit_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search users...`
+  String get cerca_utenti {
+    return Intl.message(
+      'Search users...',
+      name: 'cerca_utenti',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Anonymous`
+  String get anonimo {
+    return Intl.message(
+      'Anonymous',
+      name: 'anonimo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No users followed`
+  String get nessun_utente_seguito {
+    return Intl.message(
+      'No users followed',
+      name: 'nessun_utente_seguito',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load profile`
+  String get failed_to_load_profile {
+    return Intl.message(
+      'Failed to load profile',
+      name: 'failed_to_load_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to update follow status`
+  String get failed_to_update_follow_status {
+    return Intl.message(
+      'Failed to update follow status',
+      name: 'failed_to_update_follow_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already following`
+  String get segui_gia {
+    return Intl.message(
+      'Already following',
+      name: 'segui_gia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Follow`
+  String get segui {
+    return Intl.message(
+      'Follow',
+      name: 'segui',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Followed`
+  String get seguiti {
+    return Intl.message(
+      'Followed',
+      name: 'seguiti',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `World`
+  String get world {
+    return Intl.message(
+      'World',
+      name: 'world',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Legends`
+  String get legends {
+    return Intl.message(
+      'Legends',
+      name: 'legends',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error:`
+  String get errore {
+    return Intl.message(
+      'Error:',
+      name: 'errore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Kebab places present :(`
+  String get nessun_kebabbaro_presente {
+    return Intl.message(
+      'No Kebab places present :(',
+      name: 'nessun_kebabbaro_presente',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thank You`
+  String get thank_you {
+    return Intl.message(
+      'Thank You',
+      name: 'thank_you',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thank you for your review!`
+  String get thank_you_for_your_review {
+    return Intl.message(
+      'Thank you for your review!',
+      name: 'thank_you_for_your_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can access reviews at any time from your account.`
+  String get you_can_access_reviews_at_any_time_from_your_account {
+    return Intl.message(
+      'You can access reviews at any time from your account.',
+      name: 'you_can_access_reviews_at_any_time_from_your_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Build Your Kebab`
+  String get build_your_kebab {
+    return Intl.message(
+      'Build Your Kebab',
+      name: 'build_your_kebab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum Distance`
+  String get distanza_massima {
+    return Intl.message(
+      'Maximum Distance',
+      name: 'distanza_massima',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Favorites only for registered users`
+  String get preferiti_solo_per_utenti_registrati {
+    return Intl.message(
+      'Favorites only for registered users',
+      name: 'preferiti_solo_per_utenti_registrati',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It looks like the review you are trying to access does not exist. Please check the link and try again.`
+  String
+      get it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again {
+    return Intl.message(
+      'It looks like the review you are trying to access does not exist. Please check the link and try again.',
+      name:
+          'it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `200 meters ({results} results)`
+  String distanceLabel200m(Object results) {
+    return Intl.message(
+      '200 meters ($results results)',
+      name: 'distanceLabel200m',
+      desc: 'Label for distances within 200 meters with dynamic results count',
+      args: [results],
+    );
+  }
+
+  /// `500 meters ({results} results)`
+  String distanceLabel500m(Object results) {
+    return Intl.message(
+      '500 meters ($results results)',
+      name: 'distanceLabel500m',
+      desc: 'Label for distances within 500 meters with dynamic results count',
+      args: [results],
+    );
+  }
+
+  /// `1 km ({results} results)`
+  String distanceLabel1km(Object results) {
+    return Intl.message(
+      '1 km ($results results)',
+      name: 'distanceLabel1km',
+      desc: 'Label for distances within 1 km with dynamic results count',
+      args: [results],
+    );
+  }
+
+  /// `10 km ({results} results)`
+  String distanceLabel10km(Object results) {
+    return Intl.message(
+      '10 km ($results results)',
+      name: 'distanceLabel10km',
+      desc: 'Label for distances within 10 km with dynamic results count',
+      args: [results],
+    );
+  }
+
+  /// `Unlimited ({results} results)`
+  String distanceLabelUnlimited(Object results) {
+    return Intl.message(
+      'Unlimited ($results results)',
+      name: 'distanceLabelUnlimited',
+      desc: 'Label for unlimited distance with dynamic results count',
+      args: [results],
+    );
+  }
+
+  /// `No matching kebab found within the selected radius`
+  String get nessun_kebab_corrispondente_trovato_nel_raggio_selezionato {
+    return Intl.message(
+      'No matching kebab found within the selected radius',
+      name: 'nessun_kebab_corrispondente_trovato_nel_raggio_selezionato',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search for a kebab place...`
+  String get cerca_un_kebabbaro {
+    return Intl.message(
+      'Search for a kebab place...',
+      name: 'cerca_un_kebabbaro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open now`
+  String get aperti_ora {
+    return Intl.message(
+      'Open now',
+      name: 'aperti_ora',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load posts`
+  String get failed_to_load_posts {
+    return Intl.message(
+      'Failed to load posts',
+      name: 'failed_to_load_posts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Posts`
+  String get i_tuoi_post {
+    return Intl.message(
+      'Your Posts',
+      name: 'i_tuoi_post',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No posts found`
+  String get nessun_post_trovato {
+    return Intl.message(
+      'No posts found',
+      name: 'nessun_post_trovato',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No reviews yet`
+  String get nessuna_recensione_ancora {
+    return Intl.message(
+      'No reviews yet',
+      name: 'nessuna_recensione_ancora',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully updated profile!`
+  String get successfully_updated_profile {
+    return Intl.message(
+      'Successfully updated profile!',
+      name: 'successfully_updated_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username cannot contain spaces,\nuse underscores instead!`
+  String get username_cannot_contain_spaces_use_undescores_instead {
+    return Intl.message(
+      'Username cannot contain spaces,\nuse underscores instead!',
+      name: 'username_cannot_contain_spaces_use_undescores_instead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username must be at least 3 \ncharacters long!`
+  String get username_must_be_at_least_3_characters_long {
+    return Intl.message(
+      'Username must be at least 3 \ncharacters long!',
+      name: 'username_must_be_at_least_3_characters_long',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username cannot be more than \n12 characters!`
+  String get username_cannot_be_more_than_12_characters {
+    return Intl.message(
+      'Username cannot be more than \n12 characters!',
+      name: 'username_cannot_be_more_than_12_characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username can only contain letters,\nnumbers, and underscores!`
+  String get username_can_only_contain_letters_numbers_and_underscores {
+    return Intl.message(
+      'Username can only contain letters,\nnumbers, and underscores!',
+      name: 'username_can_only_contain_letters_numbers_and_underscores',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Explore`
+  String get esplora {
+    return Intl.message(
+      'Explore',
+      name: 'esplora',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map`
+  String get mappa {
+    return Intl.message(
+      'Map',
+      name: 'mappa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Image`
+  String get no_image {
+    return Intl.message(
+      'No Image',
+      name: 'no_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No comments available`
+  String get nessun_commento_disponibile {
+    return Intl.message(
+      'No comments available',
+      name: 'nessun_commento_disponibile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comment not available`
+  String get commento_non_disponibile {
+    return Intl.message(
+      'Comment not available',
+      name: 'commento_non_disponibile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a comment...`
+  String get scrivi_un_commento {
+    return Intl.message(
+      'Write a comment...',
+      name: 'scrivi_un_commento',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The comment was added successfully!`
+  String get il_commento_e_stato_aggiunto_con_successo {
+    return Intl.message(
+      'The comment was added successfully!',
+      name: 'il_commento_e_stato_aggiunto_con_successo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User not found`
+  String get user_not_found {
+    return Intl.message(
+      'User not found',
+      name: 'user_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred`
+  String get an_error_occurred {
+    return Intl.message(
+      'An error occurred',
+      name: 'an_error_occurred',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log In with Google`
+  String get log_in_con_google {
+    return Intl.message(
+      'Log In with Google',
+      name: 'log_in_con_google',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open`
+  String get aperto {
+    return Intl.message(
+      'Open',
+      name: 'aperto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Closed`
+  String get chiuso {
+    return Intl.message(
+      'Closed',
+      name: 'chiuso',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No reviews available`
+  String get nessuna_recensione_disponibile {
+    return Intl.message(
+      'No reviews available',
+      name: 'nessuna_recensione_disponibile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Users Review`
+  String get users_review {
+    return Intl.message(
+      'Users Review',
+      name: 'users_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `km away from you`
+  String get km_distante_da_te {
+    return Intl.message(
+      'km away from you',
+      name: 'km_distante_da_te',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Distance not available`
+  String get distanza_non_disponibile {
+    return Intl.message(
+      'Distance not available',
+      name: 'distanza_non_disponibile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vegetables`
+  String get verdura {
+    return Intl.message(
+      'Vegetables',
+      name: 'verdura',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yogurt`
+  String get yogurt {
+    return Intl.message(
+      'Yogurt',
+      name: 'yogurt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spicy`
+  String get spicy {
+    return Intl.message(
+      'Spicy',
+      name: 'spicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Onion`
+  String get cipolla {
+    return Intl.message(
+      'Onion',
+      name: 'cipolla',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get description {
+    return Intl.message(
+      'Description',
+      name: 'description',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -423,7 +1262,11 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'es'),
+      Locale.fromSubtags(languageCode: 'fr'),
       Locale.fromSubtags(languageCode: 'it'),
+      Locale.fromSubtags(languageCode: 'pt'),
     ];
   }
 

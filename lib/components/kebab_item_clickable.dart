@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
@@ -113,16 +114,16 @@ class KebabListItemClickableState extends State<KebabListItemClickable> {
                   ],
                 ),
                 if (widget.isOpen)
-                  const Text(
-                    "aperto",
+                  Text(
+                    S.of(context).aperto,
                     style: TextStyle(
                         color: Color.fromARGB(255, 37, 154, 41),
                         fontSize: 12,
                         fontStyle: FontStyle.italic),
                   )
                 else
-                  const Text(
-                    "Chiuso",
+                  Text(
+                    S.of(context).chiuso,
                     style: TextStyle(
                         color: red, fontSize: 12, fontStyle: FontStyle.italic),
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class UserReviewsPage extends StatefulWidget {
   final String userId;
@@ -63,7 +64,7 @@ class UserReviewsState extends State<UserReviewsPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : reviews.isEmpty
-              ? const Center(child: Text('Nessuna recensione ancora'))
+              ?  Center(child: Text(S.of(context).nessuna_recensione_ancora))
               : ListView.builder(
                   itemCount: reviews.length,
                   itemBuilder: (context, index) {

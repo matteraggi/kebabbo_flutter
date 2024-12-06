@@ -152,7 +152,7 @@ class _AccountPageState extends State<AccountPage> {
                     onChanged: (value) {
                       setState(() {
                         errorMessage =
-                            validateUsername(value); // Use the utility function
+                            validateUsername(value, context); // Use the utility function
                       });
                     },
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/user_item.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class SeguitiPage extends StatefulWidget {
   final String userId;
@@ -67,12 +68,12 @@ class _SeguitiPageState extends State<SeguitiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Seguiti'),
+        title: Text(S.of(context).seguiti),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : followedUsersProfiles.isEmpty
-              ? const Center(child: Text('Nessun utente seguito'))
+              ? Center(child: Text(S.of(context).nessun_utente_seguito))
               : ListView.builder(
                   itemCount: followedUsersProfiles.length,
                   itemBuilder: (context, index) {

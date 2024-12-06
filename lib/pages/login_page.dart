@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/components/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/account_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             kIsWeb ? null : 'io.supabase.flutterquickstart://login-callback/',
       );
       if (mounted) {
-        context.showSnackBar('Check your email for a login link!');
+        context.showSnackBar(S.of(context).check_your_email_for_a_login_link);
 
         _emailController.clear();
       }
@@ -43,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {
       if (mounted) {
-        context.showSnackBar('Unexpected error occurred', isError: true);
+        context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
       }
     } finally {
       if (mounted) {
@@ -118,10 +119,10 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
 
             // Optional Terms and Privacy Text
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.0),
               child: Text(
-                'By signing in, you agree to our terms and privacy policy.',
+                S.of(context).by_signing_in_you_agree_to_our_terms_and_privacy_policy,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey,
@@ -141,8 +142,8 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
 
             // Aesthetic Section: Inspirational Quote or Design
-            const Text(
-              '"Prendete,	e	mangiatene	tutti: questo	è il	Kebab offerto	in	sacrificio	per	voi."',
+            Text(
+              S.of(context).prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi,
               style: TextStyle(
                 fontStyle: FontStyle.italic,
                 fontSize: 16,

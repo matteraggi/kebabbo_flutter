@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/kebab_item_favorite.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class ThankYouPage extends StatelessWidget {
   
@@ -9,7 +10,7 @@ class ThankYouPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thank You'),
+        title: Text(S.of(context).thank_you),
         centerTitle: true,
         backgroundColor: red, // Adjust the app bar color
       ),
@@ -26,8 +27,8 @@ class ThankYouPage extends StatelessWidget {
                 size: 100, // Add an icon for visual appeal
               ),
               const SizedBox(height: 24), // Space between the icon and text
-              const Text(
-                'Thank you for your review!',
+              Text(
+                S.of(context).thank_you_for_your_review,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24, 
@@ -36,8 +37,8 @@ class ThankYouPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'You can access reviews at any time from your account.',
+              Text(
+                S.of(context).you_can_access_reviews_at_any_time_from_your_account,
                 textAlign: TextAlign.center, // Center-align the text
                 style: TextStyle(
                   fontSize: 18, 
