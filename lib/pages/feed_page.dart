@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/feed_list_item.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
@@ -120,8 +121,8 @@ class FeedPageState extends State<FeedPage> {
             height: min(180,
                 200), // Height to fit up to 4 items, with each ListTile about 48px in height
             child: userSuggestion.isEmpty
-                ? const Center(
-                    child: Text("No suggestions available",
+                ? Center(
+                    child: Text(S.of(context).no_suggestions_available,
                         style: TextStyle(color: Colors.grey)),
                   )
                 : ListView.separated(
@@ -197,7 +198,7 @@ class FeedPageState extends State<FeedPage> {
     } else {
       setState(() {
         isLoading = false;
-        errorMessage = "Registrati per poter visualizzare il feed";
+        errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
       });
     }
   }
@@ -259,7 +260,7 @@ class FeedPageState extends State<FeedPage> {
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) {
       setState(() {
-        errorMessage = "Devi essere autenticato per postare";
+        errorMessage = S.of(context).devi_essere_autenticato_per_postare;
       });
       return;
     }
@@ -267,7 +268,7 @@ class FeedPageState extends State<FeedPage> {
     final String text = postController.text.trim();
     if (text.isEmpty) {
       setState(() {
-        errorMessage = "Il testo non può essere vuoto";
+        errorMessage = S.of(context).il_testo_non_puo_essere_vuoto;
       });
       return;
     }
@@ -286,7 +287,7 @@ class FeedPageState extends State<FeedPage> {
         imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
       } catch (error) {
         setState(() {
-          errorMessage = "Errore nel caricamento dell'immagine: $error";
+          errorMessage = S.of(context).errore_nel_caricamento_dellimage + error.toString();
         });
         return;
       }
@@ -380,8 +381,8 @@ class FeedPageState extends State<FeedPage> {
       context: context,
       dialogType: DialogType.success,
       animType: AnimType.scale,
-      title: 'Congratulazioni!',
-      desc: 'Hai raggiunto un nuovo traguardo e ottenuto una nuova medaglia!',
+      title: S.of(context).congratulazioni,
+      desc: S.of(context).hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia,
       btnOkOnPress: () {},
       customHeader: Icon(
         Icons.emoji_events,
@@ -498,7 +499,7 @@ class FeedPageState extends State<FeedPage> {
                                 maxLines: 1,
                                 minLines: 1,
                                 decoration: InputDecoration(
-                                  hintText: "Scrivi un post...",
+                                  hintText: S.of(context).scrivi_un_post,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -559,7 +560,7 @@ class FeedPageState extends State<FeedPage> {
                             final post = searchResultList[index];
                             return FeedListItem(
                               key: ValueKey(post['created_at']), 
-                              text: post['text'] ?? 'Testo non disponibile',
+                              text: post['text'] ?? S.of(context).testo_non_disponibile,
                               createdAt: post['created_at'] ?? '',
                               userId: post['user_id'].toString(),
                               imageUrl: post['image_url'] ?? '',
@@ -571,8 +572,8 @@ class FeedPageState extends State<FeedPage> {
                             );
                           },
                         )
-                            : const Center(
-                                child: Text('Non segui ancora nessuno'),
+                            :  Center(
+                                child: Text(S.of(context).non_segui_ancora_nessuno),
                               ),
                       ),
                     ],

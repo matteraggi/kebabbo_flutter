@@ -195,6 +195,226 @@ class S {
       args: [],
     );
   }
+
+  /// `Change Username`
+  String get cambia_username {
+    return Intl.message(
+      'Change Username',
+      name: 'cambia_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New username...`
+  String get nuovo_username {
+    return Intl.message(
+      'New username...',
+      name: 'nuovo_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get update {
+    return Intl.message(
+      'Update',
+      name: 'update',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to upload avatar`
+  String get failed_to_upload_avatar {
+    return Intl.message(
+      'Failed to upload avatar',
+      name: 'failed_to_upload_avatar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load post count`
+  String get failed_to_load_post_count {
+    return Intl.message(
+      'Failed to load post count',
+      name: 'failed_to_load_post_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit profile`
+  String get edit_profile {
+    return Intl.message(
+      'Edit profile',
+      name: 'edit_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unexpected error occurred`
+  String get unexpected_error_occurred {
+    return Intl.message(
+      'Unexpected error occurred',
+      name: 'unexpected_error_occurred',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load favorites`
+  String get failed_to_load_favorites {
+    return Intl.message(
+      'Failed to load favorites',
+      name: 'failed_to_load_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No kebabs in favorites`
+  String get nessun_kebab_tra_i_preferiti {
+    return Intl.message(
+      'No kebabs in favorites',
+      name: 'nessun_kebab_tra_i_preferiti',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No suggestions available`
+  String get no_suggestions_available {
+    return Intl.message(
+      'No suggestions available',
+      name: 'no_suggestions_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register to view the feed`
+  String get registrati_per_poter_visualizzare_il_feed {
+    return Intl.message(
+      'Register to view the feed',
+      name: 'registrati_per_poter_visualizzare_il_feed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must be authenticated to post`
+  String get devi_essere_autenticato_per_postare {
+    return Intl.message(
+      'You must be authenticated to post',
+      name: 'devi_essere_autenticato_per_postare',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Text cannot be empty`
+  String get il_testo_non_puo_essere_vuoto {
+    return Intl.message(
+      'Text cannot be empty',
+      name: 'il_testo_non_puo_essere_vuoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error loading image:`
+  String get errore_nel_caricamento_dellimage {
+    return Intl.message(
+      'Error loading image:',
+      name: 'errore_nel_caricamento_dellimage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Congratulations!`
+  String get congratulazioni {
+    return Intl.message(
+      'Congratulations!',
+      name: 'congratulazioni',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have reached a new milestone and obtained a new medal!`
+  String get hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia {
+    return Intl.message(
+      'You have reached a new milestone and obtained a new medal!',
+      name: 'hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a post...`
+  String get scrivi_un_post {
+    return Intl.message(
+      'Write a post...',
+      name: 'scrivi_un_post',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Text not available`
+  String get testo_non_disponibile {
+    return Intl.message(
+      'Text not available',
+      name: 'testo_non_disponibile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are not following anyone yet`
+  String get non_segui_ancora_nessuno {
+    return Intl.message(
+      'You are not following anyone yet',
+      name: 'non_segui_ancora_nessuno',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error loading followers`
+  String get errore_nel_caricamento_dei_follower {
+    return Intl.message(
+      'Error loading followers',
+      name: 'errore_nel_caricamento_dei_follower',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No users follow you`
+  String get nessun_utente_ti_segue {
+    return Intl.message(
+      'No users follow you',
+      name: 'nessun_utente_ti_segue',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

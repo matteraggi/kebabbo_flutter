@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class FollowersPage extends StatefulWidget {
   final String userId;
@@ -36,7 +37,7 @@ class FollowersPageState extends State<FollowersPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Errore nel caricamento dei follower')),
+          SnackBar(content: Text(S.of(context).errore_nel_caricamento_dei_follower)),
         );
       }
       setState(() {
@@ -54,7 +55,7 @@ class FollowersPageState extends State<FollowersPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : followers.isEmpty
-              ? const Center(child: Text('Nessun utente ti segue'))
+              ?  Center(child: Text(S.of(context).nessun_utente_ti_segue))
               : ListView.builder(
                   itemCount: followers.length,
                   itemBuilder: (context, index) {

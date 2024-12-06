@@ -13,6 +13,29 @@
     "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab": "Per questo ci siamo noi: studenti universitari, come voi, con anni di esperienza come mangiatori di Kebab.",
     "testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo": "Testiamo e recensiamo Kebabbari e Street Food per voi. Benvenuti su Kebabbo.",
     "failed_to_load_reviews_count": "Failed to load reviews count",
-    "failed_to_load_follower_count": "Failed to load follower count"
+    "failed_to_load_follower_count": "Failed to load follower count",
+    "cambia_username": "Cambia Username",
+    "nuovo_username": "Nuovo username...",
+    "cancel": "Cancel", 
+    "update": "Update",
+    "failed_to_upload_avatar": "Failed to upload avatar",
+    "failed_to_load_post_count": "Failed to load post count",
+    "edit_profile": "Edit profile",
+    "unexpected_error_occurred": "Unexpected error occurred",
+    "failed_to_load_favorites": "Failed to load favorites",
+    "nessun_kebab_tra_i_preferiti": "Nessun kebab tra i preferiti",
+    "no_suggestions_available": "No suggestions available",
+    "registrati_per_poter_visualizzare_il_feed": "Registrati per poter visualizzare il feed",
+    "devi_essere_autenticato_per_postare": "Devi essere autenticato per postare",
+    "il_testo_non_puo_essere_vuoto": "Il testo non può essere vuoto",
+    "errore_nel_caricamento_dellimage": "Errore nel caricamento dell'immagine:",
+    "congratulazioni": "Congratulazioni!",
+    "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia": "Hai raggiunto un nuovo traguardo e ottenuto una nuova medaglia!",
+    "scrivi_un_post": "Scrivi un post...",
+    "testo_non_disponibile": "Testo non disponibile",
+    "non_segui_ancora_nessuno": "Non segui ancora nessuno",
+    "errore_nel_caricamento_dei_follower": "Errore nel caricamento dei follower",
+    "nessun_utente_ti_segue": "Nessun utente ti segue"
+
   
   }

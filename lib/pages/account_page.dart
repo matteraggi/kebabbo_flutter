@@ -138,15 +138,15 @@ class _AccountPageState extends State<AccountPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text('Cambia Username'),
+              title:  Text(S.of(context).cambia_username),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: _usernameController,
                     maxLength: 12,
-                    decoration: const InputDecoration(
-                      hintText: 'Nuovo username...',
+                    decoration:  InputDecoration(
+                      hintText: S.of(context).nuovo_username,
                       counterText: '',
                     ),
                     onChanged: (value) {
@@ -170,7 +170,7 @@ class _AccountPageState extends State<AccountPage> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text('Cancel'),
+                  child:  Text(S.of(context).cancel),
                 ),
                 TextButton(
                   onPressed: errorMessage != null
@@ -190,7 +190,7 @@ class _AccountPageState extends State<AccountPage> {
                             setState(() {});
                           }
                         },
-                  child: const Text('Update'),
+                  child:  Text(S.of(context).update),
                 ),
               ],
             );
@@ -229,7 +229,7 @@ class _AccountPageState extends State<AccountPage> {
       } catch (error) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to upload avatar')),
+            SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
           );
         }
       }
@@ -252,7 +252,7 @@ class _AccountPageState extends State<AccountPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load post count')),
+           SnackBar(content: Text(S.of(context).failed_to_load_post_count)),
         );
       }
     }
@@ -374,7 +374,7 @@ class _AccountPageState extends State<AccountPage> {
                               Icon(Icons.settings, color: Colors.black),
                               SizedBox(width: 8),
                               Text(
-                                'Edit profile',
+                                S.of(context).edit_profile,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -665,7 +665,7 @@ class _AccountPageState extends State<AccountPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unexpected error occurred')),
+          SnackBar(content: Text(S.of(context).unexpected_error_occurred)),
         );
       }
     }
