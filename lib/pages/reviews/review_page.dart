@@ -66,7 +66,6 @@ class ReviewPageState extends State<ReviewPage> {
         .eq('kebabber_id', kebabber!['id'])
         .maybeSingle(); // Retrieve single review or null
 
-    print('response: $response');
     if (response != null) {
       setState(() {
         existingReview = response;
@@ -121,13 +120,10 @@ class ReviewPageState extends State<ReviewPage> {
         'created_at': DateTime.now().toIso8601String(),
       };
       if (existingReview != null) {
-        print('Updating existing review ${existingReview!['id']}');
-        print("Review data: ${reviewData['quality']}");
-        final response = await Supabase.instance.client
+        await Supabase.instance.client
             .from('reviews')
             .update(reviewData)
             .eq('id', existingReview!['id']);
-        print('Response from Supabase: ${response.toString()}');
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).review_updated_successfully)),
@@ -547,7 +543,6 @@ Future<Map<String, dynamic>?> validateHash(String hash) async {
   for (var row in response) {
     final name = row['name'] as String;
     final nameHash = sha256.convert(utf8.encode(name)).toString();
-    print('Name: $name, Hash: $nameHash');
     // Compare the computed hash with the provided hash
     if (nameHash == hash) {
       return row; // Return the matching row

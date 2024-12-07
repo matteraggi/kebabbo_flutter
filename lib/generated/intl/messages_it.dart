@@ -111,6 +111,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Impossibile aggiornare lo stato del follow"),
         "failed_to_upload_avatar": MessageLookupByLibrary.simpleMessage(
             "Impossibile caricare l\'avatar"),
+        "first_time_description": MessageLookupByLibrary.simpleMessage(
+            "Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un\'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l\'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un\'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l\'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!"),
         "fun": MessageLookupByLibrary.simpleMessage("Divertimento"),
         "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia":
             MessageLookupByLibrary.simpleMessage(
@@ -187,6 +189,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Accedi per inviare la tua recensione"),
+        "popup_description": MessageLookupByLibrary.simpleMessage(
+            "Per garantire l\'autenticità delle recensioni degli utenti, per recensire tu stesso il kebab,\ndovrai recarti di persona e trovare l\'adesivo Kebabbo apposto nelle vicinanze del kebabbaro,\nscansionandolo verrai indirizzato alla pagina della recensione."),
         "preferiti_solo_per_utenti_registrati":
             MessageLookupByLibrary.simpleMessage(
                 "Preferiti solo per utenti registrati"),

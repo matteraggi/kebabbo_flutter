@@ -9,10 +9,10 @@ class SeguitiPage extends StatefulWidget {
   const SeguitiPage({super.key, required this.userId});
 
   @override
-  _SeguitiPageState createState() => _SeguitiPageState();
+  SeguitiPageState createState() => SeguitiPageState();
 }
 
-class _SeguitiPageState extends State<SeguitiPage> {
+class SeguitiPageState extends State<SeguitiPage> {
   final supabase = Supabase.instance.client;
   List<Map<String, dynamic>> followedUsersProfiles = [];
   bool isLoading = true;

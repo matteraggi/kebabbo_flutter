@@ -13,10 +13,10 @@ class FeedListItem extends StatefulWidget {
   final String createdAt;
   final String userId;
   final String imageUrl;
-  final String postId;
+  final int postId;
   final List<dynamic> likeList;
   final int commentNumber;
-  final String kebabTagId;
+  final int kebabTagId;
   final String kebabName;
 
   const FeedListItem({
@@ -98,7 +98,7 @@ class FeedListItemState extends State<FeedListItem> {
     }
   }
 
-  Future<void> _toggleLike(String postId) async {
+  Future<void> _toggleLike(int postId) async {
     final userId = supabase.auth.currentSession!.user.id;
     final updatedLikes = List<String>.from(widget.likeList);
 
@@ -163,7 +163,6 @@ class FeedListItemState extends State<FeedListItem> {
 
       // Resetta il controller del commento
       commentController.clear();
-      print("Commento pubblicato con successo.");
     } catch (error) {
       print("Errore durante la pubblicazione del commento: $error");
     }
@@ -279,7 +278,7 @@ class FeedListItemState extends State<FeedListItem> {
     );
   }
 
-  Future<List<Map<String, dynamic>>> _fetchComments(String postId) async {
+  Future<List<Map<String, dynamic>>> _fetchComments(int postId) async {
     try {
       final comments = await supabase
           .from('posts')

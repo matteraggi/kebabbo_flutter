@@ -211,11 +211,11 @@ class _SearchPageState extends State<SearchPage> {
                                 createdAt: item['created_at'] ?? '',
                                 userId: item['user_id'].toString(),
                                 imageUrl: item['image_url'] ?? '',
-                                postId: item['id']?.toString() ?? '',
+                                postId: item['id'] ?? '',
                                 likeList: item['like'] ?? [],
                                 commentNumber: item['comments_number'] ?? 0,
                                 kebabTagId:
-                                    item['kebab_tag_id']?.toString() ?? '',
+                                    item['kebab_tag_id'] ?? 0,
                                 kebabName: item['kebab_tag_name'] ?? '',
                               );
                             } else {

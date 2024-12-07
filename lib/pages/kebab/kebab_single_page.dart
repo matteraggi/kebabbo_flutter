@@ -3,7 +3,7 @@ import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite
 import 'package:kebabbo_flutter/main.dart';
 
 class KebabSinglePage extends StatefulWidget {
-  final String kebabId;
+  final int kebabId;
 
   const KebabSinglePage({super.key, required this.kebabId});
 

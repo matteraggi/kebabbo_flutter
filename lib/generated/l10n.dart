@@ -1254,6 +1254,66 @@ class S {
       args: [],
     );
   }
+
+  /// `How to review a kebab`
+  String get more_info {
+    return Intl.message(
+      'How to review a kebab',
+      name: 'more_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In order to keep the user reviews truthful, to review yourself the kebab,\nyou need to go in person to the kebab place and find the affixed Kebabbo sticker nearby,\nscanning it will bring you to the review page.`
+  String get popup_description {
+    return Intl.message(
+      'In order to keep the user reviews truthful, to review yourself the kebab,\nyou need to go in person to the kebab place and find the affixed Kebabbo sticker nearby,\nscanning it will bring you to the review page.',
+      name: 'popup_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to write your own review`
+  String get popup_title {
+    return Intl.message(
+      'How to write your own review',
+      name: 'popup_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome to Kebabbo!`
+  String get first_time_title {
+    return Intl.message(
+      'Welcome to Kebabbo!',
+      name: 'first_time_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!`
+  String get first_time_description {
+    return Intl.message(
+      'Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un\'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l\'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un\'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l\'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!',
+      name: 'first_time_description',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

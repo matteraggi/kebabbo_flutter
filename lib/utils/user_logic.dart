@@ -49,7 +49,6 @@ Future<void> updateProfile(BuildContext context, String? username,
         ingredients ?? currentProfile['ingredients'], // Use current if null
     'updated_at': DateTime.now().toIso8601String(),
   };
-  print(updates);
   try {
     await Supabase.instance.client.from('profiles').upsert(updates);
     if (username != null || avatarUrl != null) {

@@ -59,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Check your email for a login link!"),
         "chiuso": MessageLookupByLibrary.simpleMessage("Closed"),
         "cipolla": MessageLookupByLibrary.simpleMessage("Onion"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
         "commento_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Comment not available"),
         "congratulazioni":
@@ -107,6 +108,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Failed to update follow status"),
         "failed_to_upload_avatar":
             MessageLookupByLibrary.simpleMessage("Failed to upload avatar"),
+        "first_time_description": MessageLookupByLibrary.simpleMessage(
+            "Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un\'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l\'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un\'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l\'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!"),
+        "first_time_title":
+            MessageLookupByLibrary.simpleMessage("Welcome to Kebabbo!"),
         "fun": MessageLookupByLibrary.simpleMessage("Fun"),
         "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia":
             MessageLookupByLibrary.simpleMessage(
@@ -143,6 +148,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Log In with Google"),
         "mappa": MessageLookupByLibrary.simpleMessage("Map"),
         "menu": MessageLookupByLibrary.simpleMessage("Menu"),
+        "more_info":
+            MessageLookupByLibrary.simpleMessage("How to review a kebab"),
         "nessun_commento_disponibile":
             MessageLookupByLibrary.simpleMessage("No comments available"),
         "nessun_kebab_corrispondente_trovato_nel_raggio_selezionato":
@@ -182,6 +189,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Please Log In to Submit Your Review"),
+        "popup_description": MessageLookupByLibrary.simpleMessage(
+            "In order to keep the user reviews truthful, to review yourself the kebab,\nyou need to go in person to the kebab place and find the affixed Kebabbo sticker nearby,\nscanning it will bring you to the review page."),
+        "popup_title": MessageLookupByLibrary.simpleMessage(
+            "How to write your own review"),
         "preferiti_solo_per_utenti_registrati":
             MessageLookupByLibrary.simpleMessage(
                 "Favorites only for registered users"),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/feed_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
@@ -6,6 +7,7 @@ import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
 import 'package:kebabbo_flutter/pages/feed&socials/search_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -24,7 +26,6 @@ Future<void> main() async {
   if (Uri.base.pathSegments.isNotEmpty &&
       Uri.base.pathSegments[0] == 'reviews') {
     reviewHash = Uri.base.pathSegments[1];
-    print('reviewHash: $reviewHash');
   }
   runApp(MyApp(reviewHash: reviewHash));
 }
@@ -120,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    _checkFirstTimeOpen(); 
     _getLocation();
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -133,6 +135,18 @@ class _MyHomePageState extends State<MyHomePage> {
         _mapPageKey.currentState!.updatePosition(position);
       }
     });
+  }
+
+    Future<void> _checkFirstTimeOpen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+
+    if (isFirstTime) {
+      // Show the dialog if it's the first time
+      showFirstTimeDialog(context);
+      // Set isFirstTime to false so the dialog won't show again
+      prefs.setBool('isFirstTime', false);
+    }
   }
 
   Future<void> _getLocation() async {

@@ -1,6 +1,7 @@
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/bottom_kebab_buttons.dart';
+import 'package:kebabbo_flutter/components/misc/info_dialog.dart';
 import 'package:kebabbo_flutter/components/misc/single_chart.dart';
 import 'package:kebabbo_flutter/components/list_items/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
@@ -317,11 +318,33 @@ class KebabListItemState extends State<KebabListItem> {
                 avgPrice == 0 &&
                 avgQuality == 0 &&
                 avgQuantity == 0)
-              Text(S.of(context).nessuna_recensione_disponibile,
-                  style: TextStyle(color: Colors.white))
+              textExplanation(context,S.of(context).nessuna_recensione_disponibile)
             else
               Column(
                 children: [
+                  SizedBox(height: 16),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        showInfoDialog(
+                            context,
+                            S.of(context).popup_title,
+                            S
+                                .of(context)
+                                .popup_description); // Function to show the popup
+                      },
+                      child: Text(
+                        S
+                            .of(context)
+                            .more_info, // Localized string for 'More Info'
+                        style: TextStyle(
+                          color: Colors.blue, // Underlined and styled text
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   SingleStat(
                       label: S.of(context).quality,
                       number: avgQuality,
@@ -379,6 +402,9 @@ class KebabListItemState extends State<KebabListItem> {
                         size: 30,
                       ), // Icona con colore a tua scelta
                     ),
+                    const SizedBox(width: 16),
+                    buildInfoButton(context, S.of(context).popup_title,
+                        S.of(context).popup_description, Colors.white),
                   ],
                 ),
                 Row(

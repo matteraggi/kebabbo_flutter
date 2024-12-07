@@ -3,12 +3,11 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/list_items/feed_list_item.dart';
+import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -228,7 +227,6 @@ class FeedPageState extends State<FeedPage> {
             .filter('comment', 'is', null)
             .order('created_at',
                 ascending: false); // Ordina per timestamp in ordine decrescente
-
         if (mounted) {
           List<Map<String, dynamic>> posts =
               List<Map<String, dynamic>>.from(response as List);
@@ -254,156 +252,132 @@ class FeedPageState extends State<FeedPage> {
       }
     }
   }
+Future<void> _postFeed() async {
+  final user = Supabase.instance.client.auth.currentUser;
+  if (user == null) {
+    setState(() {
+      errorMessage = S.of(context).devi_essere_autenticato_per_postare;
+    });
+    return;
+  }
 
-  Future<void> _postFeed() async {
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user == null) {
-      setState(() {
-        errorMessage = S.of(context).devi_essere_autenticato_per_postare;
-      });
-      return;
-    }
+  final String text = postController.text.trim();
+  if (text.isEmpty) {
+    setState(() {
+      errorMessage = S.of(context).il_testo_non_puo_essere_vuoto;
+    });
+    return;
+  }
 
-    final String text = postController.text.trim();
-    if (text.isEmpty) {
-      setState(() {
-        errorMessage = S.of(context).il_testo_non_puo_essere_vuoto;
-      });
-      return;
-    }
+  String? imageUrl;
 
-    String? imageUrl;
-
-    if (imageBytes != null) {
-      final filePath =
-          '${user.id}-${DateTime.now().millisecondsSinceEpoch}.png';
-      try {
-        await supabase.storage.from('posts').uploadBinary(
-              filePath,
-              imageBytes!,
-              fileOptions: const FileOptions(upsert: true),
-            );
-        imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
-      } catch (error) {
-        setState(() {
-          errorMessage =
-              S.of(context).errore_nel_caricamento_dellimage + error.toString();
-        });
-        return;
-      }
-    }
-
-    final Map<String, dynamic> postData = {
-      'text': text,
-      'user_id': user.id,
-      'created_at': DateTime.now().toIso8601String(),
-    };
-
-    if (imageUrl != null) {
-      postData['image_url'] = imageUrl;
-    }
-    if (selectedKebabId != null) {
-      postData['kebab_tag_id'] = selectedKebabId;
-      postData['kebab_tag_name'] = selectedKebabName;
-    }
-
+  if (imageBytes != null) {
+    final filePath = '${user.id}-${DateTime.now().millisecondsSinceEpoch}.png';
     try {
-      await supabase.from('posts').insert(postData);
-      postController.clear();
+      await supabase.storage.from('posts').uploadBinary(
+            filePath,
+            imageBytes!,
+            fileOptions: const FileOptions(upsert: true),
+          );
+      imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
+    } catch (error) {
       setState(() {
-        imageBytes = null;
-        imagePath = null;
-        selectedKebabId = null;
-        selectedKebabName = null;
+        errorMessage = S.of(context).errore_nel_caricamento_dellimage + error.toString();
       });
+      return;
+    }
+  }
 
-      final response = await supabase
-          .from('posts')
-          .select('*')
-          .eq('user_id', user.id)
+  final Map<String, dynamic> postData = {
+    'text': text,
+    'user_id': user.id,
+    'created_at': DateTime.now().toIso8601String(),
+  };
+
+  if (imageUrl != null) {
+    postData['image_url'] = imageUrl;
+  }
+  if (selectedKebabId != null) {
+    postData['kebab_tag_id'] = selectedKebabId;
+    postData['kebab_tag_name'] = selectedKebabName;
+  }
+
+  try {
+    // Insert the post and retrieve the inserted row
+    final response = await supabase
+        .from('posts')
+        .insert(postData)
+        .select()
+        .single(); // Retrieve the inserted post
+
+    // Clear input fields after post submission
+    postController.clear();
+    setState(() {
+      imageBytes = null;
+      imagePath = null;
+      selectedKebabId = null;
+      selectedKebabName = null;
+    });
+
+    // Get the ID of the new post
+    final int newPostId = response['id'];
+
+    // Add the new post to the feed list with the retrieved ID
+    setState(() {
+      feedList.insert(0, {...postData, 'id': newPostId}); // Add the new post to the top of the feed list
+    });
+
+    // Fetch post count and award medals
+    final postCountResponse = await supabase
+        .from('posts')
+        .select('id')
+        .eq('user_id', user.id)
           .filter('comment', 'is', null)
           .count(CountOption.exact);
 
-      final postCount = response.count;
+    final postCount = postCountResponse.count;
 
-      if (postCount > 0) {
-        final profileResponse = await supabase
-            .from('profiles')
-            .select('medals')
-            .eq('id', user.id)
-            .single();
+    if (postCount > 0) {
+      final profileResponse = await supabase
+          .from('profiles')
+          .select('medals')
+          .eq('id', user.id)
+          .single();
 
-        List<dynamic> medals = List.from(profileResponse['medals'] ?? []);
-        bool newMedal = false;
+      List<dynamic> medals = List.from(profileResponse['medals'] ?? []);
+      bool newMedal = false;
 
-        if (!medals.contains(5)) {
-          medals.add(5);
-          newMedal = true;
-        }
-        if (postCount > 4 && !medals.contains(6)) {
-          medals.add(6);
-          newMedal = true;
-        }
-        if (postCount > 9 && !medals.contains(7)) {
-          medals.add(7);
-          newMedal = true;
-        }
-        if (postCount > 49 && !medals.contains(8)) {
-          medals.add(8);
-          newMedal = true;
-        }
-        await supabase
-            .from('profiles')
-            .update({'medals': medals}).eq('id', user.id);
-
-        if (newMedal) {
-          _showMedalDialog();
-        }
+      // Check and award medals
+      if (!medals.contains(5)) {
+        medals.add(5);
+        newMedal = true;
+      }
+      if (postCount > 4 && !medals.contains(6)) {
+        medals.add(6);
+        newMedal = true;
+      }
+      if (postCount > 9 && !medals.contains(7)) {
+        medals.add(7);
+        newMedal = true;
+      }
+      if (postCount > 49 && !medals.contains(8)) {
+        medals.add(8);
+        newMedal = true;
       }
 
-      // Aggiungi il nuovo post alla lista dei post in memoria
-      setState(() {
-        feedList.insert(
-            0, postData); // Aggiungi il nuovo post in cima alla lista
-      });
+      await supabase.from('profiles').update({'medals': medals}).eq('id', user.id);
 
-      //await _fetchFeed();
-    } catch (error) {
-      setState(() {
-        errorMessage = error.toString();
-      });
+      if (newMedal) {
+        showMedalDialog(context);
+      }
     }
+  } catch (error) {
+    setState(() {
+      errorMessage = error.toString();
+    });
   }
+}
 
-// Funzione per mostrare la modale della medaglia
-  void _showMedalDialog() {
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.scale,
-      title: S.of(context).congratulazioni,
-      desc: S
-          .of(context)
-          .hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia,
-      btnOkOnPress: () {},
-      customHeader: Icon(
-        Icons.emoji_events,
-        color: Colors.orange,
-        size: 100,
-      )
-          .animate(
-            onComplete: (controller) =>
-                controller.repeat(), // Ripeti l'animazione
-          )
-          .scaleXY(
-            begin: 0.5,
-            end: 1.1,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.elasticInOut,
-          )
-          .fadeIn(duration: Duration(milliseconds: 300)),
-    ).show();
-  }
 
   Future<void> _pickImage() async {
     final result = await FilePicker.platform.pickFiles(
@@ -566,10 +540,10 @@ class FeedPageState extends State<FeedPage> {
                                     createdAt: post['created_at'] ?? '',
                                     userId: post['user_id'].toString(),
                                     imageUrl: post['image_url'] ?? '',
-                                    postId: post['id'].toString(),
+                                    postId: post['id'],
                                     likeList: post['like'] ?? [],
                                     commentNumber: post['comments_number'] ?? 0,
-                                    kebabTagId: post['kebab_tag_id'].toString(),
+                                    kebabTagId: post['kebab_tag_id'] ?? 0,
                                     kebabName: post['kebab_tag_name'] ?? '',
                                   );
                                 },

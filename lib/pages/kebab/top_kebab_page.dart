@@ -124,13 +124,10 @@ class TopKebabPageState extends State<TopKebabPage> {
 
       if (isCurrentlyFavorite) {
         updatedFavorites.remove(kebabId);
-        print("Rimosso $kebabId dai preferiti.");
       } else {
         updatedFavorites.add(kebabId);
-        print("Aggiunto $kebabId ai preferiti.");
       }
 
-      print("Aggiornamento dei preferiti per $kebabId: $updatedFavorites");
       // Effettua aggiornamento su Supabase
       await supabase
           .from('profiles')
@@ -142,7 +139,6 @@ class TopKebabPageState extends State<TopKebabPage> {
       });
 
       // Log del nuovo stato
-      print("Nuovo stato preferito per $kebabId: ${!isCurrentlyFavorite}");
     } else {
       print("Kebab con id $kebabId non trovato in dashList.");
     }

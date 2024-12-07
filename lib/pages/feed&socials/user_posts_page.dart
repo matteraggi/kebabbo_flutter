@@ -35,7 +35,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
       final postsResponse = await supabase
           .from('posts')
           .select('*')
-          .eq('user_id', userId)
+          .eq('user_id', userId.toString())
           .filter('comment', 'is', null)
           .order('created_at', ascending: false);
 
@@ -78,10 +78,10 @@ class _UserPostsPageState extends State<UserPostsPage> {
                           createdAt: post['created_at'] ?? '',
                           userId: post['user_id'],
                           imageUrl: post['image_url'] ?? '',
-                          postId: post['id'].toString(),
+                          postId: post['id'],
                           likeList: post['like'] ?? [],
                           commentNumber: post['comments_number'] ?? 0,
-                          kebabTagId: post['kebab_tag_id'] ?? '',
+                          kebabTagId: post['kebab_tag_id'] ?? 0,
                           kebabName: post['kebab_tag_name'] ?? '',
                         );
                       },

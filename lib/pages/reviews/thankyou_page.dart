@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/main.dart';
 
 class ThankYouPage extends StatelessWidget {
   const ThankYouPage({super.key});

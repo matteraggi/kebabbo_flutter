@@ -86,6 +86,17 @@ Feature extra:
 - [ ] Sezione Offerte e Promozioni Esclusive
 - [ ] traduzioni stringhe
 
+Extra frigo note:
+
+- [ ] cambiare nome google login da quello strano
+- [ ] aggiungere almeno un altro login(facebook?normale?qualcos'altro?)
+
+Bug Reports:
+
+- [ ] prima volta che fai sign in nel tuo account avatar bianco
+- [ ] tornando all'app da un errore sulla main page di fetch strano
+- [ ] a mio padre il feed invece degli items ha un quadrato bianco gigante
+
 Non dev:
 
 - [ ] design loghi vari da mettere in giro

@@ -316,14 +316,11 @@ class _AccountPageState extends State<AccountPage> {
       print("Error: No valid kebab id found.");
       return {};
     }
-    print("Selected kebab: $id");
     final response =
         await supabase.from('kebab').select().eq('id', id).single();
 
-    print("Selected kebab: ${response['name']}");
 
     if (response['name'] != null) {
-      print("Selected kebab: ${response['name']}");
       setState(() {
         _favoriteKebab = response;
       });
@@ -627,7 +624,7 @@ class _AccountPageState extends State<AccountPage> {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(icon: Icon(Icons.emoji_events)),
-                      Tab(icon: Icon(Icons.star)),
+                      Tab(icon: Icon(Icons.reviews)),
                       Tab(icon: Icon(Icons.bookmark)),
                     ],
                   ),

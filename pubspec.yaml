@@ -42,6 +42,7 @@ dependencies:
   flutter_animate: ^4.5.0
   toggle_switch: ^2.3.0
   intl_utils: ^2.8.7
+  shared_preferences: ^2.0.9 
   flutter_localizations:
       sdk: flutter
 

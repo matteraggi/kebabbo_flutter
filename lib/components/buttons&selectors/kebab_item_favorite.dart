@@ -5,7 +5,6 @@ import 'package:kebabbo_flutter/components/list_items/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 
 class KebabListItemFavorite extends StatefulWidget {
   final String id;
