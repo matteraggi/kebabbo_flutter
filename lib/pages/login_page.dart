@@ -44,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
       if (mounted) context.showSnackBar(error.message, isError: true);
     } catch (error) {
       if (mounted) {
-        context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
+        context.showSnackBar(S.of(context).unexpected_error_occurred,
+            isError: true);
       }
     } finally {
       if (mounted) {
@@ -122,7 +123,9 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.0),
               child: Text(
-                S.of(context).by_signing_in_you_agree_to_our_terms_and_privacy_policy,
+                S
+                    .of(context)
+                    .by_signing_in_you_agree_to_our_terms_and_privacy_policy,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey,
@@ -143,7 +146,9 @@ class _LoginPageState extends State<LoginPage> {
 
             // Aesthetic Section: Inspirational Quote or Design
             Text(
-              S.of(context).prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi,
+              S
+                  .of(context)
+                  .prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi,
               style: TextStyle(
                 fontStyle: FontStyle.italic,
                 fontSize: 16,

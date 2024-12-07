@@ -51,7 +51,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(S.of(context).failed_to_load_favorites)),
+          SnackBar(content: Text(S.of(context).failed_to_load_favorites)),
         );
       }
     } finally {
@@ -72,7 +72,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : _favoriteKebabs.isEmpty
-                  ?  Center(child: Text(S.of(context).nessun_kebab_tra_i_preferiti))
+                  ? Center(
+                      child: Text(S.of(context).nessun_kebab_tra_i_preferiti))
                   : ListView.builder(
                       itemCount: _favoriteKebabs.length,
                       itemBuilder: (context, index) {

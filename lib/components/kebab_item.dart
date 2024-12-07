@@ -202,12 +202,18 @@ class KebabListItemState extends State<KebabListItem> {
               isFront: true,
             ),
             const SizedBox(height: 8),
-            SingleStat(label: S.of(context).price, number: widget.price, isFront: true),
+            SingleStat(
+                label: S.of(context).price,
+                number: widget.price,
+                isFront: true),
             const SizedBox(height: 8),
             SingleStat(
-                label: S.of(context).quantity, number: widget.dimension, isFront: true),
+                label: S.of(context).quantity,
+                number: widget.dimension,
+                isFront: true),
             const SizedBox(height: 8),
-            SingleStat(label: S.of(context).menu, number: widget.menu, isFront: true),
+            SingleStat(
+                label: S.of(context).menu, number: widget.menu, isFront: true),
             const SizedBox(height: 16),
             SingleChart(
               vegetables: widget.vegetables,
@@ -317,14 +323,24 @@ class KebabListItemState extends State<KebabListItem> {
               Column(
                 children: [
                   SingleStat(
-                      label: S.of(context).quality, number: avgQuality, isFront: false),
-                  const SizedBox(height: 8),
-                  SingleStat(label: S.of(context).price, number: avgPrice, isFront: false),
+                      label: S.of(context).quality,
+                      number: avgQuality,
+                      isFront: false),
                   const SizedBox(height: 8),
                   SingleStat(
-                      label: S.of(context).quantity, number: avgQuantity, isFront: false),
+                      label: S.of(context).price,
+                      number: avgPrice,
+                      isFront: false),
                   const SizedBox(height: 8),
-                  SingleStat(label: S.of(context).menu, number: avgMenu, isFront: false),
+                  SingleStat(
+                      label: S.of(context).quantity,
+                      number: avgQuantity,
+                      isFront: false),
+                  const SizedBox(height: 8),
+                  SingleStat(
+                      label: S.of(context).menu,
+                      number: avgMenu,
+                      isFront: false),
                   const SizedBox(height: 16),
                   SingleChart(
                     vegetables: widget.vegetables,
@@ -408,8 +424,10 @@ class KebabListItemState extends State<KebabListItem> {
             ),
             Center(
                 child: Text(S.of(context).users_review,
-                    style:
-                        TextStyle(fontStyle: FontStyle.italic, fontSize: 12, color: Colors.white))),
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12,
+                        color: Colors.white))),
           ],
         ),
       ),
@@ -460,7 +478,7 @@ class KebabListItemState extends State<KebabListItem> {
                   ],
                 ),
                 if (widget.isOpen)
-                   Text(
+                  Text(
                     S.of(context).aperto,
                     style: TextStyle(
                         color: Color.fromARGB(255, 37, 154, 41),
@@ -483,7 +501,8 @@ class KebabListItemState extends State<KebabListItem> {
                 const SizedBox(height: 8),
                 Text(
                   widget.distance != null
-                      ? widget.distance!.toStringAsFixed(2)+ S.of(context).km_distante_da_te
+                      ? widget.distance!.toStringAsFixed(2) +
+                          S.of(context).km_distante_da_te
                       : S.of(context).distanza_non_disponibile,
                   style: TextStyle(
                     color: widget.distance != null

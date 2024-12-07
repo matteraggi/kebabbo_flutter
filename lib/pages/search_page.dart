@@ -147,10 +147,8 @@ class _SearchPageState extends State<SearchPage> {
 
         setState(() {
           kebabbariList = kebabs
-              .map((kebab) => {
-                    'id': kebab['id'],
-                    'name': kebab['name'].toString()
-                  })
+              .map((kebab) =>
+                  {'id': kebab['id'], 'name': kebab['name'].toString()})
               .toList();
         });
       }
@@ -208,21 +206,24 @@ class _SearchPageState extends State<SearchPage> {
                             if (searchController.text.isEmpty) {
                               // Se non c'è testo, visualizza i post
                               return FeedListItem(
-                                text: item['text'] ?? S.of(context).testo_non_disponibile,
+                                text: item['text'] ??
+                                    S.of(context).testo_non_disponibile,
                                 createdAt: item['created_at'] ?? '',
                                 userId: item['user_id'].toString(),
                                 imageUrl: item['image_url'] ?? '',
                                 postId: item['id']?.toString() ?? '',
                                 likeList: item['like'] ?? [],
                                 commentNumber: item['comments_number'] ?? 0,
-                                kebabTagId: item['kebab_tag_id']?.toString() ?? '',
+                                kebabTagId:
+                                    item['kebab_tag_id']?.toString() ?? '',
                                 kebabName: item['kebab_tag_name'] ?? '',
                               );
                             } else {
                               // Se c'è testo, visualizza gli utenti
                               return UserItem(
                                   userId: item['id'] ?? "",
-                                  username: item["username"] ?? S.of(context).anonimo,
+                                  username:
+                                      item["username"] ?? S.of(context).anonimo,
                                   avatarUrl: item["avatar_url"] ?? "");
                             }
                           },

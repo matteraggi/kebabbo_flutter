@@ -20,7 +20,7 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
       'favoriteKebab': data['favorite_kebab'] ?? 0,
     };
   } catch (error) {
-    print (error);
+    print(error);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Unexpected error occurred')),
     );
@@ -80,7 +80,9 @@ String? validateUsername(String username, BuildContext context) {
 
   // Check for invalid characters (only letters, numbers, underscores allowed)
   if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(username)) {
-    return S.of(context).username_can_only_contain_letters_numbers_and_underscores;
+    return S
+        .of(context)
+        .username_can_only_contain_letters_numbers_and_underscores;
   }
 
   // Return null if there's no error (valid username)

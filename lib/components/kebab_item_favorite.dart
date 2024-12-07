@@ -178,7 +178,9 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                           isFront: true),
                       const SizedBox(height: 8),
                       SingleStat(
-                          label: S.of(context).price, number: widget.price, isFront: true),
+                          label: S.of(context).price,
+                          number: widget.price,
+                          isFront: true),
                       const SizedBox(height: 8),
                       SingleStat(
                           label: S.of(context).quantity,
@@ -186,7 +188,9 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                           isFront: true),
                       const SizedBox(height: 8),
                       SingleStat(
-                          label: S.of(context).menu, number: widget.menu, isFront: true),
+                          label: S.of(context).menu,
+                          number: widget.menu,
+                          isFront: true),
                       const SizedBox(height: 16),
                       SingleChart(
                         vegetables: widget.vegetables,

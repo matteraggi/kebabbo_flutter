@@ -105,25 +105,25 @@ class ReviewPageState extends State<ReviewPage> {
     };
 
     try {
-      var newPost ={
+      var newPost = {
         'user_id': Supabase.instance.client.auth.currentUser?.id,
         'kebab_tag_id': kebabber!['id'],
         'kebab_tag_name': kebabber!['name'],
         'text': S.of(context).reviewMessage(
-            kebabber!['name'],
-            qualityRating.toString(),
-            quantityRating.toString(),
-            menuRating.toString(),
-            priceRating.toString(),
-            funRating.toString(),
-            descriptionController.text,
-          ),
+              kebabber!['name'],
+              qualityRating.toString(),
+              quantityRating.toString(),
+              menuRating.toString(),
+              priceRating.toString(),
+              funRating.toString(),
+              descriptionController.text,
+            ),
         'created_at': DateTime.now().toIso8601String(),
       };
       if (existingReview != null) {
         print('Updating existing review ${existingReview!['id']}');
         print("Review data: ${reviewData['quality']}");
-        final response= await Supabase.instance.client
+        final response = await Supabase.instance.client
             .from('reviews')
             .update(reviewData)
             .eq('id', existingReview!['id']);
@@ -137,16 +137,14 @@ class ReviewPageState extends State<ReviewPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).review_submitted_successfully)),
         );
-
       }
-      await Supabase.instance.client
-            .from('posts')
-            .insert(newPost);
+      await Supabase.instance.client.from('posts').insert(newPost);
       await checkAndUpdateMedals(); // Verifica e aggiorna le medaglie
-
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.of(context).unexpected_error_occurred + error.toString())),
+        SnackBar(
+            content: Text(
+                S.of(context).unexpected_error_occurred + error.toString())),
       );
     } finally {
       setState(() {
@@ -269,7 +267,9 @@ class ReviewPageState extends State<ReviewPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    S.of(context).it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again,
+                    S
+                        .of(context)
+                        .it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again,
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -416,7 +416,9 @@ class ReviewPageState extends State<ReviewPage> {
                                           border: OutlineInputBorder(),
                                           errorText:
                                               descriptionController.text.isEmpty
-                                                  ? S.of(context).description_is_required
+                                                  ? S
+                                                      .of(context)
+                                                      .description_is_required
                                                   : null, // Show error if empty
                                         ),
                                         maxLines:
@@ -441,7 +443,7 @@ class ReviewPageState extends State<ReviewPage> {
                         )
                       : Column(
                           children: [
-                             Text(S.of(context).rate_the_kebab,
+                            Text(S.of(context).rate_the_kebab,
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 16),
@@ -483,7 +485,7 @@ class ReviewPageState extends State<ReviewPage> {
                                         descriptionController.text.isEmpty
                                     ? null
                                     : submitReview,
-                                child:  Text(S.of(context).submit_review),
+                                child: Text(S.of(context).submit_review),
                               ),
                             ),
                           ],

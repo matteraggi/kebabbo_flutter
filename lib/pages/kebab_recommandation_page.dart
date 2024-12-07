@@ -24,13 +24,13 @@ class KebabRecommendationPage extends StatefulWidget {
   });
 
   @override
-  KebabRecommendationPageState createState() =>
-      KebabRecommendationPageState();
+  KebabRecommendationPageState createState() => KebabRecommendationPageState();
 }
 
 class KebabRecommendationPageState extends State<KebabRecommendationPage>
     with TickerProviderStateMixin {
-  late Map<String, dynamic> _currentKebab; // State variable for the current kebab
+  late Map<String, dynamic>
+      _currentKebab; // State variable for the current kebab
   double? _distanceInKm;
   int rerollCounter = 0;
   late AnimationController _cloudController;
@@ -94,7 +94,8 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
     await _cloudController.forward();
 
     // Get the new kebab recommendation during the cloud animation
-    Map<String, dynamic>? result = await buildKebab(widget.ingredients, rerollCounter, widget.maxDistance, widget.currentPosition);
+    Map<String, dynamic>? result = await buildKebab(widget.ingredients,
+        rerollCounter, widget.maxDistance, widget.currentPosition);
     if (result != null) {
       setState(() {
         _currentKebab = result['kebab'];
@@ -119,7 +120,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(S.of(context).kebab_consigliato),
+        title: Text(S.of(context).kebab_consigliato),
       ),
       body: Stack(
         children: [
@@ -142,26 +143,31 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                         const SizedBox(height: 20),
                         KebabListItem(
                           id: _currentKebab['id'].toString(),
-                          name: _currentKebab['name'] ?? S.of(context).kebab_sconosciuto,
-                          description: _currentKebab['description'] ?? S.of(context).descrizione_non_disponibile,
+                          name: _currentKebab['name'] ??
+                              S.of(context).kebab_sconosciuto,
+                          description: _currentKebab['description'] ??
+                              S.of(context).descrizione_non_disponibile,
                           rating: (_currentKebab['rating'] ?? 0.0).toDouble(),
                           quality: (_currentKebab['quality'] ?? 0.0).toDouble(),
                           price: (_currentKebab['price'] ?? 0.0).toDouble(),
-                          dimension: (_currentKebab['dimension'] ?? 0.0).toDouble(),
+                          dimension:
+                              (_currentKebab['dimension'] ?? 0.0).toDouble(),
                           menu: (_currentKebab['menu'] ?? 0.0).toDouble(),
                           fun: (_currentKebab['fun'] ?? 0.0).toDouble(),
                           map: _currentKebab['map'] ?? 'N/A',
                           lat: (_currentKebab['lat'] ?? 0.0).toDouble(),
                           lng: (_currentKebab['lng'] ?? 0.0).toDouble(),
                           distance: _distanceInKm,
-                          vegetables: (_currentKebab['vegetables'] ?? 0.0).toDouble(),
+                          vegetables:
+                              (_currentKebab['vegetables'] ?? 0.0).toDouble(),
                           yogurt: (_currentKebab['yogurt'] ?? 0.0).toDouble(),
                           spicy: (_currentKebab['spicy'] ?? 0.0).toDouble(),
                           onion: (_currentKebab['onion'] ?? 0.0).toDouble(),
                           tag: _currentKebab['tag'] ?? 'Generale',
                           isOpen: isKebabOpen(_currentKebab['orari_apertura']),
                           isFavorite: _currentKebab['isFavorite'] ?? false,
-                          onFavoriteToggle: () => toggleFavorite(_currentKebab['id'].toString()),
+                          onFavoriteToggle: () =>
+                              toggleFavorite(_currentKebab['id'].toString()),
                           special: false,
                           initiallyExpanded: true,
                           glutenFree: _currentKebab['gluten_free'] ?? false,
@@ -219,7 +225,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
     final user = supabase.auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(
+        SnackBar(
           content: Text(S.of(context).preferiti_solo_per_utenti_registrati),
           duration: Duration(seconds: 2),
         ),
@@ -227,8 +233,13 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
       return;
     }
     final isCurrentlyFavorite = _currentKebab['isFavorite'];
-    final userResponse = await supabase.from('profiles').select('favorites').eq('id', user.id).single();
-    final List<String> updatedFavorites = List<String>.from(userResponse['favorites'] ?? []);
+    final userResponse = await supabase
+        .from('profiles')
+        .select('favorites')
+        .eq('id', user.id)
+        .single();
+    final List<String> updatedFavorites =
+        List<String>.from(userResponse['favorites'] ?? []);
 
     if (isCurrentlyFavorite) {
       updatedFavorites.remove(kebabId);
@@ -236,7 +247,9 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
       updatedFavorites.add(kebabId);
     }
 
-    await supabase.from('profiles').update({'favorites': updatedFavorites}).eq('id', user.id);
+    await supabase
+        .from('profiles')
+        .update({'favorites': updatedFavorites}).eq('id', user.id);
 
     setState(() {
       _currentKebab['isFavorite'] = !isCurrentlyFavorite;

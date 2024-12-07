@@ -13,7 +13,8 @@ class GoogleLoginButton extends StatelessWidget {
   const GoogleLoginButton({super.key, required this.redirectUrl});
 
   Future<void> _nativeGoogleSignIn() async {
-    const webClientId = '1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com';
+    const webClientId =
+        '1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com';
     const iosClientId = 'my-ios.apps.googleusercontent.com';
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
@@ -67,7 +68,7 @@ class GoogleLoginButton extends StatelessWidget {
         } else {
           await supabase.auth.signInWithOAuth(
             OAuthProvider.google,
-            redirectTo: redirectUrl,  // Use the provided redirect URL here
+            redirectTo: redirectUrl, // Use the provided redirect URL here
           );
         }
       },

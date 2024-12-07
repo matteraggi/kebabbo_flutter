@@ -49,7 +49,6 @@ class FeedPageState extends State<FeedPage> {
     super.dispose();
   }
 
-
   Future<void> fetchUserNames() async {
     try {
       final PostgrestList response =
@@ -287,7 +286,8 @@ class FeedPageState extends State<FeedPage> {
         imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
       } catch (error) {
         setState(() {
-          errorMessage = S.of(context).errore_nel_caricamento_dellimage + error.toString();
+          errorMessage =
+              S.of(context).errore_nel_caricamento_dellimage + error.toString();
         });
         return;
       }
@@ -382,7 +382,9 @@ class FeedPageState extends State<FeedPage> {
       dialogType: DialogType.success,
       animType: AnimType.scale,
       title: S.of(context).congratulazioni,
-      desc: S.of(context).hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia,
+      desc: S
+          .of(context)
+          .hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia,
       btnOkOnPress: () {},
       customHeader: Icon(
         Icons.emoji_events,
@@ -553,27 +555,28 @@ class FeedPageState extends State<FeedPage> {
                       ),
                       Expanded(
                         child: searchResultList.isNotEmpty
-                            ?
-                          ListView.builder(
-                          itemCount: searchResultList.length,
-                          itemBuilder: (context, index) {
-                            final post = searchResultList[index];
-                            return FeedListItem(
-                              key: ValueKey(post['created_at']), 
-                              text: post['text'] ?? S.of(context).testo_non_disponibile,
-                              createdAt: post['created_at'] ?? '',
-                              userId: post['user_id'].toString(),
-                              imageUrl: post['image_url'] ?? '',
-                              postId: post['id'].toString(),
-                              likeList: post['like'] ?? [],
-                              commentNumber: post['comments_number'] ?? 0,
-                              kebabTagId: post['kebab_tag_id'].toString(),
-                              kebabName: post['kebab_tag_name'] ?? '',
-                            );
-                          },
-                        )
-                            :  Center(
-                                child: Text(S.of(context).non_segui_ancora_nessuno),
+                            ? ListView.builder(
+                                itemCount: searchResultList.length,
+                                itemBuilder: (context, index) {
+                                  final post = searchResultList[index];
+                                  return FeedListItem(
+                                    key: ValueKey(post['created_at']),
+                                    text: post['text'] ??
+                                        S.of(context).testo_non_disponibile,
+                                    createdAt: post['created_at'] ?? '',
+                                    userId: post['user_id'].toString(),
+                                    imageUrl: post['image_url'] ?? '',
+                                    postId: post['id'].toString(),
+                                    likeList: post['like'] ?? [],
+                                    commentNumber: post['comments_number'] ?? 0,
+                                    kebabTagId: post['kebab_tag_id'].toString(),
+                                    kebabName: post['kebab_tag_name'] ?? '',
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                    S.of(context).non_segui_ancora_nessuno),
                               ),
                       ),
                     ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class IngredientControl extends StatefulWidget {
   final String ingredientName;
-  final int amount; 
+  final int amount;
   final Function(int) onAmountChanged;
   final Offset targetPosition;
   final bool isConverging;
@@ -28,7 +28,7 @@ class IngredientControlState extends State<IngredientControl>
   late Offset _currentPosition;
   late AnimationController _controller;
   late Animation<Offset> _positionAnimation;
-  
+
   @override
   void initState() {
     super.initState();
@@ -46,12 +46,13 @@ class IngredientControlState extends State<IngredientControl>
       _controller.forward();
     }
   }
+
   @override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  // Now it's safe to use context-dependent code, like MediaQuery
-  _preloadImages();
-}
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Now it's safe to use context-dependent code, like MediaQuery
+    _preloadImages();
+  }
 
   // Preload all image sizes to cache them in memory
   void _preloadImages() {
@@ -117,7 +118,6 @@ void didChangeDependencies() {
                 }
               : null,
         ),
-
         AnimatedBuilder(
           animation: _positionAnimation,
           builder: (context, child) {
@@ -135,7 +135,6 @@ void didChangeDependencies() {
             );
           },
         ),
-
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: _amount < 10

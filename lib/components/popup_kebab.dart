@@ -72,13 +72,29 @@ class PopupKebabItem extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(description, style: const TextStyle(fontSize: 14)),
                 const Divider(), // Linea divisoria
-                SingleStat(label: S.of(context).quality, number: quality, isFront: true,),
+                SingleStat(
+                  label: S.of(context).quality,
+                  number: quality,
+                  isFront: true,
+                ),
                 const SizedBox(height: 8),
-                SingleStat(label: S.of(context).price, number: price, isFront: true,),
+                SingleStat(
+                  label: S.of(context).price,
+                  number: price,
+                  isFront: true,
+                ),
                 const SizedBox(height: 8),
-                SingleStat(label: S.of(context).quantity, number: dimension, isFront: true,),
+                SingleStat(
+                  label: S.of(context).quantity,
+                  number: dimension,
+                  isFront: true,
+                ),
                 const SizedBox(height: 8),
-                SingleStat(label: S.of(context).menu, number: menu, isFront: true,),
+                SingleStat(
+                  label: S.of(context).menu,
+                  number: menu,
+                  isFront: true,
+                ),
                 const SizedBox(height: 8),
               ],
             ),

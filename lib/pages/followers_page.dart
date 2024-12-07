@@ -37,7 +37,8 @@ class FollowersPageState extends State<FollowersPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).errore_nel_caricamento_dei_follower)),
+          SnackBar(
+              content: Text(S.of(context).errore_nel_caricamento_dei_follower)),
         );
       }
       setState(() {
@@ -55,7 +56,7 @@ class FollowersPageState extends State<FollowersPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : followers.isEmpty
-              ?  Center(child: Text(S.of(context).nessun_utente_ti_segue))
+              ? Center(child: Text(S.of(context).nessun_utente_ti_segue))
               : ListView.builder(
                   itemCount: followers.length,
                   itemBuilder: (context, index) {

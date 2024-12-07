@@ -182,7 +182,8 @@ class TopKebabPageState extends State<TopKebabPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : errorMessage != null
-              ? Center(child: Text(S.of(context).errore +errorMessage.toString()))
+              ? Center(
+                  child: Text(S.of(context).errore + errorMessage.toString()))
               : SafeArea(
                   minimum: const EdgeInsets.symmetric(
                     vertical: 0,
@@ -212,7 +213,8 @@ class TopKebabPageState extends State<TopKebabPage> {
                                     controller: searchController,
                                     onChanged: searchKebab,
                                     decoration: InputDecoration(
-                                      hintText: S.of(context).cerca_un_kebabbaro,
+                                      hintText:
+                                          S.of(context).cerca_un_kebabbaro,
                                       hintStyle: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.black,
@@ -296,7 +298,8 @@ class TopKebabPageState extends State<TopKebabPage> {
                           ),
                           dashList.isEmpty
                               ? Center(
-                                  child: Text(S.of(context).nessun_kebabbaro_presente))
+                                  child: Text(
+                                      S.of(context).nessun_kebabbaro_presente))
                               : Expanded(
                                   child: ListView.builder(
                                     itemCount: searchResultList.length,

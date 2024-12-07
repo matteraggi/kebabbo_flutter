@@ -59,7 +59,6 @@ class FeedListItemState extends State<FeedListItem> {
     timeago_it.setLocaleMessages('it', timeago_it.ItMessages());
   }
 
-
   Future<void> _fetchUserProfile(String userId) async {
     try {
       final response =
@@ -201,10 +200,13 @@ class FeedListItemState extends State<FeedListItem> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      return Center(child: Text(S.of(context).errore +snapshot.error.toString()));
+                      return Center(
+                          child: Text(S.of(context).errore +
+                              snapshot.error.toString()));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
-                          child: Text(S.of(context).nessun_commento_disponibile));
+                          child:
+                              Text(S.of(context).nessun_commento_disponibile));
                     } else {
                       final commentsList =
                           snapshot.data!; // Usa la lista di commenti qui
@@ -224,8 +226,8 @@ class FeedListItemState extends State<FeedListItem> {
                                   ? const Icon(Icons.person)
                                   : null,
                             ),
-                            title: Text(
-                                comment['text'] ?? S.of(context).commento_non_disponibile),
+                            title: Text(comment['text'] ??
+                                S.of(context).commento_non_disponibile),
                             subtitle: Text(
                               '${userProfile['username'] ?? 'Anonimo'} - ${_formatTimestamp(comment['created_at'])}',
                             ),
@@ -260,8 +262,9 @@ class FeedListItemState extends State<FeedListItem> {
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                                content: Text(
-                                    S.of(context).il_commento_e_stato_aggiunto_con_successo)),
+                                content: Text(S
+                                    .of(context)
+                                    .il_commento_e_stato_aggiunto_con_successo)),
                           );
                         }
                       },

@@ -138,21 +138,21 @@ class _AccountPageState extends State<AccountPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title:  Text(S.of(context).cambia_username),
+              title: Text(S.of(context).cambia_username),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: _usernameController,
                     maxLength: 12,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       hintText: S.of(context).nuovo_username,
                       counterText: '',
                     ),
                     onChanged: (value) {
                       setState(() {
-                        errorMessage =
-                            validateUsername(value, context); // Use the utility function
+                        errorMessage = validateUsername(
+                            value, context); // Use the utility function
                       });
                     },
                   ),
@@ -170,7 +170,7 @@ class _AccountPageState extends State<AccountPage> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child:  Text(S.of(context).cancel),
+                  child: Text(S.of(context).cancel),
                 ),
                 TextButton(
                   onPressed: errorMessage != null
@@ -190,7 +190,7 @@ class _AccountPageState extends State<AccountPage> {
                             setState(() {});
                           }
                         },
-                  child:  Text(S.of(context).update),
+                  child: Text(S.of(context).update),
                 ),
               ],
             );
@@ -252,7 +252,7 @@ class _AccountPageState extends State<AccountPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(S.of(context).failed_to_load_post_count)),
+          SnackBar(content: Text(S.of(context).failed_to_load_post_count)),
         );
       }
     }
@@ -312,7 +312,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<Map<String, dynamic>> fetchSelectedKebab(String id) async {
-    if (id.isEmpty || id=="0"){
+    if (id.isEmpty || id == "0") {
       print("Error: No valid kebab id found.");
       return {};
     }
@@ -403,7 +403,6 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                         // Add "Delete account" button in red
-
                       ],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -671,7 +670,7 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
- /* Future<void> _deleteAccount(BuildContext context) async {
+  /* Future<void> _deleteAccount(BuildContext context) async {
   final userId = supabase.auth.currentUser!.id;
   final allMyPosts = await supabase
       .from('posts')

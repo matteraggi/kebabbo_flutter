@@ -81,7 +81,8 @@ class _AvatarState extends State<Avatar> {
       }
     } catch (error) {
       if (mounted) {
-        context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
+        context.showSnackBar(S.of(context).unexpected_error_occurred,
+            isError: true);
       }
     }
 

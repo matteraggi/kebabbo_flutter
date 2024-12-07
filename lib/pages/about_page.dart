@@ -23,21 +23,24 @@ final francescoUrls = [
   Uri.parse("https://www.instagram.com/fra___espo"),
   Uri.parse("https://www.github.com/Francesco0905")
 ];
+
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key}); // Super parameter for key
 
   @override
   AboutPageState createState() => AboutPageState(); // Public state class
 }
+
 class AboutPageState extends State<AboutPage> {
   void _showSuggestionForm(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        final TextEditingController kebabNameController = TextEditingController();
+        final TextEditingController kebabNameController =
+            TextEditingController();
 
         return AlertDialog(
-          title: Text( S.of(context).consigliaci_un_kebabbaro),
+          title: Text(S.of(context).consigliaci_un_kebabbaro),
           content: TextField(
             controller: kebabNameController,
             decoration: InputDecoration(
@@ -69,6 +72,7 @@ class AboutPageState extends State<AboutPage> {
       },
     );
   }
+
   Future<void> sendEmail(String kebabName) async {
     const serviceId = 'service_60j6i59';
     const templateId = 'template_3w34spe';
@@ -92,6 +96,7 @@ class AboutPageState extends State<AboutPage> {
       print('Errore nell\'invio dell\'email: ${response.body}');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,26 +109,32 @@ class AboutPageState extends State<AboutPage> {
           child: ListView(
             children: [
               const SizedBox(height: 20),
-               Text(
+              Text(
                 S.of(context).la_tua_soluzione_per_il_pranzo_universitario,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 20),
               Text(
-                S.of(context).in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 20),
-               Text(
-                S.of(context).per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab,
+                S
+                    .of(context)
+                    .in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 20),
               Text(
-                S.of(context).testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo,
+                S
+                    .of(context)
+                    .per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                S
+                    .of(context)
+                    .testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),

@@ -5,7 +5,6 @@ import 'package:kebabbo_flutter/components/kebab_item.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
-
 class SpecialPage extends StatefulWidget {
   final Position? currentPosition;
 
@@ -49,7 +48,6 @@ class SpecialPageState extends State<SpecialPage> {
           kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
         }
 
-
         // Aggiungi lo stato di "preferito" per ciascun kebab
         final user = supabase.auth.currentUser;
         if (user != null) {
@@ -81,15 +79,16 @@ class SpecialPageState extends State<SpecialPage> {
     }
   }
 
-    Future<void> toggleFavorite(String kebabId) async {
+  Future<void> toggleFavorite(String kebabId) async {
     final user = supabase.auth.currentUser;
     if (user == null) return;
 
     final kebabIndex = dashList.indexWhere((kebab) => kebab['id'] == kebabId);
     if (kebabIndex != -1) {
       final isCurrentlyFavorite = dashList[kebabIndex]['isFavorite'];
-      final updatedFavorites = List<String>.from(
-          dashList.where((kebab) => kebab['isFavorite']).map((k) => k['id'].toString()));
+      final updatedFavorites = List<String>.from(dashList
+          .where((kebab) => kebab['isFavorite'])
+          .map((k) => k['id'].toString()));
 
       if (isCurrentlyFavorite) {
         updatedFavorites.remove(kebabId);
@@ -99,15 +98,13 @@ class SpecialPageState extends State<SpecialPage> {
 
       await supabase
           .from('profiles')
-          .update({'favorites': updatedFavorites})
-          .eq('id', user.id);
+          .update({'favorites': updatedFavorites}).eq('id', user.id);
 
       setState(() {
         dashList[kebabIndex]['isFavorite'] = !isCurrentlyFavorite;
       });
     }
   }
-
 
   void onTabChange(String tableName) {
     setState(() {
@@ -171,7 +168,7 @@ class SpecialPageState extends State<SpecialPage> {
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child:  Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -190,9 +187,11 @@ class SpecialPageState extends State<SpecialPage> {
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : errorMessage != null
-                ? Center(child: Text(S.of(context).errore +errorMessage.toString()))
+                ? Center(
+                    child: Text(S.of(context).errore + errorMessage.toString()))
                 : dashList.isEmpty
-                    ?  Center(child: Text(S.of(context).nessun_kebabbaro_presente))
+                    ? Center(
+                        child: Text(S.of(context).nessun_kebabbaro_presente))
                     : SafeArea(
                         minimum: const EdgeInsets.symmetric(
                           vertical: 0,
@@ -224,16 +223,17 @@ class SpecialPageState extends State<SpecialPage> {
                                     map: kebab['map'] ?? '',
                                     lat: (kebab['lat'] ?? 0.0).toDouble(),
                                     lng: (kebab['lng'] ?? 0.0).toDouble(),
-                                    distance:
-                                        kebab['distance']?.toDouble(),
-                                    vegetables: (kebab['vegetables'] ?? 0.0).toDouble(),
+                                    distance: kebab['distance']?.toDouble(),
+                                    vegetables:
+                                        (kebab['vegetables'] ?? 0.0).toDouble(),
                                     yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
                                     spicy: (kebab['spicy'] ?? 0.0).toDouble(),
                                     onion: (kebab['onion'] ?? 0.0).toDouble(),
                                     tag: (kebab['tag'] ?? ''),
                                     isOpen: kebab['isOpen'] ?? false,
                                     isFavorite: kebab['isFavorite'] ?? false,
-                                    onFavoriteToggle: () => toggleFavorite(kebab['id'].toString()),
+                                    onFavoriteToggle: () =>
+                                        toggleFavorite(kebab['id'].toString()),
                                     special: true,
                                     glutenFree: kebab['gluten_free'] ?? false,
                                   );
