@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/pages/single_user_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
 
 class UserItem extends StatefulWidget {
   final String userId;
@@ -13,10 +13,10 @@ class UserItem extends StatefulWidget {
       required this.avatarUrl});
 
   @override
-  _UserItemState createState() => _UserItemState();
+  UserItemState createState() => UserItemState();
 }
 
-class _UserItemState extends State<UserItem> {
+class UserItemState extends State<UserItem> {
   @override
   void initState() {
     super.initState();

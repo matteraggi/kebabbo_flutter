@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/components/kebab_item.dart';
+import 'package:kebabbo_flutter/components/list_items/kebab_item.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 

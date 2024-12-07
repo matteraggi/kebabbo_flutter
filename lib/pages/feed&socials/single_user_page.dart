@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/pages/followers_page.dart';
-import 'package:kebabbo_flutter/pages/seguiti_page.dart';
-import 'package:kebabbo_flutter/pages/user_posts_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/followers_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/seguiti_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/user_posts_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 

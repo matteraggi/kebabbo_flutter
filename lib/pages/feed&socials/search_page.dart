@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/feed_list_item.dart';
-import 'package:kebabbo_flutter/components/user_item.dart';
+import 'package:kebabbo_flutter/components/list_items/feed_list_item.dart';
+import 'package:kebabbo_flutter/components/misc/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

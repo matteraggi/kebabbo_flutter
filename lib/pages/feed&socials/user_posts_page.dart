@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/feed_list_item.dart';
+import 'package:kebabbo_flutter/components/list_items/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 

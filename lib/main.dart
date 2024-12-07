@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/pages/account_page.dart';
-import 'package:kebabbo_flutter/pages/feed_page.dart';
-import 'package:kebabbo_flutter/pages/login_page.dart';
-import 'package:kebabbo_flutter/pages/map_page.dart';
-import 'package:kebabbo_flutter/pages/review_page.dart'; // Import ReviewPage
-import 'package:kebabbo_flutter/pages/search_page.dart';
-import 'package:kebabbo_flutter/pages/top_kebab_page.dart';
+import 'package:kebabbo_flutter/pages/account/account_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/feed_page.dart';
+import 'package:kebabbo_flutter/pages/account/login_page.dart';
+import 'package:kebabbo_flutter/pages/misc/map_page.dart';
+import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
+import 'package:kebabbo_flutter/pages/feed&socials/search_page.dart';
+import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

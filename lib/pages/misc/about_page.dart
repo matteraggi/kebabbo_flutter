@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/card_item.dart';
+import 'package:kebabbo_flutter/components/list_items/card_item.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;

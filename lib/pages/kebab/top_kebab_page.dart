@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/components/order_bar.dart';
-import 'package:kebabbo_flutter/components/kebab_item.dart';
-import 'package:kebabbo_flutter/pages/special_page.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/order_bar.dart';
+import 'package:kebabbo_flutter/components/list_items/kebab_item.dart';
+import 'package:kebabbo_flutter/pages/kebab/special_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';

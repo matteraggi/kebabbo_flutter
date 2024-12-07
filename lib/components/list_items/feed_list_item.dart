@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/pages/kebab_single_page.dart';
-import 'package:kebabbo_flutter/pages/single_user_page.dart';
+import 'package:kebabbo_flutter/pages/kebab/kebab_single_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart' as timeago_it;
