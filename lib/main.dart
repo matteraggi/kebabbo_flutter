@@ -12,6 +12,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:kebabbo_flutter/utils/notifications.dart';
+import 'package:flutter/foundation.dart'; // Import for kIsWeb
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
@@ -27,10 +31,34 @@ Future<void> main() async {
       Uri.base.pathSegments[0] == 'reviews') {
     reviewHash = Uri.base.pathSegments[1];
   }
+
+WidgetsFlutterBinding.ensureInitialized();
+
+  // Web-specific initialization using FirebaseOptions
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+  apiKey: "AIzaSyDs2C7PvgXSUgCGoy7OcAGm55hlpbGtFVI",
+  authDomain: "kebabbo-669ea.firebaseapp.com",
+  projectId: "kebabbo-669ea",
+  storageBucket: "kebabbo-669ea.firebasestorage.app",
+  messagingSenderId: "12309724529",
+  appId: "1:12309724529:web:c84bf69f2af9846fee4ad0",
+  measurementId: "G-Z2YEVGGKTF"
+    ),
+    );
+  } else {
+    // Mobile initialization (Android/iOS)
+    await Firebase.initializeApp();
+  }
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
   runApp(MyApp(reviewHash: reviewHash));
 }
 
 final supabase = Supabase.instance.client;
+
 
 class MyApp extends StatelessWidget {
   final String? reviewHash;
@@ -117,12 +145,16 @@ class _MyHomePageState extends State<MyHomePage> {
   late Stream<Position> _positionStream;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
     _checkFirstTimeOpen(); 
     _getLocation();
+    requestNotificationPermissions(_messaging); // Call this during initialization
+    registerNotificationListeners(); // Register listeners for notifications
+
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,

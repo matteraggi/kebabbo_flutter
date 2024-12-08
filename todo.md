@@ -74,8 +74,8 @@ Feature lancio:
 - [x] Badge sezione troppo lunga
 - [x] Grafico kebabbari con scritte asse x troppo grandi e tagliate sotto
 
-- [ ] spiegazioni agli utenti sull'utilizzo della piattaforma
-- [ ] pallini informativi
+- [x] spiegazioni agli utenti sull'utilizzo della piattaforma
+- [x] pallini informativi
 
 Feature extra:
 
@@ -84,13 +84,14 @@ Feature extra:
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
-- [ ] traduzioni stringhe
+- [x] traduzioni stringhe
 
 Extra frigo note:
 
 - [ ] cambiare nome google login da quello strano
 - [ ] aggiungere almeno un altro login(facebook?normale?qualcos'altro?)
 - [ ] cancellare posts non cancellano immagini
+- [ ] per firebase serve Debug signing certificate SHA-1 (optional)
 
 Bug Reports:
 

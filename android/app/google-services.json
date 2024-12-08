@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "12309724529",
+    "project_id": "kebabbo-669ea",
+    "storage_bucket": "kebabbo-669ea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12309724529:android:15d1ba0a48ab39ebee4ad0",
+        "android_client_info": {
+          "package_name": "com.canny.kebabbo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVeCoip7TeN7D2guJE4b2QfzITKdJqb1k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
