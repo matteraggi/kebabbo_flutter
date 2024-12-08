@@ -577,7 +577,12 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ],
               ),
-              child: Row(
+              
+              child:InkWell(
+                    onTap: () {
+                      _openFavoriteKebabSelection();
+                    },
+                    child:Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
@@ -602,14 +607,10 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                       ],
                     ),
-                  InkWell(
-                    onTap: () {
-                      _openFavoriteKebabSelection();
-                    },
-                    child:
                         Icon(Icons.border_color, color: Colors.black, size: 22),
-                  ),
+                  
                 ],
+              ),
               ),
             ),
             const SizedBox(height: 15),

@@ -36,6 +36,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "accedi_per_cercare": MessageLookupByLibrary.simpleMessage(
+            "Log in to post and see peoples\' info"),
         "an_error_occurred":
             MessageLookupByLibrary.simpleMessage("An error occurred"),
         "annulla": MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -62,6 +64,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "commento_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Comment not available"),
+        "conferma_eliminazione":
+            MessageLookupByLibrary.simpleMessage("Confirm deletion"),
         "congratulazioni":
             MessageLookupByLibrary.simpleMessage("Congratulations!"),
         "consigliaci_un_kebabbaro":
@@ -71,9 +75,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Description is required"),
         "descrizione_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Description not available"),
+        "devi_essere_autenticato_per_commentare":
+            MessageLookupByLibrary.simpleMessage("You must login to comment"),
+        "devi_essere_autenticato_per_mettere_mi_piace":
+            MessageLookupByLibrary.simpleMessage("You must login to like"),
         "devi_essere_autenticato_per_postare":
             MessageLookupByLibrary.simpleMessage(
                 "You must be authenticated to post"),
+        "devi_essere_autenticato_per_visualizzare_il_profilo":
+            MessageLookupByLibrary.simpleMessage(
+                "You must login to view the profile"),
         "distanceLabel10km": m0,
         "distanceLabel1km": m1,
         "distanceLabel200m": m2,
@@ -84,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "distanza_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Distance not available"),
         "edit_profile": MessageLookupByLibrary.simpleMessage("Edit profile"),
+        "elimina": MessageLookupByLibrary.simpleMessage("Delete"),
         "errore": MessageLookupByLibrary.simpleMessage("Error:"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage("Error loading followers"),
@@ -109,7 +121,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "failed_to_upload_avatar":
             MessageLookupByLibrary.simpleMessage("Failed to upload avatar"),
         "first_time_description": MessageLookupByLibrary.simpleMessage(
-            "Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un\'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l\'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un\'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l\'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!"),
+            "Welcome to Kebabbo!\nWhat can you do on here?\nWell, you can explore our professional kebab reviews or check out other users\' ratings.\nWrite your own review by scanning the Kebabbo sticker at the kebab place.\nCheck out other users\' profiles, posts and connect with fellows kebab enjoyers and earn achievements for using the app.\n Use our search and filter features or our powerful build tool to find your ideal kebab or explore our interactive map to discover nearby gems.\nHave fun and kebab away!"),
         "first_time_title":
             MessageLookupByLibrary.simpleMessage("Welcome to Kebabbo!"),
         "fun": MessageLookupByLibrary.simpleMessage("Fun"),
@@ -193,6 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "In order to keep the user reviews truthful, to review yourself the kebab,\nyou need to go in person to the kebab place and find the affixed Kebabbo sticker nearby,\nscanning it will bring you to the review page."),
         "popup_title": MessageLookupByLibrary.simpleMessage(
             "How to write your own review"),
+        "post_eliminato": MessageLookupByLibrary.simpleMessage("Post deleted"),
         "preferiti_solo_per_utenti_registrati":
             MessageLookupByLibrary.simpleMessage(
                 "Favorites only for registered users"),
@@ -254,6 +267,9 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Username must be at least 3 \ncharacters long!"),
         "users_review": MessageLookupByLibrary.simpleMessage("Users Review"),
         "verdura": MessageLookupByLibrary.simpleMessage("Vegetables"),
+        "vuoi_veramente_eliminare_il_post":
+            MessageLookupByLibrary.simpleMessage(
+                "Do you really want to delete the post?"),
         "world": MessageLookupByLibrary.simpleMessage("World"),
         "yogurt": MessageLookupByLibrary.simpleMessage("Yogurt"),
         "you_can_access_reviews_at_any_time_from_your_account":

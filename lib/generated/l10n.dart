@@ -1305,11 +1305,91 @@ class S {
     );
   }
 
-  /// `Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!`
+  /// `Welcome to Kebabbo!\nWhat can you do on here?\nWell, you can explore our professional kebab reviews or check out other users' ratings.\nWrite your own review by scanning the Kebabbo sticker at the kebab place.\nCheck out other users' profiles, posts and connect with fellows kebab enjoyers and earn achievements for using the app.\n Use our search and filter features or our powerful build tool to find your ideal kebab or explore our interactive map to discover nearby gems.\nHave fun and kebab away!`
   String get first_time_description {
     return Intl.message(
-      'Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un\'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l\'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un\'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l\'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!',
+      'Welcome to Kebabbo!\nWhat can you do on here?\nWell, you can explore our professional kebab reviews or check out other users\' ratings.\nWrite your own review by scanning the Kebabbo sticker at the kebab place.\nCheck out other users\' profiles, posts and connect with fellows kebab enjoyers and earn achievements for using the app.\n Use our search and filter features or our powerful build tool to find your ideal kebab or explore our interactive map to discover nearby gems.\nHave fun and kebab away!',
       name: 'first_time_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get elimina {
+    return Intl.message(
+      'Delete',
+      name: 'elimina',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you really want to delete the post?`
+  String get vuoi_veramente_eliminare_il_post {
+    return Intl.message(
+      'Do you really want to delete the post?',
+      name: 'vuoi_veramente_eliminare_il_post',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm deletion`
+  String get conferma_eliminazione {
+    return Intl.message(
+      'Confirm deletion',
+      name: 'conferma_eliminazione',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Post deleted`
+  String get post_eliminato {
+    return Intl.message(
+      'Post deleted',
+      name: 'post_eliminato',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must login to like`
+  String get devi_essere_autenticato_per_mettere_mi_piace {
+    return Intl.message(
+      'You must login to like',
+      name: 'devi_essere_autenticato_per_mettere_mi_piace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log in to post and see peoples' info`
+  String get accedi_per_cercare {
+    return Intl.message(
+      'Log in to post and see peoples\' info',
+      name: 'accedi_per_cercare',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must login to comment`
+  String get devi_essere_autenticato_per_commentare {
+    return Intl.message(
+      'You must login to comment',
+      name: 'devi_essere_autenticato_per_commentare',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must login to view the profile`
+  String get devi_essere_autenticato_per_visualizzare_il_profilo {
+    return Intl.message(
+      'You must login to view the profile',
+      name: 'devi_essere_autenticato_per_visualizzare_il_profilo',
       desc: '',
       args: [],
     );

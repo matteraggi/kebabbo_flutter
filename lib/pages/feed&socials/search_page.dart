@@ -33,7 +33,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    _checkAuthAndFetchFeed();
+    _fetchFeed();
     fetchUserNames();
     searchController.addListener(_onSearchTextChanged);
   }
@@ -86,36 +86,23 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Future<void> _checkAuthAndFetchFeed() async {
-    final session = Supabase.instance.client.auth.currentSession;
-    if (session != null) {
-      await _fetchFeed();
-    } else {
-      setState(() {
-        isLoading = false;
-        errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
-      });
-    }
-  }
-
   Future<void> _fetchFeed() async {
     try {
       final userId = Supabase.instance.client.auth.currentUser?.id;
 
+      final PostgrestList response;
       if (userId == null) {
-        setState(() {
-          isLoading = false;
-        });
-        return; // No user is logged in, exit early
+        //use edge function get_recent_posts
+        response = await supabase.rpc('get_recent_posts');
+        print(response);
+      } else {
+        response = await supabase
+            .from('posts')
+            .select('*')
+            .filter('comment', 'is', null)
+            .neq('user_id', userId) // Exclude posts from the current user
+            .order('created_at', ascending: false); // Order by timestamp
       }
-
-      final PostgrestList response = await supabase
-          .from('posts')
-          .select('*')
-          .filter('comment', 'is', null)
-          .neq('user_id', userId) // Escludi i post con il tuo user_id
-          .order('created_at',
-              ascending: false); // Ordina per timestamp in ordine decrescente
 
       if (mounted) {
         List<Map<String, dynamic>> posts =
@@ -177,20 +164,23 @@ class _SearchPageState extends State<SearchPage> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: TextField(
-                                controller: searchController,
-                                decoration: InputDecoration(
-                                  hintText: S.of(context).cerca_utenti,
-                                  prefixIcon: Icon(Icons.search),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
+                                child: TextField(
+                              controller: searchController,
+                              enabled: supabase.auth.currentUser !=
+                                  null, // Enable only if user is logged in
+                              decoration: InputDecoration(
+                                hintText: supabase.auth.currentUser != null
+                                    ? S.of(context).cerca_utenti
+                                    : S.of(context).accedi_per_cercare, // Different hint if not logged in
+                                prefixIcon: Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderSide: BorderSide.none,
                                 ),
+                                filled: true,
+                                fillColor: Colors.grey[200],
                               ),
-                            ),
+                            )),
                           ],
                         ),
                       ),
@@ -214,8 +204,7 @@ class _SearchPageState extends State<SearchPage> {
                                 postId: item['id'] ?? '',
                                 likeList: item['like'] ?? [],
                                 commentNumber: item['comments_number'] ?? 0,
-                                kebabTagId:
-                                    item['kebab_tag_id'] ?? 0,
+                                kebabTagId: item['kebab_tag_id'] ?? 0,
                                 kebabName: item['kebab_tag_name'] ?? '',
                               );
                             } else {

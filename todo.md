@@ -90,12 +90,14 @@ Extra frigo note:
 
 - [ ] cambiare nome google login da quello strano
 - [ ] aggiungere almeno un altro login(facebook?normale?qualcos'altro?)
+- [ ] cancellare posts non cancellano immagini
 
 Bug Reports:
 
 - [ ] prima volta che fai sign in nel tuo account avatar bianco
 - [ ] tornando all'app da un errore sulla main page di fetch strano
 - [ ] a mio padre il feed invece degli items ha un quadrato bianco gigante
+- [ ] delle volte gli avatar basici sono bianchi
 
 Non dev:
 

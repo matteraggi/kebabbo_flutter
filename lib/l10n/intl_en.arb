@@ -166,7 +166,14 @@
   "popup_description": "In order to keep the user reviews truthful, to review yourself the kebab,\nyou need to go in person to the kebab place and find the affixed Kebabbo sticker nearby,\nscanning it will bring you to the review page.",
   "popup_title": "How to write your own review",
   "first_time_title": "Welcome to Kebabbo!",
-  "first_time_description": "Welcome to Kebabbo!\nWhat can you do on here?\nWell, you can explore our professional kebab reviews or check out other users' ratings.\nWrite your own review by scanning the Kebabbo sticker at the kebab place.\nCheck out other users' profiles, posts and connect with fellows kebab enjoyers and earn achievements for using the app.\n Use our search and filter features or our powerful build tool to find your ideal kebab or explore our interactive map to discover nearby gems.\nHave fun and kebab away!"
-
+  "first_time_description": "Welcome to Kebabbo!\nWhat can you do on here?\nWell, you can explore our professional kebab reviews or check out other users' ratings.\nWrite your own review by scanning the Kebabbo sticker at the kebab place.\nCheck out other users' profiles, posts and connect with fellows kebab enjoyers and earn achievements for using the app.\n Use our search and filter features or our powerful build tool to find your ideal kebab or explore our interactive map to discover nearby gems.\nHave fun and kebab away!",
+  "elimina": "Delete",
+  "vuoi_veramente_eliminare_il_post": "Do you really want to delete the post?",
+  "conferma_eliminazione": "Confirm deletion",
+  "post_eliminato": "Post deleted",
+    "devi_essere_autenticato_per_mettere_mi_piace": "You must login to like",
+    "accedi_per_cercare": "Log in to post and see peoples' info",
+    "devi_essere_autenticato_per_commentare": "You must login to comment",
+    "devi_essere_autenticato_per_visualizzare_il_profilo": "You must login to view the profile"
   }
   

@@ -48,6 +48,8 @@ class FeedListItemState extends State<FeedListItem> {
   List<Map<String, dynamic>> userProfiles = [];
   late int _currentCommentNumber;
   List<String> userList = [];
+  String anonymous ="Anonimo";
+  bool deleted = false;
 
   @override
   void initState() {
@@ -58,34 +60,58 @@ class FeedListItemState extends State<FeedListItem> {
     _currentCommentNumber = widget.commentNumber;
     timeago_it.setLocaleMessages('it', timeago_it.ItMessages());
   }
+   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  Future<void> _fetchUserProfile(String userId) async {
-    try {
-      final response =
-          await supabase.from('profiles').select('*').eq('id', userId).single();
-
-      if (mounted) {
-        setState(() {
-          userName = response['username'] ?? S.of(context).anonimo;
-          avatarUrl = response['avatar_url'] as String?;
-          isLoading = false;
-        });
-      }
-    } catch (error) {
-      if (mounted) {
-        setState(() {
-          userName = S.of(context).anonimo;
-          isLoading = false;
-        });
-      }
-      print('Errore nel recupero del profilo: $error');
+    // Use S.of(context) safely here
+    if (Supabase.instance.client.auth.currentSession == null) {
+      setState(() {
+        anonymous = S.of(context).anonimo;
+      });
     }
   }
 
+Future<void> _fetchUserProfile(String userId) async {
+  try {
+    // If userId is null or empty, set default values
+    if (supabase.auth.currentUser == null) {
+      if (mounted) {
+        setState(() {
+          userName = anonymous;
+          avatarUrl = null;
+          isLoading = false;
+        });
+      }
+      return; // Exit early since no user ID is provided
+    }
+
+    final response =
+        await supabase.from('profiles').select('*').eq('id', userId).single();
+
+    if (mounted) {
+      setState(() {
+        userName = response['username'] ?? anonymous;
+        avatarUrl = response['avatar_url'] as String?;
+        isLoading = false;
+      });
+    }
+  } catch (error) {
+    if (mounted) {
+      setState(() {
+        userName = anonymous;
+        avatarUrl = null; // No avatar if there's an error
+        isLoading = false;
+      });
+    }
+    print('Errore nel recupero del profilo: $error');
+  }
+}
+
   Future<void> _checkIfLiked() async {
     try {
-      final userId = supabase.auth.currentSession!.user.id;
-      bool userLiked = widget.likeList.contains(userId);
+      final userId = supabase.auth.currentSession?.user.id;
+      bool userLiked = userId != null ? widget.likeList.contains(userId) : false;
 
       if (mounted) {
         setState(() {
@@ -99,13 +125,20 @@ class FeedListItemState extends State<FeedListItem> {
   }
 
   Future<void> _toggleLike(int postId) async {
-    final userId = supabase.auth.currentSession!.user.id;
+    final userId = supabase.auth.currentSession?.user.id;
     final updatedLikes = List<String>.from(widget.likeList);
 
     if (hasLiked) {
       updatedLikes.remove(userId);
       likeCount--;
     } else {
+      if (userId == null) {
+        //show a toast
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).devi_essere_autenticato_per_mettere_mi_piace)),
+        );
+        return;
+      }
       updatedLikes.add(userId);
       likeCount++;
     }
@@ -244,8 +277,12 @@ class FeedListItemState extends State<FeedListItem> {
                     Expanded(
                       child: TextField(
                         controller: commentController,
+                        enabled: supabase.auth.currentUser !=
+                            null, // Abilita solo se l'utente è loggato
                         decoration: InputDecoration(
-                          hintText: S.of(context).scrivi_un_commento,
+                          hintText: supabase.auth.currentUser != null
+                              ? S.of(context).scrivi_un_commento
+                              : S.of(context).devi_essere_autenticato_per_commentare,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -280,13 +317,18 @@ class FeedListItemState extends State<FeedListItem> {
 
   Future<List<Map<String, dynamic>>> _fetchComments(int postId) async {
     try {
-      final comments = await supabase
-          .from('posts')
-          .select('*')
-          .filter('comment', 'eq', postId)
-          .order('created_at', ascending: true);
-
+      //use edge function get_comments_for_post
+      print(postId);
+      final comments = await supabase.rpc('get_comments_for_post',params:  {'post_id': postId});
+      print("comments: $comments");
       userProfiles = [];
+      
+      if (supabase.auth.currentUser == null) {
+        for (var comment in comments) {
+          comment['user_profile'] = {'username': 'Anonimo', 'avatar_url': null};
+        }
+        return List<Map<String, dynamic>>.from(comments);
+      }
       for (var comment in comments) {
         final userId = comment['user_id'];
         final response = await supabase
@@ -311,6 +353,9 @@ class FeedListItemState extends State<FeedListItem> {
   }
 
   Future<void> fetchUserNames() async {
+    if (supabase.auth.currentUser == null) {
+      return;
+    }
     final PostgrestList response =
         await supabase.from('profiles').select('username');
 
@@ -351,6 +396,13 @@ class FeedListItemState extends State<FeedListItem> {
         recognizer: TapGestureRecognizer()
           ..onTap = () async {
             try {
+              if(supabase.auth.currentUser == null) {
+                //show toast
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(S.of(context).devi_essere_autenticato_per_visualizzare_il_profilo)),
+                );
+                return;
+              }
               final userId = await _fetchUserIdByUsername(tagText);
               if (userId != null) {
                 Navigator.push(
@@ -387,119 +439,197 @@ class FeedListItemState extends State<FeedListItem> {
     return spans;
   }
 
-  @override
+   @override
   Widget build(BuildContext context) {
-    return Card(
+    // Get the current user's ID (Supabase auth example)
+    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+
+    return deleted ? Container() : Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            isLoading
-                ? const CircularProgressIndicator()
-                : InkWell(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                isLoading
+                    ? const CircularProgressIndicator()
+                    : InkWell(
+                        onTap: () {
+                          if(supabase.auth.currentUser == null){
+                            //show toast
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(S.of(context).devi_essere_autenticato_per_visualizzare_il_profilo)),
+                            );
+                            return;
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SingleUserPage(
+                                userId: widget.userId,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage: avatarUrl != null &&
+                                      avatarUrl!.isNotEmpty
+                                  ? NetworkImage(avatarUrl!)
+                                  : const AssetImage('images/kebab.png')
+                                      as ImageProvider,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              userName ?? S.of(context).anonimo,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                const SizedBox(height: 8),
+                if (widget.kebabName.isNotEmpty)
+                  InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SingleUserPage(
-                            userId: widget
-                                .userId, // Passa l'ID dell'utente alla SingleUserPage
+                          builder: (context) => KebabSinglePage(
+                            kebabId: widget.kebabTagId,
                           ),
                         ),
                       );
                     },
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage:
-                              avatarUrl != null && avatarUrl!.isNotEmpty
-                                  ? NetworkImage(avatarUrl!)
-                                  : const AssetImage('images/kebab.png')
-                                      as ImageProvider,
+                        const Icon(
+                          Icons.place_outlined,
+                          color: Colors.grey,
+                          size: 16,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 2),
                         Text(
-                          userName ?? S.of(context).anonimo,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          widget.kebabName,
+                          style: const TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
-            const SizedBox(height: 8),
-            if (widget.kebabName.isNotEmpty)
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => KebabSinglePage(
-                        kebabId: widget.kebabTagId,
-                      ),
-                    ),
-                  );
-                },
-                child: Row(
+                const SizedBox(height: 8),
+                Text.rich(
+                  TextSpan(
+                    children: _highlightUserTags(widget.text),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                widget.imageUrl.isNotEmpty
+                    ? Image.network(widget.imageUrl)
+                    : const SizedBox.shrink(),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.place_outlined,
-                      color: Colors.grey,
-                      size: 16,
+                    Text('$likeCount'),
+                    IconButton(
+                      icon: Icon(
+                        hasLiked ? Icons.favorite : Icons.favorite_border,
+                        color: hasLiked ? Colors.red : Colors.black,
+                      ),
+                      onPressed: () => _toggleLike(widget.postId),
                     ),
-                    const SizedBox(width: 2),
-                    Text(
-                      widget.kebabName,
-                      style: const TextStyle(color: Colors.grey),
+                    const SizedBox(width: 16),
+                    Text('$_currentCommentNumber'),
+                    IconButton(
+                      icon: const Icon(Icons.comment_outlined,
+                          color: Colors.black),
+                      onPressed: _showCommentsDialog,
                     ),
                   ],
                 ),
-              ),
-            const SizedBox(height: 8),
-            Text.rich(
-              TextSpan(
-                children: _highlightUserTags(widget.text),
-              ),
-            ),
-            const SizedBox(height: 8),
-            widget.imageUrl.isNotEmpty
-                ? Image.network(widget.imageUrl)
-                : const SizedBox.shrink(),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('$likeCount'),
-                IconButton(
-                  icon: Icon(
-                    hasLiked ? Icons.favorite : Icons.favorite_border,
-                    color: hasLiked ? red : Colors.black,
-                  ),
-                  onPressed: () => _toggleLike(widget.postId),
-                ),
-                const SizedBox(width: 16),
-                Text('$_currentCommentNumber'),
-                IconButton(
-                  icon: const Icon(Icons.comment_outlined, color: Colors.black),
-                  onPressed: _showCommentsDialog,
+                const SizedBox(height: 8),
+                Text(
+                  _formatTimestamp(widget.createdAt),
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              _formatTimestamp(widget.createdAt),
-              style: const TextStyle(color: Colors.grey),
-            ),
+            // Add the trash icon if the post belongs to the current user
+            if (widget.userId == currentUserId)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.black),
+                  onPressed: () {
+                    _showDeleteConfirmationDialog();
+                  },
+                ),
+              ),
           ],
         ),
       ),
     );
   }
+
+  // Function to show a confirmation dialog before deleting
+  void _showDeleteConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).conferma_eliminazione),
+          content: Text(S.of(context).vuoi_veramente_eliminare_il_post),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();  // Close dialog
+              },
+              child: Text(S.of(context).annulla),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();  // Close dialog
+                await _deletePost(widget.postId);  // Call the delete function
+              },
+              child: Text(S.of(context).elimina),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Function to delete the post
+  Future<void> _deletePost(int postId) async {
+    // Example delete operation, update this with your actual delete logic
+    await Supabase.instance.client
+        .from('posts')
+        .delete()
+        .eq('id', postId);
+
+
+    // Show a confirmation message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(S.of(context).post_eliminato)),
+    );
+    setState(() {
+      // Hide the post from the UI
+      deleted = true;
+    });
+  }
+
+  // Other methods like _toggleLike(), _showCommentsDialog(), etc.
 }
 
 Future<String?> _fetchUserIdByUsername(String username) async {
+  if(supabase.auth.currentUser == null) {
+    return null;
+  }
   final response = await supabase
       .from('profiles') // Replace with your actual users table
       .select('id')

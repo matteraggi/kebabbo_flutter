@@ -39,6 +39,19 @@ class FeedPageState extends State<FeedPage> {
     fetchUserNames();
     postController.addListener(_onTextChanged);
   }
+    @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Use S.of(context) here after dependencies are initialized
+    if (Supabase.instance.client.auth.currentSession == null && errorMessage == null) {
+      setState(() {
+        errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
+        isLoading = false;
+      });
+    }
+  }
+
 
   @override
   void dispose() {
@@ -196,14 +209,14 @@ class FeedPageState extends State<FeedPage> {
     } else {
       setState(() {
         isLoading = false;
-        errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
+        // Moved the S.of(context) call to didChangeDependencies()
+        // errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
       });
     }
   }
 
   Future<void> _fetchFeed() async {
     try {
-      // Recupera la lista degli utenti seguiti
       final profileResponse = await supabase
           .from('profiles')
           .select('followed_users')
@@ -219,14 +232,13 @@ class FeedPageState extends State<FeedPage> {
         final String orCondition =
             followedUsers.map((userId) => 'user_id.eq.$userId').join(',');
 
-        // Recupera i post solo dagli utenti seguiti usando la condizione 'or'
         final PostgrestList response = await supabase
             .from('posts')
             .select('*')
             .or(orCondition)
             .filter('comment', 'is', null)
-            .order('created_at',
-                ascending: false); // Ordina per timestamp in ordine decrescente
+            .order('created_at', ascending: false);
+
         if (mounted) {
           List<Map<String, dynamic>> posts =
               List<Map<String, dynamic>>.from(response as List);
