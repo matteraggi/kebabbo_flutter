@@ -69,13 +69,14 @@ Feature lancio:
 
 - [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+
 - [ ] Togliere compilato da github
 - [x] Gluten free tag metterlo in tutti i kebab item come in quello principale della home
 - [x] Badge sezione troppo lunga
 - [x] Grafico kebabbari con scritte asse x troppo grandi e tagliate sotto
 
-- [x] spiegazioni agli utenti sull'utilizzo della piattaforma
-- [x] pallini informativi
+- [x] Spiegazioni agli utenti sull'utilizzo della piattaforma
+- [x] Pallini informativi
 
 Feature extra:
 
@@ -84,24 +85,10 @@ Feature extra:
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
-- [x] traduzioni stringhe
-
-Extra frigo note:
-
-- [ ] cambiare nome google login da quello strano
-- [ ] aggiungere almeno un altro login(facebook?normale?qualcos'altro?)
-- [ ] cancellare posts non cancellano immagini
-- [ ] per firebase serve Debug signing certificate SHA-1 (optional)
-
-Bug Reports:
-
-- [ ] prima volta che fai sign in nel tuo account avatar bianco
-- [ ] tornando all'app da un errore sulla main page di fetch strano
-- [ ] a mio padre il feed invece degli items ha un quadrato bianco gigante
-- [ ] delle volte gli avatar basici sono bianchi
+- [ ] traduzioni stringhe
 
 Non dev:
 
-- [ ] design loghi vari da mettere in giro
+- [ ] Design loghi vari da mettere in giro
 - [ ] Pensare piano marketing con CMO dell'azienda
 - [ ] Sponsor

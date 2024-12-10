@@ -7,6 +7,7 @@ import 'package:kebabbo_flutter/pages/kebab/special_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TopKebabPage extends StatefulWidget {
   final Position? currentPosition;
@@ -27,6 +28,7 @@ class TopKebabPageState extends State<TopKebabPage> {
   bool showOnlyOpen = false;
   bool showOnlyKebab = true;
   TextEditingController searchController = TextEditingController();
+  final String privacyPolicyUrl = "https://kebabbo-privacy-policy.vercel.app/";
 
   @override
   void initState() {
@@ -340,7 +342,37 @@ class TopKebabPageState extends State<TopKebabPage> {
                                     },
                                   ),
                                 ),
-                          const SizedBox(height: 16),
+                          GestureDetector(
+                            onTap: () async {
+                              final url = Uri.parse(privacyPolicyUrl);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Impossibile aprire il link.'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Center(
+                                child: Text(
+                                  "Privacy Policy",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontStyle: FontStyle.italic,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       // Icona circolare "kebab special" in basso a sinistra
