@@ -63,7 +63,7 @@ class _MedalPageState extends State<MedalPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : ListView(

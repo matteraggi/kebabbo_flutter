@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class FavoritesPage extends StatefulWidget {
   final String userId;
@@ -51,7 +50,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).failed_to_load_favorites)),
+          const SnackBar(content: Text('Failed to load favorites')),
         );
       }
     } finally {
@@ -68,12 +67,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : _favoriteKebabs.isEmpty
-                  ? Center(
-                      child: Text(S.of(context).nessun_kebab_tra_i_preferiti))
+                  ? const Center(child: Text("Nessun kebab tra i preferiti"))
                   : ListView.builder(
                       itemCount: _favoriteKebabs.length,
                       itemBuilder: (context, index) {
