@@ -1394,6 +1394,86 @@ class S {
       args: [],
     );
   }
+
+  /// `Sign Up`
+  String get sign_up {
+    return Intl.message(
+      'Sign Up',
+      name: 'sign_up',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your email`
+  String get please_enter_your_email {
+    return Intl.message(
+      'Please enter your email',
+      name: 'please_enter_your_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid email`
+  String get please_enter_a_valid_email {
+    return Intl.message(
+      'Please enter a valid email',
+      name: 'please_enter_a_valid_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a password`
+  String get please_enter_a_password {
+    return Intl.message(
+      'Please enter a password',
+      name: 'please_enter_a_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password must be at least 6 characters`
+  String get password_must_be_at_least_6_characters {
+    return Intl.message(
+      'Password must be at least 6 characters',
+      name: 'password_must_be_at_least_6_characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check your email for a verification link`
+  String get check_your_email_for_a_verification_link {
+    return Intl.message(
+      'Check your email for a verification link',
+      name: 'check_your_email_for_a_verification_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't have an account? Sign Up`
+  String get dont_have_an_account_sign_up {
+    return Intl.message(
+      'Don\'t have an account? Sign Up',
+      name: 'dont_have_an_account_sign_up',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logged in`
+  String get logged_in {
+    return Intl.message(
+      'Logged in',
+      name: 'logged_in',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -174,6 +174,15 @@
     "devi_essere_autenticato_per_mettere_mi_piace": "You must login to like",
     "accedi_per_cercare": "Log in to post and see peoples' info",
     "devi_essere_autenticato_per_commentare": "You must login to comment",
-    "devi_essere_autenticato_per_visualizzare_il_profilo": "You must login to view the profile"
+    "devi_essere_autenticato_per_visualizzare_il_profilo": "You must login to view the profile",
+    "sign_up": "Sign Up",
+    "please_enter_your_email": "Please enter your email",
+    "please_enter_a_valid_email": "Please enter a valid email",
+    "please_enter_a_password": "Please enter a password",
+    "password_must_be_at_least_6_characters": "Password must be at least 6 characters",
+    "check_your_email_for_a_verification_link": "Check your email for a verification link",
+    "dont_have_an_account_sign_up": "Don't have an account? Sign Up",
+    "logged_in": "Logged in"
+
   }
   

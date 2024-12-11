@@ -59,6 +59,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "check_your_email_for_a_login_link":
             MessageLookupByLibrary.simpleMessage(
                 "Check your email for a login link!"),
+        "check_your_email_for_a_verification_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Check your email for a verification link"),
         "chiuso": MessageLookupByLibrary.simpleMessage("Closed"),
         "cipolla": MessageLookupByLibrary.simpleMessage("Onion"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
@@ -94,6 +97,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Maximum Distance"),
         "distanza_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Distance not available"),
+        "dont_have_an_account_sign_up": MessageLookupByLibrary.simpleMessage(
+            "Don\'t have an account? Sign Up"),
         "edit_profile": MessageLookupByLibrary.simpleMessage("Edit profile"),
         "elimina": MessageLookupByLibrary.simpleMessage("Delete"),
         "errore": MessageLookupByLibrary.simpleMessage("Error:"),
@@ -158,6 +163,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "legends": MessageLookupByLibrary.simpleMessage("Legends"),
         "log_in_con_google":
             MessageLookupByLibrary.simpleMessage("Log In with Google"),
+        "logged_in": MessageLookupByLibrary.simpleMessage("Logged in"),
         "mappa": MessageLookupByLibrary.simpleMessage("Map"),
         "menu": MessageLookupByLibrary.simpleMessage("Menu"),
         "more_info":
@@ -195,9 +201,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("New username..."),
         "oops_review_not_found":
             MessageLookupByLibrary.simpleMessage("Oops! Review Not Found"),
+        "password_must_be_at_least_6_characters":
+            MessageLookupByLibrary.simpleMessage(
+                "Password must be at least 6 characters"),
         "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab":
             MessageLookupByLibrary.simpleMessage(
                 "That\'s why we are here: university students, like you, with years of experience as Kebab eaters."),
+        "please_enter_a_password":
+            MessageLookupByLibrary.simpleMessage("Please enter a password"),
+        "please_enter_a_valid_email":
+            MessageLookupByLibrary.simpleMessage("Please enter a valid email"),
+        "please_enter_your_email":
+            MessageLookupByLibrary.simpleMessage("Please enter your email"),
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Please Log In to Submit Your Review"),
@@ -236,6 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "seguiti": MessageLookupByLibrary.simpleMessage("Followed"),
         "seleziona_il_tuo_kebab_preferito":
             MessageLookupByLibrary.simpleMessage("Select your favorite kebab"),
+        "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "spicy": MessageLookupByLibrary.simpleMessage("Spicy"),
         "submit_review": MessageLookupByLibrary.simpleMessage("Submit Review"),
         "successfully_updated_profile": MessageLookupByLibrary.simpleMessage(
