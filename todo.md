@@ -92,3 +92,37 @@ Non dev:
 - [ ] Design loghi vari da mettere in giro
 - [ ] Pensare piano marketing con CMO dell'azienda
 - [ ] Sponsor
+
+Brand Identity:
+- logo (
+    5 logo variations that brand needs:
+        - primary logo (abbastanza completo quindi: immagine, nome e magari anche date e robe varie)
+        - primary logo versione black and white nei due contrasti
+        - secondary logo (invece di avere nome e immagine insieme abbiamo immagine sulla sx e nome a dx per layout orizzontali)
+        - submark (solo nome)
+        - favicon (solo iconcina)
+)
+- color palette (
+    red = Color.fromRGBO(187, 0, 0, 1.0);
+    yellow = Color.fromRGBO(255, 186, 28, 1.0);
+    + altro colore minore. Opzioni:
+        #666370 
+        #31231E
+        #ECF0F1
+        #7B7554
+        #2D3047
+)
+- typography 
+- extra(
+    Photography
+    Illustration
+    Iconography
+    Data visualization
+)
+
+prima di iniziare:
+
+- Brand Heart: Scopo, visione, missione, valori -> Aiutare universitari a trovare un pasto top che costi poco e che sia buono. Senza farsi fregare da recensioni google non vere, mensa o posti turistici. ✅
+- Brand name: Kebabbo ✅
+- Brand essence: Voce, tono, personalità -> amichevole, da universitario a universitario ✅
+- Messaging: Frasi principali, slogan, messaggi che vogliamo mandare

@@ -174,11 +174,14 @@ class _SearchPageState extends State<SearchPage> {
                                     : S.of(context).accedi_per_cercare, // Different hint if not logged in
                                 prefixIcon: Icon(Icons.search),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 filled: true,
-                                fillColor: Colors.grey[200],
+                                  fillColor: Colors.grey[200],
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
                               ),
                             )),
                           ],
