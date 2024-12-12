@@ -176,11 +176,31 @@ class S {
     );
   }
 
-  /// `Change Username`
+  /// `Change Profile`
+  String get cambia_profilo {
+    return Intl.message(
+      'Change Profile Info',
+      name: 'cambia_profilo',
+      desc: '',
+      args: [],
+    );
+  }
+
+    /// `Change Username`
   String get cambia_username {
     return Intl.message(
       'Change Username',
       name: 'cambia_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+      /// `Change Profile Pic`
+  String get cambia_profilepic {
+    return Intl.message(
+      'Change Profile Pic',
+      name: 'cambia_profilepic',
       desc: '',
       args: [],
     );
