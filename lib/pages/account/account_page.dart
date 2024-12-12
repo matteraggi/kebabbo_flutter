@@ -8,6 +8,7 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/followers_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
+import 'package:kebabbo_flutter/pages/misc/about_page.dart';
 import 'package:kebabbo_flutter/pages/misc/medal_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
@@ -319,7 +320,6 @@ class _AccountPageState extends State<AccountPage> {
     final response =
         await supabase.from('kebab').select().eq('id', id).single();
 
-
     if (response['name'] != null) {
       setState(() {
         _favoriteKebab = response;
@@ -386,6 +386,24 @@ class _AccountPageState extends State<AccountPage> {
                           height: 40,
                           child: Row(
                             children: [
+                              Icon(Icons.info, color: Colors.black),
+                              SizedBox(width: 8),
+                              Text(
+                                "About",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem<int>(
+                          value: 3,
+                          height: 40,
+                          child: Row(
+                            children: [
                               Icon(Icons.logout, color: Colors.black),
                               SizedBox(width: 8),
                               Text(
@@ -413,6 +431,10 @@ class _AccountPageState extends State<AccountPage> {
                             _changeUsername();
                           });
                         } else if (value == 2) {
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const AboutPage()));
+                        } else if (value == 3) {
                           _signOut();
                         }
                       }
@@ -577,40 +599,38 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ],
               ),
-              
-              child:InkWell(
-                    onTap: () {
-                      _openFavoriteKebabSelection();
-                    },
-                    child:Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
-                    Text(S.of(context).seleziona_il_tuo_kebab_preferito)
-                  else
-                    Row(
-                      children: [
-                        Image.asset(
-                          _favoriteKebab?["tag"] == "kebab"
-                              ? "assets/images/kebabcolored.png"
-                              : "assets/images/sandwitch.png",
-                          height: 24,
-                          width: 24,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+              child: InkWell(
+                onTap: () {
+                  _openFavoriteKebabSelection();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
+                      Text(S.of(context).seleziona_il_tuo_kebab_preferito)
+                    else
+                      Row(
+                        children: [
+                          Image.asset(
+                            _favoriteKebab?["tag"] == "kebab"
+                                ? "assets/images/kebabcolored.png"
+                                : "assets/images/sandwitch.png",
+                            height: 24,
+                            width: 24,
                           ),
-                        ),
-                      ],
-                    ),
-                        Icon(Icons.border_color, color: Colors.black, size: 22),
-                  
-                ],
-              ),
+                          SizedBox(width: 8),
+                          Text(
+                            "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    Icon(Icons.border_color, color: Colors.black, size: 22),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 15),

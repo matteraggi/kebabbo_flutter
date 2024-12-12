@@ -184,23 +184,6 @@ class MapPageState extends State<MapPage> {
               ),
             ],
           ),
-          // Pulsante info in alto a sinistra
-          Positioned(
-            top: 16.0,
-            left: 16.0,
-            child: FloatingActionButton(
-              backgroundColor: Colors.white,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AboutPage(),
-                  ),
-                );
-              },
-              child: const Icon(Icons.info, color: Colors.black),
-            ),
-          ),
           Positioned(
             bottom: 16.0,
             left: 16.0,
