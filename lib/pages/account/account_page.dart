@@ -139,10 +139,38 @@ class _AccountPageState extends State<AccountPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text(S.of(context).cambia_username),
+              title: Text(S.of(context).cambia_profilo),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Text(S.of(context).cambia_profilepic,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        padding: EdgeInsets
+                            .zero, // Remove extra padding around the icon
+                        constraints: const BoxConstraints(),
+                        icon: Icon(
+                          Icons.camera_alt,
+                          size: 25, // Smaller icon size
+                          color: main.red, // Red icon color
+                        ),
+                        onPressed: _changeAvatar, // Added the onPressed action
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(S.of(context).cambia_username,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      )),
                   TextField(
                     controller: _usernameController,
                     maxLength: 12,
@@ -485,26 +513,6 @@ class _AccountPageState extends State<AccountPage> {
                             ? NetworkImage(_avatarUrl!)
                             : const AssetImage('assets/images/kebab.png')
                                 as ImageProvider,
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white, // White background
-                    borderRadius:
-                        BorderRadius.circular(15), // Pill-shaped corners
-                  ),
-                  padding: const EdgeInsets.all(
-                      1), // Adjust padding for smaller pill
-                  child: IconButton(
-                    padding:
-                        EdgeInsets.zero, // Remove extra padding around the icon
-                    constraints: const BoxConstraints(),
-                    icon: Icon(
-                      Icons.camera_alt,
-                      size: 25, // Smaller icon size
-                      color: main.red, // Red icon color
-                    ),
-                    onPressed: _changeAvatar, // Added the onPressed action
                   ),
                 ),
               ],
