@@ -82,13 +82,15 @@ Feature extra:
 
 - [x] Badge del posto quando si mette review
 - [x] Recensioni utenti postate come post
+- [ ] La lingua è sempre inglese
+- [ ] Nella sezione recensioni non sempre compare la scritta su come recensire
 - [ ] Controllare dimensione caricamento foto profilo e post
 - [ ] Rotella caricamento immagine quando cambio foto profilo
 - [ ] Cambiare UI modulo di cambio account info
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
-- [ ] traduzioni stringhe
+- [x] traduzioni stringhe
 
 Non dev:
 
