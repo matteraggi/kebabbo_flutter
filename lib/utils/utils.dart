@@ -113,8 +113,7 @@ bool isKebabOpen(Map<String, dynamic>? orariApertura) {
   // Ottieni l'ora e il giorno corrente
   DateTime now = DateTime.now();
   String dayOfWeekEnglish =
-      DateFormat('EEEE').format(now).toLowerCase(); // giorno in minuscolo
-
+      DateFormat('EEEE', 'en_US').format(now).toLowerCase();
   const Map<String, String> daysOfWeek = {
     'monday': 'lunedì',
     'tuesday': 'martedì',
