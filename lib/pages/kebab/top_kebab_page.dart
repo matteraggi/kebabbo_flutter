@@ -52,14 +52,14 @@ class TopKebabPageState extends State<TopKebabPage> {
       if (mounted) {
         List<Map<String, dynamic>> kebabs =
             List<Map<String, dynamic>>.from(response as List);
-
+      
         for (var kebab in kebabs) {
           if (userPosition != null) {
             double distanceInMeters = Geolocator.distanceBetween(
               userPosition.latitude,
               userPosition.longitude,
-              kebab['lat'],
-              kebab['lng'],
+              kebab['lat'] ?? 0.0,
+              kebab['lng'] ?? 0.0,
             );
             kebab['distance'] = distanceInMeters / 1000;
           }
@@ -69,6 +69,7 @@ class TopKebabPageState extends State<TopKebabPage> {
         // Sort the kebabs using the utility function
         kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition,
             showOnlyOpen, showOnlyKebab);
+
 
         // Aggiungi lo stato di "preferito" per ciascun kebab
         final user = supabase.auth.currentUser;
