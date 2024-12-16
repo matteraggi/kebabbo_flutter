@@ -93,22 +93,26 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('en', ''), // English
-        const Locale('it', ''), // Italian
-        const Locale('es', ''), // Spanish
-        const Locale('fr', ''), // French
-        const Locale('de', ''), // German
-        const Locale('pt', ''), // Portuguese
+      supportedLocales: const [
+        Locale('it', ''), // Italian
+        Locale('en', ''), // English
+        Locale('es', ''), // Spanish
+        Locale('fr', ''), // French
+        Locale('de', ''), // German
+        Locale('pt', ''), // Portuguese
       ],
-      // Locale resolution for user-preferred language
+      // Locale resolution to prefer system language
       localeResolutionCallback: (locale, supportedLocales) {
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale?.languageCode &&
-              supportedLocale.countryCode == locale?.countryCode) {
-            return supportedLocale;
+        print("Locale: $locale");
+        if (locale != null) {
+          for (var supportedLocale in supportedLocales) {
+            // Match the languageCode only (ignore countryCode for broader support)
+            if (supportedLocale.languageCode == locale.languageCode) {
+              return supportedLocale;
+            }
           }
         }
+        // Fallback to the first supported locale (English)
         return supportedLocales.first;
       },
       home: MyHomePage(reviewHash: reviewHash), // Set MyHomePage as the home
