@@ -160,9 +160,35 @@
       "spicy": "Piccante", 
       "cipolla": "Cipolla",
       "description": "Descrizione",
-
+      "more_info": "Come recensire un kebab", 
+      "close": "Chiudi",
+      "popup_title": "Come scrivere la tua recensione", 
+      "first_time_title": "Benvenuto su Kebabbo!", 
+      "elimina": "Elimina",
+      "vuoi_veramente_eliminare_il_post": "Vuoi veramente eliminare il post?", 
+      "conferma_eliminazione": "Conferma eliminazione", 
+      "post_eliminato": "Post eliminato", 
+      "devi_essere_autenticato_per_mettere_mi_piace": "Devi accedere per mettere mi piace", 
+      "accedi_per_cercare": "Accedi per pubblicare e vedere le informazioni delle persone", 
+      "devi_essere_autenticato_per_commentare": "Devi accedere per commentare", 
+      "devi_essere_autenticato_per_visualizzare_il_profilo": "Devi accedere per visualizzare il profilo", 
+      "sign_up": "Registrati", 
+      "please_enter_your_email": "Inserisci la tua email", 
+      "please_enter_a_valid_email": "Inserisci un'email valida", 
+      "please_enter_a_password": "Inserisci una password", 
+      "password_must_be_at_least_6_characters": "La password deve essere di almeno 6 caratteri", 
+      "check_your_email_for_a_verification_link": "Controlla la tua email per un link di verifica", 
+      "dont_have_an_account_sign_up": "Non hai un account? Registrati", 
+      "logged_in": "Accesso effettuato", 
+      "login": "Accedi",
+      "email": "Email",
+      "password": "Password",
       "popup_description": "Per garantire l'autenticità delle recensioni degli utenti, per recensire tu stesso il kebab,\ndovrai recarti di persona e trovare l'adesivo Kebabbo apposto nelle vicinanze del kebabbaro,\nscansionandolo verrai indirizzato alla pagina della recensione.",
-      "first_time_description": "Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!"
+      "first_time_description": "Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!",
+      
+      "cambia_profilo": "Cambia profilo",
+      "cambia_profilepic": "Cambia immagine del profilo",
+      "please_fill_in_all_fields": "Compila tutti i campi"
     }
 
 
