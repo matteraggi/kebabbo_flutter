@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
+import 'package:kebabbo_flutter/pages/account/auth_callback.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/feed_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
@@ -69,6 +70,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kebabbo',
+      routes:  {
+        '/auth/callback': (context) => const AuthCallbackPage(),
+      },
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: yellow,
         primaryColor: red,
@@ -103,17 +107,11 @@ class MyApp extends StatelessWidget {
       ],
       // Locale resolution to prefer system language
       localeResolutionCallback: (locale, supportedLocales) {
-        print("Locale: $locale");
-        if (locale != null) {
-          for (var supportedLocale in supportedLocales) {
-            // Match the languageCode only (ignore countryCode for broader support)
-            if (supportedLocale.languageCode == locale.languageCode) {
-              return supportedLocale;
-            }
-          }
-        }
-        // Fallback to the first supported locale (English)
-        return supportedLocales.first;
+        return supportedLocales.firstWhere(
+          (supportedLocale) =>
+              supportedLocale.languageCode == locale?.languageCode,
+          orElse: () => supportedLocales.first,
+        );
       },
       home: MyHomePage(reviewHash: reviewHash), // Set MyHomePage as the home
     );

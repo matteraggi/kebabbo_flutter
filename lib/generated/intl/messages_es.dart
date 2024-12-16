@@ -36,6 +36,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "accedi_per_cercare": MessageLookupByLibrary.simpleMessage(
+            "Inicia sesión para publicar y ver la información de las personas"),
         "an_error_occurred":
             MessageLookupByLibrary.simpleMessage("Se ha producido un error"),
         "annulla": MessageLookupByLibrary.simpleMessage("Cancelar"),
@@ -58,10 +60,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Buscar usuarios..."),
         "check_your_email_for_a_login_link": MessageLookupByLibrary.simpleMessage(
             "¡Revisa tu correo electrónico para obtener un enlace de inicio de sesión!"),
+        "check_your_email_for_a_verification_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Revisa tu correo electrónico para obtener un enlace de verificación"),
         "chiuso": MessageLookupByLibrary.simpleMessage("Cerrado"),
         "cipolla": MessageLookupByLibrary.simpleMessage("Cebolla"),
+        "close": MessageLookupByLibrary.simpleMessage("Cerrar"),
         "commento_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Comentario no disponible"),
+        "conferma_eliminazione":
+            MessageLookupByLibrary.simpleMessage("Confirmar eliminación"),
         "congratulazioni":
             MessageLookupByLibrary.simpleMessage("¡Felicidades!"),
         "consigliaci_un_kebabbaro": MessageLookupByLibrary.simpleMessage(
@@ -71,9 +79,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Se requiere descripción"),
         "descrizione_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Descripción no disponible"),
+        "devi_essere_autenticato_per_commentare":
+            MessageLookupByLibrary.simpleMessage(
+                "Debes iniciar sesión para comentar"),
+        "devi_essere_autenticato_per_mettere_mi_piace":
+            MessageLookupByLibrary.simpleMessage(
+                "Debes iniciar sesión para dar me gusta"),
         "devi_essere_autenticato_per_postare":
             MessageLookupByLibrary.simpleMessage(
                 "Debes estar autenticado para publicar"),
+        "devi_essere_autenticato_per_visualizzare_il_profilo":
+            MessageLookupByLibrary.simpleMessage(
+                "Debes iniciar sesión para ver el perfil"),
         "distanceLabel10km": m0,
         "distanceLabel1km": m1,
         "distanceLabel200m": m2,
@@ -83,7 +100,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Distancia máxima"),
         "distanza_non_disponibile":
             MessageLookupByLibrary.simpleMessage("Distancia no disponible"),
+        "dont_have_an_account_sign_up": MessageLookupByLibrary.simpleMessage(
+            "¿No tienes una cuenta? Registrarse"),
         "edit_profile": MessageLookupByLibrary.simpleMessage("Editar perfil"),
+        "elimina": MessageLookupByLibrary.simpleMessage("Eliminar"),
+        "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
         "errore": MessageLookupByLibrary.simpleMessage("Error:"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage("Error al cargar seguidores"),
@@ -108,6 +129,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Error al actualizar el estado de seguimiento"),
         "failed_to_upload_avatar":
             MessageLookupByLibrary.simpleMessage("Error al subir el avatar"),
+        "first_time_description": MessageLookupByLibrary.simpleMessage(
+            "¡Bienvenido a Kebabbo!\n¿Qué puedes hacer aquí?\nBueno, puedes explorar nuestras reseñas profesionales de kebab o consultar las valoraciones de otros usuarios.\nEscribe tu propia reseña escaneando la pegatina de Kebabbo en el lugar de kebab.\nConsulta los perfiles y publicaciones de otros usuarios, conéctate con otros amantes del kebab y gana logros por usar la aplicación.\nUtiliza nuestras funciones de búsqueda y filtro o nuestra potente herramienta de creación para encontrar tu kebab ideal o explora nuestro mapa interactivo para descubrir joyas cercanas.\n¡Diviértete y a por el kebab!"),
+        "first_time_title":
+            MessageLookupByLibrary.simpleMessage("¡Bienvenido a Kebabbo!"),
         "fun": MessageLookupByLibrary.simpleMessage("Diversión"),
         "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia":
             MessageLookupByLibrary.simpleMessage(
@@ -143,8 +168,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "legends": MessageLookupByLibrary.simpleMessage("Leyendas"),
         "log_in_con_google":
             MessageLookupByLibrary.simpleMessage("Iniciar sesión con Google"),
+        "logged_in": MessageLookupByLibrary.simpleMessage("Sesión iniciada"),
+        "login": MessageLookupByLibrary.simpleMessage("Iniciar sesión"),
         "mappa": MessageLookupByLibrary.simpleMessage("Mapa"),
         "menu": MessageLookupByLibrary.simpleMessage("Menú"),
+        "more_info":
+            MessageLookupByLibrary.simpleMessage("Cómo reseñar un kebab"),
         "nessun_commento_disponibile": MessageLookupByLibrary.simpleMessage(
             "No hay comentarios disponibles"),
         "nessun_kebab_corrispondente_trovato_nel_raggio_selezionato":
@@ -179,12 +208,28 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nuevo nombre de usuario..."),
         "oops_review_not_found":
             MessageLookupByLibrary.simpleMessage("¡Ups! Reseña no encontrada"),
+        "password": MessageLookupByLibrary.simpleMessage("Contraseña"),
+        "password_must_be_at_least_6_characters":
+            MessageLookupByLibrary.simpleMessage(
+                "La contraseña debe tener al menos 6 caracteres"),
         "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab":
             MessageLookupByLibrary.simpleMessage(
                 "Por eso estamos aquí: estudiantes universitarios, como tú, con años de experiencia como consumidores de kebab."),
+        "please_enter_a_password":
+            MessageLookupByLibrary.simpleMessage("Introduce una contraseña"),
+        "please_enter_a_valid_email": MessageLookupByLibrary.simpleMessage(
+            "Introduce un correo electrónico válido"),
+        "please_enter_your_email": MessageLookupByLibrary.simpleMessage(
+            "Introduce tu correo electrónico"),
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Inicia sesión para enviar tu reseña"),
+        "popup_description": MessageLookupByLibrary.simpleMessage(
+            "Para garantizar la autenticidad de las reseñas de los usuarios, para reseñar tú mismo el kebab,\ndebes ir en persona al lugar de kebab y encontrar la pegatina de Kebabbo colocada cerca,\nescanearla te llevará a la página de reseñas."),
+        "popup_title": MessageLookupByLibrary.simpleMessage(
+            "Cómo escribir tu propia reseña"),
+        "post_eliminato":
+            MessageLookupByLibrary.simpleMessage("Publicación eliminada"),
         "preferiti_solo_per_utenti_registrati":
             MessageLookupByLibrary.simpleMessage(
                 "Favoritos solo para usuarios registrados"),
@@ -217,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "seleziona_il_tuo_kebab_preferito":
             MessageLookupByLibrary.simpleMessage(
                 "Selecciona tu kebab favorito"),
+        "sign_up": MessageLookupByLibrary.simpleMessage("Registrarse"),
         "spicy": MessageLookupByLibrary.simpleMessage("Picante"),
         "submit_review": MessageLookupByLibrary.simpleMessage("Enviar reseña"),
         "successfully_updated_profile": MessageLookupByLibrary.simpleMessage(
@@ -249,6 +295,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "users_review":
             MessageLookupByLibrary.simpleMessage("Reseña de usuarios"),
         "verdura": MessageLookupByLibrary.simpleMessage("Vegetales"),
+        "vuoi_veramente_eliminare_il_post":
+            MessageLookupByLibrary.simpleMessage(
+                "¿De verdad quieres eliminar la publicación?"),
         "world": MessageLookupByLibrary.simpleMessage("Mundo"),
         "yogurt": MessageLookupByLibrary.simpleMessage("Yogur"),
         "you_can_access_reviews_at_any_time_from_your_account":

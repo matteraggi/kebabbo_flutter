@@ -176,31 +176,11 @@ class S {
     );
   }
 
-  /// `Change Profile`
-  String get cambia_profilo {
-    return Intl.message(
-      'Change Profile Info',
-      name: 'cambia_profilo',
-      desc: '',
-      args: [],
-    );
-  }
-
-    /// `Change Username`
+  /// `Change Username`
   String get cambia_username {
     return Intl.message(
       'Change Username',
       name: 'cambia_username',
-      desc: '',
-      args: [],
-    );
-  }
-
-      /// `Change Profile Pic`
-  String get cambia_profilepic {
-    return Intl.message(
-      'Change Profile Pic',
-      name: 'cambia_profilepic',
       desc: '',
       args: [],
     );
@@ -1490,6 +1470,66 @@ class S {
     return Intl.message(
       'Logged in',
       name: 'logged_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log In`
+  String get login {
+    return Intl.message(
+      'Log In',
+      name: 'login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get password {
+    return Intl.message(
+      'Password',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change profile`
+  String get cambia_profilo {
+    return Intl.message(
+      'Change profile',
+      name: 'cambia_profilo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change profile picture`
+  String get cambia_profilepic {
+    return Intl.message(
+      'Change profile picture',
+      name: 'cambia_profilepic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please fill in all fields`
+  String get please_fill_in_all_fields {
+    return Intl.message(
+      'Please fill in all fields',
+      name: 'please_fill_in_all_fields',
       desc: '',
       args: [],
     );

@@ -50,6 +50,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "by_signing_in_you_agree_to_our_terms_and_privacy_policy":
             MessageLookupByLibrary.simpleMessage(
                 "By signing in, you agree to our terms and privacy policy."),
+        "cambia_profilepic":
+            MessageLookupByLibrary.simpleMessage("Change profile picture"),
+        "cambia_profilo":
+            MessageLookupByLibrary.simpleMessage("Change profile"),
         "cambia_username":
             MessageLookupByLibrary.simpleMessage("Change Username"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -101,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Don\'t have an account? Sign Up"),
         "edit_profile": MessageLookupByLibrary.simpleMessage("Edit profile"),
         "elimina": MessageLookupByLibrary.simpleMessage("Delete"),
+        "email": MessageLookupByLibrary.simpleMessage("Email"),
         "errore": MessageLookupByLibrary.simpleMessage("Error:"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage("Error loading followers"),
@@ -164,6 +169,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "log_in_con_google":
             MessageLookupByLibrary.simpleMessage("Log In with Google"),
         "logged_in": MessageLookupByLibrary.simpleMessage("Logged in"),
+        "login": MessageLookupByLibrary.simpleMessage("Log In"),
         "mappa": MessageLookupByLibrary.simpleMessage("Map"),
         "menu": MessageLookupByLibrary.simpleMessage("Menu"),
         "more_info":
@@ -201,6 +207,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("New username..."),
         "oops_review_not_found":
             MessageLookupByLibrary.simpleMessage("Oops! Review Not Found"),
+        "password": MessageLookupByLibrary.simpleMessage("Password"),
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "Password must be at least 6 characters"),
@@ -213,6 +220,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please enter a valid email"),
         "please_enter_your_email":
             MessageLookupByLibrary.simpleMessage("Please enter your email"),
+        "please_fill_in_all_fields":
+            MessageLookupByLibrary.simpleMessage("Please fill in all fields"),
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Please Log In to Submit Your Review"),
