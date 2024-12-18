@@ -60,7 +60,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: yellow,
-        title: Text(S.of(context).i_tuoi_post),
+        title: const Text("Posts"),
       ),
       body: SafeArea(
         child: Padding(
@@ -83,6 +83,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
                           commentNumber: post['comments_number'] ?? 0,
                           kebabTagId: post['kebab_tag_id'] ?? 0,
                           kebabName: post['kebab_tag_name'] ?? '',
+                          canBeEliminated: widget.userId == supabase.auth.currentUser!.id,
                         );
                       },
                     ),

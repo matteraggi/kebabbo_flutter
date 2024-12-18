@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/list_items/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/followers_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/seguiti_page.dart';
@@ -22,6 +23,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
   bool _loading = true;
   int _favoritesCount = 0;
   List<dynamic> _followed = [];
+  List<dynamic> _userPosts = [];
   bool _isFollowing = false; // Variabile per controllare se l'utente è seguito
   int _seguitiCount = 0; // Variabile per il conteggio dei follower
   int _followerCount = 0;
@@ -33,6 +35,39 @@ class _SingleUserPageState extends State<SingleUserPage> {
     _loadProfile(widget.userId); // Passa l'ID utente al metodo di caricamento
     _getPostCount(widget.userId); // Passa l'ID utente anche qui
     _getFollowerCount(widget.userId); // Passa l'ID utente anche qui
+    _loadUserPosts(); // Passa l'ID utente anche qui
+  }
+
+Future<void> _loadUserPosts() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final userId = widget.userId; // Usando userId passato al widget
+
+      // Recupera i post dell'utente specificato
+      final postsResponse = await supabase
+          .from('posts')
+          .select('*')
+          .eq('user_id', userId.toString())
+          .filter('comment', 'is', null)
+          .order('created_at', ascending: false);
+
+      _userPosts = List<Map<String, dynamic>>.from(postsResponse);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).failed_to_load_posts)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
   }
 
   Future<void> _getFollowerCount(String userId) async {
@@ -156,14 +191,14 @@ class _SingleUserPageState extends State<SingleUserPage> {
       }
     }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: yellow,
-      ),
-      body: Padding(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: yellow,
+    ),
+    body: SingleChildScrollView(
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -284,11 +319,11 @@ class _SingleUserPageState extends State<SingleUserPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             if (_favoriteKebab.isNotEmpty)
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                padding: EdgeInsets.all(12),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -296,14 +331,14 @@ class _SingleUserPageState extends State<SingleUserPage> {
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 6,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.star, color: yellow, size: 24),
+                    const Icon(Icons.star, color: yellow, size: 24),
                     Row(
                       children: [
                         Image.asset(
@@ -313,7 +348,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                           height: 24,
                           width: 24,
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(
                           "${_favoriteKebab["name"] ?? S.of(context).nome_non_disponibile}",
                           style: const TextStyle(
@@ -323,13 +358,47 @@ class _SingleUserPageState extends State<SingleUserPage> {
                         ),
                       ],
                     ),
-                    Icon(Icons.star, color: yellow, size: 24),
+                    const Icon(Icons.star, color: yellow, size: 24),
                   ],
                 ),
               ),
+            const SizedBox(height: 20),
+            
+            // User's Posts Section
+            Text(
+              S.of(context).i_tuoi_post,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // List of user posts
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true, // Let ListView take up only the necessary space
+              itemCount: _userPosts.length,
+              itemBuilder: (context, index) {
+                final post = _userPosts[index];
+                return FeedListItem(
+                  text: post['text'] ?? S.of(context).testo_non_disponibile,
+                  createdAt: post['created_at'] ?? '',
+                  userId: post['user_id'],
+                  imageUrl: post['image_url'] ?? '',
+                  postId: post['id'],
+                  likeList: post['like'] ?? [],
+                  commentNumber: post['comments_number'] ?? 0,
+                  kebabTagId: post['kebab_tag_id'] ?? 0,
+                  kebabName: post['kebab_tag_name'] ?? '',
+                  canBeEliminated: widget.userId == supabase.auth.currentUser!.id,
+                );
+              },
+            ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

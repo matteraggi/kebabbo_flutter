@@ -18,6 +18,8 @@ class FeedListItem extends StatefulWidget {
   final int commentNumber;
   final int kebabTagId;
   final String kebabName;
+  final bool canBeEliminated;
+  
 
   const FeedListItem({
     super.key,
@@ -30,6 +32,7 @@ class FeedListItem extends StatefulWidget {
     required this.commentNumber,
     required this.kebabTagId,
     required this.kebabName,
+    this.canBeEliminated = false,
   });
 
   @override
@@ -50,6 +53,7 @@ class FeedListItemState extends State<FeedListItem> {
   List<String> userList = [];
   String anonymous ="Anonimo";
   bool deleted = false;
+  
 
   @override
   void initState() {
@@ -559,7 +563,9 @@ Future<void> _fetchUserProfile(String userId) async {
               ],
             ),
             // Add the trash icon if the post belongs to the current user
-            if (widget.userId == currentUserId)
+            if (widget.canBeEliminated &&
+                currentUserId != null &&
+                currentUserId == widget.userId)
               Positioned(
                 top: 0,
                 right: 0,
@@ -623,7 +629,6 @@ Future<void> _fetchUserProfile(String userId) async {
     });
   }
 
-  // Other methods like _toggleLike(), _showCommentsDialog(), etc.
 }
 
 Future<String?> _fetchUserIdByUsername(String username) async {
