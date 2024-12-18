@@ -496,27 +496,79 @@ class _AccountPageState extends State<AccountPage> {
               ],
             ),
             const SizedBox(height: 15),
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: main.red, width: 3),
-                  ),
-                  child: CircleAvatar(
-                    radius: 47,
-                    backgroundImage:
-                        (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                            ? NetworkImage(_avatarUrl!)
-                            : const AssetImage('assets/images/kebab.png')
-                                as ImageProvider,
+GestureDetector(
+  onTap: () {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop(); // Close the dialog when tapped again
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,  // Adjust size
+                  height: MediaQuery.of(context).size.height * 0.5, // Adjust size
+                  child: Image(
+                    image: (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                        ? NetworkImage(_avatarUrl!)
+                        : const AssetImage('assets/images/kebab.png') as ImageProvider,
+                    fit: BoxFit.cover, // Fit the image within the dialog
                   ),
                 ),
-              ],
-            ),
+              ),
+Positioned(
+                top: 10,  // Adjust positioning as necessary
+                right: 10, // Adjust positioning as necessary
+                child: Container(
+                  padding: const EdgeInsets.all(4.0), // Add padding around the icon
+                  decoration: BoxDecoration(
+                    color: Colors.white, // White background color
+                    shape: BoxShape.circle, // Circular shape for the container
+                  ),
+                  child: IconButton(
+                    padding: EdgeInsets.zero, // Remove extra padding around the icon
+                    constraints: const BoxConstraints(),
+                    icon: Icon(
+                      Icons.camera_alt,
+                      size: 25, // Smaller icon size
+                      color: main.red, // Red icon color
+                    ),
+                    onPressed: _changeAvatar, // Action to change the avatar
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  },
+  child: Stack(
+    alignment: Alignment.bottomRight,
+    children: [
+      Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: main.red, width: 3),
+        ),
+        child: CircleAvatar(
+          radius: 47,
+          backgroundImage:
+              (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                  ? NetworkImage(_avatarUrl!)
+                  : const AssetImage('assets/images/kebab.png') as ImageProvider,
+        ),
+      ),
+    ],
+  ),
+),
+
             const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
