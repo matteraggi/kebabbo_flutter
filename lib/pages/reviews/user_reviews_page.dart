@@ -28,6 +28,7 @@ class UserReviewsState extends State<UserReviewsPage> {
     // Recupera tutti i profili che hanno l'userId nel campo 'followed_users'
     final response =
         await supabase.from('reviews').select('*').eq('user_id', userId);
+    print(response);
     for (var review in response) {
       final kebabberId = review['kebabber_id'].toString();
       final kebabberResponse = await supabase
@@ -58,6 +59,7 @@ class UserReviewsState extends State<UserReviewsPage> {
     setState(() {
       reviews = List<Map<String, dynamic>>.from(response);
       isLoading = false;
+      print("reviews: $reviews");
     });
   }
 
@@ -67,7 +69,8 @@ class UserReviewsState extends State<UserReviewsPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : reviews.isEmpty
-              ? textExplanation(context, S.of(context).nessuna_recensione_ancora)
+              ? textExplanation(
+                  context, S.of(context).nessuna_recensione_ancora)
               : ListView.builder(
                   itemCount: reviews.length,
                   itemBuilder: (context, index) {
