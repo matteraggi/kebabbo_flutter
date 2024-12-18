@@ -33,23 +33,22 @@ Widget buildInfoButton(
 }
 
 Widget textExplanation(BuildContext context, String text) {
-  return Expanded(
-      // Expanded to take up all available vertical space
-      child: Center(
-    // Center the text
+  return Center(
+    // Center the text within the available space
     child: Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min, // Use min to only take needed vertical space
       children: [
         Text(
           text,
           style: TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 8),
-        linkExplanation(context)
+        linkExplanation(context),
       ],
     ),
-  ));
+  );
 }
+
 
 Widget linkExplanation(BuildContext context) {
   return GestureDetector(
