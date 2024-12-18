@@ -510,7 +510,7 @@ class _AccountPageState extends State<AccountPage> {
                               Navigator.of(context)
                                   .pop(); // Close the dialog when tapped again
                             },
-                            child: Container(
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width *
                                   0.8, // Adjust size
                               height: MediaQuery.of(context).size.height *
