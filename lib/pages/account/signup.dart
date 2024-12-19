@@ -1,53 +1,62 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/pages/account/signup.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key, required this.redirectUrl});
+  final String redirectUrl;
+
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  SignUpPageState createState() => SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class SignUpPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isLoading = false;
-  final bool _redirecting = false;
-  late final TextEditingController _emailController = TextEditingController();
-  late final TextEditingController _passwordController =
-      TextEditingController();
-  late final StreamSubscription<AuthState> _authStateSubscription;
-  final redirectUrl = Uri(
-    scheme: Uri.base.scheme,
-    host: Uri.base.host,
-    port: Uri.base.port,
-  ).toString();
+  SupabaseClient supabase = Supabase.instance.client;
 
-  Future<void> _signInWithEmailAndPassword() async {
-    
+  Future<void> _signUp() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       context.showSnackBar(S.of(context).please_fill_in_all_fields,
           isError: true);
       return;
     }
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
     try {
-      await supabase.auth.signInWithPassword(
+      final AuthResponse res = await supabase.auth.signUp(
         email: _emailController.text.trim(),
         password: _passwordController.text,
+        emailRedirectTo: kIsWeb
+        ? Uri.base.origin  // For web
+        : 'io.supabase.flutter://login-callback/', //TODO da cambiare con il proprio dominio
       );
-
-      if (mounted) {
-        context.showSnackBar(S.of(context).logged_in);
-        _emailController.clear();
-        _passwordController.clear();
+      print(res.user);
+      print(res.session);
+      // Check if res.user is null
+      if (res.user != null) {
+        if (mounted) {
+          context.showSnackBar(
+              S.of(context).check_your_email_for_a_verification_link);
+              Navigator.of(context).pop();
+          
+        }
+      } else {
+        // Handle the case where res.user is null
+        context.showSnackBar(S.of(context).unexpected_error_occurred,
+            isError: true);
       }
     } on AuthException catch (error) {
       context.showSnackBar(error.message, isError: true);
@@ -67,7 +76,6 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _authStateSubscription.cancel();
     super.dispose();
   }
 
@@ -75,43 +83,42 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          'Sign In',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
-        centerTitle: true,
+        title: Text(S.of(context).sign_up),
       ),
-      body: SingleChildScrollView(
+      body: Form(
+        key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Logo or Icon
-              AnimatedOpacity(
-                opacity: 1.0,
-                duration: const Duration(seconds: 1),
-                child: Image.asset(
-                  'assets/images/kebab.png', // Use your logo here
-                  height: 160,
+              //sign up text
+              Text(
+                S.of(context).sign_up,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 30),
+          SizedBox(height: 24),
+              AnimatedOpacity(
 
-              // Google Login Button with Custom Icon
-              GoogleLoginButton(redirectUrl: redirectUrl),
-              const SizedBox(height: 8),
+              opacity: 1.0,
 
+              duration: const Duration(seconds: 1),
+
+              child: Image.asset(
+
+                'assets/images/kebab.png', // Use your logo here
+
+                height: 160,
+
+              ),
+
+            ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                    const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,12 +169,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(
-                        height: 16), // Spacing between the form and the button
+                        height: 24), // Spacing between the form and the button
 
                     // Login Button
                     ElevatedButton(
                       onPressed:
-                          _isLoading? null : _signInWithEmailAndPassword,
+                          _isLoading  ? null : _signUp,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 80, vertical: 15), // Button padding
@@ -179,64 +186,6 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(S.of(context).login),
                     ),
                   ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SignUpPage(redirectUrl: redirectUrl)),
-                  );
-                },
-                child: Text(S.of(context).dont_have_an_account_sign_up),
-              ),
-
-              // Optional Terms and Privacy Text
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Text(
-                  S
-                      .of(context)
-                      .by_signing_in_you_agree_to_our_terms_and_privacy_policy,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
-
-              // Decorative Element (Divider or Animated Element)
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-                indent: 40,
-                endIndent: 40,
-              ),
-              const SizedBox(height: 20),
-
-              // Aesthetic Section: Inspirational Quote or Design
-              Text(
-                S
-                    .of(context)
-                    .prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 16,
-                  color: Colors.blueGrey,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-
-              // Simple Footer Text (Optional)
-              const Text(
-                'Kebabbo App - All Rights Reserved',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
                 ),
               ),
             ],

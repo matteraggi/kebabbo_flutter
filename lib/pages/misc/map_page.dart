@@ -3,7 +3,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/misc/popup_kebab.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/pages/misc/about_page.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:url_launcher/url_launcher.dart';

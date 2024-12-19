@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
-import 'package:kebabbo_flutter/pages/account/auth_callback.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/feed_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
@@ -70,9 +69,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kebabbo',
-      routes:  {
-        '/auth/callback': (context) => const AuthCallbackPage(),
-      },
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: yellow,
         primaryColor: red,
@@ -141,9 +137,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 2;
-  final ValueNotifier<Position?> _currentPositionNotifier =
-      ValueNotifier<Position?>(null);
+  var selectedIndex = 2; // Home page by default
+  final ValueNotifier<Position?> _currentPositionNotifier = ValueNotifier<Position?>(null);
   late Stream<Position> _positionStream;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
@@ -154,8 +149,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _checkFirstTimeOpen(); 
     _getLocation();
-    requestNotificationPermissions(_messaging); // Call this during initialization
-    registerNotificationListeners(); // Register listeners for notifications
+    requestNotificationPermissions(_messaging); // Request notification permissions
+    registerNotificationListeners(); // Register notification listeners
 
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -171,60 +166,57 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-    Future<void> _checkFirstTimeOpen() async {
+  Future<void> _checkFirstTimeOpen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
     if (isFirstTime) {
-      // Show the dialog if it's the first time
+      // Show first-time dialog
       showFirstTimeDialog(context);
-      // Set isFirstTime to false so the dialog won't show again
       prefs.setBool('isFirstTime', false);
     }
   }
 
   Future<void> _getLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
+    if (!serviceEnabled || permission == LocationPermission.deniedForever) {
       _currentPositionNotifier.value = null;
       return;
     }
 
-    permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        _currentPositionNotifier.value = null;
-        return;
+    }
+
+    if (permission != LocationPermission.denied) {
+      Position position = await Geolocator.getCurrentPosition();
+      _currentPositionNotifier.value = position;
+      if (selectedIndex == 3 && _mapPageKey.currentState != null) {
+        _mapPageKey.currentState!.updatePosition(position);
       }
     }
+  }
 
-    if (permission == LocationPermission.deniedForever) {
-      _currentPositionNotifier.value = null;
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-    _currentPositionNotifier.value = position;
-    if (selectedIndex == 3 && _mapPageKey.currentState != null) {
-      _mapPageKey.currentState!.updatePosition(position);
-    }
+  // Update index with callback
+  void _updateIndex(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Widget page;
 
-    // Show ReviewPage if there's a reviewHash, otherwise use selectedIndex
     if (widget.reviewHash != null) {
+      // Handle Review Page
       page = ReviewPage(
         hash: widget.reviewHash!,
       );
     } else {
-      // Use selectedIndex to set the page based on the current tab
+      // Standard navigation based on selectedIndex
       switch (selectedIndex) {
         case 0:
           page = const FeedPage();
