@@ -109,9 +109,9 @@ class SignUpPageState extends State<SignUpPage> {
 
               child: Image.asset(
 
-                'assets/images/kebab.png', // Use your logo here
+                'assets/images/big_logo_name_blackred.png', // Use your logo here
 
-                height: 160,
+                height: 300,
 
               ),
 

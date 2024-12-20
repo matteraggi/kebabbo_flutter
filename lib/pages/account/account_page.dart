@@ -520,7 +520,7 @@ class _AccountPageState extends State<AccountPage> {
                                         _avatarUrl!.isNotEmpty)
                                     ? NetworkImage(_avatarUrl!)
                                     : const AssetImage(
-                                            'assets/images/kebab.png')
+                                            'assets/logos/small_logo.png')
                                         as ImageProvider,
                                 fit: BoxFit
                                     .cover, // Fit the image within the dialog
@@ -573,7 +573,7 @@ class _AccountPageState extends State<AccountPage> {
                       backgroundImage:
                           (_avatarUrl != null && _avatarUrl!.isNotEmpty)
                               ? NetworkImage(_avatarUrl!)
-                              : const AssetImage('assets/images/kebab.png')
+                              : const AssetImage('assets/logos/small_logo.png')
                                   as ImageProvider,
                     ),
                   ),
