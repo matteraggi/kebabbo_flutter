@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/account/forgot_password.dart';
 import 'package:kebabbo_flutter/pages/account/signup.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
@@ -26,7 +27,6 @@ class LoginPageState extends State<LoginPage> {
   ).toString();
 
   Future<void> _signInWithEmailAndPassword() async {
-    
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       context.showSnackBar(S.of(context).please_fill_in_all_fields,
           isError: true);
@@ -122,7 +122,7 @@ class LoginPageState extends State<LoginPage> {
                         boxShadow: [
                           BoxShadow(
                             color:
-                                Colors.grey.withOpacity(0.3), // Subtle shadow
+                                Colors.grey.withAlpha(77), // Subtle shadow
                             blurRadius: 10,
                             offset: Offset(0, 5),
                           ),
@@ -159,12 +159,23 @@ class LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(
-                        height: 16), // Spacing between the form and the button
+                        height: 4), // Spacing between the form and the button
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ForgotPasswordPage(redirectUrl: redirectUrl)),
+                        );
+                      },
+                      child: Text(S.of(context).forgot_password),
+                    ),
+                    SizedBox(height: 4),
 
                     // Login Button
                     ElevatedButton(
                       onPressed:
-                          _isLoading? null : _signInWithEmailAndPassword,
+                          _isLoading ? null : _signInWithEmailAndPassword,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 80, vertical: 15), // Button padding

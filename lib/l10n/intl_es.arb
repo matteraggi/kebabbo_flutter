@@ -224,9 +224,12 @@
   "login": "Iniciar sesión",
   "email": "Correo electrónico",
   "password": "Contraseña",
-  "cambia_profilo": "Cambiar perfil",
-  "cambia_profilepic": "Cambiar foto de perfil",
-  "please_fill_in_all_fields": "Por favor, complete todos los campos",
   "password_minimum_length": "La contraseña debe tener al menos 6 caracteres",
-  "email_required": "El correo electrónico es obligatorio"
+  "email_required": "El correo electrónico es obligatorio",
+  "send_reset_email": "Enviar correo electrónico de restablecimiento",
+  "forgot_password": "Olvidé mi contraseña",
+  "check_your_email_for_a_reset_link": "Consulta tu correo electrónico para obtener un enlace de restablecimiento",
+  "password_reset_success": "Restablecimiento de contraseña exitoso",
+  "new_password": "Nueva contraseña",
+  "reset_password": "Restablecer contraseña"
 }

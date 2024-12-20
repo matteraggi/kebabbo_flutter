@@ -224,9 +224,12 @@
   "login": "Se connecter",
   "email": "E-mail",
   "password": "Mot de passe",
-  "cambia_profilo": "Changer de profil",
-  "cambia_profilepic": "Changer la photo de profil",
-  "please_fill_in_all_fields": "Veuillez remplir tous les champs",
   "password_minimum_length": "Le mot de passe doit comporter au moins 6 caractères",
-  "email_required": "L'email est requis"
+  "email_required": "L'email est requis",
+  "send_reset_email": "Envoyer un e-mail de réinitialisation",
+  "forgot_password": "Mot de passe oublié",
+  "check_your_email_for_a_reset_link": "Vérifie tes e-mails pour un lien de réinitialisation",
+  "password_reset_success": "Réinitialisation du mot de passe réussie",
+  "new_password": "Nouveau mot de passe",
+  "reset_password": "Réinitialiser le mot de passe"
 }

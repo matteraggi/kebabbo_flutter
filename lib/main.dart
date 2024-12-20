@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
+import 'package:kebabbo_flutter/pages/account/reset_password.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
@@ -28,9 +29,15 @@ Future<void> main() async {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
 
   String? reviewHash;
-  if (Uri.base.pathSegments.isNotEmpty &&
-      Uri.base.pathSegments[0] == 'reviews') {
-    reviewHash = Uri.base.pathSegments[1];
+  String? resetPasswordToken;
+
+  // Handle deep links based on URL path
+  if (Uri.base.pathSegments.isNotEmpty) {
+    if (Uri.base.pathSegments[0] == 'reviews') {
+      reviewHash = Uri.base.pathSegments[1];
+    } else if (Uri.base.pathSegments[0] == 'reset-password') {
+      resetPasswordToken = Uri.base.queryParameters['code'];
+    }
   }
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,15 +61,16 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  runApp(MyApp(reviewHash: reviewHash));
+  runApp(MyApp(reviewHash: reviewHash, resetPasswordToken: resetPasswordToken));
 }
 
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   final String? reviewHash;
+  final String? resetPasswordToken;
 
-  const MyApp({super.key, this.reviewHash});
+  const MyApp({super.key, this.reviewHash, this.resetPasswordToken});
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +116,7 @@ class MyApp extends StatelessWidget {
           orElse: () => supportedLocales.first,
         );
       },
-      home: MyHomePage(reviewHash: reviewHash), // Set MyHomePage as the home
+      home: MyHomePage(reviewHash: reviewHash, resetPasswordToken: resetPasswordToken), // Set MyHomePage as the home
     );
   }
 }
@@ -128,8 +136,9 @@ extension ContextExtension on BuildContext {
 
 class MyHomePage extends StatefulWidget {
   final String? reviewHash;
+  final String? resetPasswordToken;
 
-  const  MyHomePage({super.key, this.reviewHash});
+  const  MyHomePage({super.key, this.reviewHash, this.resetPasswordToken});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -137,6 +146,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? reviewHash; // Now a mutable state variable
+  String? resetPasswordToken; // Now a mutable state variable
+
   var selectedIndex = 2; // Home page by default
   final ValueNotifier<Position?> _currentPositionNotifier =
       ValueNotifier<Position?>(null);
@@ -149,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     reviewHash = widget.reviewHash;
+    resetPasswordToken = widget.resetPasswordToken;
     _checkFirstTimeOpen();
     _getLocation();
     if (!kIsWeb) {
@@ -208,12 +220,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     Widget page;
 
+    
+
     if (reviewHash != null) {
       // Handle Review Page
       page = ReviewPage(
         hash: widget.reviewHash!,
       );
-    } else {
+    }
+    else if (resetPasswordToken != null) {
+      // Handle Reset Password Page
+      page = ResetPasswordForm(token: widget.resetPasswordToken!);
+    }
+     else {
       // Standard navigation based on selectedIndex
       switch (selectedIndex) {
         case 0:
@@ -262,6 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
             selectedIndex = index;
             reviewHash =
                 null; // Reset reviewHash so the nav bar takes control
+            resetPasswordToken = null; // Reset resetPasswordToken
           });
         },
         items: [

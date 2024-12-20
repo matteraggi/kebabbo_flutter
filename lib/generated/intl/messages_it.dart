@@ -64,6 +64,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "check_your_email_for_a_login_link":
             MessageLookupByLibrary.simpleMessage(
                 "Controlla la tua email per un link di accesso!"),
+        "check_your_email_for_a_reset_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Controlla la tua email per un link di reimpostazione"),
         "check_your_email_for_a_verification_link":
             MessageLookupByLibrary.simpleMessage(
                 "Controlla la tua email per un link di verifica"),
@@ -142,6 +145,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Benvenuto su Kebabbo! Cosa puoi fare qui?\nBeh, puoi esplorare le nostre professionalissime recensioni di kebab o dare un\'occhiata a quelle di altri utenti.\nAggiungi la tua recensione scansionando l\'adesivo di Kebabbo davanti al kebabbaro stesso.\nDai un\'occhiata ai profili e ai post di altri utenti, connettiti con altri amanti del kebab e guadagna medaglie utilizzando l\'app.\nUsa le nostre funzioni di ricerca e filtraggio o il nostro potente strumento di creazione del kebab perfetto, o esplora la nostra mappa interattiva per scoprire gemme nelle vicinanze.\nDivertiti e kebabba!"),
         "first_time_title":
             MessageLookupByLibrary.simpleMessage("Benvenuto su Kebabbo!"),
+        "forgot_password":
+            MessageLookupByLibrary.simpleMessage("Password dimenticata"),
         "fun": MessageLookupByLibrary.simpleMessage("Divertimento"),
         "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia":
             MessageLookupByLibrary.simpleMessage(
@@ -201,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nessuna recensione ancora"),
         "nessuna_recensione_disponibile": MessageLookupByLibrary.simpleMessage(
             "Nessuna recensione disponibile"),
+        "new_password": MessageLookupByLibrary.simpleMessage("Nuova Password"),
         "no_image": MessageLookupByLibrary.simpleMessage("Nessuna immagine"),
         "no_suggestions_available": MessageLookupByLibrary.simpleMessage(
             "Nessun suggerimento disponibile"),
@@ -222,6 +228,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "La password deve essere di almeno 6 caratteri"),
+        "password_reset_success": MessageLookupByLibrary.simpleMessage(
+            "Reimpostazione password riuscita"),
         "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab":
             MessageLookupByLibrary.simpleMessage(
                 "Per questo ci siamo noi: studenti universitari, come voi, con anni di esperienza come mangiatori di Kebab."),
@@ -259,6 +267,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "registrati_per_poter_visualizzare_il_feed":
             MessageLookupByLibrary.simpleMessage(
                 "Registrati per poter visualizzare il feed"),
+        "reset_password":
+            MessageLookupByLibrary.simpleMessage("Reimposta Password"),
         "review": MessageLookupByLibrary.simpleMessage("Recensione"),
         "reviewMessage": m5,
         "review_submitted_successfully": MessageLookupByLibrary.simpleMessage(
@@ -275,6 +285,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "seleziona_il_tuo_kebab_preferito":
             MessageLookupByLibrary.simpleMessage(
                 "Seleziona il tuo kebab preferito"),
+        "send_reset_email": MessageLookupByLibrary.simpleMessage(
+            "Invia email di reimpostazione"),
         "sign_up": MessageLookupByLibrary.simpleMessage("Registrati"),
         "spicy": MessageLookupByLibrary.simpleMessage("Piccante"),
         "submit_review":
