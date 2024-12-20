@@ -66,6 +66,7 @@ flutter:
   # Generate the localization files automatically
   assets:
     - assets/images/
+    - assets/logos/
     - assets/icons/
     - packages/font_awesome_flutter/fonts/fa-brands-400.ttf
     - lib/l10n/
