@@ -1,5 +1,8 @@
 {
     "@@locale": "de",
+    "cambia_profilo": "profil ändern",
+    "cambia_profilepic": "profilbild ändern",
+    "please_fill_in_all_fields": "Bitte füllen Sie alle Felder aus",
     "nome_non_disponibile": "Name nicht verfügbar",
     "seleziona_il_tuo_kebab_preferito": "Wähle deinen Lieblingskebab",
     "consigliaci_un_kebabbaro": "Empfiehl uns einen Kebabladen",

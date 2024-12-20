@@ -1,5 +1,8 @@
 {
     "@@locale": "pt",
+    "cambia_profilo": "mudar perfil",
+    "cambia_profilepic": "alterar foto do perfil",
+    "please_fill_in_all_fields": "por favor preencha todos os campos",
     "nome_non_disponibile": "Nome não disponível",
     "seleziona_il_tuo_kebab_preferito": "Selecione seu kebab favorito",
     "consigliaci_un_kebabbaro": "Recomende um lugar de kebab",

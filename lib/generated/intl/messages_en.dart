@@ -30,7 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m4(results) => "Unlimited (${results} results)";
 
-  static String m5(Object kebabName, qualityRating, quantityRating, menuRating,
+  static String m5(kebabName, qualityRating, quantityRating, menuRating,
           priceRating, funRating, description) =>
       "I just reviewed the kebab at ${kebabName}!\n\nQuality: ${qualityRating}\nQuantity: ${quantityRating}\nMenu: ${menuRating}\nPrice: ${priceRating}\nFun: ${funRating}\n\n${description}";
 
