@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/components/list_items/feed_list_item.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 
@@ -390,25 +391,24 @@ Future<void> _postFeed() async {
   }
 }
 
+Future<void> _pickImage() async {
+  final result = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+    allowCompression: true,
+    allowMultiple: false,
+  );
 
-  Future<void> _pickImage() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowCompression: true,
-      allowMultiple: false,
-    );
+  if (result != null) {
+    Uint8List imageData = result.files.single.bytes!;
+    Uint8List? compressedImage = await ImageUtils.compressImage(
+        imageData, 400 * 1024, 1200, 1200); // Use the utility function
 
-    if (result != null) {
-      // Ottiene i bytes dell'immagine e la comprime
-      Uint8List imageData = result.files.single.bytes!;
-      Uint8List? compressedImage = await compressImage(imageData);
-
-      setState(() {
-        imageBytes = compressedImage;
-        imagePath = result.files.single.name;
-      });
-    }
+    setState(() {
+      imageBytes = compressedImage;
+      imagePath = result.files.single.name;
+    });
   }
+}
 
   Future<void> _tagKebab() async {
     await fetchKebabNames(); // Popola la lista dei kebabbari

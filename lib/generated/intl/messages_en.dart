@@ -106,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit_profile": MessageLookupByLibrary.simpleMessage("Edit profile"),
         "elimina": MessageLookupByLibrary.simpleMessage("Delete"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "email_required":
+            MessageLookupByLibrary.simpleMessage("Email is required"),
         "errore": MessageLookupByLibrary.simpleMessage("Error:"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage("Error loading followers"),
@@ -208,6 +210,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oops_review_not_found":
             MessageLookupByLibrary.simpleMessage("Oops! Review Not Found"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "password_minimum_length": MessageLookupByLibrary.simpleMessage(
+            "Password must be at least 6 characters"),
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "Password must be at least 6 characters"),

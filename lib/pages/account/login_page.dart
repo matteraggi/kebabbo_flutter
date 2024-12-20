@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
@@ -8,15 +7,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, this.authCallback});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
+  final Function(int)? authCallback;
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
-  final bool _redirecting = false;
   late final TextEditingController _emailController = TextEditingController();
   late final TextEditingController _passwordController =
       TextEditingController();
@@ -48,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         context.showSnackBar(S.of(context).logged_in);
         _emailController.clear();
         _passwordController.clear();
+        widget.authCallback?.call(4);
       }
     } on AuthException catch (error) {
       context.showSnackBar(error.message, isError: true);

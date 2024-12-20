@@ -199,13 +199,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // Update index with callback
-  void _updateIndex(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget page;
@@ -239,8 +232,12 @@ class _MyHomePageState extends State<MyHomePage> {
           );
           break;
         case 4:
-          page = supabase.auth.currentSession == null
-              ? const LoginPage()
+          page = supabase.auth.currentSession == null// add function to update selected index
+              ? LoginPage(authCallback:  (int index) {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                })
               : AccountPage(currentPosition: _currentPositionNotifier.value);
           break;
         default:

@@ -110,6 +110,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Modifica profilo"),
         "elimina": MessageLookupByLibrary.simpleMessage("Elimina"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "email_required":
+            MessageLookupByLibrary.simpleMessage("l\'Email è obbligatoria"),
         "errore": MessageLookupByLibrary.simpleMessage("Errore:"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage(
@@ -215,6 +217,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oops_review_not_found": MessageLookupByLibrary.simpleMessage(
             "Oops! Recensione non trovata"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "password_minimum_length": MessageLookupByLibrary.simpleMessage(
+            "La password deve essere di almeno 6 caratteri"),
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "La password deve essere di almeno 6 caratteri"),
