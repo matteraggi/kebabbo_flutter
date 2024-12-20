@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
-import 'package:kebabbo_flutter/pages/feed&socials/feed_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
