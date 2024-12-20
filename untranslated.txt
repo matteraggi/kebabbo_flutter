@@ -1,1 +1,21 @@
-{}
+{
+  "de": [
+    "password_minimum_length",
+    "email_required"
+  ],
+
+  "es": [
+    "password_minimum_length",
+    "email_required"
+  ],
+
+  "fr": [
+    "password_minimum_length",
+    "email_required"
+  ],
+
+  "pt": [
+    "password_minimum_length",
+    "email_required"
+  ]
+}

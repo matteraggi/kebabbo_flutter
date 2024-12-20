@@ -14,10 +14,11 @@ import 'package:kebabbo_flutter/pages/feed&socials/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/user_posts_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/user_reviews_page.dart';
+import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:image/image.dart' as img;
 import 'dart:convert';
 
 void printObject(Object object) {
@@ -40,13 +41,10 @@ class _AccountPageState extends State<AccountPage> {
   String? _avatarUrl;
   int _postCount = 0;
   bool _loading = true;
-  int _favoritesCount = 0;
   List<int> _ingredients = [5, 5, 5, 5, 5];
   final TextEditingController _usernameController = TextEditingController();
   int _followersCount = 0;
   int _seguitiCount = 0;
-  int _reviewsCount = 0;
-  String? _favoriteKebabId;
   Map<String, dynamic>? _favoriteKebab;
 
   @override
@@ -55,7 +53,6 @@ class _AccountPageState extends State<AccountPage> {
     _loadProfile();
     _getPostCount();
     _getFollowerCount();
-    _getReviewsCount();
   }
 
   Future<void> _getFollowerCount() async {
@@ -76,24 +73,6 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  Future<void> _getReviewsCount() async {
-    try {
-      final response = await supabase
-          .from('reviews')
-          .select('id')
-          .eq('user_id', supabase.auth.currentUser!.id);
-      setState(() {
-        _reviewsCount = response.length;
-      });
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).failed_to_load_reviews_count)),
-        );
-      }
-    }
-  }
-
   Future<void> _loadProfile() async {
     setState(() {
       _loading = true;
@@ -104,7 +83,7 @@ class _AccountPageState extends State<AccountPage> {
     setState(() {
       _username = profileData['username'];
       _avatarUrl = profileData['avatarUrl'];
-      _favoritesCount = profileData['favoritesCount'];
+      print("_avatarUrl: $_avatarUrl");
       _ingredients = List<int>.from(profileData['ingredients']);
       _seguitiCount = (profileData['seguitiCount'] != null)
           ? profileData['seguitiCount'].length
@@ -161,7 +140,10 @@ class _AccountPageState extends State<AccountPage> {
                           size: 25, // Smaller icon size
                           color: main.red, // Red icon color
                         ),
-                        onPressed: _changeAvatar, // Added the onPressed action
+                        onPressed: () async {
+                          _changeAvatar(); //then close the dialog
+                          Navigator.of(context).pop();
+                        }, // Added the onPressed action
                       ),
                     ],
                   ),
@@ -228,42 +210,52 @@ class _AccountPageState extends State<AccountPage> {
       },
     );
   }
+Future<void> _changeAvatar() async {
+  // Use FilePicker to select an image
+  final result = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+    allowCompression: true,
+    allowMultiple: false,
+  );
 
-  Future<void> _changeAvatar() async {
-    // Usa FilePicker per selezionare un’immagine
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowCompression: true,
-      allowMultiple: false,
-    );
+  if (result != null) {
+    final Uint8List bytes = result.files.single.bytes!;
+    Uint8List? processedImage =
+        await ImageUtils.compressImage(bytes, 100 * 1024, 800, 800);
 
-    if (result != null) {
-      final Uint8List bytes = result.files.single.bytes!;
-      Uint8List? compressedImage = await compressImage(bytes);
-      final userId = supabase.auth.currentSession!.user.id;
-      final filePath = '$userId.png';
+    final userId = supabase.auth.currentSession!.user.id;
 
-      try {
-        await supabase.storage.from('avatars').uploadBinary(
-            filePath, compressedImage!,
-            fileOptions: const FileOptions(upsert: true));
-        // Ottieni l'URL pubblico dell'immagine e aggiorna il profilo
-        final imageUrlResponse =
-            supabase.storage.from('avatars').getPublicUrl(filePath);
-        setState(() {
-          _avatarUrl = imageUrlResponse;
-        });
+    try {
+      // Upload the processed image
+      await supabase.storage.from('avatars').uploadBinary(
+          '$userId.png', processedImage!,
+          fileOptions: const FileOptions(upsert: true));
 
-        await _updateProfile();
-      } catch (error) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
-          );
-        }
+      // Get the public URL of the uploaded avatar
+      final imageUrlResponse =
+          supabase.storage.from('avatars').getPublicUrl('$userId.png');
+
+      // Cache busting: Append a timestamp or unique query param to force the browser to load the new image
+      final cacheBustedUrl = '$imageUrlResponse?v=${DateTime.now().millisecondsSinceEpoch}';
+
+      // Update the client-side avatar URL with cache-busted URL
+      setState(() {
+        _avatarUrl = cacheBustedUrl;
+      });
+
+      // Update profile after uploading the avatar
+      _updateProfile();
+    } catch (error) {
+      if (mounted) {
+        print(error);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
+        );
       }
     }
   }
+}
+
 
   Future<void> _getPostCount() async {
     try {
@@ -370,17 +362,19 @@ class _AccountPageState extends State<AccountPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    // Posiziona il menu un po' più in basso rispetto all'icona
-                    final RenderBox renderBox =
-                        context.findRenderObject() as RenderBox;
-                    final position = renderBox.localToGlobal(Offset.zero);
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // Posiziona il menu un po' più in basso rispetto all'icona
+                          final RenderBox renderBox =
+                              context.findRenderObject() as RenderBox;
+                          final position = renderBox.localToGlobal(Offset.zero);
 
                     showMenu(
                       context: context,

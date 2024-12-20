@@ -1534,6 +1534,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Password must be at least 6 characters`
+  String get password_minimum_length {
+    return Intl.message(
+      'Password must be at least 6 characters',
+      name: 'password_minimum_length',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email is required`
+  String get email_required {
+    return Intl.message(
+      'Email is required',
+      name: 'email_required',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

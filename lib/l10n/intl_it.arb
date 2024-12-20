@@ -188,7 +188,9 @@
       
       "cambia_profilo": "Cambia profilo",
       "cambia_profilepic": "Cambia immagine del profilo",
-      "please_fill_in_all_fields": "Compila tutti i campi"
+      "please_fill_in_all_fields": "Compila tutti i campi",
+      "password_minimum_length" : "La password deve essere di almeno 6 caratteri",
+      "email_required": "l'Email è obbligatoria"
     }
 
 
