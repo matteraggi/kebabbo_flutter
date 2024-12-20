@@ -19,7 +19,7 @@ import 'package:flutter/foundation.dart'; // Import for kIsWeb
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
-
+ 
 Future<void> main() async {
   await Supabase.initialize(
       url: "https://ntrxsuhmslsvlflwbizb.supabase.co",
