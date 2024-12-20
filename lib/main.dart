@@ -127,15 +127,16 @@ extension ContextExtension on BuildContext {
 }
 
 class MyHomePage extends StatefulWidget {
-  String? reviewHash;
+  final String? reviewHash;
 
-  MyHomePage({super.key, this.reviewHash});
+  const  MyHomePage({super.key, this.reviewHash});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String? reviewHash; // Now a mutable state variable
   var selectedIndex = 2; // Home page by default
   final ValueNotifier<Position?> _currentPositionNotifier =
       ValueNotifier<Position?>(null);
@@ -147,6 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    reviewHash = widget.reviewHash;
     _checkFirstTimeOpen();
     _getLocation();
     if (!kIsWeb) {
@@ -206,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     Widget page;
 
-    if (widget.reviewHash != null) {
+    if (reviewHash != null) {
       // Handle Review Page
       page = ReviewPage(
         hash: widget.reviewHash!,
@@ -258,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: (index) {
           setState(() {
             selectedIndex = index;
-            widget.reviewHash =
+            reviewHash =
                 null; // Reset reviewHash so the nav bar takes control
           });
         },
