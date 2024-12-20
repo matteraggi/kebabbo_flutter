@@ -175,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-    if (isFirstTime) {
+    if (isFirstTime && mounted) {
       // Show first-time dialog
       showFirstTimeDialog(context);
       prefs.setBool('isFirstTime', false);
@@ -252,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      body: page,
+      body: mounted ? page : Container(), // Wrap the page,
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: true,
         showUnselectedLabels: false,
