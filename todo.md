@@ -82,9 +82,9 @@ Feature extra:
 
 - [x] Badge del posto quando si mette review
 - [x] Recensioni utenti postate come post
-- [ ] La lingua è sempre inglese
-- [ ] Nella sezione recensioni non sempre compare la scritta su come recensire
-- [ ] Controllare dimensione caricamento foto profilo e post
+- [x] La lingua è sempre inglese
+- [x] Nella sezione recensioni non sempre compare la scritta su come recensire
+- [x] Controllare dimensione caricamento foto profilo e post
 - [ ] Rotella caricamento immagine quando cambio foto profilo
 - [ ] Cambiare UI modulo di cambio account info
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
@@ -102,6 +102,7 @@ Non dev:
 - [ ] Sponsor
 
 Brand Identity:
+
 - logo (
     5 logo variations that brand needs:
         - primary logo (abbastanza completo quindi: immagine, nome e magari anche date e robe varie)
@@ -113,14 +114,16 @@ Brand Identity:
 - color palette (
     red = Color.fromRGBO(187, 0, 0, 1.0);
     yellow = Color.fromRGBO(255, 186, 28, 1.0);
-    + altro colore minore. Opzioni:
-        #666370 
+    altro colore minore. Opzioni:
+        #666370
         #31231E
         #ECF0F1
         #7B7554
         #2D3047
 )
-- typography 
+
+- typography
+
 - extra(
     Photography
     Illustration
