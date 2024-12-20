@@ -361,16 +361,6 @@ Widget build(BuildContext context) {
                 ),
               ),
             const SizedBox(height: 20),
-            
-            // User's Posts Section
-            Text(
-              S.of(context).i_tuoi_post,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
 
             // List of user posts
             ListView.builder(
