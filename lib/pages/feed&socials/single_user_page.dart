@@ -21,7 +21,6 @@ class _SingleUserPageState extends State<SingleUserPage> {
   String? _avatarUrl;
   int _postCount = 0;
   bool _loading = true;
-  int _favoritesCount = 0;
   List<dynamic> _followed = [];
   List<dynamic> _userPosts = [];
   bool _isFollowing = false; // Variabile per controllare se l'utente è seguito
@@ -119,9 +118,6 @@ Future<void> _loadUserPosts() async {
       setState(() {
         _username = profileData['username'];
         _avatarUrl = profileData['avatar_url'];
-        _favoritesCount = (profileData['favorites'] is List)
-            ? profileData['favorites'].length
-            : 0;
         _followed = currentUserProfile['followed_users'] ?? [];
         _isFollowing = _followed.contains(userId);
         _seguitiCount = (profileData['followed_users'] != null)
@@ -197,7 +193,9 @@ Widget build(BuildContext context) {
     appBar: AppBar(
       backgroundColor: yellow,
     ),
-    body: SingleChildScrollView(
+    body: _loading
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(

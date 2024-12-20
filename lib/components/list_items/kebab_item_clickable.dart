@@ -65,7 +65,7 @@ class KebabListItemClickableState extends State<KebabListItemClickable> {
 
     final userId = user.id; // Prendi l'ID dell'utente loggato
 
-    final response = await Supabase.instance.client.from('profiles').upsert({
+    await Supabase.instance.client.from('profiles').upsert({
       'id': userId, // ID dell'utente per trovare la riga corretta
       'favorite_kebab': favoriteKebabId, // Il kebab preferito
     }).eq('id', userId);
