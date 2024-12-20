@@ -19,7 +19,6 @@ class LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailController = TextEditingController();
   late final TextEditingController _passwordController =
       TextEditingController();
-  late final StreamSubscription<AuthState> _authStateSubscription;
   final redirectUrl = Uri(
     scheme: Uri.base.scheme,
     host: Uri.base.host,
@@ -67,7 +66,6 @@ class LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _authStateSubscription.cancel();
     super.dispose();
   }
 
