@@ -224,9 +224,12 @@
   "login": "Entrar",
   "email": "Email",
   "password": "Senha",
-  "cambia_profilo": "Alterar perfil",
-  "cambia_profilepic": "Alterar foto de perfil",
-  "please_fill_in_all_fields": "Por favor, preencha todos os campos",
   "password_minimum_length": "A senha deve ter no mínimo 6 caracteres",
-  "email_required": "O email é obrigatório"
+  "email_required": "O email é obrigatório",
+  "send_reset_email": "Enviar e-mail de redefinição",
+  "forgot_password": "Esqueci minha senha",
+  "check_your_email_for_a_reset_link": "Verifique seu e-mail para obter um link de redefinição",
+  "password_reset_success": "Redefinição de senha bem-sucedida",
+  "new_password": "Nova senha",
+  "reset_password": "Redefinir senha"
 }

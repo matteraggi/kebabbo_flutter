@@ -1554,6 +1554,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Send reset email`
+  String get send_reset_email {
+    return Intl.message(
+      'Send reset email',
+      name: 'send_reset_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot password`
+  String get forgot_password {
+    return Intl.message(
+      'Forgot password',
+      name: 'forgot_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check your email for a reset link`
+  String get check_your_email_for_a_reset_link {
+    return Intl.message(
+      'Check your email for a reset link',
+      name: 'check_your_email_for_a_reset_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password reset successful`
+  String get password_reset_success {
+    return Intl.message(
+      'Password reset successful',
+      name: 'password_reset_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Password`
+  String get new_password {
+    return Intl.message(
+      'New Password',
+      name: 'new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset Password`
+  String get reset_password {
+    return Intl.message(
+      'Reset Password',
+      name: 'reset_password',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

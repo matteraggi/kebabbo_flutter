@@ -224,9 +224,12 @@
   "login": "Anmelden",
   "email": "E-Mail",
   "password": "Passwort",
-  "cambia_profilo": "Profil ändern",
-  "cambia_profilepic": "Profilbild ändern",
-  "please_fill_in_all_fields": "Bitte füllen Sie alle Felder aus",
   "password_minimum_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
-  "email_required": "E-Mail ist erforderlich"
+  "email_required": "E-Mail ist erforderlich",
+  "send_reset_email": "E-Mail zum Zurücksetzen senden",
+  "forgot_password": "Passwort vergessen",
+  "check_your_email_for_a_reset_link": "Überprüfe deine E-Mails auf einen Link zum Zurücksetzen",
+  "password_reset_success": "Passwort zurücksetzen erfolgreich",
+  "new_password": "Neues Passwort",
+  "reset_password": "Passwort zurücksetzen"
 }

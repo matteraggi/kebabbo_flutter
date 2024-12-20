@@ -225,5 +225,11 @@
   "cambia_profilepic": "Cambia immagine del profilo",
   "please_fill_in_all_fields": "Compila tutti i campi",
   "password_minimum_length": "La password deve essere di almeno 6 caratteri",
-  "email_required": "l'Email è obbligatoria"
+  "email_required": "l'Email è obbligatoria",
+  "send_reset_email": "Invia email di reimpostazione",
+  "forgot_password": "Password dimenticata",
+  "check_your_email_for_a_reset_link": "Controlla la tua email per un link di reimpostazione",
+  "password_reset_success": "Reimpostazione password riuscita",
+  "new_password": "Nuova Password",
+  "reset_password": "Reimposta Password"
 }

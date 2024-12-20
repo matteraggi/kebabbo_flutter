@@ -52,9 +52,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Al iniciar sesión, aceptas nuestros términos y política de privacidad."),
         "cambia_profilepic":
-            MessageLookupByLibrary.simpleMessage("Cambiar foto de perfil"),
+            MessageLookupByLibrary.simpleMessage("cambiar foto de perfil"),
         "cambia_profilo":
-            MessageLookupByLibrary.simpleMessage("Cambiar perfil"),
+            MessageLookupByLibrary.simpleMessage("cambiar perfil"),
         "cambia_username":
             MessageLookupByLibrary.simpleMessage("Cambiar nombre de usuario"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
@@ -64,6 +64,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Buscar usuarios..."),
         "check_your_email_for_a_login_link": MessageLookupByLibrary.simpleMessage(
             "¡Revisa tu correo electrónico para obtener un enlace de inicio de sesión!"),
+        "check_your_email_for_a_reset_link": MessageLookupByLibrary.simpleMessage(
+            "Consulta tu correo electrónico para obtener un enlace de restablecimiento"),
         "check_your_email_for_a_verification_link":
             MessageLookupByLibrary.simpleMessage(
                 "Revisa tu correo electrónico para obtener un enlace de verificación"),
@@ -139,6 +141,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "¡Bienvenido a Kebabbo!\n¿Qué puedes hacer aquí?\nBueno, puedes explorar nuestras reseñas profesionales de kebab o consultar las valoraciones de otros usuarios.\nEscribe tu propia reseña escaneando la pegatina de Kebabbo en el lugar de kebab.\nConsulta los perfiles y publicaciones de otros usuarios, conéctate con otros amantes del kebab y gana logros por usar la aplicación.\nUtiliza nuestras funciones de búsqueda y filtro o nuestra potente herramienta de creación para encontrar tu kebab ideal o explora nuestro mapa interactivo para descubrir joyas cercanas.\n¡Diviértete y a por el kebab!"),
         "first_time_title":
             MessageLookupByLibrary.simpleMessage("¡Bienvenido a Kebabbo!"),
+        "forgot_password":
+            MessageLookupByLibrary.simpleMessage("Olvidé mi contraseña"),
         "fun": MessageLookupByLibrary.simpleMessage("Diversión"),
         "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia":
             MessageLookupByLibrary.simpleMessage(
@@ -199,6 +203,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aún no hay reseñas"),
         "nessuna_recensione_disponibile":
             MessageLookupByLibrary.simpleMessage("No hay reseñas disponibles"),
+        "new_password":
+            MessageLookupByLibrary.simpleMessage("Nueva contraseña"),
         "no_image": MessageLookupByLibrary.simpleMessage("Sin imagen"),
         "no_suggestions_available": MessageLookupByLibrary.simpleMessage(
             "No hay sugerencias disponibles"),
@@ -220,6 +226,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "La contraseña debe tener al menos 6 caracteres"),
+        "password_reset_success": MessageLookupByLibrary.simpleMessage(
+            "Restablecimiento de contraseña exitoso"),
         "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab":
             MessageLookupByLibrary.simpleMessage(
                 "Por eso estamos aquí: estudiantes universitarios, como tú, con años de experiencia como consumidores de kebab."),
@@ -230,7 +238,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "please_enter_your_email": MessageLookupByLibrary.simpleMessage(
             "Introduce tu correo electrónico"),
         "please_fill_in_all_fields": MessageLookupByLibrary.simpleMessage(
-            "Por favor, complete todos los campos"),
+            "por favor complete todos los campos"),
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Inicia sesión para enviar tu reseña"),
@@ -256,6 +264,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Califica el kebab"),
         "registrati_per_poter_visualizzare_il_feed":
             MessageLookupByLibrary.simpleMessage("Regístrate para ver el feed"),
+        "reset_password":
+            MessageLookupByLibrary.simpleMessage("Restablecer contraseña"),
         "review": MessageLookupByLibrary.simpleMessage("Reseña"),
         "reviewMessage": m5,
         "review_submitted_successfully": MessageLookupByLibrary.simpleMessage(
@@ -272,6 +282,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "seleziona_il_tuo_kebab_preferito":
             MessageLookupByLibrary.simpleMessage(
                 "Selecciona tu kebab favorito"),
+        "send_reset_email": MessageLookupByLibrary.simpleMessage(
+            "Enviar correo electrónico de restablecimiento"),
         "sign_up": MessageLookupByLibrary.simpleMessage("Registrarse"),
         "spicy": MessageLookupByLibrary.simpleMessage("Picante"),
         "submit_review": MessageLookupByLibrary.simpleMessage("Enviar reseña"),
