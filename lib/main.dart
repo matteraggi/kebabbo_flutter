@@ -16,6 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:kebabbo_flutter/utils/notifications.dart';
 import 'package:flutter/foundation.dart'; // Import for kIsWeb
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
@@ -32,33 +33,31 @@ Future<void> main() async {
     reviewHash = Uri.base.pathSegments[1];
   }
 
-WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   // Web-specific initialization using FirebaseOptions
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
-  apiKey: "AIzaSyDs2C7PvgXSUgCGoy7OcAGm55hlpbGtFVI",
-  authDomain: "kebabbo-669ea.firebaseapp.com",
-  projectId: "kebabbo-669ea",
-  storageBucket: "kebabbo-669ea.firebasestorage.app",
-  messagingSenderId: "12309724529",
-  appId: "1:12309724529:web:c84bf69f2af9846fee4ad0",
-  measurementId: "G-Z2YEVGGKTF"
-    ),
+          apiKey: "AIzaSyDs2C7PvgXSUgCGoy7OcAGm55hlpbGtFVI",
+          authDomain: "kebabbo-669ea.firebaseapp.com",
+          projectId: "kebabbo-669ea",
+          storageBucket: "kebabbo-669ea.firebasestorage.app",
+          messagingSenderId: "12309724529",
+          appId: "1:12309724529:web:c84bf69f2af9846fee4ad0",
+          measurementId: "G-Z2YEVGGKTF"),
     );
   } else {
     // Mobile initialization (Android/iOS)
     await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
-
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   runApp(MyApp(reviewHash: reviewHash));
 }
 
 final supabase = Supabase.instance.client;
-
 
 class MyApp extends StatelessWidget {
   final String? reviewHash;
@@ -138,7 +137,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 2; // Home page by default
-  final ValueNotifier<Position?> _currentPositionNotifier = ValueNotifier<Position?>(null);
+  final ValueNotifier<Position?> _currentPositionNotifier =
+      ValueNotifier<Position?>(null);
   late Stream<Position> _positionStream;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
@@ -147,10 +147,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _checkFirstTimeOpen(); 
+    _checkFirstTimeOpen();
     _getLocation();
-    requestNotificationPermissions(_messaging); // Request notification permissions
-    registerNotificationListeners(); // Register notification listeners
+    if (!kIsWeb) {
+      requestNotificationPermissions(
+          _messaging); // Request notification permissions
+      registerNotificationListeners(context);
+    } // Register notification listeners
 
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -232,8 +235,9 @@ class _MyHomePageState extends State<MyHomePage> {
           );
           break;
         case 4:
-          page = supabase.auth.currentSession == null// add function to update selected index
-              ? LoginPage(authCallback:  (int index) {
+          page = supabase.auth.currentSession ==
+                  null // add function to update selected index
+              ? LoginPage(authCallback: (int index) {
                   setState(() {
                     selectedIndex = index;
                   });
