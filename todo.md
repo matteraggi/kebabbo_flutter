@@ -91,6 +91,9 @@ Feature extra:
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
 - [x] traduzioni stringhe
+- [ ] pack opening pokemon pocket style con carte kebabbari da collezionare. una apertura giornaliera con clessidre ottenibile attraverso fidelity card in collaborazione con kebabbari scelti
+- [ ] i pacchetti se sono un pò inclinati hanno le carte buone così se vengono scoperti tutti finisco la collezione subito e non shoppano più
+- [ ] nel pick a 5 carte non è random, c'è il super algoritmo per decidere ogni carta dove va
 
 Non dev:
 

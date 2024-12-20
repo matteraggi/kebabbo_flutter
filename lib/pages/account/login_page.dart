@@ -99,12 +99,11 @@ class _LoginPageState extends State<LoginPage> {
                 opacity: 1.0,
                 duration: const Duration(seconds: 1),
                 child: Image.asset(
-                  'assets/images/kebab.png', // Use your logo here
-                  height: 160,
+                  'assets/logos/big_logo_name_blackred.png', // Use your logo here
+                  height: 300,
                 ),
               ),
-              const SizedBox(height: 30),
-
+              SizedBox(height: 20),
               // Google Login Button with Custom Icon
               GoogleLoginButton(redirectUrl: redirectUrl),
               const SizedBox(height: 8),
