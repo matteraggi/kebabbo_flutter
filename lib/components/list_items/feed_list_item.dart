@@ -483,7 +483,7 @@ Future<void> _fetchUserProfile(String userId) async {
                               backgroundImage: avatarUrl != null &&
                                       avatarUrl!.isNotEmpty
                                   ? NetworkImage(avatarUrl!)
-                                  : const AssetImage('logos/small_logo.png')
+                                  : const AssetImage('images/small_logo.png')
                                       as ImageProvider,
                             ),
                             const SizedBox(width: 8),

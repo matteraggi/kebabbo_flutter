@@ -223,7 +223,7 @@ Widget build(BuildContext context) {
                 radius: 47,
                 backgroundImage: (_avatarUrl != null && _avatarUrl!.isNotEmpty)
                     ? NetworkImage(_avatarUrl!)
-                    : const AssetImage('assets/logos/small_logo.png')
+                    : const AssetImage('assets/images/small_logo.png')
                         as ImageProvider,
               ),
             ),

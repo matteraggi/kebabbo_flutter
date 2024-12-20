@@ -514,7 +514,7 @@ Future<void> _changeAvatar() async {
                                         _avatarUrl!.isNotEmpty)
                                     ? NetworkImage(_avatarUrl!)
                                     : const AssetImage(
-                                            'assets/logos/small_logo.png')
+                                            'assets/images/small_logo.png')
                                         as ImageProvider,
                                 fit: BoxFit
                                     .cover, // Fit the image within the dialog
@@ -567,7 +567,7 @@ Future<void> _changeAvatar() async {
                       backgroundImage:
                           (_avatarUrl != null && _avatarUrl!.isNotEmpty)
                               ? NetworkImage(_avatarUrl!)
-                              : const AssetImage('assets/logos/small_logo.png')
+                              : const AssetImage('assets/images/small_logo.png')
                                   as ImageProvider,
                     ),
                   ),
