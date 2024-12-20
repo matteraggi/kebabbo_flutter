@@ -42,7 +42,7 @@ void showMedalDialog(BuildContext context) {
       btnOkColor: red,
       btnOkOnPress: () {},
       customHeader: Image.asset(
-        'assets/images/small_logo.png',  // Your custom PNG image path
+        'assets/logos/small_logo.png',  // Your custom PNG image path
         width: 100,
         height: 100,
       ),  // No animation for the image
