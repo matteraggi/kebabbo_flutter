@@ -510,13 +510,13 @@ class S {
 
   /// `I just reviewed the kebab at {kebabName}!\n\nQuality: {qualityRating}\nQuantity: {quantityRating}\nMenu: {menuRating}\nPrice: {priceRating}\nFun: {funRating}\n\n{description}`
   String reviewMessage(
-      Object kebabName,
-      Object qualityRating,
-      Object quantityRating,
-      Object menuRating,
-      Object priceRating,
-      Object funRating,
-      Object description) {
+      String kebabName,
+      String qualityRating,
+      String quantityRating,
+      String menuRating,
+      String priceRating,
+      String funRating,
+      String description) {
     return Intl.message(
       'I just reviewed the kebab at $kebabName!\n\nQuality: $qualityRating\nQuantity: $quantityRating\nMenu: $menuRating\nPrice: $priceRating\nFun: $funRating\n\n$description',
       name: 'reviewMessage',
@@ -876,7 +876,7 @@ class S {
   }
 
   /// `200 meters ({results} results)`
-  String distanceLabel200m(Object results) {
+  String distanceLabel200m(String results) {
     return Intl.message(
       '200 meters ($results results)',
       name: 'distanceLabel200m',
@@ -886,7 +886,7 @@ class S {
   }
 
   /// `500 meters ({results} results)`
-  String distanceLabel500m(Object results) {
+  String distanceLabel500m(String results) {
     return Intl.message(
       '500 meters ($results results)',
       name: 'distanceLabel500m',
@@ -896,7 +896,7 @@ class S {
   }
 
   /// `1 km ({results} results)`
-  String distanceLabel1km(Object results) {
+  String distanceLabel1km(String results) {
     return Intl.message(
       '1 km ($results results)',
       name: 'distanceLabel1km',
@@ -906,7 +906,7 @@ class S {
   }
 
   /// `10 km ({results} results)`
-  String distanceLabel10km(Object results) {
+  String distanceLabel10km(String results) {
     return Intl.message(
       '10 km ($results results)',
       name: 'distanceLabel10km',
@@ -916,7 +916,7 @@ class S {
   }
 
   /// `Unlimited ({results} results)`
-  String distanceLabelUnlimited(Object results) {
+  String distanceLabelUnlimited(String results) {
     return Intl.message(
       'Unlimited ($results results)',
       name: 'distanceLabelUnlimited',

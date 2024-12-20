@@ -32,7 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(kebabName, qualityRating, quantityRating, menuRating,
           priceRating, funRating, description) =>
-      "Je viens de critiquer le kebab chez ${kebabName} !\n\nQualité : ${qualityRating}\nQuantité : ${quantityRating}\nMenu : ${menuRating}\nPrix : ${priceRating}\nAmusement : ${funRating}\n\n${description}";
+      "Je viens d\'évaluer le kebab chez ${kebabName}!\n\nQualité: ${qualityRating}\nQuantité: ${quantityRating}\nMenu: ${menuRating}\nPrix: ${priceRating}\nDivertissement: ${funRating}\n\n${description}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -51,6 +51,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "by_signing_in_you_agree_to_our_terms_and_privacy_policy":
             MessageLookupByLibrary.simpleMessage(
                 "En te connectant, tu acceptes nos conditions générales et notre politique de confidentialité."),
+        "cambia_profilepic":
+            MessageLookupByLibrary.simpleMessage("Changer la photo de profil"),
+        "cambia_profilo":
+            MessageLookupByLibrary.simpleMessage("Changer de profil"),
         "cambia_username": MessageLookupByLibrary.simpleMessage(
             "Changer le nom d\'utilisateur"),
         "cancel": MessageLookupByLibrary.simpleMessage("Annuler"),
@@ -107,6 +111,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Modifier le profil"),
         "elimina": MessageLookupByLibrary.simpleMessage("Supprimer"),
         "email": MessageLookupByLibrary.simpleMessage("E-mail"),
+        "email_required":
+            MessageLookupByLibrary.simpleMessage("L\'email est requis"),
         "errore": MessageLookupByLibrary.simpleMessage("Erreur :"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage(
@@ -211,6 +217,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oops_review_not_found":
             MessageLookupByLibrary.simpleMessage("Oups ! Critique non trouvée"),
         "password": MessageLookupByLibrary.simpleMessage("Mot de passe"),
+        "password_minimum_length": MessageLookupByLibrary.simpleMessage(
+            "Le mot de passe doit comporter au moins 6 caractères"),
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "Le mot de passe doit comporter au moins 6 caractères"),
@@ -223,6 +231,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Veuillez saisir une adresse e-mail valide"),
         "please_enter_your_email": MessageLookupByLibrary.simpleMessage(
             "Veuillez saisir ton adresse e-mail"),
+        "please_fill_in_all_fields": MessageLookupByLibrary.simpleMessage(
+            "Veuillez remplir tous les champs"),
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Connecte-toi pour soumettre ta critique"),

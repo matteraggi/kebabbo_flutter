@@ -51,6 +51,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "by_signing_in_you_agree_to_our_terms_and_privacy_policy":
             MessageLookupByLibrary.simpleMessage(
                 "Al iniciar sesión, aceptas nuestros términos y política de privacidad."),
+        "cambia_profilepic":
+            MessageLookupByLibrary.simpleMessage("Cambiar foto de perfil"),
+        "cambia_profilo":
+            MessageLookupByLibrary.simpleMessage("Cambiar perfil"),
         "cambia_username":
             MessageLookupByLibrary.simpleMessage("Cambiar nombre de usuario"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
@@ -105,6 +109,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit_profile": MessageLookupByLibrary.simpleMessage("Editar perfil"),
         "elimina": MessageLookupByLibrary.simpleMessage("Eliminar"),
         "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
+        "email_required": MessageLookupByLibrary.simpleMessage(
+            "El correo electrónico es obligatorio"),
         "errore": MessageLookupByLibrary.simpleMessage("Error:"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage("Error al cargar seguidores"),
@@ -209,6 +215,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oops_review_not_found":
             MessageLookupByLibrary.simpleMessage("¡Ups! Reseña no encontrada"),
         "password": MessageLookupByLibrary.simpleMessage("Contraseña"),
+        "password_minimum_length": MessageLookupByLibrary.simpleMessage(
+            "La contraseña debe tener al menos 6 caracteres"),
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "La contraseña debe tener al menos 6 caracteres"),
@@ -221,6 +229,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Introduce un correo electrónico válido"),
         "please_enter_your_email": MessageLookupByLibrary.simpleMessage(
             "Introduce tu correo electrónico"),
+        "please_fill_in_all_fields": MessageLookupByLibrary.simpleMessage(
+            "Por favor, complete todos los campos"),
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Inicia sesión para enviar tu reseña"),
