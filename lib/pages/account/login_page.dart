@@ -96,7 +96,7 @@ class LoginPageState extends State<LoginPage> {
               AnimatedOpacity(
                 opacity: 1.0,
                 duration: const Duration(seconds: 1),
-                child: Image.asset(
+                child: Image.asset( 
                   'assets/images/big_logo_name_blackred.png', // Use your logo here
                   height: 300,
                 ),
