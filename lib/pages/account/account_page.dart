@@ -679,7 +679,7 @@ Future<void> _changeAvatar() async {
                             _favoriteKebab?["tag"] == "kebab"
                                 ? "assets/images/kebabcolored.png"
                                 : "assets/images/sandwitch.png",
-                            height: 24,
+                            height: 24, 
                             width: 24,
                           ),
                           SizedBox(width: 8),
