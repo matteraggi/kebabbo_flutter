@@ -32,7 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(kebabName, qualityRating, quantityRating, menuRating,
           priceRating, funRating, description) =>
-      "Ho appena recensito il kebab di ${kebabName}!\n\nQualità: ${qualityRating}\nQuantità: ${quantityRating}\nMenu: ${menuRating}\nPrezzo: ${priceRating}\nDivertimento: ${funRating}\n\n${description}";
+      "Ho appena recensito il kebab da ${kebabName}!\n\nQualità: ${qualityRating}\nQuantità: ${quantityRating}\nMenu: ${menuRating}\nPrezzo: ${priceRating}\nDivertimento: ${funRating}\n\n${description}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{

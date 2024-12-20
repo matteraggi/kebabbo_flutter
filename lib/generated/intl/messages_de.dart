@@ -51,6 +51,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "by_signing_in_you_agree_to_our_terms_and_privacy_policy":
             MessageLookupByLibrary.simpleMessage(
                 "Mit der Anmeldung stimmst du unseren Nutzungsbedingungen und Datenschutzrichtlinien zu."),
+        "cambia_profilepic":
+            MessageLookupByLibrary.simpleMessage("Profilbild ändern"),
+        "cambia_profilo": MessageLookupByLibrary.simpleMessage("Profil ändern"),
         "cambia_username":
             MessageLookupByLibrary.simpleMessage("Benutzernamen ändern"),
         "cancel": MessageLookupByLibrary.simpleMessage("Abbrechen"),
@@ -106,6 +109,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Profil bearbeiten"),
         "elimina": MessageLookupByLibrary.simpleMessage("Löschen"),
         "email": MessageLookupByLibrary.simpleMessage("E-Mail"),
+        "email_required":
+            MessageLookupByLibrary.simpleMessage("E-Mail ist erforderlich"),
         "errore": MessageLookupByLibrary.simpleMessage("Fehler:"),
         "errore_nel_caricamento_dei_follower":
             MessageLookupByLibrary.simpleMessage(
@@ -211,6 +216,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "oops_review_not_found": MessageLookupByLibrary.simpleMessage(
             "Ups! Bewertung nicht gefunden"),
         "password": MessageLookupByLibrary.simpleMessage("Passwort"),
+        "password_minimum_length": MessageLookupByLibrary.simpleMessage(
+            "Das Passwort muss mindestens 6 Zeichen lang sein"),
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "Passwort muss mindestens 6 Zeichen lang sein"),
@@ -223,6 +230,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Bitte gib eine gültige E-Mail-Adresse ein"),
         "please_enter_your_email": MessageLookupByLibrary.simpleMessage(
             "Bitte gib deine E-Mail-Adresse ein"),
+        "please_fill_in_all_fields": MessageLookupByLibrary.simpleMessage(
+            "Bitte füllen Sie alle Felder aus"),
         "please_log_in_to_submit_your_review":
             MessageLookupByLibrary.simpleMessage(
                 "Bitte melde dich an, um deine Bewertung abzugeben"),

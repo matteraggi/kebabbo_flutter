@@ -1,133 +1,169 @@
 {
-    "@@locale": "en",
-    "nome_non_disponibile": "Name not available",
-    "seleziona_il_tuo_kebab_preferito": "Select your favorite kebab",
-    "consigliaci_un_kebabbaro": "Recommend a kebab place",
-    "nome_del_kebabbaro": "Name of the kebab place",
-    "annulla": "Cancel",
-    "invia": "Send",
-    "la_tua_soluzione_per_il_pranzo_universitario": "Your solution for university lunch",
-    "in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google": "In Italy, the world of Kebab is still a dark world. The best places are underrated, and the worst ones get high reviews on Google.",
-    "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab": "That's why we are here: university students, like you, with years of experience as Kebab eaters.",
-    "testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo": "We test and review Kebab places and Street Food for you. Welcome to Kebabbo.",
-    "failed_to_load_reviews_count": "Failed to load reviews count",
-    "failed_to_load_follower_count": "Failed to load follower count",
-    "cambia_username": "Change Username",
-    "nuovo_username": "New username...",
-    "cancel": "Cancel", 
-    "update": "Update",
-    "failed_to_upload_avatar": "Failed to upload avatar",
-    "failed_to_load_post_count": "Failed to load post count",
-    "edit_profile": "Edit profile",
-    "unexpected_error_occurred": "Unexpected error occurred",
-    "failed_to_load_favorites": "Failed to load favorites",
-    "nessun_kebab_tra_i_preferiti": "No kebabs in favorites", 
-    "no_suggestions_available": "No suggestions available",
-    "registrati_per_poter_visualizzare_il_feed": "Register to view the feed",
-    "devi_essere_autenticato_per_postare": "You must be authenticated to post",
-    "il_testo_non_puo_essere_vuoto": "Text cannot be empty",
-    "errore_nel_caricamento_dellimage": "Error loading image:", 
-    "congratulazioni": "Congratulations!",
-    "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia": "You have reached a new milestone and obtained a new medal!",
-    "scrivi_un_post": "Write a post...",
-    "testo_non_disponibile": "Text not available",
-    "non_segui_ancora_nessuno": "You are not following anyone yet",
-    "errore_nel_caricamento_dei_follower": "Error loading followers",
-    "nessun_utente_ti_segue": "No users follow you" ,
-    "il_kebab_che_ti_raccomandiamo_e": "The kebab we recommend is:",
-    "kebab_consigliato": "Recommended Kebab",
-    "kebab_sconosciuto": "Unknown Kebab",
-    "descrizione_non_disponibile": "Description not available",
-    "back_to_build": "Back to Build",
-    "check_your_email_for_a_login_link": "Check your email for a login link!",
-    "by_signing_in_you_agree_to_our_terms_and_privacy_policy": "By signing in, you agree to our terms and privacy policy.",
-    "prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi": "\"Take, and eat of this, all of you: this is the Kebab offered in sacrifice for you.\"", 
-    "failed_to_load_medals": "Failed to load medals",
-    "prima_review": "first review",
-    "primo_post": "first post",
-    "reviewMessage": "I just reviewed the kebab at {kebabName}!\n\nQuality: {qualityRating}\nQuantity: {quantityRating}\nMenu: {menuRating}\nPrice: {priceRating}\nFun: {funRating}\n\n{description}",
-    "@reviewMessage": {
-      "description": "A message when a user reviews a kebab",
-      "placeholders": {
-        "kebabName": {},
-        "qualityRating": {},
-        "quantityRating": {},
-        "menuRating": {},
-        "priceRating": {},
-        "funRating": {},
-        "description": {}
+  "@@locale": "en",
+  "nome_non_disponibile": "Name not available",
+  "seleziona_il_tuo_kebab_preferito": "Select your favorite kebab",
+  "consigliaci_un_kebabbaro": "Recommend a kebab place",
+  "nome_del_kebabbaro": "Name of the kebab place",
+  "annulla": "Cancel",
+  "invia": "Send",
+  "la_tua_soluzione_per_il_pranzo_universitario": "Your solution for university lunch",
+  "in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google": "In Italy, the world of Kebab is still a dark world. The best places are underrated, and the worst ones get high reviews on Google.",
+  "per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab": "That's why we are here: university students, like you, with years of experience as Kebab eaters.",
+  "testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo": "We test and review Kebab places and Street Food for you. Welcome to Kebabbo.",
+  "failed_to_load_reviews_count": "Failed to load reviews count",
+  "failed_to_load_follower_count": "Failed to load follower count",
+  "cambia_username": "Change Username",
+  "nuovo_username": "New username...",
+  "cancel": "Cancel",
+  "update": "Update",
+  "failed_to_upload_avatar": "Failed to upload avatar",
+  "failed_to_load_post_count": "Failed to load post count",
+  "edit_profile": "Edit profile",
+  "unexpected_error_occurred": "Unexpected error occurred",
+  "failed_to_load_favorites": "Failed to load favorites",
+  "nessun_kebab_tra_i_preferiti": "No kebabs in favorites",
+  "no_suggestions_available": "No suggestions available",
+  "registrati_per_poter_visualizzare_il_feed": "Register to view the feed",
+  "devi_essere_autenticato_per_postare": "You must be authenticated to post",
+  "il_testo_non_puo_essere_vuoto": "Text cannot be empty",
+  "errore_nel_caricamento_dellimage": "Error loading image:",
+  "congratulazioni": "Congratulations!",
+  "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia": "You have reached a new milestone and obtained a new medal!",
+  "scrivi_un_post": "Write a post...",
+  "testo_non_disponibile": "Text not available",
+  "non_segui_ancora_nessuno": "You are not following anyone yet",
+  "errore_nel_caricamento_dei_follower": "Error loading followers",
+  "nessun_utente_ti_segue": "No users follow you",
+  "il_kebab_che_ti_raccomandiamo_e": "The kebab we recommend is:",
+  "kebab_consigliato": "Recommended Kebab",
+  "kebab_sconosciuto": "Unknown Kebab",
+  "descrizione_non_disponibile": "Description not available",
+  "back_to_build": "Back to Build",
+  "check_your_email_for_a_login_link": "Check your email for a login link!",
+  "by_signing_in_you_agree_to_our_terms_and_privacy_policy": "By signing in, you agree to our terms and privacy policy.",
+  "prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi": "\"Take, and eat of this, all of you: this is the Kebab offered in sacrifice for you.\"",
+  "failed_to_load_medals": "Failed to load medals",
+  "prima_review": "first review",
+  "primo_post": "first post",
+  "reviewMessage": "I just reviewed the kebab at {kebabName}!\n\nQuality: {qualityRating}\nQuantity: {quantityRating}\nMenu: {menuRating}\nPrice: {priceRating}\nFun: {funRating}\n\n{description}",
+  "@reviewMessage": {
+    "description": "A message when a user reviews a kebab",
+    "placeholders": {
+      "kebabName": {
+        "type": "String",
+        "description": "Name of the kebab place"
+      },
+      "qualityRating": {
+        "type": "String",
+        "description": "Quality rating"
+      },
+      "quantityRating": {
+        "type": "String",
+        "description": "Quantity rating"
+      },
+      "menuRating": {
+        "type": "String",
+        "description": "Menu rating"
+      },
+      "priceRating": {
+        "type": "String",
+        "description": "Price rating"
+      },
+      "funRating": {
+        "type": "String",
+        "description": "Fun rating"
+      },
+      "description": {
+        "type": "String",
+        "description": "Additional user comments"
       }
-    },
-    "review_updated_successfully": "Review updated successfully",
-    "review_submitted_successfully": "Review submitted successfully",
-    "nuova_medaglia": "New Medal!",
-    "hai_ricevuto_una_nuova_medaglia_per_il_tuo_contributo": "You received a new medal for your contribution!",
-    "review": "Review",
-    "oops_review_not_found": "Oops! Review Not Found",
-    "please_log_in_to_submit_your_review": "Please Log In to Submit Your Review",
-    "rate_the_kebab": "Rate the Kebab",
-    "quality": "Quality",
-    "quantity": "Quantity",
-    "menu": "Menu",
-    "price": "Price",
-    "fun": "Fun", 
-    "description_is_required": "Description is required",
-    "submit_review": "Submit Review",
-    "cerca_utenti": "Search users...",
-    "anonimo": "Anonymous",
-    "nessun_utente_seguito": "No users followed",
-    "failed_to_load_profile": "Failed to load profile",
-    "failed_to_update_follow_status": "Failed to update follow status",
-    "segui_gia": "Already following",
-    "segui": "Follow",
-    "seguiti": "Followed",
-    "world": "World",
-    "legends": "Legends",
-    "errore": "Error:",
-    "nessun_kebabbaro_presente": "No Kebab places present :(",
-    "thank_you": "Thank You",
-    "thank_you_for_your_review": "Thank you for your review!",
-    "you_can_access_reviews_at_any_time_from_your_account": "You can access reviews at any time from your account.",
-    "build_your_kebab": "Build Your Kebab",
-    "distanza_massima": "Maximum Distance",
-    "preferiti_solo_per_utenti_registrati": "Favorites only for registered users",
-    "it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again": "It looks like the review you are trying to access does not exist. Please check the link and try again." ,
-    "distanceLabel200m": "200 meters ({results} results)",
-    "distanceLabel500m": "500 meters ({results} results)",
-    "distanceLabel1km": "1 km ({results} results)",
-    "distanceLabel10km": "10 km ({results} results)",
-    "distanceLabelUnlimited": "Unlimited ({results} results)",
-    "@distanceLabel200m": {
-      "description": "Label for distances within 200 meters with dynamic results count",
-      "placeholders": {
-        "results": {}
+    }
+  },
+  "review_updated_successfully": "Review updated successfully",
+  "review_submitted_successfully": "Review submitted successfully",
+  "nuova_medaglia": "New Medal!",
+  "hai_ricevuto_una_nuova_medaglia_per_il_tuo_contributo": "You received a new medal for your contribution!",
+  "review": "Review",
+  "oops_review_not_found": "Oops! Review Not Found",
+  "please_log_in_to_submit_your_review": "Please Log In to Submit Your Review",
+  "rate_the_kebab": "Rate the Kebab",
+  "quality": "Quality",
+  "quantity": "Quantity",
+  "menu": "Menu",
+  "price": "Price",
+  "fun": "Fun",
+  "description_is_required": "Description is required",
+  "submit_review": "Submit Review",
+  "cerca_utenti": "Search users...",
+  "anonimo": "Anonymous",
+  "nessun_utente_seguito": "No users followed",
+  "failed_to_load_profile": "Failed to load profile",
+  "failed_to_update_follow_status": "Failed to update follow status",
+  "segui_gia": "Already following",
+  "segui": "Follow",
+  "seguiti": "Followed",
+  "world": "World",
+  "legends": "Legends",
+  "errore": "Error:",
+  "nessun_kebabbaro_presente": "No Kebab places present :(",
+  "thank_you": "Thank You",
+  "thank_you_for_your_review": "Thank you for your review!",
+  "you_can_access_reviews_at_any_time_from_your_account": "You can access reviews at any time from your account.",
+  "build_your_kebab": "Build Your Kebab",
+  "distanza_massima": "Maximum Distance",
+  "preferiti_solo_per_utenti_registrati": "Favorites only for registered users",
+  "it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again": "It looks like the review you are trying to access does not exist. Please check the link and try again.",
+  "distanceLabel200m": "200 meters ({results} results)",
+  "distanceLabel500m": "500 meters ({results} results)",
+  "distanceLabel1km": "1 km ({results} results)",
+  "distanceLabel10km": "10 km ({results} results)",
+  "distanceLabelUnlimited": "Unlimited ({results} results)",
+  "@distanceLabel200m": {
+    "description": "Label for distances within 200 meters with dynamic results count",
+    "placeholders": {
+      "results": {
+        "type": "String",
+        "description": "Number of results"
       }
-    },
-    "@distanceLabel500m": {
-      "description": "Label for distances within 500 meters with dynamic results count",
-      "placeholders": {
-        "results": {}
+    }
+  },
+  "@distanceLabel500m": {
+    "description": "Label for distances within 500 meters with dynamic results count",
+    "placeholders": {
+      "results": {
+        "type": "String",
+        "description": "Number of results"
       }
-    },
-    "@distanceLabel1km": {
-      "description": "Label for distances within 1 km with dynamic results count",
-      "placeholders": {
-        "results": {}
+    }
+  },
+  "@distanceLabel1km": {
+    "description": "Label for distances within 1 km with dynamic results count",
+    "placeholders": {
+      "results": {
+        "type": "String",
+        "description": "Number of results"
       }
-    },
-    "@distanceLabel10km": {
-      "description": "Label for distances within 10 km with dynamic results count",
-      "placeholders": {
-        "results": {}
+    }
+  },
+  "@distanceLabel10km": {
+    "description": "Label for distances within 10 km with dynamic results count",
+    "placeholders": {
+      "results": {
+        "type": "String",
+        "description": "Number of results"
       }
-    },
-    "@distanceLabelUnlimited": {
-      "description": "Label for unlimited distance with dynamic results count",
-      "placeholders": {
-        "results": {}
+    }
+  },
+  "@distanceLabelUnlimited": {
+    "description": "Label for unlimited distance with dynamic results count",
+    "placeholders": {
+      "results": {
+        "type": "String",
+        "description": "Number of results"
       }
-    },
-    "nessun_kebab_corrispondente_trovato_nel_raggio_selezionato": "No matching kebab found within the selected radius",
+    }
+  },
+  "nessun_kebab_corrispondente_trovato_nel_raggio_selezionato": "No matching kebab found within the selected radius",
   "cerca_un_kebabbaro": "Search for a kebab place...",
   "aperti_ora": "Open now",
   "failed_to_load_posts": "Failed to load posts",
@@ -170,27 +206,24 @@
   "vuoi_veramente_eliminare_il_post": "Do you really want to delete the post?",
   "conferma_eliminazione": "Confirm deletion",
   "post_eliminato": "Post deleted",
-    "devi_essere_autenticato_per_mettere_mi_piace": "You must login to like",
-    "accedi_per_cercare": "Log in to post and see peoples' info",
-    "devi_essere_autenticato_per_commentare": "You must login to comment",
-    "devi_essere_autenticato_per_visualizzare_il_profilo": "You must login to view the profile",
-    "sign_up": "Sign Up",
-    "please_enter_your_email": "Please enter your email",
-    "please_enter_a_valid_email": "Please enter a valid email",
-    "please_enter_a_password": "Please enter a password",
-    "password_must_be_at_least_6_characters": "Password must be at least 6 characters",
-    "check_your_email_for_a_verification_link": "Check your email for a verification link",
-    "dont_have_an_account_sign_up": "Don't have an account? Sign Up",
-    "logged_in": "Logged in",
-    "login": "Log In",
-    "email": "Email",
-    "password": "Password",
-
-
+  "devi_essere_autenticato_per_mettere_mi_piace": "You must login to like",
+  "accedi_per_cercare": "Log in to post and see peoples' info",
+  "devi_essere_autenticato_per_commentare": "You must login to comment",
+  "devi_essere_autenticato_per_visualizzare_il_profilo": "You must login to view the profile",
+  "sign_up": "Sign Up",
+  "please_enter_your_email": "Please enter your email",
+  "please_enter_a_valid_email": "Please enter a valid email",
+  "please_enter_a_password": "Please enter a password",
+  "password_must_be_at_least_6_characters": "Password must be at least 6 characters",
+  "check_your_email_for_a_verification_link": "Check your email for a verification link",
+  "dont_have_an_account_sign_up": "Don't have an account? Sign Up",
+  "logged_in": "Logged in",
+  "login": "Log In",
+  "email": "Email",
+  "password": "Password",
   "cambia_profilo": "Change profile",
   "cambia_profilepic": "Change profile picture",
   "please_fill_in_all_fields": "Please fill in all fields",
-  "password_minimum_length" : "Password must be at least 6 characters",
+  "password_minimum_length": "Password must be at least 6 characters",
   "email_required": "Email is required"
-  }
-  
+}
