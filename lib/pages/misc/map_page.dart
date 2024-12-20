@@ -97,7 +97,7 @@ class MapPageState extends State<MapPage> {
           height: 40.0,
           point: LatLng(item['lat'], item['lng']),
           child: Image.asset(item['tag'] == 'kebab'
-              ? "assets/logos/small_logo.png"
+              ? "assets/images/kebab.png"
               : "assets/images/sandwitch.png"),
           key: ValueKey('kebab_marker_${item['id']}'),
         );
