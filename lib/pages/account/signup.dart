@@ -96,17 +96,6 @@ class SignUpPageState extends State<SignUpPage> {
             ),
             const SizedBox(height: 24),
 
-            // Logo/Image
-            AnimatedOpacity(
-              opacity: 1.0,
-              duration: const Duration(seconds: 1),
-              child: Image.asset(
-                'assets/images/kebab.png',
-                height: 160,
-              ),
-            ),
-            const SizedBox(height: 24),
-
             // Form fields inside a styled container
             Form(
               key: _formKey,
