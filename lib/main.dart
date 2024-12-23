@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
-import 'package:kebabbo_flutter/pages/account/reset_password.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
+import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
 import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
 import 'package:kebabbo_flutter/pages/feed&socials/search_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
@@ -29,14 +29,14 @@ Future<void> main() async {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
 
   String? reviewHash;
-  String? resetPasswordToken;
+  String? policy;
 
   // Handle deep links based on URL path
   if (Uri.base.pathSegments.isNotEmpty) {
     if (Uri.base.pathSegments[0] == 'reviews') {
       reviewHash = Uri.base.pathSegments[1];
-    } else if (Uri.base.pathSegments[0] == 'reset-password') {
-      resetPasswordToken = Uri.base.queryParameters['code'];
+    } else if (Uri.base.pathSegments[0] == 'privacy-policy') {
+      policy = "privacy-policy";
     }
   }
 
@@ -61,16 +61,16 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  runApp(MyApp(reviewHash: reviewHash, resetPasswordToken: resetPasswordToken));
+  runApp(MyApp(reviewHash: reviewHash, policy: policy));
 }
 
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   final String? reviewHash;
-  final String? resetPasswordToken;
+  final String? policy;
 
-  const MyApp({super.key, this.reviewHash, this.resetPasswordToken});
+  const MyApp({super.key, this.reviewHash, this.policy});
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class MyApp extends StatelessWidget {
           orElse: () => supportedLocales.first,
         );
       },
-      home: MyHomePage(reviewHash: reviewHash, resetPasswordToken: resetPasswordToken), // Set MyHomePage as the home
+      home: MyHomePage(reviewHash: reviewHash, policy: policy), // Set MyHomePage as the home
     );
   }
 }
@@ -136,9 +136,9 @@ extension ContextExtension on BuildContext {
 
 class MyHomePage extends StatefulWidget {
   final String? reviewHash;
-  final String? resetPasswordToken;
+  final String? policy;
 
-  const  MyHomePage({super.key, this.reviewHash, this.resetPasswordToken});
+  const  MyHomePage({super.key, this.reviewHash, this.policy});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -146,7 +146,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? reviewHash; // Now a mutable state variable
-  String? resetPasswordToken; // Now a mutable state variable
+  String? policy; // Now a mutable state variable
 
   var selectedIndex = 2; // Home page by default
   final ValueNotifier<Position?> _currentPositionNotifier =
@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     reviewHash = widget.reviewHash;
-    resetPasswordToken = widget.resetPasswordToken;
+    policy = widget.policy;
     _checkFirstTimeOpen();
     _getLocation();
     if (!kIsWeb) {
@@ -228,9 +228,9 @@ class _MyHomePageState extends State<MyHomePage> {
         hash: widget.reviewHash!,
       );
     }
-    else if (resetPasswordToken != null) {
+    else if (policy != null) {
       // Handle Reset Password Page
-      page = ResetPasswordForm(token: widget.resetPasswordToken!);
+      page = PrivacyPolicyPage();
     }
      else {
       // Standard navigation based on selectedIndex
@@ -281,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
             selectedIndex = index;
             reviewHash =
                 null; // Reset reviewHash so the nav bar takes control
-            resetPasswordToken = null; // Reset resetPasswordToken
+            policy = null; // Reset policy
           });
         },
         items: [
