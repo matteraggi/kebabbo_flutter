@@ -81,9 +81,9 @@ Feature lancio:
 - [x] Controllare dimensione caricamento foto profilo e post
 - [x] traduzioni stringhe
 - [x] Cambiare UI modulo di cambio account info
-- [ ] pack opening pokemon pocket style con carte kebabbari da collezionare
 
 Feature extra:
+- [ ] pack opening pokemon pocket style con carte kebabbari da collezionare
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
