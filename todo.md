@@ -66,34 +66,27 @@ Feature lancio:
 - [x] review visibili da account + profilo di altri
 - [x] aggiornare numero commenti e like quando viene messo un'altro post (il post appena messo prende già il numero di commenti e like del precedente, perché non viene aggiornata la UI)
 - [x] design account e single user page
-
 - [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
-
 - [ ] Togliere compilato da github
 - [x] Gluten free tag metterlo in tutti i kebab item come in quello principale della home
 - [x] Badge sezione troppo lunga
 - [x] Grafico kebabbari con scritte asse x troppo grandi e tagliate sotto
-
 - [x] Spiegazioni agli utenti sull'utilizzo della piattaforma
 - [x] Pallini informativi
-
-Feature extra:
-
 - [x] Badge del posto quando si mette review
 - [x] Recensioni utenti postate come post
 - [x] La lingua è sempre inglese
 - [x] Nella sezione recensioni non sempre compare la scritta su come recensire
 - [x] Controllare dimensione caricamento foto profilo e post
-- [ ] Rotella caricamento immagine quando cambio foto profilo
-- [ ] Cambiare UI modulo di cambio account info
+- [x] traduzioni stringhe
+- [x] Cambiare UI modulo di cambio account info
+- [ ] pack opening pokemon pocket style con carte kebabbari da collezionare
+
+Feature extra:
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
-- [x] traduzioni stringhe
-- [ ] pack opening pokemon pocket style con carte kebabbari da collezionare. una apertura giornaliera con clessidre ottenibile attraverso fidelity card in collaborazione con kebabbari scelti
-- [ ] i pacchetti se sono un pò inclinati hanno le carte buone così se vengono scoperti tutti finisco la collezione subito e non shoppano più
-- [ ] nel pick a 5 carte non è random, c'è il super algoritmo per decidere ogni carta dove va
 
 Non dev:
 
