@@ -6,29 +6,41 @@ class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
 
   Future<String> loadHtmlFromAssets(String path) async {
-    return await rootBundle.loadString(path);
+    try {
+      return await rootBundle.loadString(path);
+    } catch (e) {
+      debugPrint("Errore nel caricamento dell'HTML: $e");
+      return "<h1>Errore nel caricamento della Privacy Policy</h1>";
+    }
   }
-@override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Privacy Policy')),
+      appBar: AppBar(title: const Text('Privacy Policy')),
       body: FutureBuilder(
         future: loadHtmlFromAssets('assets/privacy-policy/index.html'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'Errore nel caricamento della Privacy Policy',
+                  style: TextStyle(color: Colors.red),
+                ),
+              );
+            }
+
             return SingleChildScrollView(
-              scrollDirection: Axis.horizontal, // Enable horizontal scrolling
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical, // Enable vertical scrolling
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 2, // Adjust width as needed
-                  padding: const EdgeInsets.all(16.0),
-                  child: Html(data: snapshot.data as String),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Html(
+                  data: snapshot.data as String,
                 ),
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
