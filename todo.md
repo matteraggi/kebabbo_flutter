@@ -97,7 +97,7 @@ Feature extra:
 
 Non dev:
 
-- [ ] Design loghi vari da mettere in giro
+- [x] Design loghi vari da mettere in giro
 - [ ] Pensare piano marketing con CMO dell'azienda
 - [ ] Sponsor
 

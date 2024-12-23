@@ -19,6 +19,7 @@ import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 void printObject(Object object) {
   final prettyPrint = JsonEncoder.withIndent('  ').convert(object);
@@ -45,6 +46,7 @@ class _AccountPageState extends State<AccountPage> {
   int _followersCount = 0;
   int _seguitiCount = 0;
   Map<String, dynamic>? _favoriteKebab;
+  final String privacyPolicyUrl = "https://kebabbo.top/privacy-policy";
 
   @override
   void initState() {
@@ -209,52 +211,53 @@ class _AccountPageState extends State<AccountPage> {
       },
     );
   }
-Future<void> _changeAvatar() async {
-  // Use FilePicker to select an image
-  final result = await FilePicker.platform.pickFiles(
-    type: FileType.image,
-    allowCompression: true,
-    allowMultiple: false,
-  );
 
-  if (result != null) {
-    final Uint8List bytes = result.files.single.bytes!;
-    Uint8List? processedImage =
-        await ImageUtils.compressImage(bytes, 100 * 1024, 800, 800);
+  Future<void> _changeAvatar() async {
+    // Use FilePicker to select an image
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowCompression: true,
+      allowMultiple: false,
+    );
 
-    final userId = supabase.auth.currentSession!.user.id;
+    if (result != null) {
+      final Uint8List bytes = result.files.single.bytes!;
+      Uint8List? processedImage =
+          await ImageUtils.compressImage(bytes, 100 * 1024, 800, 800);
 
-    try {
-      // Upload the processed image
-      await supabase.storage.from('avatars').uploadBinary(
-          '$userId.png', processedImage!,
-          fileOptions: const FileOptions(upsert: true));
+      final userId = supabase.auth.currentSession!.user.id;
 
-      // Get the public URL of the uploaded avatar
-      final imageUrlResponse =
-          supabase.storage.from('avatars').getPublicUrl('$userId.png');
+      try {
+        // Upload the processed image
+        await supabase.storage.from('avatars').uploadBinary(
+            '$userId.png', processedImage!,
+            fileOptions: const FileOptions(upsert: true));
 
-      // Cache busting: Append a timestamp or unique query param to force the browser to load the new image
-      final cacheBustedUrl = '$imageUrlResponse?v=${DateTime.now().millisecondsSinceEpoch}';
+        // Get the public URL of the uploaded avatar
+        final imageUrlResponse =
+            supabase.storage.from('avatars').getPublicUrl('$userId.png');
 
-      // Update the client-side avatar URL with cache-busted URL
-      setState(() {
-        _avatarUrl = cacheBustedUrl;
-      });
+        // Cache busting: Append a timestamp or unique query param to force the browser to load the new image
+        final cacheBustedUrl =
+            '$imageUrlResponse?v=${DateTime.now().millisecondsSinceEpoch}';
 
-      // Update profile after uploading the avatar
-      _updateProfile();
-    } catch (error) {
-      if (mounted) {
-        print(error);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
-        );
+        // Update the client-side avatar URL with cache-busted URL
+        setState(() {
+          _avatarUrl = cacheBustedUrl;
+        });
+
+        // Update profile after uploading the avatar
+        _updateProfile();
+      } catch (error) {
+        if (mounted) {
+          print(error);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
+          );
+        }
       }
     }
   }
-}
-
 
   Future<void> _getPostCount() async {
     try {
@@ -369,366 +372,411 @@ Future<void> _changeAvatar() async {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           // Posiziona il menu un po' più in basso rispetto all'icona
                           final RenderBox renderBox =
                               context.findRenderObject() as RenderBox;
                           final position = renderBox.localToGlobal(Offset.zero);
 
-                    showMenu(
-                      context: context,
-                      position: RelativeRect.fromLTRB(
-                        position.dx + 10,
-                        position.dy + 60,
-                        position.dx + renderBox.size.width,
-                        position.dy + 60,
-                      ),
-                      items: [
-                        PopupMenuItem<int>(
-                          value: 1,
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Icon(Icons.settings, color: Colors.black),
-                              SizedBox(width: 8),
-                              Text(
-                                S.of(context).edit_profile,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
+                          showMenu(
+                            context: context,
+                            position: RelativeRect.fromLTRB(
+                              position.dx + 10,
+                              position.dy + 60,
+                              position.dx + renderBox.size.width,
+                              position.dy + 60,
+                            ),
+                            items: [
+                              PopupMenuItem<int>(
+                                value: 1,
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.settings, color: Colors.black),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      S.of(context).edit_profile,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem<int>(
-                          value: 2,
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Icon(Icons.info, color: Colors.black),
-                              SizedBox(width: 8),
-                              Text(
-                                "About",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
+                              PopupMenuItem<int>(
+                                value: 2,
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.info, color: Colors.black),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "About",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem<int>(
-                          value: 3,
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Icon(Icons.logout, color: Colors.black),
-                              SizedBox(width: 8),
-                              Text(
-                                'Logout',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
+                              PopupMenuItem<int>(
+                                value: 3,
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.privacy_tip,
+                                        color: Colors.black),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Privacy Policy',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              PopupMenuItem<int>(
+                                value: 4,
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.logout, color: Colors.black),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Logout',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Add "Delete account" button in red
                             ],
-                          ),
-                        ),
-                        // Add "Delete account" button in red
-                      ],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 5,
-                      color: Colors.white,
-                    ).then((value) {
-                      if (value != null) {
-                        if (value == 1) {
-                          Future.delayed(Duration(milliseconds: 100), () {
-                            _changeUsername();
-                          });
-                        } else if (value == 2) {
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const AboutPage()));
-                        } else if (value == 3) {
-                          _signOut();
-                        }
-                      }
-                    });
-                  },
-                  child: Icon(Icons.menu, color: Colors.black, size: 24),
-                ),
-                Text(
-                  _username,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ToolsPage(
-                              currentPosition: widget.currentPosition,
-                              ingredients: _ingredients,
-                              onIngredientsUpdated: (updatedIngredients) {
-                                setState(() {
-                                  _ingredients =
-                                      updatedIngredients; // Update ingredients locally in AccountPage
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 5,
+                            color: Colors.white,
+                          ).then((value) {
+                            if (value != null) {
+                              if (value == 1) {
+                                Future.delayed(Duration(milliseconds: 100), () {
+                                  _changeUsername();
                                 });
-                              },
-                            )));
-                  },
-                  child: Icon(Icons.build, color: Colors.black, size: 22),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      backgroundColor: Colors.transparent,
-                      child: Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pop(); // Close the dialog when tapped again
-                            },
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width *
-                                  0.8, // Adjust size
-                              height: MediaQuery.of(context).size.height *
-                                  0.5, // Adjust size
-                              child: Image(
-                                image: (_avatarUrl != null &&
-                                        _avatarUrl!.isNotEmpty)
+                              } else if (value == 2) {
+                                // ignore: use_build_context_synchronously
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const AboutPage()));
+                              } else if (value == 3) {
+                                print("Opening privacy policy");
+
+                                () async {
+                                  final url = Uri.parse(privacyPolicyUrl);
+                                  if (await canLaunchUrl(url)) {
+                                    await launchUrl(
+                                      url,
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Impossibile aprire il link.'),
+                                        duration: Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
+                                }();
+                              } else if (value == 4) {
+                                _signOut();
+                              }
+                            }
+                          });
+                        },
+                        child: Icon(Icons.menu, color: Colors.black, size: 24),
+                      ),
+                      Text(
+                        _username,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ToolsPage(
+                                    currentPosition: widget.currentPosition,
+                                    ingredients: _ingredients,
+                                    onIngredientsUpdated: (updatedIngredients) {
+                                      setState(() {
+                                        _ingredients =
+                                            updatedIngredients; // Update ingredients locally in AccountPage
+                                      });
+                                    },
+                                  )));
+                        },
+                        child: Icon(Icons.build, color: Colors.black, size: 22),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            backgroundColor: Colors.transparent,
+                            child: Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog when tapped again
+                                  },
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.8, // Adjust size
+                                    height: MediaQuery.of(context).size.height *
+                                        0.5, // Adjust size
+                                    child: Image(
+                                      image: (_avatarUrl != null &&
+                                              _avatarUrl!.isNotEmpty)
+                                          ? NetworkImage(_avatarUrl!)
+                                          : const AssetImage(
+                                                  'assets/logos/small_logo.png')
+                                              as ImageProvider,
+                                      fit: BoxFit
+                                          .cover, // Fit the image within the dialog
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 10, // Adjust positioning as necessary
+                                  right: 10, // Adjust positioning as necessary
+                                  child: Container(
+                                    padding: const EdgeInsets.all(
+                                        4.0), // Add padding around the icon
+                                    decoration: BoxDecoration(
+                                      color: Colors
+                                          .white, // White background color
+                                      shape: BoxShape
+                                          .circle, // Circular shape for the container
+                                    ),
+                                    child: IconButton(
+                                      padding: EdgeInsets
+                                          .zero, // Remove extra padding around the icon
+                                      constraints: const BoxConstraints(),
+                                      icon: Icon(
+                                        Icons.camera_alt,
+                                        size: 25, // Smaller icon size
+                                        color: main.red, // Red icon color
+                                      ),
+                                      onPressed:
+                                          _changeAvatar, // Action to change the avatar
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: main.red, width: 3),
+                          ),
+                          child: CircleAvatar(
+                            radius: 47,
+                            backgroundImage:
+                                (_avatarUrl != null && _avatarUrl!.isNotEmpty)
                                     ? NetworkImage(_avatarUrl!)
                                     : const AssetImage(
                                             'assets/logos/small_logo.png')
                                         as ImageProvider,
-                                fit: BoxFit
-                                    .cover, // Fit the image within the dialog
-                              ),
-                            ),
                           ),
-                          Positioned(
-                            top: 10, // Adjust positioning as necessary
-                            right: 10, // Adjust positioning as necessary
-                            child: Container(
-                              padding: const EdgeInsets.all(
-                                  4.0), // Add padding around the icon
-                              decoration: BoxDecoration(
-                                color: Colors.white, // White background color
-                                shape: BoxShape
-                                    .circle, // Circular shape for the container
-                              ),
-                              child: IconButton(
-                                padding: EdgeInsets
-                                    .zero, // Remove extra padding around the icon
-                                constraints: const BoxConstraints(),
-                                icon: Icon(
-                                  Icons.camera_alt,
-                                  size: 25, // Smaller icon size
-                                  color: main.red, // Red icon color
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    UserPostsPage(userId: _id)));
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                "$_postCount",
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                onPressed:
-                                    _changeAvatar, // Action to change the avatar
                               ),
-                            ),
+                              const Text(
+                                'Posts',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    );
-                  },
-                );
-              },
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: main.red, width: 3),
-                    ),
-                    child: CircleAvatar(
-                      radius: 47,
-                      backgroundImage:
-                          (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                              ? NetworkImage(_avatarUrl!)
-                              : const AssetImage('assets/logos/small_logo.png')
-                                  as ImageProvider,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => UserPostsPage(userId: _id)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          "$_postCount",
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    FollowersPage(userId: _id)));
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                '$_followersCount',
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Text(
+                                'Followers',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ],
                           ),
                         ),
-                        const Text(
-                          'Posts',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FollowersPage(userId: _id)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          '$_followersCount',
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Text(
-                          'Followers',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SeguitiPage(userId: _id)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          '$_seguitiCount',
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Text(
-                          'Seguiti',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 16),
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: InkWell(
-                onTap: () {
-                  _openFavoriteKebabSelection();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
-                      Text(S.of(context).seleziona_il_tuo_kebab_preferito)
-                    else
-                      Row(
-                        children: [
-                          Image.asset(
-                            _favoriteKebab?["tag"] == "kebab"
-                                ? "assets/images/kebabcolored.png"
-                                : "assets/images/sandwitch.png",
-                            height: 24, 
-                            width: 24,
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
                       ),
-                    Icon(Icons.border_color, color: Colors.black, size: 22),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            DefaultTabController(
-              length: 3,
-              child: Column(
-                children: [
-                  TabBar(
-                    physics: const BouncingScrollPhysics(),
-                    indicatorColor: Colors.black,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey,
-                    tabs: [
-                      Tab(icon: Icon(Icons.emoji_events)),
-                      Tab(icon: Icon(Icons.reviews)),
-                      Tab(icon: Icon(Icons.bookmark)),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    SeguitiPage(userId: _id)));
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                '$_seguitiCount',
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Text(
+                                'Seguiti',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(
-                    height:
-                        tabBarViewHeight, // Or any other height that suits your content
-                    child: TabBarView(
+                  const SizedBox(height: 15),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        _openFavoriteKebabSelection();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
+                            Text(S.of(context).seleziona_il_tuo_kebab_preferito)
+                          else
+                            Row(
+                              children: [
+                                Image.asset(
+                                  _favoriteKebab?["tag"] == "kebab"
+                                      ? "assets/images/kebabcolored.png"
+                                      : "assets/images/sandwitch.png",
+                                  height: 24,
+                                  width: 24,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          Icon(Icons.border_color,
+                              color: Colors.black, size: 22),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  DefaultTabController(
+                    length: 3,
+                    child: Column(
                       children: [
-                        MedalPage(userId: _id),
-                        UserReviewsPage(userId: _id),
-                        FavoritesPage(userId: _id),
+                        TabBar(
+                          physics: const BouncingScrollPhysics(),
+                          indicatorColor: Colors.black,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.grey,
+                          tabs: [
+                            Tab(icon: Icon(Icons.emoji_events)),
+                            Tab(icon: Icon(Icons.reviews)),
+                            Tab(icon: Icon(Icons.bookmark)),
+                          ],
+                        ),
+                        SizedBox(
+                          height:
+                              tabBarViewHeight, // Or any other height that suits your content
+                          child: TabBarView(
+                            children: [
+                              MedalPage(userId: _id),
+                              UserReviewsPage(userId: _id),
+                              FavoritesPage(userId: _id),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -922,3 +970,37 @@ Future<void> _changeAvatar() async {
   }
   */
 }
+
+/*
+GestureDetector(
+                            onTap: () async {
+                              final url = Uri.parse(privacyPolicyUrl);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Impossibile aprire il link.'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Center(
+                                child: Text(
+                                  "Privacy Policy",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontStyle: FontStyle.italic,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+*/
