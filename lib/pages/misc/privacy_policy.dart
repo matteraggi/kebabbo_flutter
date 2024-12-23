@@ -8,7 +8,7 @@ class PrivacyPolicyPage extends StatelessWidget {
   Future<String> loadHtmlFromAssets(String path) async {
     return await rootBundle.loadString(path);
   }
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Privacy Policy')),
@@ -17,7 +17,15 @@ class PrivacyPolicyPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return SingleChildScrollView(
-              child: Html(data: snapshot.data as String),
+              scrollDirection: Axis.horizontal, // Enable horizontal scrolling
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical, // Enable vertical scrolling
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 2, // Adjust width as needed
+                  padding: const EdgeInsets.all(16.0),
+                  child: Html(data: snapshot.data as String),
+                ),
+              ),
             );
           } else {
             return Center(child: CircularProgressIndicator());
