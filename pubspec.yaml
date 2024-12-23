@@ -69,6 +69,7 @@ flutter:
     - assets/images/
     - assets/logos/
     - assets/icons/
+    - assets/kebab-card/
     - assets/privacy-policy/
     - packages/font_awesome_flutter/fonts/fa-brands-400.ttf
     - lib/l10n/
