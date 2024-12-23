@@ -47,6 +47,7 @@ class _AccountPageState extends State<AccountPage> {
   int _seguitiCount = 0;
   Map<String, dynamic>? _favoriteKebab;
   final String privacyPolicyUrl = "https://kebabbo.top/privacy-policy";
+  bool _isAvatarLoading = false;
 
   @override
   void initState() {
@@ -118,94 +119,114 @@ class _AccountPageState extends State<AccountPage> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
-            return AlertDialog(
-              title: Text(S.of(context).cambia_profilo),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(S.of(context).cambia_profilepic,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      const SizedBox(width: 16),
-                      IconButton(
-                        padding: EdgeInsets
-                            .zero, // Remove extra padding around the icon
-                        constraints: const BoxConstraints(),
-                        icon: Icon(
-                          Icons.camera_alt,
-                          size: 25, // Smaller icon size
-                          color: main.red, // Red icon color
+            return _isAvatarLoading
+                ? const Center(child: CircularProgressIndicator())
+                : AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 30,
                         ),
-                        onPressed: () async {
-                          _changeAvatar(); //then close the dialog
-                          Navigator.of(context).pop();
-                        }, // Added the onPressed action
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(S.of(context).cambia_username,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  TextField(
-                    controller: _usernameController,
-                    maxLength: 12,
-                    decoration: InputDecoration(
-                      hintText: S.of(context).nuovo_username,
-                      counterText: '',
+                        Container(
+                          decoration: BoxDecoration(
+                            color: main.red, // Sfondo rosso
+                            borderRadius:
+                                BorderRadius.circular(15), // Angoli arrotondati
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8), // Padding interno
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(
+                                12), // Effetto di tocco arrotondato
+                            onTap: () async {
+                              _changeAvatar(); // Cambia avatar
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    S.of(context).cambia_profilepic,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors
+                                          .white, // Testo bianco per contrasto
+                                    ),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Icon(
+                                  Icons.camera_alt,
+                                  size: 25, // Dimensione dell'icona
+                                  color: Colors.white, // Icona bianca
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(S.of(context).cambia_username,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        TextField(
+                          controller: _usernameController,
+                          maxLength: 12,
+                          decoration: InputDecoration(
+                            hintText: S.of(context).nuovo_username,
+                            counterText: '',
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              errorMessage = validateUsername(
+                                  value, context); // Use the utility function
+                            });
+                          },
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          errorMessage ?? ' \n ',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ],
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        errorMessage = validateUsername(
-                            value, context); // Use the utility function
-                      });
-                    },
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    errorMessage ?? ' \n ',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    if (mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Text(S.of(context).cancel),
-                ),
-                TextButton(
-                  onPressed: errorMessage != null
-                      ? null
-                      : () async {
+                    actions: [
+                      TextButton(
+                        onPressed: () {
                           if (mounted) {
                             Navigator.of(context).pop();
                           }
-
-                          setState(() {
-                            _username = _usernameController.text.trim();
-                          });
-
-                          await _updateProfile();
-
-                          if (mounted) {
-                            setState(() {});
-                          }
                         },
-                  child: Text(S.of(context).update),
-                ),
-              ],
-            );
+                        child: Text(S.of(context).cancel),
+                      ),
+                      TextButton(
+                        onPressed: errorMessage != null
+                            ? null
+                            : () async {
+                                if (mounted) {
+                                  Navigator.of(context).pop();
+                                }
+
+                                setState(() {
+                                  _username = _usernameController.text.trim();
+                                });
+
+                                await _updateProfile();
+
+                                if (mounted) {
+                                  setState(() {});
+                                }
+                              },
+                        child: Text(S.of(context).update),
+                      ),
+                    ],
+                  );
           },
         );
       },
@@ -213,7 +234,10 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<void> _changeAvatar() async {
-    // Use FilePicker to select an image
+    setState(() {
+      _isAvatarLoading = true;
+    });
+
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowCompression: true,
@@ -228,26 +252,25 @@ class _AccountPageState extends State<AccountPage> {
       final userId = supabase.auth.currentSession!.user.id;
 
       try {
-        // Upload the processed image
         await supabase.storage.from('avatars').uploadBinary(
-            '$userId.png', processedImage!,
-            fileOptions: const FileOptions(upsert: true));
+              '$userId.png',
+              processedImage!,
+              fileOptions: const FileOptions(upsert: true),
+            );
 
-        // Get the public URL of the uploaded avatar
         final imageUrlResponse =
             supabase.storage.from('avatars').getPublicUrl('$userId.png');
 
-        // Cache busting: Append a timestamp or unique query param to force the browser to load the new image
         final cacheBustedUrl =
             '$imageUrlResponse?v=${DateTime.now().millisecondsSinceEpoch}';
 
-        // Update the client-side avatar URL with cache-busted URL
         setState(() {
           _avatarUrl = cacheBustedUrl;
         });
 
-        // Update profile after uploading the avatar
-        _updateProfile();
+        await _updateProfile();
+
+        Navigator.of(context).pop(); // Chiudi il dialog
       } catch (error) {
         if (mounted) {
           print(error);
@@ -257,6 +280,10 @@ class _AccountPageState extends State<AccountPage> {
         }
       }
     }
+
+    setState(() {
+      _isAvatarLoading = false; // Nascondi il loader
+    });
   }
 
   Future<void> _getPostCount() async {
@@ -410,7 +437,8 @@ class _AccountPageState extends State<AccountPage> {
                                 height: 40,
                                 child: Row(
                                   children: [
-                                    Icon(Icons.info, color: Colors.black),
+                                    Icon(Icons.info_outline,
+                                        color: Colors.black),
                                     SizedBox(width: 8),
                                     Text(
                                       "About",
