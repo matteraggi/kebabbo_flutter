@@ -485,7 +485,7 @@ class _AccountPageState extends State<AccountPage> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(
                                       url,
-                                      mode: LaunchMode.externalApplication,
+                                      mode: LaunchMode.inAppWebView,
                                     );
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
