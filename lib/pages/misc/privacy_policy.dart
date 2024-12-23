@@ -13,7 +13,7 @@ class PrivacyPolicyPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Privacy Policy')),
       body: FutureBuilder(
-        future: loadHtmlFromAssets('privacy-policy/index.html'),
+        future: loadHtmlFromAssets('assets/privacy-policy/index.html'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return SingleChildScrollView(
