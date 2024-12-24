@@ -52,6 +52,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   firebase_crashlytics: ^4.2.0
   flutter_html: ^3.0.0-beta.2
+  carousel_slider: ^5.0.0
 
 
 dev_dependencies:
