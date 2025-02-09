@@ -231,5 +231,9 @@
   "check_your_email_for_a_reset_link": "Überprüfe deine E-Mails auf einen Link zum Zurücksetzen",
   "password_reset_success": "Passwort zurücksetzen erfolgreich",
   "new_password": "Neues Passwort",
-  "reset_password": "Passwort zurücksetzen"
+  "reset_password": "Passwort zurücksetzen",
+  "nessun_kebab_vicino_a_te": "Kein Kebab in deiner Nähe",
+  "no_thanks": "Nein, danke",
+  "app_is_installed_description": "Kebabbo ist bereits auf deinem Gerät installiert. Möchtest du es öffnen?",
+  "app_is_installed": "App installiert"
 }

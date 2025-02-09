@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
@@ -5,9 +7,11 @@ import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
+import 'package:kebabbo_flutter/pages/reviews/choose_kebab_review_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
 import 'package:kebabbo_flutter/pages/feed&socials/search_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,11 +22,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:kebabbo_flutter/utils/notifications.dart';
 import 'package:flutter/foundation.dart'; // Import for kIsWeb
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
+import 'dart:html' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
- 
+
 Future<void> main() async {
   await Supabase.initialize(
       url: "https://ntrxsuhmslsvlflwbizb.supabase.co",
@@ -117,7 +122,8 @@ class MyApp extends StatelessWidget {
           orElse: () => supportedLocales.first,
         );
       },
-      home: MyHomePage(reviewHash: reviewHash, policy: policy), // Set MyHomePage as the home
+      home: MyHomePage(
+          reviewHash: reviewHash, policy: policy), // Set MyHomePage as the home
     );
   }
 }
@@ -139,7 +145,7 @@ class MyHomePage extends StatefulWidget {
   final String? reviewHash;
   final String? policy;
 
-  const  MyHomePage({super.key, this.reviewHash, this.policy});
+  const MyHomePage({super.key, this.reviewHash, this.policy});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -155,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late Stream<Position> _positionStream;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
+  final GlobalKey<ReviewPageState> _reviewsPageKey = GlobalKey<ReviewPageState>();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   @override
@@ -163,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
     reviewHash = widget.reviewHash;
     policy = widget.policy;
     _checkFirstTimeOpen();
+    _checkIfAppInstalled();
     _getLocation();
     if (!kIsWeb) {
       requestNotificationPermissions(
@@ -201,39 +209,59 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!serviceEnabled || permission == LocationPermission.deniedForever) {
       _currentPositionNotifier.value = null;
+      print('Location services are disabled.');
       return;
     }
 
     if (permission == LocationPermission.denied) {
+      print('Location permissions are denied.');
       permission = await Geolocator.requestPermission();
     }
 
     if (permission != LocationPermission.denied) {
+      print('Getting current location...');
       Position position = await Geolocator.getCurrentPosition();
       _currentPositionNotifier.value = position;
       if (selectedIndex == 3 && _mapPageKey.currentState != null) {
         _mapPageKey.currentState!.updatePosition(position);
       }
+      if(_reviewsPageKey.currentState != null){
+        print("position$position");
+        _reviewsPageKey.currentState!.updatePosition(position);
+      }
     }
   }
+
+Future<void> _checkIfAppInstalled() async {
+  String appUrl = 'intent://kebabbologna/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
+
+  if (!kIsWeb && Platform.isAndroid) { // Check for Android *and* not web
+    if (await canLaunchUrl(Uri.parse(appUrl))) {
+      // App is likely installed, but let's try to launch it just in case:
+      await launchUrl(Uri.parse(appUrl));
+
+    } else { //App is not installed
+        showAppInstallDialog(context);
+    }
+}
+}
 
   @override
   Widget build(BuildContext context) {
     Widget page;
 
-    
-
     if (reviewHash != null) {
       // Handle Review Page
+      print("position${_currentPositionNotifier.value}");
       page = ReviewPage(
-        hash: widget.reviewHash!,
+        hash: reviewHash!,
+        initialPosition: _currentPositionNotifier.value,
+        key: _reviewsPageKey,
       );
-    }
-    else if (policy != null) {
+    } else if (policy != null) {
       // Handle Reset Password Page
       page = PrivacyPolicyPage();
-    }
-     else {
+    } else {
       // Standard navigation based on selectedIndex
       switch (selectedIndex) {
         case 0:
@@ -280,8 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: (index) {
           setState(() {
             selectedIndex = index;
-            reviewHash =
-                null; // Reset reviewHash so the nav bar takes control
+            reviewHash = null; // Reset reviewHash so the nav bar takes control
             policy = null; // Reset policy
           });
         },

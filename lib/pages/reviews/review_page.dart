@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/reviews/choose_kebab_review_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -12,7 +14,9 @@ import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class ReviewPage extends StatefulWidget {
   final String hash;
-  const ReviewPage({super.key, required this.hash});
+  final Position? initialPosition;
+  const ReviewPage(
+      {super.key, required this.hash, required this.initialPosition});
 
   @override
   ReviewPageState createState() => ReviewPageState();
@@ -31,29 +35,53 @@ class ReviewPageState extends State<ReviewPage> {
   final redirectUrl = Uri.base.toString();
   bool isSubmitting = false;
   bool thankYouActive = false;
+  Position? _currentPosition;
+  String _currentHash = "";
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _validateHash();
-    descriptionController.addListener(() {
-      setState(() {}); // Rebuild UI whenever the description changes
-    });
+    _currentPosition = widget.initialPosition;
+    changeHash(widget.hash);
   }
 
-  Future<void> _validateHash() async {
-    final kebabberData = await validateHash(widget.hash);
-    if (mounted) {
-      setState(() {
-        kebabber = kebabberData;
-        isValidHash = kebabberData != null;
-      });
 
-      if (isValidHash && kebabber != null) {
-        await _checkForExistingReview();
+
+Future<void> changeHash(String newHash) async {
+  setState(() {
+    _currentHash = newHash;
+    _isLoading = true; // Start loading
+  });
+  if (newHash=="nearme"){
+      if (mounted) {
+        setState(() {
+          isValidHash = true;
+          _isLoading = false;
+        });
+      }
+    return;
+  }
+      try {
+      final kebabberData = await validateHash(_currentHash);
+      if (mounted) {
+        setState(() {
+          kebabber = kebabberData;
+          isValidHash = kebabberData != null;
+        });
+
+        if (isValidHash && kebabber != null) {
+          await _checkForExistingReview();
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
-  }
+}
 
   Future<void> _checkForExistingReview() async {
     final userId = Supabase.instance.client.auth.currentUser?.id;
@@ -236,9 +264,16 @@ class ReviewPageState extends State<ReviewPage> {
     ).show();
   }
 
+  // Function to update position
+  void updatePosition(Position newPosition) {
+    setState(() {
+      _currentPosition = newPosition;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!isValidHash || kebabber == null) {
+    if (!isValidHash) {
       return Scaffold(
         appBar: AppBar(title: Text(S.of(context).review)),
         body: Center(
@@ -275,8 +310,8 @@ class ReviewPageState extends State<ReviewPage> {
         ),
       );
     }
-
-    if (Supabase.instance.client.auth.currentSession == null) {
+    if (Supabase.instance.client.auth.currentSession == null &&
+        isValidHash) {
       return Scaffold(
         appBar: AppBar(
             title: RichText(
@@ -325,25 +360,33 @@ class ReviewPageState extends State<ReviewPage> {
       return ThankYouPage();
     }
 
+    if (kebabber == null) {
+      return ChooseReviewPage(
+      key:  ValueKey(_currentPosition),
+    initialPosition: _currentPosition,
+    changeHash: changeHash);
+    }
     return Scaffold(
       appBar: AppBar(
           title: RichText(
         text: TextSpan(
-          style: const TextStyle(
-              fontSize: 18.0, color: Colors.black), // Base style
+          style: const TextStyle(fontSize: 18.0, color: Colors.black),
           children: [
-            TextSpan(text: S.of(context).review), // Regular text
+            TextSpan(text: S.of(context).review),
             TextSpan(
-              text: kebabber!['name'], // The name
+              text: kebabber?['name'] ?? "", // Safe access
               style: const TextStyle(
-                fontSize: 22.0, // Make the name bigger
-                fontWeight: FontWeight.bold, // Make the name bold
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
       )),
-      body: SingleChildScrollView(
+      body:
+      _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Card(
@@ -520,12 +563,6 @@ class ReviewPageState extends State<ReviewPage> {
       ],
     );
   }
-}
-
-String generateHash(String kebabberName) {
-  final bytes = utf8.encode(kebabberName);
-  final digest = sha256.convert(bytes);
-  return digest.toString();
 }
 
 Future<Map<String, dynamic>?> validateHash(String hash) async {

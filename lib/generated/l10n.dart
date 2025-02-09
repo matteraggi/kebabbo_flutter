@@ -1614,6 +1614,46 @@ class S {
       args: [],
     );
   }
+
+  /// `No kebabs near you`
+  String get nessun_kebab_vicino_a_te {
+    return Intl.message(
+      'No kebabs near you',
+      name: 'nessun_kebab_vicino_a_te',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No, thanks`
+  String get no_thanks {
+    return Intl.message(
+      'No, thanks',
+      name: 'no_thanks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You already have the app installed. Do you want to open it?`
+  String get app_is_installed_description {
+    return Intl.message(
+      'You already have the app installed. Do you want to open it?',
+      name: 'app_is_installed_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App is installed`
+  String get app_is_installed {
+    return Intl.message(
+      'App is installed',
+      name: 'app_is_installed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

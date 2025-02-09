@@ -10,6 +10,14 @@
             <string>io.supabase.flutter</string> <!-- Your custom scheme -->
         </array>
     </dict>
+	<dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>kebabbo</string>
+        </array>
+    </dict>
 </array>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>

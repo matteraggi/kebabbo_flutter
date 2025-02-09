@@ -44,6 +44,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "anonimo": MessageLookupByLibrary.simpleMessage("Anónimo"),
         "aperti_ora": MessageLookupByLibrary.simpleMessage("Abierto ahora"),
         "aperto": MessageLookupByLibrary.simpleMessage("Abierto"),
+        "app_is_installed":
+            MessageLookupByLibrary.simpleMessage("App instalada"),
+        "app_is_installed_description": MessageLookupByLibrary.simpleMessage(
+            "Kebabbo ya está instalado en tu dispositivo. ¿Quieres abrirlo?"),
         "back_to_build":
             MessageLookupByLibrary.simpleMessage("Volver a construir"),
         "build_your_kebab":
@@ -191,6 +195,8 @@ class MessageLookup extends MessageLookupByLibrary {
                 "No se encontró ningún kebab coincidente dentro del radio seleccionado"),
         "nessun_kebab_tra_i_preferiti":
             MessageLookupByLibrary.simpleMessage("No hay kebabs en favoritos"),
+        "nessun_kebab_vicino_a_te":
+            MessageLookupByLibrary.simpleMessage("Ningún kebab cerca de ti"),
         "nessun_kebabbaro_presente": MessageLookupByLibrary.simpleMessage(
             "No hay lugares de kebab presentes :("),
         "nessun_post_trovato": MessageLookupByLibrary.simpleMessage(
@@ -208,6 +214,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_image": MessageLookupByLibrary.simpleMessage("Sin imagen"),
         "no_suggestions_available": MessageLookupByLibrary.simpleMessage(
             "No hay sugerencias disponibles"),
+        "no_thanks": MessageLookupByLibrary.simpleMessage("No, gracias"),
         "nome_del_kebabbaro":
             MessageLookupByLibrary.simpleMessage("Nombre del lugar de kebab"),
         "nome_non_disponibile":
