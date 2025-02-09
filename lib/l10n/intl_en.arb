@@ -231,7 +231,11 @@
   "check_your_email_for_a_reset_link": "Check your email for a reset link",
   "password_reset_success": "Password reset successful",
   "new_password": "New Password",
-  "reset_password": "Reset Password"
+  "reset_password": "Reset Password",
+  "nessun_kebab_vicino_a_te": "No kebabs near you",
+  "no_thanks":  "No, thanks",
+  "app_is_installed_description": "You already have the app installed. Do you want to open it?",
+  "app_is_installed":  "App is installed"
   
 
 }

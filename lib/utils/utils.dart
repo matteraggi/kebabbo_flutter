@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 List<Map<String, dynamic>> fuzzySearchAndSort(List<Map<String, dynamic>> items,
     String query, String searchKey, bool showOnlyOpen, bool showOnlyKebab) {
   List<Map<String, dynamic>> tempList = items;
@@ -104,6 +105,12 @@ List<Map<String, dynamic>> sortKebabs(
   });
 
   return kebabs;
+}
+
+String generateHash(String kebabberName) {
+  final bytes = utf8.encode(kebabberName);
+  final digest = sha256.convert(bytes);
+  return digest.toString();
 }
 
 bool isKebabOpen(Map<String, dynamic>? orariApertura) {
@@ -234,3 +241,4 @@ Future<Uint8List?> compressImage(Uint8List imageData) async {
   // Codifica nuovamente l'immagine in JPEG con qualità ridotta
   return Uint8List.fromList(img.encodeJpg(resizedImage, quality: 60));
 }
+

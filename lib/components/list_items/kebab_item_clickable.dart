@@ -75,9 +75,7 @@ class KebabListItemClickableState extends State<KebabListItemClickable> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        saveFavoriteKebab(widget.id);
         widget.onKebabSelected(widget.id);
-        Navigator.pop(context);
       },
       child: Card(
         elevation: 4,

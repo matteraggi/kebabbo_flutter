@@ -44,6 +44,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "anonimo": MessageLookupByLibrary.simpleMessage("Anonimo"),
         "aperti_ora": MessageLookupByLibrary.simpleMessage("Aperti ora"),
         "aperto": MessageLookupByLibrary.simpleMessage("Aperto"),
+        "app_is_installed":
+            MessageLookupByLibrary.simpleMessage("App installata"),
+        "app_is_installed_description": MessageLookupByLibrary.simpleMessage(
+            "Kebabbo è già installato sul tuo dispositivo. Vuoi aprirlo?"),
         "back_to_build":
             MessageLookupByLibrary.simpleMessage("Torna alla costruzione"),
         "build_your_kebab":
@@ -52,7 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Accedendo, accetti i nostri termini e la nostra politica sulla privacy."),
         "cambia_profilepic":
-            MessageLookupByLibrary.simpleMessage("Cambia immagine del profilo"),
+            MessageLookupByLibrary.simpleMessage("Cambia profile pic"),
         "cambia_profilo":
             MessageLookupByLibrary.simpleMessage("Cambia profilo"),
         "cambia_username":
@@ -194,6 +198,8 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Nessun kebab corrispondente trovato nel raggio selezionato"),
         "nessun_kebab_tra_i_preferiti": MessageLookupByLibrary.simpleMessage(
             "Nessun kebab tra i preferiti"),
+        "nessun_kebab_vicino_a_te":
+            MessageLookupByLibrary.simpleMessage("Nessun kebab vicino a te"),
         "nessun_kebabbaro_presente": MessageLookupByLibrary.simpleMessage(
             "Nessun Kebabbaro presente :("),
         "nessun_post_trovato":
@@ -210,6 +216,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_image": MessageLookupByLibrary.simpleMessage("Nessuna immagine"),
         "no_suggestions_available": MessageLookupByLibrary.simpleMessage(
             "Nessun suggerimento disponibile"),
+        "no_thanks": MessageLookupByLibrary.simpleMessage("No, grazie"),
         "nome_del_kebabbaro":
             MessageLookupByLibrary.simpleMessage("Nome del kebabbaro"),
         "nome_non_disponibile":

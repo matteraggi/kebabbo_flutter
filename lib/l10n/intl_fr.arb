@@ -231,5 +231,9 @@
   "check_your_email_for_a_reset_link": "Vérifie tes e-mails pour un lien de réinitialisation",
   "password_reset_success": "Réinitialisation du mot de passe réussie",
   "new_password": "Nouveau mot de passe",
-  "reset_password": "Réinitialiser le mot de passe"
+  "reset_password": "Réinitialiser le mot de passe",
+  "nessun_kebab_vicino_a_te": "Aucun kebab près de chez vous",
+  "no_thanks": "Non, merci",
+  "app_is_installed_description": "Kebabbo est déjà installé sur votre appareil. Voulez-vous l'ouvrir ?",
+  "app_is_installed": "Application installée"
 }

@@ -231,5 +231,9 @@
   "check_your_email_for_a_reset_link": "Verifique seu e-mail para obter um link de redefinição",
   "password_reset_success": "Redefinição de senha bem-sucedida",
   "new_password": "Nova senha",
-  "reset_password": "Redefinir senha"
+  "reset_password": "Redefinir senha",
+  "nessun_kebab_vicino_a_te": "Nenhum kebab perto de você",
+  "no_thanks": "Não, obrigado",
+  "app_is_installed_description": "Kebabbo já está instalado no seu dispositivo. Deseja abri-lo?",
+  "app_is_installed": "Aplicativo instalado"
 }

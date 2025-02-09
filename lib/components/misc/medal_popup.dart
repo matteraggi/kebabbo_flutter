@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'dart:html' as html;
 void showMedalDialog(BuildContext context) {
   AwesomeDialog(
     context: context,
@@ -47,4 +48,32 @@ void showMedalDialog(BuildContext context) {
         height: 100,
       ),  // No animation for the image
     ).show();
+  }
+
+    void showAppInstallDialog(BuildContext context) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.scale,
+      title: S.of(context).app_is_installed,
+      desc: S.of(context).app_is_installed_description,
+      btnOkColor: red,
+      btnCancelColor: Colors.black,
+      btnCancelText: S.of(context).no_thanks,
+      btnCancelOnPress: () {},
+      btnOkOnPress: () {
+        openApp();
+      },
+      customHeader: Image.asset(
+        'assets/logos/small_logo.png',  // Your custom PNG image path
+        width: 100,
+        height: 100,
+      ),  // No animation for the image
+    ).show();
+  }
+
+  void openApp () {
+    // Open the app
+html.window.location.href = 'intent://kebabbologna.com/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
+
   }
