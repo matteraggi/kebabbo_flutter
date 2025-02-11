@@ -14,6 +14,8 @@ import 'package:kebabbo_flutter/pages/feed&socials/seguiti_page.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/user_posts_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/user_reviews_page.dart';
+import 'package:kebabbo_flutter/pages/tcg/carousel.dart';
+import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -475,6 +477,25 @@ class _AccountPageState extends State<AccountPage> {
                                 height: 40,
                                 child: Row(
                                   children: [
+                                    Icon(Icons.collections_bookmark_sharp,
+                                        color: Colors.black),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Cards',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem<int>(
+                                value: 5,
+                                height: 40,
+                                child: Row(
+                                  children: [
                                     Icon(Icons.logout, color: Colors.black),
                                     SizedBox(width: 8),
                                     Text(
@@ -526,6 +547,9 @@ class _AccountPageState extends State<AccountPage> {
                                   }
                                 }();
                               } else if (value == 4) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => KebabCarouselPage()));
+                              } else if (value == 5) {
                                 _signOut();
                               }
                             }
@@ -540,22 +564,37 @@ class _AccountPageState extends State<AccountPage> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ToolsPage(
-                                    currentPosition: widget.currentPosition,
-                                    ingredients: _ingredients,
-                                    onIngredientsUpdated: (updatedIngredients) {
-                                      setState(() {
-                                        _ingredients =
-                                            updatedIngredients; // Update ingredients locally in AccountPage
-                                      });
-                                    },
-                                  )));
-                        },
-                        child: Icon(Icons.build, color: Colors.black, size: 22),
-                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PackPage()));
+                            },
+                            child: Icon(Icons.card_giftcard,
+                                color: Colors.black, size: 22),
+                          ),
+                          SizedBox(width: 16),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ToolsPage(
+                                        currentPosition: widget.currentPosition,
+                                        ingredients: _ingredients,
+                                        onIngredientsUpdated:
+                                            (updatedIngredients) {
+                                          setState(() {
+                                            _ingredients =
+                                                updatedIngredients; // Update ingredients locally in AccountPage
+                                          });
+                                        },
+                                      )));
+                            },
+                            child: Icon(Icons.build,
+                                color: Colors.black, size: 22),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   const SizedBox(height: 15),
