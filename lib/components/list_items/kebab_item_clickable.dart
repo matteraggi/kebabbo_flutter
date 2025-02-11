@@ -3,7 +3,6 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
-
 class KebabListItemClickable extends StatefulWidget {
   final String id;
   final String name;
@@ -11,8 +10,8 @@ class KebabListItemClickable extends StatefulWidget {
   final String tag;
   final bool isOpen;
   final bool glutenFree;
-  final Function(String)
-      onKebabSelected; // Callback per passare il valore cliccato
+  final Function(String) onKebabSelected;
+  final bool shouldSaveFavorite; // ✅ Nuovo parametro
 
   const KebabListItemClickable({
     super.key,
@@ -22,7 +21,8 @@ class KebabListItemClickable extends StatefulWidget {
     required this.tag,
     required this.isOpen,
     required this.glutenFree,
-    required this.onKebabSelected, // Aggiungi il callback
+    required this.onKebabSelected,
+    this.shouldSaveFavorite = false,
   });
 
   @override
@@ -76,6 +76,10 @@ class KebabListItemClickableState extends State<KebabListItemClickable> {
     return GestureDetector(
       onTap: () {
         widget.onKebabSelected(widget.id);
+        if (widget.shouldSaveFavorite) {
+          saveFavoriteKebab(widget.id);
+          Navigator.pop(context);
+        }
       },
       child: Card(
         elevation: 4,
