@@ -347,6 +347,7 @@ class _AccountPageState extends State<AccountPage> {
                   onKebabSelected: (selectedKebabId) {
                     fetchSelectedKebab(selectedKebabId);
                   },
+                  shouldSaveFavorite: true,
                 ),
                 SizedBox(height: 8),
               ]);
