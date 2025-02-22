@@ -18,17 +18,20 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name =
+        (locale.countryCode?.isEmpty ?? false)
+            ? locale.languageCode
+            : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -41,8 +44,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -92,22 +97,12 @@ class S {
 
   /// `Cancel`
   String get annulla {
-    return Intl.message(
-      'Cancel',
-      name: 'annulla',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cancel', name: 'annulla', desc: '', args: []);
   }
 
   /// `Send`
   String get invia {
-    return Intl.message(
-      'Send',
-      name: 'invia',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Send', name: 'invia', desc: '', args: []);
   }
 
   /// `Your solution for university lunch`
@@ -122,7 +117,7 @@ class S {
 
   /// `In Italy, the world of Kebab is still a dark world. The best places are underrated, and the worst ones get high reviews on Google.`
   String
-      get in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google {
+  get in_italia_il_mondo_del_kebab_e_ancora_un_mondo_oscuro_i_migliori_locali_sono_sottovalutati_e_i_peggiori_ricevono_recensioni_alte_su_google {
     return Intl.message(
       'In Italy, the world of Kebab is still a dark world. The best places are underrated, and the worst ones get high reviews on Google.',
       name:
@@ -134,7 +129,7 @@ class S {
 
   /// `That's why we are here: university students, like you, with years of experience as Kebab eaters.`
   String
-      get per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab {
+  get per_questo_ci_siamo_noi_studenti_universitari_come_voi_con_anni_di_esperienza_come_mangiatori_di_kebab {
     return Intl.message(
       'That\'s why we are here: university students, like you, with years of experience as Kebab eaters.',
       name:
@@ -146,7 +141,7 @@ class S {
 
   /// `We test and review Kebab places and Street Food for you. Welcome to Kebabbo.`
   String
-      get testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo {
+  get testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo {
     return Intl.message(
       'We test and review Kebab places and Street Food for you. Welcome to Kebabbo.',
       name:
@@ -198,22 +193,12 @@ class S {
 
   /// `Cancel`
   String get cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
   }
 
   /// `Update`
   String get update {
-    return Intl.message(
-      'Update',
-      name: 'update',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Update', name: 'update', desc: '', args: []);
   }
 
   /// `Failed to upload avatar`
@@ -468,7 +453,7 @@ class S {
 
   /// `"Take, and eat of this, all of you: this is the Kebab offered in sacrifice for you."`
   String
-      get prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi {
+  get prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi {
     return Intl.message(
       '"Take, and eat of this, all of you: this is the Kebab offered in sacrifice for you."',
       name:
@@ -500,23 +485,19 @@ class S {
 
   /// `first post`
   String get primo_post {
-    return Intl.message(
-      'first post',
-      name: 'primo_post',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('first post', name: 'primo_post', desc: '', args: []);
   }
 
   /// `I just reviewed the kebab at {kebabName}!\n\nQuality: {qualityRating}\nQuantity: {quantityRating}\nMenu: {menuRating}\nPrice: {priceRating}\nFun: {funRating}\n\n{description}`
   String reviewMessage(
-      String kebabName,
-      String qualityRating,
-      String quantityRating,
-      String menuRating,
-      String priceRating,
-      String funRating,
-      String description) {
+    String kebabName,
+    String qualityRating,
+    String quantityRating,
+    String menuRating,
+    String priceRating,
+    String funRating,
+    String description,
+  ) {
     return Intl.message(
       'I just reviewed the kebab at $kebabName!\n\nQuality: $qualityRating\nQuantity: $quantityRating\nMenu: $menuRating\nPrice: $priceRating\nFun: $funRating\n\n$description',
       name: 'reviewMessage',
@@ -528,7 +509,7 @@ class S {
         menuRating,
         priceRating,
         funRating,
-        description
+        description,
       ],
     );
   }
@@ -575,12 +556,7 @@ class S {
 
   /// `Review`
   String get review {
-    return Intl.message(
-      'Review',
-      name: 'review',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Review', name: 'review', desc: '', args: []);
   }
 
   /// `Oops! Review Not Found`
@@ -615,52 +591,27 @@ class S {
 
   /// `Quality`
   String get quality {
-    return Intl.message(
-      'Quality',
-      name: 'quality',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quality', name: 'quality', desc: '', args: []);
   }
 
   /// `Quantity`
   String get quantity {
-    return Intl.message(
-      'Quantity',
-      name: 'quantity',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quantity', name: 'quantity', desc: '', args: []);
   }
 
   /// `Menu`
   String get menu {
-    return Intl.message(
-      'Menu',
-      name: 'menu',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Menu', name: 'menu', desc: '', args: []);
   }
 
   /// `Price`
   String get price {
-    return Intl.message(
-      'Price',
-      name: 'price',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Price', name: 'price', desc: '', args: []);
   }
 
   /// `Fun`
   String get fun {
-    return Intl.message(
-      'Fun',
-      name: 'fun',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Fun', name: 'fun', desc: '', args: []);
   }
 
   /// `Description is required`
@@ -695,12 +646,7 @@ class S {
 
   /// `Anonymous`
   String get anonimo {
-    return Intl.message(
-      'Anonymous',
-      name: 'anonimo',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Anonymous', name: 'anonimo', desc: '', args: []);
   }
 
   /// `No users followed`
@@ -745,52 +691,27 @@ class S {
 
   /// `Follow`
   String get segui {
-    return Intl.message(
-      'Follow',
-      name: 'segui',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Follow', name: 'segui', desc: '', args: []);
   }
 
   /// `Followed`
   String get seguiti {
-    return Intl.message(
-      'Followed',
-      name: 'seguiti',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Followed', name: 'seguiti', desc: '', args: []);
   }
 
   /// `World`
   String get world {
-    return Intl.message(
-      'World',
-      name: 'world',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('World', name: 'world', desc: '', args: []);
   }
 
   /// `Legends`
   String get legends {
-    return Intl.message(
-      'Legends',
-      name: 'legends',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Legends', name: 'legends', desc: '', args: []);
   }
 
   /// `Error:`
   String get errore {
-    return Intl.message(
-      'Error:',
-      name: 'errore',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Error:', name: 'errore', desc: '', args: []);
   }
 
   /// `No Kebab places present :(`
@@ -805,12 +726,7 @@ class S {
 
   /// `Thank You`
   String get thank_you {
-    return Intl.message(
-      'Thank You',
-      name: 'thank_you',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thank You', name: 'thank_you', desc: '', args: []);
   }
 
   /// `Thank you for your review!`
@@ -865,7 +781,7 @@ class S {
 
   /// `It looks like the review you are trying to access does not exist. Please check the link and try again.`
   String
-      get it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again {
+  get it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again {
     return Intl.message(
       'It looks like the review you are trying to access does not exist. Please check the link and try again.',
       name:
@@ -947,12 +863,7 @@ class S {
 
   /// `Open now`
   String get aperti_ora {
-    return Intl.message(
-      'Open now',
-      name: 'aperti_ora',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Open now', name: 'aperti_ora', desc: '', args: []);
   }
 
   /// `Failed to load posts`
@@ -967,12 +878,7 @@ class S {
 
   /// `Your Posts`
   String get i_tuoi_post {
-    return Intl.message(
-      'Your Posts',
-      name: 'i_tuoi_post',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Your Posts', name: 'i_tuoi_post', desc: '', args: []);
   }
 
   /// `No posts found`
@@ -1047,32 +953,17 @@ class S {
 
   /// `Explore`
   String get esplora {
-    return Intl.message(
-      'Explore',
-      name: 'esplora',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Explore', name: 'esplora', desc: '', args: []);
   }
 
   /// `Map`
   String get mappa {
-    return Intl.message(
-      'Map',
-      name: 'mappa',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Map', name: 'mappa', desc: '', args: []);
   }
 
   /// `No Image`
   String get no_image {
-    return Intl.message(
-      'No Image',
-      name: 'no_image',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No Image', name: 'no_image', desc: '', args: []);
   }
 
   /// `No comments available`
@@ -1147,22 +1038,12 @@ class S {
 
   /// `Open`
   String get aperto {
-    return Intl.message(
-      'Open',
-      name: 'aperto',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Open', name: 'aperto', desc: '', args: []);
   }
 
   /// `Closed`
   String get chiuso {
-    return Intl.message(
-      'Closed',
-      name: 'chiuso',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Closed', name: 'chiuso', desc: '', args: []);
   }
 
   /// `No reviews available`
@@ -1207,52 +1088,27 @@ class S {
 
   /// `Vegetables`
   String get verdura {
-    return Intl.message(
-      'Vegetables',
-      name: 'verdura',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Vegetables', name: 'verdura', desc: '', args: []);
   }
 
   /// `Yogurt`
   String get yogurt {
-    return Intl.message(
-      'Yogurt',
-      name: 'yogurt',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Yogurt', name: 'yogurt', desc: '', args: []);
   }
 
   /// `Spicy`
   String get spicy {
-    return Intl.message(
-      'Spicy',
-      name: 'spicy',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Spicy', name: 'spicy', desc: '', args: []);
   }
 
   /// `Onion`
   String get cipolla {
-    return Intl.message(
-      'Onion',
-      name: 'cipolla',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Onion', name: 'cipolla', desc: '', args: []);
   }
 
   /// `Description`
   String get description {
-    return Intl.message(
-      'Description',
-      name: 'description',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Description', name: 'description', desc: '', args: []);
   }
 
   /// `How to review a kebab`
@@ -1267,12 +1123,7 @@ class S {
 
   /// `Close`
   String get close {
-    return Intl.message(
-      'Close',
-      name: 'close',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Close', name: 'close', desc: '', args: []);
   }
 
   /// `In order to keep the user reviews truthful, to review yourself the kebab,\nyou need to go in person to the kebab place and find the affixed Kebabbo sticker nearby,\nscanning it will bring you to the review page.`
@@ -1317,12 +1168,7 @@ class S {
 
   /// `Delete`
   String get elimina {
-    return Intl.message(
-      'Delete',
-      name: 'elimina',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Delete', name: 'elimina', desc: '', args: []);
   }
 
   /// `Do you really want to delete the post?`
@@ -1397,12 +1243,7 @@ class S {
 
   /// `Sign Up`
   String get sign_up {
-    return Intl.message(
-      'Sign Up',
-      name: 'sign_up',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign Up', name: 'sign_up', desc: '', args: []);
   }
 
   /// `Please enter your email`
@@ -1467,42 +1308,22 @@ class S {
 
   /// `Logged in`
   String get logged_in {
-    return Intl.message(
-      'Logged in',
-      name: 'logged_in',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Logged in', name: 'logged_in', desc: '', args: []);
   }
 
   /// `Log In`
   String get login {
-    return Intl.message(
-      'Log In',
-      name: 'login',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Log In', name: 'login', desc: '', args: []);
   }
 
   /// `Email`
   String get email {
-    return Intl.message(
-      'Email',
-      name: 'email',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Email', name: 'email', desc: '', args: []);
   }
 
   /// `Password`
   String get password {
-    return Intl.message(
-      'Password',
-      name: 'password',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Password', name: 'password', desc: '', args: []);
   }
 
   /// `Change profile`
@@ -1627,12 +1448,7 @@ class S {
 
   /// `No, thanks`
   String get no_thanks {
-    return Intl.message(
-      'No, thanks',
-      name: 'no_thanks',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No, thanks', name: 'no_thanks', desc: '', args: []);
   }
 
   /// `You already have the app installed. Do you want to open it?`
@@ -1653,6 +1469,61 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Kebabbo Card`
+  String get single_card {
+    return Intl.message(
+      'Kebabbo Card',
+      name: 'single_card',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebabbo Pack`
+  String get pack {
+    return Intl.message('Kebabbo Pack', name: 'pack', desc: '', args: []);
+  }
+
+  /// `Kebab TCG Carousel`
+  String get my_cards {
+    return Intl.message(
+      'Kebab TCG Carousel',
+      name: 'my_cards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This pack is not available yet`
+  String get pack_too_soon {
+    return Intl.message(
+      'This pack is not available yet',
+      name: 'pack_too_soon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don't have any cards yet`
+  String get no_cards_yet {
+    return Intl.message(
+      'You don\'t have any cards yet',
+      name: 'no_cards_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Pack`
+  String get open_pack {
+    return Intl.message('Open Pack', name: 'open_pack', desc: '', args: []);
+  }
+
+  /// `Go Back`
+  String get go_back {
+    return Intl.message('Go Back', name: 'go_back', desc: '', args: []);
   }
 }
 

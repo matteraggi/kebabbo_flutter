@@ -49,7 +49,8 @@ class _AccountPageState extends State<AccountPage> {
   Map<String, dynamic>? _favoriteKebab;
   final String privacyPolicyUrl = "https://kebabbo.top/privacy-policy";
   bool _isAvatarLoading = false;
-
+  DateTime _lastPack = DateTime.now().toUtc();
+  bool _isTimerActive = false;
   @override
   void initState() {
     super.initState();
@@ -76,6 +77,13 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
+  String _formatDuration(Duration duration) {
+    final hours = duration.inHours.remainder(12).toString().padLeft(2, '0');
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
+  }
+
   Future<void> _loadProfile() async {
     setState(() {
       _loading = true;
@@ -86,7 +94,8 @@ class _AccountPageState extends State<AccountPage> {
     setState(() {
       _username = profileData['username'];
       _avatarUrl = profileData['avatarUrl'];
-      print("_avatarUrl: $_avatarUrl");
+      _lastPack = DateTime.parse(profileData['last_pack']).toUtc();
+      _isTimerActive = _calculateIsTimerActive(_lastPack);
       _ingredients = List<int>.from(profileData['ingredients']);
       _seguitiCount = (profileData['seguitiCount'] != null)
           ? profileData['seguitiCount'].length
@@ -382,6 +391,12 @@ class _AccountPageState extends State<AccountPage> {
     return response;
   }
 
+  bool _calculateIsTimerActive(DateTime lastPackTime) {
+    final now = DateTime.now().toUtc();
+    final difference = now.difference(lastPackTime);
+    return difference.inSeconds < 12 * 60 * 60;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Ottieni l'altezza dello schermo
@@ -567,12 +582,72 @@ class _AccountPageState extends State<AccountPage> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PackPage()));
-                            },
-                            child: Icon(Icons.card_giftcard,
-                                color: Colors.black, size: 22),
+                            onTap: _isTimerActive
+                                ? null // Disable if timer is active
+                                : () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PackPage()),
+                                    );
+                                  },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.card_giftcard,
+                                  color: _isTimerActive
+                                      ? Colors.blueGrey
+                                      : Colors.black, // Grey if disabled
+                                  size: 22,
+                                ),
+                                StreamBuilder<DateTime>(
+                                  stream: Stream.periodic(
+                                      const Duration(seconds: 1),
+                                      (_) => DateTime.now().toUtc()),
+                                  builder: (context, snapshot) {
+                                    final now =
+                                        snapshot.data ?? DateTime.now().toUtc();
+                                    final difference =
+                                        now.difference(_lastPack);
+                                    final remainingTime =
+                                        const Duration(hours: 12) - difference;
+                                    if (difference.inSeconds < 12 * 60 * 60 &&
+                                        !remainingTime.isNegative) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 6, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              Colors.white, // White background
+                                          borderRadius: BorderRadius.circular(
+                                              20), // Pill shape
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Color.fromRGBO(0, 0, 0, 0.2),
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Text(
+                                          _formatDuration(remainingTime),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight:
+                                                FontWeight.bold, // Bold text
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return const SizedBox
+                                          .shrink(); // Hide if timer is not needed
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(width: 16),
                           InkWell(
@@ -850,14 +925,10 @@ class _AccountPageState extends State<AccountPage> {
 
   Future<void> _signOut() async {
     try {
-      setState(() {
-        
-      });
+      setState(() {});
       await supabase.auth.signOut();
       print("session ${supabase.auth.currentSession}");
       // Navigate immediately after sign out
-
-  
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

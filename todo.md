@@ -81,6 +81,7 @@ Feature lancio:
 - [x] Controllare dimensione caricamento foto profilo e post
 - [x] traduzioni stringhe
 - [x] Cambiare UI modulo di cambio account info
+- [x] aggiungere murgulet card
 
 Feature extra:
 - [ ] pack opening pokemon pocket style con carte kebabbari da collezionare
