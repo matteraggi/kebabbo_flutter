@@ -7,7 +7,6 @@ import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab/favorites_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/followers_page.dart';
-import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/about_page.dart';
 import 'package:kebabbo_flutter/pages/misc/medal_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/seguiti_page.dart';
@@ -851,14 +850,14 @@ class _AccountPageState extends State<AccountPage> {
 
   Future<void> _signOut() async {
     try {
+      setState(() {
+        
+      });
       await supabase.auth.signOut();
-
+      print("session ${supabase.auth.currentSession}");
       // Navigate immediately after sign out
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginPage()),
-        );
-      }
+
+  
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
