@@ -17,6 +17,7 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
       'favoritesCount': (data['favorites'] as List?)?.length ?? 0,
       'ingredients': data['ingredients'] ?? [],
       'seguitiCount': data['followed_users'] ?? [],
+      'last_pack': data['last_pack'] ?? '',
       'favoriteKebab': data['favorite_kebab'] ?? 0,
     };
   } catch (error) {

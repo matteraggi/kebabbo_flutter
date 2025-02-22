@@ -235,5 +235,12 @@
   "nessun_kebab_vicino_a_te": "Ningún kebab cerca de ti",
   "no_thanks": "No, gracias",
   "app_is_installed_description": "Kebabbo ya está instalado en tu dispositivo. ¿Quieres abrirlo?",
-  "app_is_installed": "App instalada"
+  "app_is_installed": "App instalada",
+  "single_card": "Carta Kebabbo",
+  "pack": "Paquete Kebabbo",
+  "my_cards": "Colección Kebab TCG",
+  "pack_too_soon": "Este paquete aún no está disponible",
+  "no_cards_yet": "Aún no tienes ninguna carta",
+  "open_pack": "Abrir Pacote",
+  "go_back": "Volver"
 }
