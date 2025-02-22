@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
+import 'package:kebabbo_flutter/pages/account/reset_password.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
-import 'package:kebabbo_flutter/pages/reviews/choose_kebab_review_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
 import 'package:kebabbo_flutter/pages/feed&socials/search_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
-import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,7 +21,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:kebabbo_flutter/utils/notifications.dart';
 import 'package:flutter/foundation.dart'; // Import for kIsWeb
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'dart:html' as html;
 import 'package:url_launcher/url_launcher.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
@@ -35,14 +33,16 @@ Future<void> main() async {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
 
   String? reviewHash;
-  String? policy;
+  String? otherPaths;
 
   // Handle deep links based on URL path
   if (Uri.base.pathSegments.isNotEmpty) {
     if (Uri.base.pathSegments[0] == 'reviews') {
       reviewHash = Uri.base.pathSegments[1];
     } else if (Uri.base.pathSegments[0] == 'privacy-policy') {
-      policy = "privacy-policy";
+      otherPaths = "privacy-policy";
+    } else if (Uri.base.pathSegments[0] == 'reset-password') {
+      otherPaths = "reset-password";
     }
   }
 
@@ -67,16 +67,16 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  runApp(MyApp(reviewHash: reviewHash, policy: policy));
+  runApp(MyApp(reviewHash: reviewHash, otherPaths: otherPaths));
 }
 
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   final String? reviewHash;
-  final String? policy;
+  final String? otherPaths;
 
-  const MyApp({super.key, this.reviewHash, this.policy});
+  const MyApp({super.key, this.reviewHash, this.otherPaths});
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +123,8 @@ class MyApp extends StatelessWidget {
         );
       },
       home: MyHomePage(
-          reviewHash: reviewHash, policy: policy), // Set MyHomePage as the home
+          reviewHash: reviewHash,
+          otherPaths: otherPaths), // Set MyHomePage as the home
     );
   }
 }
@@ -143,9 +144,9 @@ extension ContextExtension on BuildContext {
 
 class MyHomePage extends StatefulWidget {
   final String? reviewHash;
-  final String? policy;
+  final String? otherPaths;
 
-  const MyHomePage({super.key, this.reviewHash, this.policy});
+  const MyHomePage({super.key, this.reviewHash, this.otherPaths});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -153,7 +154,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? reviewHash; // Now a mutable state variable
-  String? policy; // Now a mutable state variable
+  String? otherPaths; // Now a mutable state variable
 
   var selectedIndex = 2; // Home page by default
   final ValueNotifier<Position?> _currentPositionNotifier =
@@ -161,14 +162,15 @@ class _MyHomePageState extends State<MyHomePage> {
   late Stream<Position> _positionStream;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
-  final GlobalKey<ReviewPageState> _reviewsPageKey = GlobalKey<ReviewPageState>();
+  final GlobalKey<ReviewPageState> _reviewsPageKey =
+      GlobalKey<ReviewPageState>();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
     reviewHash = widget.reviewHash;
-    policy = widget.policy;
+    otherPaths = widget.otherPaths;
     _checkFirstTimeOpen();
     _checkIfAppInstalled();
     _getLocation();
@@ -225,79 +227,58 @@ class _MyHomePageState extends State<MyHomePage> {
       if (selectedIndex == 3 && _mapPageKey.currentState != null) {
         _mapPageKey.currentState!.updatePosition(position);
       }
-      if(_reviewsPageKey.currentState != null){
+      if (_reviewsPageKey.currentState != null) {
         print("position$position");
         _reviewsPageKey.currentState!.updatePosition(position);
       }
     }
   }
 
-Future<void> _checkIfAppInstalled() async {
-  String appUrl = 'intent://kebabbologna/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
+  Future<void> _checkIfAppInstalled() async {
+    String appUrl =
+        'intent://kebabbologna/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
 
-  if (!kIsWeb && Platform.isAndroid) { // Check for Android *and* not web
-    if (await canLaunchUrl(Uri.parse(appUrl))) {
-      // App is likely installed, but let's try to launch it just in case:
-      await launchUrl(Uri.parse(appUrl));
-
-    } else { //App is not installed
+    if (!kIsWeb && Platform.isAndroid) {
+      // Check for Android *and* not web
+      if (await canLaunchUrl(Uri.parse(appUrl))) {
+        // App is likely installed, but let's try to launch it just in case:
+        await launchUrl(Uri.parse(appUrl));
+      } else {
+        //App is not installed
         showAppInstallDialog(context);
-    }
-}
-}
-
-  @override
-  Widget build(BuildContext context) {
-    Widget page;
-
-    if (reviewHash != null) {
-      // Handle Review Page
-      print("position${_currentPositionNotifier.value}");
-      page = ReviewPage(
-        hash: reviewHash!,
-        initialPosition: _currentPositionNotifier.value,
-        key: _reviewsPageKey,
-      );
-    } else if (policy != null) {
-      // Handle Reset Password Page
-      page = PrivacyPolicyPage();
-    } else {
-      // Standard navigation based on selectedIndex
-      switch (selectedIndex) {
-        case 0:
-          page = const FeedPage();
-          break;
-        case 1:
-          page = SearchPage();
-          break;
-        case 2:
-          page = ValueListenableBuilder<Position?>(
-            valueListenable: _currentPositionNotifier,
-            builder: (context, currentPosition, child) {
-              return TopKebabPage(currentPosition: currentPosition);
-            },
-          );
-          break;
-        case 3:
-          page = MapPage(
-            initialPosition: _currentPositionNotifier.value,
-            key: _mapPageKey,
-          );
-          break;
-        case 4:
-          page = supabase.auth.currentSession ==
-                  null // add function to update selected index
-              ? LoginPage(authCallback: (int index) {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                })
-              : AccountPage(currentPosition: _currentPositionNotifier.value);
-          break;
-        default:
-          throw UnimplementedError('No widget for $selectedIndex');
       }
     }
+  }
+
+@override
+Widget build(BuildContext context) {
+  Widget page;
+
+  if (reviewHash != null) {
+    // Handle Review Page
+    print("position${_currentPositionNotifier.value}");
+    page = ReviewPage(
+      hash: reviewHash!,
+      initialPosition: _currentPositionNotifier.value,
+      key: _reviewsPageKey,
+    );
+  } else if (otherPaths != null) {
+    // Check if otherPaths is NOT null BEFORE comparing it
+    if (otherPaths == "privacy-policy") {
+      // Handle Privacy Policy Page
+      page = PrivacyPolicyPage();
+    } else if (otherPaths == "reset-password") {
+      // Handle Reset Password Page
+      page = ResetPasswordForm();
+    } else {
+      // Handle other possible paths or show a default page
+      page = _buildDefaultPage(); // Or another appropriate default
+    }
+  } else {
+    // Standard navigation based on selectedIndex
+    page = _buildStandardNavigationPage();
+  }
+
 
     return Scaffold(
       body: mounted ? page : Container(), // Wrap the page,
@@ -309,7 +290,7 @@ Future<void> _checkIfAppInstalled() async {
           setState(() {
             selectedIndex = index;
             reviewHash = null; // Reset reviewHash so the nav bar takes control
-            policy = null; // Reset policy
+            otherPaths = null; // Reset policy
           });
         },
         items: [
@@ -341,4 +322,53 @@ Future<void> _checkIfAppInstalled() async {
       ),
     );
   }
+
+
+Widget _buildStandardNavigationPage() {
+  switch (selectedIndex) {
+    case 0:
+      return const FeedPage();
+    case 1:
+      return SearchPage();
+    case 2:
+      return ValueListenableBuilder<Position?>(
+        valueListenable: _currentPositionNotifier,
+        builder: (context, currentPosition, child) {
+          return TopKebabPage(currentPosition: currentPosition);
+        },
+      );
+    case 3:
+      return MapPage(
+        initialPosition: _currentPositionNotifier.value,
+        key: _mapPageKey,
+      );
+    case 4:
+      return StreamBuilder<AuthState>(
+  stream: supabase.auth.onAuthStateChange,
+  builder: (context, snapshot) {
+    final session = supabase.auth.currentSession;
+
+    if (session == null) {
+      return LoginPage(authCallback: (int index) {
+        setState(() {
+          selectedIndex = index;
+        });
+      });
+    } else {
+      return AccountPage(currentPosition: _currentPositionNotifier.value);
+    }
+  },
+);
+
+    default:
+      throw UnimplementedError('No widget for $selectedIndex');
+  }
 }
+
+Widget _buildDefaultPage() {
+  // Return a default widget for when otherPaths is not null but doesn't match known paths
+  return const Center(child: Text("Page Not Found")); // Or any other appropriate default
+}
+
+}
+
