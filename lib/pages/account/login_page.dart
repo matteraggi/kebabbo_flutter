@@ -46,7 +46,9 @@ class LoginPageState extends State<LoginPage> {
         context.showSnackBar(S.of(context).logged_in);
         _emailController.clear();
         _passwordController.clear();
+        setState(() {
         widget.authCallback?.call(4);
+        });
       }
     } on AuthException catch (error) {
       context.showSnackBar(error.message, isError: true);

@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/choose_kebab_review_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -310,62 +311,25 @@ Future<void> changeHash(String newHash) async {
         ),
       );
     }
-    if (Supabase.instance.client.auth.currentSession == null &&
-        isValidHash) {
-      return Scaffold(
-        appBar: AppBar(
-            title: RichText(
-          text: TextSpan(
-            style: const TextStyle(
-                fontSize: 18.0, color: Colors.black), // Base style
-            children: [
-              TextSpan(text: S.of(context).review), // Regular text
-              TextSpan(
-                text: kebabber!['name'], // The name
-                style: const TextStyle(
-                  fontSize: 22.0, // Make the name bigger
-                  fontWeight: FontWeight.bold, // Make the name bold
-                ),
-              ),
-            ],
-          ),
-        )),
-        body: Center(
-          child: Card(
-            margin: const EdgeInsets.all(16.0),
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    S.of(context).please_log_in_to_submit_your_review,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  GoogleLoginButton(redirectUrl: redirectUrl),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    if (thankYouActive) {
-      return ThankYouPage();
-    }
-
+    
     if (kebabber == null) {
       return ChooseReviewPage(
       key:  ValueKey(_currentPosition),
     initialPosition: _currentPosition,
     changeHash: changeHash);
     }
+    if (thankYouActive) {
+      return ThankYouPage();
+    }
+
+    return StreamBuilder<AuthState>(
+  stream: supabase.auth.onAuthStateChange,
+  builder: (context, snapshot) {
+    final session = supabase.auth.currentSession;
+
+    if (session == null && isValidHash) {
+      return LoginPage();
+    } else {
     return Scaffold(
       appBar: AppBar(
           title: RichText(
@@ -374,7 +338,7 @@ Future<void> changeHash(String newHash) async {
           children: [
             TextSpan(text: S.of(context).review),
             TextSpan(
-              text: kebabber?['name'] ?? "", // Safe access
+              text: "  ${kebabber?['name'] ?? ""}", // Safe access
               style: const TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.bold,
@@ -537,7 +501,9 @@ Future<void> changeHash(String newHash) async {
       ),
     );
   }
-
+  });
+  }
+  
   Widget buildCenteredRatingBar(
       String label, Function(double) onRatingUpdate, double initialRating) {
     return Column(

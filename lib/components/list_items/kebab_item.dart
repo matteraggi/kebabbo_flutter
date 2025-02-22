@@ -84,50 +84,45 @@ class KebabListItemState extends State<KebabListItem> {
     _controller = FlipCardController();
     getUsersReviews();
   }
+Future<void> getUsersReviews() async {
+  try {
+    final response = await supabase
+        .from('reviews')
+        .select('quality, quantity, menu, price, fun')
+        .eq('kebabber_id', widget.id);
 
-  Future<void> getUsersReviews() async {
-    try {
-      // Recupera tutte le recensioni per questo kebabbaro
-      final response = await supabase
-          .from('reviews')
-          .select('quality, quantity, menu, price, fun')
-          .eq('kebabber_id', widget.id);
+    List<dynamic> reviews = response;
+    if (reviews.isEmpty) return;
 
-      // Otteniamo i dati delle recensioni
-      List<dynamic> reviews = response;
-      if (reviews.isEmpty) return;
+    double totalQuality = 0;
+    double totalQuantity = 0;
+    double totalMenu = 0;
+    double totalPrice = 0;
+    double totalFun = 0;
 
-      double totalQuality = 0;
-      double totalQuantity = 0;
-      double totalMenu = 0;
-      double totalPrice = 0;
-      double totalFun = 0;
-
-      for (var review in reviews) {
-        totalQuality += review['quality'] ?? 0;
-        totalQuantity += review['quantity'] ?? 0;
-        totalMenu += review['menu'] ?? 0;
-        totalPrice += review['price'] ?? 0;
-        totalFun += review['fun'] ?? 0;
-      }
-
-      // Calcoliamo la media di ogni campo
-      avgQuality = totalQuality / reviews.length;
-      avgQuantity = totalQuantity / reviews.length;
-      avgMenu = totalMenu / reviews.length;
-      avgPrice = totalPrice / reviews.length;
-      avgFun = totalFun / reviews.length;
-
-      // Calcoliamo la media tra le medie
-      overallAvgRating =
-          (avgQuality + avgQuantity + avgMenu + avgPrice + avgFun) / 5;
-
-      // Aggiorniamo lo stato per ricalcolare l'interfaccia
-      setState(() {});
-    } catch (e) {
-      print("Errore durante il recupero delle recensioni: $e");
+    for (var review in reviews) {
+      totalQuality += review['quality'] ?? 0;
+      totalQuantity += review['quantity'] ?? 0;
+      totalMenu += review['menu'] ?? 0;
+      totalPrice += review['price'] ?? 0;
+      totalFun += review['fun'] ?? 0;
     }
+
+    avgQuality = totalQuality / reviews.length;
+    avgQuantity = totalQuantity / reviews.length;
+    avgMenu = totalMenu / reviews.length;
+    avgPrice = totalPrice / reviews.length;
+    avgFun = totalFun / reviews.length;
+    overallAvgRating = (avgQuality + avgQuantity + avgMenu + avgPrice + avgFun) / 5;
+
+    if (mounted) {
+      setState(() {});
+    }
+  } catch (e) {
+    print("Errore durante il recupero delle recensioni: $e");
   }
+}
+
 
   List<Widget> _buildRatingStars(double rating) {
     List<Widget> stars = [];
