@@ -31,11 +31,14 @@ class PrivacyPolicyPage extends StatelessWidget {
               );
             }
 
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Html(
-                  data: snapshot.data as String,
+            return Container(
+              color: Colors.white, // Set background color to white
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Html(
+                    data: snapshot.data as String,
+                  ),
                 ),
               ),
             );
