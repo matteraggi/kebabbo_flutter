@@ -6,7 +6,7 @@ import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const MAXDISTANCE = 200000;
+const MAXDISTANCE = 200;
 
 class ChooseReviewPage extends StatefulWidget {
   final Position? initialPosition;
