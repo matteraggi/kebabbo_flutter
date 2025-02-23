@@ -432,6 +432,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tem certeza de que deseja excluir a postagem?",
     ),
     "world": MessageLookupByLibrary.simpleMessage("Mundo"),
+    "write_a_review_for_a_kebab_near_you": MessageLookupByLibrary.simpleMessage(
+      "Escreva uma avaliação para um kebab perto de você",
+    ),
     "yogurt": MessageLookupByLibrary.simpleMessage("Iogurte"),
     "you_can_access_reviews_at_any_time_from_your_account":
         MessageLookupByLibrary.simpleMessage(

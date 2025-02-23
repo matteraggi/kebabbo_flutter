@@ -430,6 +430,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Möchtest du den Beitrag wirklich löschen?",
     ),
     "world": MessageLookupByLibrary.simpleMessage("Welt"),
+    "write_a_review_for_a_kebab_near_you": MessageLookupByLibrary.simpleMessage(
+      "Schreibe eine Bewertung für einen Kebab in deiner Nähe",
+    ),
     "yogurt": MessageLookupByLibrary.simpleMessage("Joghurt"),
     "you_can_access_reviews_at_any_time_from_your_account":
         MessageLookupByLibrary.simpleMessage(
