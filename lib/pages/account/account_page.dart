@@ -28,9 +28,8 @@ void printObject(Object object) {
 }
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({super.key, Position? currentPosition});
-
-  get currentPosition => null;
+  final Position? currentPosition;
+  const AccountPage({super.key, required this.currentPosition});
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -909,7 +908,7 @@ class _AccountPageState extends State<AccountPage> {
                           child: TabBarView(
                             children: [
                               MedalPage(userId: _id),
-                              UserReviewsPage(userId: _id),
+                              UserReviewsPage(userId: _id, initialPosition:  widget.currentPosition,),
                               FavoritesPage(userId: _id),
                             ],
                           ),

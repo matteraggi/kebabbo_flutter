@@ -1525,6 +1525,16 @@ class S {
   String get go_back {
     return Intl.message('Go Back', name: 'go_back', desc: '', args: []);
   }
+
+  /// `Write a review for a kebab near you`
+  String get write_a_review_for_a_kebab_near_you {
+    return Intl.message(
+      'Write a review for a kebab near you',
+      name: 'write_a_review_for_a_kebab_near_you',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

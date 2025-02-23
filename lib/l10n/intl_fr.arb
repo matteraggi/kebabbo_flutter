@@ -242,5 +242,7 @@
   "pack_too_soon": "Ce pack n'est pas encore disponible",
   "no_cards_yet": "Vous n'avez pas encore de cartes",
   "open_pack": "Ouvrir le pack",
-  "go_back": "Retour"
+  "go_back": "Retour",
+  "write_a_review_for_a_kebab_near_you": "Écris une critique pour un kebab près de chez toi"
+
 }

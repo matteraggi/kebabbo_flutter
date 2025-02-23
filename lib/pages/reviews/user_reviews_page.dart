@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/components/misc/info_dialog.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/reviews/review_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class UserReviewsPage extends StatefulWidget {
   final String userId;
+  final Position? initialPosition;
 
-  const UserReviewsPage({super.key, required this.userId});
+  const UserReviewsPage({super.key, required this.userId, required this.initialPosition});
 
   @override
   UserReviewsState createState() => UserReviewsState();
@@ -66,16 +69,44 @@ class UserReviewsState extends State<UserReviewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
+  body: Column(
+    children: [
+      // Pill-shaped button at the top
+      Padding(
+        padding: const EdgeInsets.all(10.0), // Add some padding for better spacing
+        child: SizedBox(
+          width: double.infinity, // Full width button
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 15), // Button height
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // Pill shape
+              ),
+              backgroundColor: red, // Customize color if needed
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(hash: "nearme", initialPosition: widget.initialPosition)));
+            },
+            icon: const Icon(Icons.add, color: Colors.white), // "+" icon
+            label:  Text(
+              S.of(context).write_a_review_for_a_kebab_near_you,
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+      
+      // The rest of the content
+      isLoading
           ? const Center(child: CircularProgressIndicator())
           : reviews.isEmpty
-              ? textExplanation(
-                  context, S.of(context).nessuna_recensione_ancora)
-              : ListView.builder(
-                  itemCount: reviews.length,
-                  itemBuilder: (context, index) {
-                    final review = reviews[index];
-                    return KebabListItemFavorite(
+              ? textExplanation(context, S.of(context).nessuna_recensione_ancora)
+              : Expanded( // Wrap ListView.builder in Expanded to fit it in the column
+                  child: ListView.builder(
+                    itemCount: reviews.length,
+                    itemBuilder: (context, index) {
+                      final review = reviews[index];
+                      return KebabListItemFavorite(
                         id: review['kebabber_id'].toString(),
                         name: review['name'],
                         description: review['description'],
@@ -95,9 +126,14 @@ class UserReviewsState extends State<UserReviewsPage> {
                         tag: review['tag'],
                         isOpen: review['is_open'],
                         glutenFree: review['gluten_free'],
-                        expanded: false);
-                  },
+                        expanded: false,
+                        
+                      );
+                    },
+                  ),
                 ),
-    );
+    ],
+  ),
+);
   }
 }
