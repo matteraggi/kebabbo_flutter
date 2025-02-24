@@ -3,7 +3,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/choose_kebab_review_page.dart';

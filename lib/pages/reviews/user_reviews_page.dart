@@ -70,31 +70,48 @@ class UserReviewsState extends State<UserReviewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
   body: Column(
-    children: [
-      // Pill-shaped button at the top
-      Padding(
-        padding: const EdgeInsets.all(10.0), // Add some padding for better spacing
-        child: SizedBox(
-          width: double.infinity, // Full width button
-          child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 15), // Button height
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30), // Pill shape
+  children: [
+    // Pill-shaped button at the top
+    Padding(
+      padding: const EdgeInsets.all(10.0), // Add some padding for better spacing
+      child: SizedBox(
+        width: double.infinity, // Full width button
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 15), // Button height
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30), // Pill shape
+            ),
+            backgroundColor: red, // Customize color if needed
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ReviewPage(
+                  hash: "nearme",
+                  initialPosition: widget.initialPosition,
+                ),
               ),
-              backgroundColor: red, // Customize color if needed
-            ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(hash: "nearme", initialPosition: widget.initialPosition)));
-            },
-            icon: const Icon(Icons.add, color: Colors.white), // "+" icon
-            label:  Text(
-              S.of(context).write_a_review_for_a_kebab_near_you,
-              style: TextStyle(fontSize: 16),
-            ),
+            );
+          },
+          icon: const Padding(padding: EdgeInsets.only(left: 16), child:Icon(Icons.add, color: Colors.white)), // "+" icon
+          label: Row(
+            mainAxisSize: MainAxisSize.min, // Ensures Row only takes necessary space
+            children: [
+              Expanded(
+                child: Text(
+                  S.of(context).write_a_review_for_a_kebab_near_you,
+                  textAlign: TextAlign.center, // Center the text
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+              SizedBox(width: 16),
+            ],
           ),
         ),
       ),
+    ),
       
       // The rest of the content
       isLoading

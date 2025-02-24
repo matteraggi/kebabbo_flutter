@@ -43,7 +43,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [yellow, Colors.white],
+              colors: [Colors.white,red],
               stops: [0, 1],
             ),
           ),

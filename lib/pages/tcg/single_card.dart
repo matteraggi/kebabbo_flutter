@@ -35,7 +35,7 @@ class SingleCardState extends State<SingleCard> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.white, yellow],
+              colors: [ Colors.white, red],
               stops: [0, 1],
             ),
           ),
