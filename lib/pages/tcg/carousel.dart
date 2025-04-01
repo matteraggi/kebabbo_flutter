@@ -40,12 +40,16 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
               .select('name')
               .filter('id', 'in', tcgIds);
           print('kebabResponse: $kebabResponse');
-          setState(() {
-            imagePaths = kebabResponse.map<String>((kebabs) {
+          List<String> kebabList=kebabResponse.map<String>((kebabs) {
               final String kebabberId =
                   kebabs['name'].toLowerCase().replaceAll(' ', '-');
-              return 'assets/kebab-card/$kebabberId.png';
-            }).toList();
+              return 'assets/kebab-card/$kebabberId.png';}
+            ).toList();
+            for (var item in kebabList) {
+              await precacheImage(AssetImage('assets/kebab-card/$item.png'), context);
+            }
+          setState(() {
+            imagePaths = kebabList;
           });
         }
       }
