@@ -388,7 +388,6 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   bool _calculateIsTimerActive(DateTime lastPackTime) {
-    return false;
     final now = DateTime.now().toUtc();
     final difference = now.difference(lastPackTime);
     return difference.inSeconds < 12 * 60 * 60;
