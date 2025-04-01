@@ -59,6 +59,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "app_is_installed_description": MessageLookupByLibrary.simpleMessage(
       "Kebabbo já está instalado no seu dispositivo. Deseja abri-lo?",
     ),
+    "autenticazione_necessaria": MessageLookupByLibrary.simpleMessage(
+      "Você precisa estar autenticado para comentar.",
+    ),
     "back_to_build": MessageLookupByLibrary.simpleMessage(
       "Voltar para a construção",
     ),
@@ -96,6 +99,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "close": MessageLookupByLibrary.simpleMessage("Fechar"),
     "commento_non_disponibile": MessageLookupByLibrary.simpleMessage(
       "Comentário não disponível",
+    ),
+    "commento_vuoto": MessageLookupByLibrary.simpleMessage(
+      "O texto do comentário não pode estar vazio.",
     ),
     "conferma_eliminazione": MessageLookupByLibrary.simpleMessage(
       "Confirmar exclusão",
@@ -190,6 +196,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgot_password": MessageLookupByLibrary.simpleMessage(
       "Esqueci minha senha",
     ),
+    "found_all_cards": MessageLookupByLibrary.simpleMessage(
+      "Todos os cards encontrados.",
+    ),
     "fun": MessageLookupByLibrary.simpleMessage("Diversão"),
     "go_back": MessageLookupByLibrary.simpleMessage("Voltar"),
     "hai_raggiunto_un_nuovo_traguardo_e_ottenuto_una_nuova_medaglia":
@@ -254,7 +263,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sem kebabs nos favoritos",
     ),
     "nessun_kebab_vicino_a_te": MessageLookupByLibrary.simpleMessage(
-      "Nenhum kebab perto de você",
+      "Nenhum kebab perto de você \nVocê deve estar próximo da loja de kebab para avaliá-la por motivos de autenticidade.\nVerifique sua localização e recarregue a página.",
     ),
     "nessun_kebabbaro_presente": MessageLookupByLibrary.simpleMessage(
       "Nenhum lugar de kebab presente :(",
@@ -368,6 +377,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "review_updated_successfully": MessageLookupByLibrary.simpleMessage(
       "Avaliação atualizada com sucesso",
     ),
+    "riprova": MessageLookupByLibrary.simpleMessage("Tentar novamente"),
     "scrivi_un_commento": MessageLookupByLibrary.simpleMessage(
       "Escreva um comentário...",
     ),
@@ -433,7 +443,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "world": MessageLookupByLibrary.simpleMessage("Mundo"),
     "write_a_review_for_a_kebab_near_you": MessageLookupByLibrary.simpleMessage(
-      "Escreva uma avaliação para um kebab perto de você",
+      "Escreva uma avaliação",
     ),
     "yogurt": MessageLookupByLibrary.simpleMessage("Iogurte"),
     "you_can_access_reviews_at_any_time_from_your_account":

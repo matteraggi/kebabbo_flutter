@@ -232,11 +232,11 @@
   "password_reset_success": "Password reset successful",
   "new_password": "New Password",
   "reset_password": "Reset Password",
-  "nessun_kebab_vicino_a_te": "No kebabs near you",
-  "no_thanks":  "No, thanks",
+  "nessun_kebab_vicino_a_te": "No kebab near you \nYou must be near the kebab shop to review it for authenticity reasons.\nCheck your location and reload the page.",
+  "riprova": "Try again",
+  "no_thanks": "No, thanks",
   "app_is_installed_description": "You already have the app installed. Do you want to open it?",
-  "app_is_installed":  "App is installed",
-
+  "app_is_installed": "App is installed",
   "single_card": "Kebabbo Card",
   "pack": "Kebabbo Pack",
   "my_cards": "Kebab TCG Carousel",
@@ -244,8 +244,8 @@
   "no_cards_yet": "You don't have any cards yet",
   "open_pack": "Open Pack",
   "go_back": "Go Back",
-  "write_a_review_for_a_kebab_near_you": "Write a review for a kebab near you"
-
-
-
+  "write_a_review_for_a_kebab_near_you": "Write a review",
+  "autenticazione_necessaria": "You must be logged in to comment.",
+ "commento_vuoto": "The comment text cannot be empty.",
+ "found_all_cards": "All cards found."
 }
