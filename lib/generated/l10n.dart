@@ -1436,14 +1436,19 @@ class S {
     );
   }
 
-  /// `No kebabs near you`
+  /// `No kebab near you \nYou must be near the kebab shop to review it for authenticity reasons.\nCheck your location and reload the page.`
   String get nessun_kebab_vicino_a_te {
     return Intl.message(
-      'No kebabs near you',
+      'No kebab near you \nYou must be near the kebab shop to review it for authenticity reasons.\nCheck your location and reload the page.',
       name: 'nessun_kebab_vicino_a_te',
       desc: '',
       args: [],
     );
+  }
+
+  /// `Try again`
+  String get riprova {
+    return Intl.message('Try again', name: 'riprova', desc: '', args: []);
   }
 
   /// `No, thanks`
@@ -1526,11 +1531,41 @@ class S {
     return Intl.message('Go Back', name: 'go_back', desc: '', args: []);
   }
 
-  /// `Write a review for a kebab near you`
+  /// `Write a review`
   String get write_a_review_for_a_kebab_near_you {
     return Intl.message(
-      'Write a review for a kebab near you',
+      'Write a review',
       name: 'write_a_review_for_a_kebab_near_you',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must be logged in to comment.`
+  String get autenticazione_necessaria {
+    return Intl.message(
+      'You must be logged in to comment.',
+      name: 'autenticazione_necessaria',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The comment text cannot be empty.`
+  String get commento_vuoto {
+    return Intl.message(
+      'The comment text cannot be empty.',
+      name: 'commento_vuoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All cards found.`
+  String get found_all_cards {
+    return Intl.message(
+      'All cards found.',
+      name: 'found_all_cards',
       desc: '',
       args: [],
     );

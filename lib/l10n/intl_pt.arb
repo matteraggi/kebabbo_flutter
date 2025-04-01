@@ -232,7 +232,8 @@
   "password_reset_success": "Redefinição de senha bem-sucedida",
   "new_password": "Nova senha",
   "reset_password": "Redefinir senha",
-  "nessun_kebab_vicino_a_te": "Nenhum kebab perto de você",
+  "nessun_kebab_vicino_a_te": "Nenhum kebab perto de você \nVocê deve estar próximo da loja de kebab para avaliá-la por motivos de autenticidade.\nVerifique sua localização e recarregue a página.",
+  "riprova": "Tentar novamente",
   "no_thanks": "Não, obrigado",
   "app_is_installed_description": "Kebabbo já está instalado no seu dispositivo. Deseja abri-lo?",
   "app_is_installed": "Aplicativo instalado",
@@ -243,6 +244,8 @@
   "no_cards_yet": "Você ainda não tem nenhuma carta",
   "open_pack": "Abrir Pacote",
   "go_back": "Voltar",
-  "write_a_review_for_a_kebab_near_you": "Escreva uma avaliação para um kebab perto de você"
-
+  "write_a_review_for_a_kebab_near_you": "Escreva uma avaliação",
+  "autenticazione_necessaria": "Você precisa estar autenticado para comentar.",
+ "commento_vuoto": "O texto do comentário não pode estar vazio.",
+ "found_all_cards": "Todos os cards encontrados."
 }
