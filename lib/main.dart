@@ -217,8 +217,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (permission == LocationPermission.denied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(('Location permissions have been denied.'))));
       permission = await Geolocator.requestPermission();
     }
 
