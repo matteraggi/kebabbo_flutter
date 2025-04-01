@@ -1,11 +1,11 @@
 {
-    "name": "kebabbo",
-    "short_name": "kebabbo",
+    "name": "Kebabbo",
+    "short_name": "Kebabbo",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#fff",
-    "theme_color": "#000",
-    "description": "A new Flutter project.",
+    "background_color": "#FFBA1C",
+    "theme_color": "#BB0000",
+    "description": "La vera guida per i miglior kebab di Bologna",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
