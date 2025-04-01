@@ -211,12 +211,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!serviceEnabled || permission == LocationPermission.deniedForever) {
       _currentPositionNotifier.value = null;
-      print('Location services are disabled.');
+      ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Location services are disabled.')));
       return;
     }
 
     if (permission == LocationPermission.denied) {
-      print('Location permissions are denied.');
+      ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(('Location permissions have been denied.'))));
       permission = await Geolocator.requestPermission();
     }
 
@@ -228,7 +230,6 @@ class _MyHomePageState extends State<MyHomePage> {
         _mapPageKey.currentState!.updatePosition(position);
       }
       if (_reviewsPageKey.currentState != null) {
-        print("position$position");
         _reviewsPageKey.currentState!.updatePosition(position);
       }
     }
@@ -256,7 +257,6 @@ Widget build(BuildContext context) {
 
   if (reviewHash != null) {
     // Handle Review Page
-    print("position${_currentPositionNotifier.value}");
     page = ReviewPage(
       hash: reviewHash!,
       initialPosition: _currentPositionNotifier.value,

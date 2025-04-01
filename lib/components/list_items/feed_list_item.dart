@@ -168,13 +168,15 @@ Future<void> _fetchUserProfile(String userId) async {
   Future<void> _postComment() async {
     final user = supabase.auth.currentUser;
     if (user == null) {
-      print("Devi essere autenticato per commentare.");
+      ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(S.of(context).autenticazione_necessaria)));
       return;
     }
 
     final String commentText = commentController.text.trim();
     if (commentText.isEmpty) {
-      print("Il testo del commento non può essere vuoto.");
+      ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(S.of(context).commento_vuoto))); 
       return;
     }
 
@@ -322,9 +324,7 @@ Future<void> _fetchUserProfile(String userId) async {
   Future<List<Map<String, dynamic>>> _fetchComments(int postId) async {
     try {
       //use edge function get_comments_for_post
-      print(postId);
       final comments = await supabase.rpc('get_comments_for_post',params:  {'post_id': postId});
-      print("comments: $comments");
       userProfiles = [];
       
       if (supabase.auth.currentUser == null) {
@@ -352,6 +352,7 @@ Future<void> _fetchUserProfile(String userId) async {
 
       return List<Map<String, dynamic>>.from(comments);
     } catch (error) {
+      print('Errore nel recupero dei commenti: $error');
       return []; // Restituisci una lista vuota in caso di errore
     }
   }
