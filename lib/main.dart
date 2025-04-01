@@ -45,7 +45,7 @@ Future<void> main() async {
       otherPaths = "reset-password";
     }
   }
-
+ 
   WidgetsFlutterBinding.ensureInitialized();
 
   // Web-specific initialization using FirebaseOptions
