@@ -22,10 +22,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
-void printObject(Object object) {
-  final prettyPrint = JsonEncoder.withIndent('  ').convert(object);
-  print(prettyPrint);
-}
+
 
 class AccountPage extends StatefulWidget {
   final Position? currentPosition;
@@ -282,7 +279,7 @@ class _AccountPageState extends State<AccountPage> {
         Navigator.of(context).pop(); // Chiudi il dialog
       } catch (error) {
         if (mounted) {
-          print(error);
+          print( "Error uploading avatar: $error");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
           );
@@ -391,6 +388,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   bool _calculateIsTimerActive(DateTime lastPackTime) {
+    return false;
     final now = DateTime.now().toUtc();
     final difference = now.difference(lastPackTime);
     return difference.inSeconds < 12 * 60 * 60;
@@ -926,7 +924,6 @@ class _AccountPageState extends State<AccountPage> {
     try {
       setState(() {});
       await supabase.auth.signOut();
-      print("session ${supabase.auth.currentSession}");
       // Navigate immediately after sign out
     } catch (error) {
       if (mounted) {
@@ -967,7 +964,6 @@ class _AccountPageState extends State<AccountPage> {
     // 2. Delete avatar from 'avatars' bucket (assuming one avatar per user)
     final avatarFiles = await supabase.storage.from('avatars').list();
     for (var file in avatarFiles) {
-      print(file.name);
     }
   if (_avatarUrl != null && _avatarUrl!.isNotEmpty) {  
     final avatarName = _avatarUrl!.split('/').last;
@@ -976,7 +972,6 @@ class _AccountPageState extends State<AccountPage> {
       if (file.name == avatarName) {
         print("Deleting avatar: $avatarName");
         final response = await supabase.storage.from('avatars').remove([file.name]);
-        print(response);
         break; // Exit the loop after deleting the avatar
       }
     }

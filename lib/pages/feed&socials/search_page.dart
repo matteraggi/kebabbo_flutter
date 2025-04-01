@@ -94,7 +94,6 @@ class _SearchPageState extends State<SearchPage> {
       if (userId == null) {
         //use edge function get_recent_posts
         response = await supabase.rpc('get_recent_posts');
-        print(response);
       } else {
         response = await supabase
             .from('posts')
