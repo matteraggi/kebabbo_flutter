@@ -30,6 +30,18 @@ class ChooseReviewState extends State<ChooseReviewPage> {
     _currentPosition = widget.initialPosition;
     _fetchKebabNearMe(_currentPosition);
   }
+    void _refreshPage() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    // Simulating a refresh delay
+    await Future.delayed(const Duration(seconds: 1));
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 Future<void> _fetchKebabNearMe(Position? userPosition) async {
   final PostgrestList response = await supabase.from('kebab').select('*');
   try {
@@ -88,8 +100,49 @@ Future<void> _fetchKebabNearMe(Position? userPosition) async {
               ? const Center(child: CircularProgressIndicator())
               : dashList.isEmpty
                   ? Center(
-                      child: Text(S.of(context).nessun_kebab_vicino_a_te),
-                    )
+  child: Column(
+    mainAxisSize: MainAxisSize.min, // Keeps the column centered and compact
+    children: [
+      Text(
+        S.of(context).nessun_kebab_vicino_a_te,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 16),
+      ),
+      const SizedBox(height: 12), // Adds spacing between text and button
+      ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20), // Button size
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // Pill shape
+              ),
+              backgroundColor: red, // Red button
+            ),
+            onPressed: isLoading ? null : _refreshPage, // Disable button while loading
+            child: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.refresh, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text(
+                        "Retry",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ],
+                  ),
+          ),
+    ],
+  ),
+)
+
                   : ListView.builder(
                       itemCount: dashList.length,
                       itemBuilder: (context, index) {
