@@ -42,7 +42,11 @@ class PackPageState extends State<PackPage> {
         Navigator.pop(context);
       }
       // Ensure state is reset even if mounted is false somehow before return
-      if (mounted) setState(() => _isOpeningLogicRunning = false); else _isOpeningLogicRunning = false;
+      if (mounted) {
+        setState(() => _isOpeningLogicRunning = false);
+      } else {
+        _isOpeningLogicRunning = false;
+      }
       return;
     }
 
@@ -72,7 +76,11 @@ class PackPageState extends State<PackPage> {
             );
             Navigator.pop(context); // Close the pack page if too soon
           }
-          if (mounted) setState(() => _isOpeningLogicRunning = false); else _isOpeningLogicRunning = false;
+          if (mounted) {
+            setState(() => _isOpeningLogicRunning = false);
+          } else {
+            _isOpeningLogicRunning = false;
+          }
           return;
         }
       }
@@ -96,7 +104,11 @@ class PackPageState extends State<PackPage> {
           );
           Navigator.pop(context); // Close page as there's nothing new to show
         }
-        if (mounted) setState(() => _isOpeningLogicRunning = false); else _isOpeningLogicRunning = false;
+        if (mounted) {
+          setState(() => _isOpeningLogicRunning = false);
+        } else {
+          _isOpeningLogicRunning = false;
+        }
         return;
       }
 
@@ -136,7 +148,11 @@ class PackPageState extends State<PackPage> {
         // It's often good to pop on error to prevent user being stuck
         Navigator.pop(context);
       }
-      if (mounted) setState(() => _isOpeningLogicRunning = false); else _isOpeningLogicRunning = false;
+      if (mounted) {
+        setState(() => _isOpeningLogicRunning = false);
+      } else {
+        _isOpeningLogicRunning = false;
+      }
     }
   }
 
