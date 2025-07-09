@@ -26,11 +26,14 @@ import 'package:url_launcher/url_launcher.dart';
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
+final supabaseUrl = const String.fromEnvironment('SUPABASE_URL');
+final supabaseAnonKey = const String.fromEnvironment('SUPABASE_ANON_KEY');
+
 Future<void> main() async {
   await Supabase.initialize(
-      url: "https://ntrxsuhmslsvlflwbizb.supabase.co",
-      anonKey:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cnhzdWhtc2xzdmxmbHdiaXpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3OTAwNzYsImV4cCI6MjAzNDM2NjA3Nn0.lJ9AUgZteiVE7DVTLBCf7mUs5HhUK9EpefB9hIHeEFI");
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
+  );
 
   String? reviewHash;
   String? otherPaths;
@@ -45,20 +48,21 @@ Future<void> main() async {
       otherPaths = "reset-password";
     }
   }
- 
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // Web-specific initialization using FirebaseOptions
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
-          apiKey: "AIzaSyDs2C7PvgXSUgCGoy7OcAGm55hlpbGtFVI",
-          authDomain: "kebabbo-669ea.firebaseapp.com",
-          projectId: "kebabbo-669ea",
-          storageBucket: "kebabbo-669ea.firebasestorage.app",
-          messagingSenderId: "12309724529",
-          appId: "1:12309724529:web:c84bf69f2af9846fee4ad0",
-          measurementId: "G-Z2YEVGGKTF"),
+        apiKey: "AIzaSyDs2C7PvgXSUgCGoy7OcAGm55hlpbGtFVI",
+        authDomain: "kebabbo-669ea.firebaseapp.com",
+        projectId: "kebabbo-669ea",
+        storageBucket: "kebabbo-669ea.firebasestorage.app",
+        messagingSenderId: "12309724529",
+        appId: "1:12309724529:web:c84bf69f2af9846fee4ad0",
+        measurementId: "G-Z2YEVGGKTF",
+      ),
     );
   } else {
     // Mobile initialization (Android/iOS)
@@ -85,13 +89,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: yellow,
         primaryColor: red,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: yellow,
-        ),
+        appBarTheme: const AppBarTheme(backgroundColor: yellow),
         textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: red,
-          ),
+          style: TextButton.styleFrom(foregroundColor: red),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -123,8 +123,9 @@ class MyApp extends StatelessWidget {
         );
       },
       home: MyHomePage(
-          reviewHash: reviewHash,
-          otherPaths: otherPaths), // Set MyHomePage as the home
+        reviewHash: reviewHash,
+        otherPaths: otherPaths,
+      ), // Set MyHomePage as the home
     );
   }
 }
@@ -176,7 +177,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _getLocation();
     if (!kIsWeb) {
       requestNotificationPermissions(
-          _messaging); // Request notification permissions
+        _messaging,
+      ); // Request notification permissions
       registerNotificationListeners(context);
     } // Register notification listeners
 
@@ -212,7 +214,8 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!serviceEnabled || permission == LocationPermission.deniedForever) {
       _currentPositionNotifier.value = null;
       ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Location services are disabled.')));
+        SnackBar(content: Text('Location services are disabled.')),
+      );
       return;
     }
 
@@ -249,34 +252,33 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  Widget page;
+  @override
+  Widget build(BuildContext context) {
+    Widget page;
 
-  if (reviewHash != null) {
-    // Handle Review Page
-    page = ReviewPage(
-      hash: reviewHash!,
-      initialPosition: _currentPositionNotifier.value,
-      key: _reviewsPageKey,
-    );
-  } else if (otherPaths != null) {
-    // Check if otherPaths is NOT null BEFORE comparing it
-    if (otherPaths == "privacy-policy") {
-      // Handle Privacy Policy Page
-      page = PrivacyPolicyPage();
-    } else if (otherPaths == "reset-password") {
-      // Handle Reset Password Page
-      page = ResetPasswordForm();
+    if (reviewHash != null) {
+      // Handle Review Page
+      page = ReviewPage(
+        hash: reviewHash!,
+        initialPosition: _currentPositionNotifier.value,
+        key: _reviewsPageKey,
+      );
+    } else if (otherPaths != null) {
+      // Check if otherPaths is NOT null BEFORE comparing it
+      if (otherPaths == "privacy-policy") {
+        // Handle Privacy Policy Page
+        page = PrivacyPolicyPage();
+      } else if (otherPaths == "reset-password") {
+        // Handle Reset Password Page
+        page = ResetPasswordForm();
+      } else {
+        // Handle other possible paths or show a default page
+        page = _buildDefaultPage(); // Or another appropriate default
+      }
     } else {
-      // Handle other possible paths or show a default page
-      page = _buildDefaultPage(); // Or another appropriate default
+      // Standard navigation based on selectedIndex
+      page = _buildStandardNavigationPage();
     }
-  } else {
-    // Standard navigation based on selectedIndex
-    page = _buildStandardNavigationPage();
-  }
-
 
     return Scaffold(
       body: mounted ? page : Container(), // Wrap the page,
@@ -308,10 +310,7 @@ Widget build(BuildContext context) {
             icon: Icon(Icons.map),
             label: S.of(context).mappa,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Account',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
         ],
         backgroundColor: red,
         selectedItemColor: yellow,
@@ -321,52 +320,55 @@ Widget build(BuildContext context) {
     );
   }
 
+  Widget _buildStandardNavigationPage() {
+    switch (selectedIndex) {
+      case 0:
+        return const FeedPage();
+      case 1:
+        return SearchPage();
+      case 2:
+        return ValueListenableBuilder<Position?>(
+          valueListenable: _currentPositionNotifier,
+          builder: (context, currentPosition, child) {
+            return TopKebabPage(currentPosition: currentPosition);
+          },
+        );
+      case 3:
+        return MapPage(
+          initialPosition: _currentPositionNotifier.value,
+          key: _mapPageKey,
+        );
+      case 4:
+        return StreamBuilder<AuthState>(
+          stream: supabase.auth.onAuthStateChange,
+          builder: (context, snapshot) {
+            final session = supabase.auth.currentSession;
 
-Widget _buildStandardNavigationPage() {
-  switch (selectedIndex) {
-    case 0:
-      return const FeedPage();
-    case 1:
-      return SearchPage();
-    case 2:
-      return ValueListenableBuilder<Position?>(
-        valueListenable: _currentPositionNotifier,
-        builder: (context, currentPosition, child) {
-          return TopKebabPage(currentPosition: currentPosition);
-        },
-      );
-    case 3:
-      return MapPage(
-        initialPosition: _currentPositionNotifier.value,
-        key: _mapPageKey,
-      );
-    case 4:
-      return StreamBuilder<AuthState>(
-  stream: supabase.auth.onAuthStateChange,
-  builder: (context, snapshot) {
-    final session = supabase.auth.currentSession;
+            if (session == null) {
+              return LoginPage(
+                authCallback: (int index) {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                },
+              );
+            } else {
+              return AccountPage(
+                currentPosition: _currentPositionNotifier.value,
+              );
+            }
+          },
+        );
 
-    if (session == null) {
-      return LoginPage(authCallback: (int index) {
-        setState(() {
-          selectedIndex = index;
-        });
-      });
-    } else {
-      return AccountPage(currentPosition: _currentPositionNotifier.value);
+      default:
+        throw UnimplementedError('No widget for $selectedIndex');
     }
-  },
-);
+  }
 
-    default:
-      throw UnimplementedError('No widget for $selectedIndex');
+  Widget _buildDefaultPage() {
+    // Return a default widget for when otherPaths is not null but doesn't match known paths
+    return const Center(
+      child: Text("Page Not Found"),
+    ); // Or any other appropriate default
   }
 }
-
-Widget _buildDefaultPage() {
-  // Return a default widget for when otherPaths is not null but doesn't match known paths
-  return const Center(child: Text("Page Not Found")); // Or any other appropriate default
-}
-
-}
-
