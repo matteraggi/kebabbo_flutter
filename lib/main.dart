@@ -48,6 +48,7 @@ Future<void> main() async {
       otherPaths = "reset-password";
     }
   }
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // Web-specific initialization using FirebaseOptions
@@ -251,9 +252,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> _checkIfAppInstalled() async {
-    String appUrl =
-        'intent://kebabbologna/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
+  @override
+  Widget build(BuildContext context) {
+    Widget page;
 
     if (reviewHash != null) {
       // Handle Review Page
@@ -278,36 +279,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // Standard navigation based on selectedIndex
       page = _buildStandardNavigationPage();
     }
-  }
-
-@override
-Widget build(BuildContext context) {
-  Widget page;
-
-  if (reviewHash != null) {
-    // Handle Review Page
-    page = ReviewPage(
-      hash: reviewHash!,
-      initialPosition: _currentPositionNotifier.value,
-      key: _reviewsPageKey,
-    );
-  } else if (otherPaths != null) {
-    // Check if otherPaths is NOT null BEFORE comparing it
-    if (otherPaths == "privacy-policy") {
-      // Handle Privacy Policy Page
-      page = PrivacyPolicyPage();
-    } else if (otherPaths == "reset-password") {
-      // Handle Reset Password Page
-      page = ResetPasswordForm();
-    } else {
-      // Handle other possible paths or show a default page
-      page = _buildDefaultPage(); // Or another appropriate default
-    }
-  } else {
-    // Standard navigation based on selectedIndex
-    page = _buildStandardNavigationPage();
-  }
-
 
     return Scaffold(
       body: mounted ? page : Container(), // Wrap the page,
@@ -401,11 +372,3 @@ Widget build(BuildContext context) {
     ); // Or any other appropriate default
   }
 }
-
-Widget _buildDefaultPage() {
-  // Return a default widget for when otherPaths is not null but doesn't match known paths
-  return const Center(child: Text("Page Not Found")); // Or any other appropriate default
-}
-
-}
-
