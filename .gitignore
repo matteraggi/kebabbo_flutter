@@ -44,5 +44,5 @@ app.*.map.json
 /android/app/google-services.json
 
 /web/firebase-messaging-sw.js
-
+*/launch.json
 .env
