@@ -69,7 +69,6 @@ Future<void> _fetchKebabNearMe(Position? userPosition) async {
         if (distanceInMeters <= MAXDISTANCE) {
           // Add kebab to filtered list if within max distance
           filteredKebabs.add(kebab);
-        } else {
         }
       }
 

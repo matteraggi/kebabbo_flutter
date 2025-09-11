@@ -27,6 +27,9 @@ class TopKebabPageState extends State<TopKebabPage> {
   bool showOnlyOpen = false;
   bool showOnlyKebab = true;
   TextEditingController searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  bool _hasAutoScrolled = false;
+  String? _expandedKebabId; // NUOVA VARIABILE DI STATO
 
   @override
   void initState() {
@@ -68,6 +71,17 @@ class TopKebabPageState extends State<TopKebabPage> {
         kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition,
             showOnlyOpen, showOnlyKebab);
 
+        Map<String, dynamic>? closestKebab;
+        if (userPosition != null && kebabs.isNotEmpty) {
+          final tempClosest = kebabs.reduce((curr, next) =>
+              (curr['distance'] ?? double.infinity) < (next['distance'] ?? double.infinity)
+                  ? curr
+                  : next);
+            print(tempClosest);
+          if ((tempClosest['distance'] ?? double.infinity) < 0.2) {
+            closestKebab = tempClosest;
+          }
+        }
 
         // Aggiungi lo stato di "preferito" per ciascun kebab
         final user = supabase.auth.currentUser;
@@ -84,22 +98,68 @@ class TopKebabPageState extends State<TopKebabPage> {
             kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
           }
         }
+      if (mounted) {
+      setState(() {
+        dashList = kebabs;
+        searchResultList = kebabs;
+        isLoading = false;
+        
+        // AGGIORNAMENTO: Se troviamo un kebab vicino, salviamo il suo ID
+        if (closestKebab != null && !_hasAutoScrolled) {
+          _expandedKebabId = closestKebab['id'].toString();
+        }
+      });
 
-        setState(() {
-          dashList = kebabs;
-          searchResultList = kebabs;
-          isLoading = false;
+      // Lo scroll viene attivato qui, dopo che lo stato è stato aggiornato
+      if (closestKebab != null && !_hasAutoScrolled) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToKebab(closestKebab!);
         });
       }
-    } catch (error) {
+    }
+      }
+  } catch (error) {
       if (mounted) {
         setState(() {
           errorMessage = error.toString();
           isLoading = false;
         });
       }
-    }
+        }
   }
+
+  // Sostituisci la vecchia funzione _scrollToAndOpenKebab con questa
+void _scrollToKebab(Map<String, dynamic> kebab) {
+  final kebabId = kebab['id'].toString();
+  final index = searchResultList.indexWhere((k) => k['id'].toString() == kebabId);
+
+  if (index != -1) {
+    const double itemHeight = 180.0; // L'altezza dell'elemento CHIUSO
+    final topOfItemOffset = index * itemHeight;
+
+    // LA MODIFICA È QUI:
+    // Aggiungiamo un "margine di sicurezza" in alto per dare spazio all'espansione.
+    // Puoi modificare questo valore per trovare quello perfetto per il tuo layout.
+    const double topPadding = 430.0; 
+
+    // Calcoliamo il nuovo offset e ci assicuriamo che non sia mai minore di zero.
+    final targetOffset = (topOfItemOffset - topPadding).clamp(
+      0.0, 
+      _scrollController.position.maxScrollExtent,
+    );
+    print(targetOffset);
+    // Anima lo scroll fino al nuovo offset calcolato
+    _scrollController.animateTo(
+      targetOffset,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+
+    setState(() {
+      _hasAutoScrolled = true;
+    });
+  }
+}
 
   Future<void> toggleFavorite(String kebabId) async {
     final user = supabase.auth.currentUser;
@@ -299,9 +359,11 @@ class TopKebabPageState extends State<TopKebabPage> {
                                       S.of(context).nessun_kebabbaro_presente))
                               : Expanded(
                                   child: ListView.builder(
+                                    controller: _scrollController, // Il controller rimane
                                     itemCount: searchResultList.length,
                                     itemBuilder: (context, index) {
                                       final kebab = searchResultList[index];
+                                      final kebabId = kebab['id'].toString(); // Ottieni l'ID
                                       return KebabListItem(
                                         id: kebab['id'].toString(),
                                         name: kebab['name'] ?? '',
@@ -337,6 +399,8 @@ class TopKebabPageState extends State<TopKebabPage> {
                                         special: false,
                                         glutenFree:
                                             kebab['gluten_free'] ?? false,
+                                        initiallyExpanded: kebabId == _expandedKebabId,
+
                                       );
                                     },
                                   ),
