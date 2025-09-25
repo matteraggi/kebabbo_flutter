@@ -86,7 +86,7 @@ This project is under active development and currently **deployed online** at [k
 A huge thank you to the passionate kebab experts who brought KEBABBO to life:
 
 * [Elia Friberg](https://github.com/fri3erg)
-* [Matteo Friberg](https://github.com/matteraggi)
+* [Matteo Raggi](https://github.com/matteraggi)
 
 ---
 
