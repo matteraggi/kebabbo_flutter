@@ -53,7 +53,7 @@ class TopKebabPageState extends State<TopKebabPage> {
       if (mounted) {
         List<Map<String, dynamic>> kebabs =
             List<Map<String, dynamic>>.from(response as List);
-      
+
         for (var kebab in kebabs) {
           if (userPosition != null) {
             double distanceInMeters = Geolocator.distanceBetween(
@@ -74,10 +74,11 @@ class TopKebabPageState extends State<TopKebabPage> {
         Map<String, dynamic>? closestKebab;
         if (userPosition != null && kebabs.isNotEmpty) {
           final tempClosest = kebabs.reduce((curr, next) =>
-              (curr['distance'] ?? double.infinity) < (next['distance'] ?? double.infinity)
+              (curr['distance'] ?? double.infinity) <
+                      (next['distance'] ?? double.infinity)
                   ? curr
                   : next);
-            print(tempClosest);
+          print(tempClosest);
           if ((tempClosest['distance'] ?? double.infinity) < 0.2) {
             closestKebab = tempClosest;
           }
@@ -98,68 +99,69 @@ class TopKebabPageState extends State<TopKebabPage> {
             kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
           }
         }
-      if (mounted) {
-      setState(() {
-        dashList = kebabs;
-        searchResultList = kebabs;
-        isLoading = false;
-        
-        // AGGIORNAMENTO: Se troviamo un kebab vicino, salviamo il suo ID
-        if (closestKebab != null && !_hasAutoScrolled) {
-          _expandedKebabId = closestKebab['id'].toString();
-        }
-      });
+        if (mounted) {
+          setState(() {
+            dashList = kebabs;
+            searchResultList = kebabs;
+            isLoading = false;
 
-      // Lo scroll viene attivato qui, dopo che lo stato è stato aggiornato
-      if (closestKebab != null && !_hasAutoScrolled) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollToKebab(closestKebab!);
-        });
+            // AGGIORNAMENTO: Se troviamo un kebab vicino, salviamo il suo ID
+            if (closestKebab != null && !_hasAutoScrolled) {
+              _expandedKebabId = closestKebab['id'].toString();
+            }
+          });
+
+          // Lo scroll viene attivato qui, dopo che lo stato è stato aggiornato
+          if (closestKebab != null && !_hasAutoScrolled) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _scrollToKebab(closestKebab!);
+            });
+          }
+        }
       }
-    }
-      }
-  } catch (error) {
+    } catch (error) {
       if (mounted) {
         setState(() {
           errorMessage = error.toString();
           isLoading = false;
         });
       }
-        }
+    }
   }
 
   // Sostituisci la vecchia funzione _scrollToAndOpenKebab con questa
-void _scrollToKebab(Map<String, dynamic> kebab) {
-  final kebabId = kebab['id'].toString();
-  final index = searchResultList.indexWhere((k) => k['id'].toString() == kebabId);
+  void _scrollToKebab(Map<String, dynamic> kebab) {
+    final kebabId = kebab['id'].toString();
+    final index =
+        searchResultList.indexWhere((k) => k['id'].toString() == kebabId);
 
-  if (index != -1) {
-    const double itemHeight = 180.0; // L'altezza dell'elemento CHIUSO
-    final topOfItemOffset = index * itemHeight;
+    if (index != -1) {
+      const double itemHeight = 180.0; // L'altezza dell'elemento CHIUSO
+      final topOfItemOffset = index * itemHeight;
 
-    // LA MODIFICA È QUI:
-    // Aggiungiamo un "margine di sicurezza" in alto per dare spazio all'espansione.
-    // Puoi modificare questo valore per trovare quello perfetto per il tuo layout.
-    const double topPadding = 430.0; 
+      // LA MODIFICA È QUI:
+      // Aggiungiamo un "margine di sicurezza" in alto per dare spazio all'espansione.
+      // Puoi modificare questo valore per trovare quello perfetto per il tuo layout.
+      const double topPadding = 430.0;
 
-    // Calcoliamo il nuovo offset e ci assicuriamo che non sia mai minore di zero.
-    final targetOffset = (topOfItemOffset - topPadding).clamp(
-      0.0, 
-      _scrollController.position.maxScrollExtent,
-    );
-    print(targetOffset);
-    // Anima lo scroll fino al nuovo offset calcolato
-    _scrollController.animateTo(
-      targetOffset,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
+      // Calcoliamo il nuovo offset e ci assicuriamo che non sia mai minore di zero.
+      final targetOffset = (topOfItemOffset - topPadding).clamp(
+        0.0,
+        _scrollController.position.maxScrollExtent,
+      );
+      print(targetOffset);
+      // Anima lo scroll fino al nuovo offset calcolato
+      _scrollController.animateTo(
+        targetOffset,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeInOut,
+      );
 
-    setState(() {
-      _hasAutoScrolled = true;
-    });
+      setState(() {
+        _hasAutoScrolled = true;
+      });
+    }
   }
-}
 
   Future<void> toggleFavorite(String kebabId) async {
     final user = supabase.auth.currentUser;
@@ -359,11 +361,13 @@ void _scrollToKebab(Map<String, dynamic> kebab) {
                                       S.of(context).nessun_kebabbaro_presente))
                               : Expanded(
                                   child: ListView.builder(
-                                    controller: _scrollController, // Il controller rimane
+                                    controller:
+                                        _scrollController, // Il controller rimane
                                     itemCount: searchResultList.length,
                                     itemBuilder: (context, index) {
                                       final kebab = searchResultList[index];
-                                      final kebabId = kebab['id'].toString(); // Ottieni l'ID
+                                      final kebabId = kebab['id']
+                                          .toString(); // Ottieni l'ID
                                       return KebabListItem(
                                         id: kebab['id'].toString(),
                                         name: kebab['name'] ?? '',
@@ -399,8 +403,8 @@ void _scrollToKebab(Map<String, dynamic> kebab) {
                                         special: false,
                                         glutenFree:
                                             kebab['gluten_free'] ?? false,
-                                        initiallyExpanded: kebabId == _expandedKebabId,
-
+                                        initiallyExpanded:
+                                            kebabId == _expandedKebabId,
                                       );
                                     },
                                   ),

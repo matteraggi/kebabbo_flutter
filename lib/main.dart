@@ -28,8 +28,13 @@ const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
 final supabaseUrl = const String.fromEnvironment('SUPABASE_URL');
 final supabaseAnonKey = const String.fromEnvironment('SUPABASE_ANON_KEY');
+final firebaseKey = const String.fromEnvironment('FIREBASE_KEY');
 
 Future<void> main() async {
+  if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
+    print('⚠️ ATTENZIONE: SUPABASE_URL o SUPABASE_ANON_KEY non impostati!');
+  }
+
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
@@ -55,7 +60,7 @@ Future<void> main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
-        apiKey: "AIzaSyDs2C7PvgXSUgCGoy7OcAGm55hlpbGtFVI",
+        apiKey: firebaseKey,
         authDomain: "kebabbo-669ea.firebaseapp.com",
         projectId: "kebabbo-669ea",
         storageBucket: "kebabbo-669ea.firebasestorage.app",

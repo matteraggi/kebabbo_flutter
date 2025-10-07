@@ -45,4 +45,12 @@ app.*.map.json
 
 /web/firebase-messaging-sw.js
 */launch.json
+
+linux/
+macos/
+windows/
+build/
+android/
+ios/
+
 .env
