@@ -580,6 +580,7 @@ class _AccountPageState extends State<AccountPage> {
                             onTap: _isTimerActive
                                 ? null // Disable if timer is active
                                 : () {
+                                  _isTimerActive= false;
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) =>

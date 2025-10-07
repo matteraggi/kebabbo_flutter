@@ -611,24 +611,50 @@ Future<void> _fetchUserProfile(String userId) async {
     );
   }
 
-  // Function to delete the post
-  Future<void> _deletePost(int postId) async {
-    // Example delete operation, update this with your actual delete logic
+// in FeedListItemState...
+
+Future<void> _deletePost(int postId) async {
+  // 1. Get the current user's ID
+  final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+
+  // 2. Add a guard clause in case the user is not logged in
+  if (currentUserId == null) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context).autenticazione_necessaria)),
+      );
+    }
+    return;
+  }
+
+  try {
+    // 3. Use .match() to specify BOTH conditions for the delete
     await Supabase.instance.client
         .from('posts')
         .delete()
-        .eq('id', postId);
+        .match({
+          'id': postId,
+          'user_id': currentUserId // This is the crucial line
+        });
 
-
-    // Show a confirmation message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(S.of(context).post_eliminato)),
-    );
-    setState(() {
-      // Hide the post from the UI
-      deleted = true;
-    });
+    if (mounted) {
+      // Show a confirmation message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context).post_eliminato)),
+      );
+      setState(() {
+        // Hide the post from the UI
+        deleted = true;
+      });
+    }
+  } catch (error) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting post: $error")),
+      );
+    }
   }
+}
 
 }
 
