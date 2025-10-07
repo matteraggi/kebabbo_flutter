@@ -43,7 +43,7 @@ class OrderBar extends StatelessWidget {
                   onChanged: (bool value) {
                     changeShowOnlyKebab();
                   },
-                  activeColor: Colors.white,
+                  activeThumbColor: Colors.white,
                   activeTrackColor: yellow,
                 ),
                 SizedBox(width: 8),

@@ -9,8 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 class MapPage extends StatefulWidget {
-  final Position?
-      initialPosition; // Make it final since the initial position is passed during creation
+  final Position? initialPosition;
 
   const MapPage({super.key, required this.initialPosition});
 
@@ -22,7 +21,6 @@ class MapPageState extends State<MapPage> {
   List<Map<String, dynamic>> dashList = [];
   final MapController _mapController = MapController();
   final PopupController _popupController = PopupController();
-  bool _isMapInitialized = false;
   String? errorMessage;
 
   Position? _currentPosition;
@@ -30,9 +28,17 @@ class MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    _currentPosition =
-        widget.initialPosition; // Initialize position from widget
+    _currentPosition = widget.initialPosition;
     fetchKebab();
+  }
+
+  // RESTORED: This method allows main.dart to update the map's position
+  void updatePosition(Position newPosition) {
+    if (mounted) {
+      setState(() {
+        _currentPosition = newPosition;
+      });
+    }
   }
 
   Future<void> fetchKebab() async {
@@ -53,16 +59,8 @@ class MapPageState extends State<MapPage> {
     }
   }
 
-  // Function to update position
-  void updatePosition(Position newPosition) {
-    setState(() {
-      _currentPosition = newPosition;
-    });
-  }
-
   void _centerMap() {
-    print('Centering map to: $_currentPosition');
-    if (_currentPosition != null && _isMapInitialized) {
+    if (_currentPosition != null) {
       _mapController.move(
         LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
         14,
@@ -72,25 +70,33 @@ class MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    // If the position is null (e.g., permission was denied in main.dart)
+    // show a helpful message instead of a loader.
     if (_currentPosition == null) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'Location not available. Please enable location permissions for Kebabbo.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
       );
     }
 
+    // If we have a position, build the map.
     LatLng center =
         LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
 
     List<Marker> markers = [
-      if (_currentPosition != null)
-        Marker(
-          width: 50.0,
-          height: 50.0,
-          point:
-              LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-          child: Image.asset("assets/images/user.png"),
-          key: const ValueKey('user_marker'), // Key to identify the user marker
-        ),
+      Marker(
+        width: 50.0,
+        height: 50.0,
+        point: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+        child: Image.asset("assets/images/user.png"),
+        key: const ValueKey('user_marker'),
+      ),
       ...dashList.map((item) {
         return Marker(
           width: 40.0,
@@ -104,96 +110,72 @@ class MapPageState extends State<MapPage> {
       })
     ];
 
-    return Center(
-      child: Stack(
-        children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: center,
-              initialZoom: 14,
-              onMapReady: () {
-                setState(() {
-                  _isMapInitialized = true;
-                });
-              },
-              onTap: (_, __) {
-                _popupController.hideAllPopups();
-              },
-              /*
-              provare questo per rotazione ma meno sensibile e non mentre zoommi
-
-              interactionOptions: const InteractionOptions(
-                enableMultiFingerGestureRace: true,
-                flags: InteractiveFlag.doubleTapDragZoom |
-                    InteractiveFlag.doubleTapZoom |
-                    InteractiveFlag.drag |
-                    InteractiveFlag.flingAnimation |
-                    InteractiveFlag.pinchZoom |
-                    InteractiveFlag.scrollWheelZoom,
-              ),
-              */
-              interactionOptions: const InteractionOptions(
-                  flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag),
+    return Stack(
+      children: [
+        FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            initialCenter: center,
+            initialZoom: 14,
+            onTap: (_, __) {
+              _popupController.hideAllPopups();
+            },
+            interactionOptions: const InteractionOptions(
+                flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag),
+          ),
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              tileProvider: CancellableNetworkTileProvider(),
             ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                tileProvider: CancellableNetworkTileProvider(), // Add this line
-              ),
-              RichAttributionWidget(
-                attributions: [
-                  TextSourceAttribution(
-                    'OpenStreetMap contributors',
-                    onTap: () => _launchURL(
-                        Uri.parse('https://openstreetmap.org/copyright')),
-                  ),
-                ],
-              ),
-              MarkerLayer(markers: markers),
-              PopupMarkerLayer(
-                options: PopupMarkerLayerOptions(
-                  markerCenterAnimation: const MarkerCenterAnimation(
-                      curve: Curves.easeInOut,
-                      duration: Duration(milliseconds: 500)),
-                  markerTapBehavior: MarkerTapBehavior.togglePopupAndHideRest(),
-                  popupController: _popupController,
-                  markers: markers,
-                  popupDisplayOptions: PopupDisplayOptions(
-                    builder: (BuildContext context, Marker marker) {
-                      // Open popup only if it's not the user marker
-                      if (marker.key == const ValueKey('user_marker')) {
-                        return const SizedBox.shrink();
-                      }
-                      final item = dashList.firstWhere((element) =>
-                          marker.point.latitude == element['lat'] &&
-                          marker.point.longitude == element['lng']);
-                      return PopupKebabItem(
-                        name: item['name'],
-                        description: item['description'],
-                        rating: item['rating'].toDouble(),
-                        quality: item['quality'].toDouble(),
-                        price: item['price'].toDouble(),
-                        dimension: item['dimension'].toDouble(),
-                        menu: item['menu'].toDouble(),
-                      );
-                    },
-                  ),
+            RichAttributionWidget(
+              attributions: [
+                TextSourceAttribution(
+                  'OpenStreetMap contributors',
+                  onTap: () => _launchURL(
+                      Uri.parse('https://openstreetmap.org/copyright')),
                 ),
-              ),
-            ],
-          ),
-          Positioned(
-            bottom: 16.0,
-            left: 16.0,
-            child: FloatingActionButton(
-              backgroundColor: Colors.white,
-              onPressed: _centerMap,
-              child: const Icon(Icons.my_location, color: Colors.black),
+              ],
             ),
+            PopupMarkerLayer(
+              options: PopupMarkerLayerOptions(
+                markerCenterAnimation: const MarkerCenterAnimation(),
+                markerTapBehavior: MarkerTapBehavior.togglePopupAndHideRest(),
+                popupController: _popupController,
+                popupDisplayOptions: PopupDisplayOptions(
+                  builder: (BuildContext context, Marker marker) {
+                    if (marker.key == const ValueKey('user_marker')) {
+                      return const SizedBox.shrink();
+                    }
+                    final item = dashList.firstWhere((element) =>
+                        marker.point.latitude == element['lat'] &&
+                        marker.point.longitude == element['lng']);
+                    return PopupKebabItem(
+                      name: item['name'],
+                      description: item['description'],
+                      rating: item['rating'].toDouble(),
+                      quality: item['quality'].toDouble(),
+                      price: item['price'].toDouble(),
+                      dimension: item['dimension'].toDouble(),
+                      menu: item['menu'].toDouble(),
+                    );
+                  },
+                ),
+              markers: markers,
+              ),
+            ),
+          ],
+        ),
+        Positioned(
+          bottom: 16.0,
+          left: 16.0,
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            onPressed: _centerMap,
+            child: const Icon(Icons.my_location, color: Colors.black),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
