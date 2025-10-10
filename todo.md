@@ -1,5 +1,27 @@
 # TODO
 
+- [ ] RENDERE KEBABBO SOCIAL
+Kebabbo è il sito da consultare per dei buoni consigli sul kebab, consigli da esperti. Ma una guida non la guarda nessuno più di 1 volta al mese. E i kebab recensiti saranno sempre pochi. E non aumenteranno molto con la fine dell'Uni. 
+Soluzione: gli utenti possono caricare i posti che trovano (con approvazione nostra dalla piattaforma moderatori) con la propria review. Click sulla mappa per prendere le coordinate, niente recensione scritta visibile nel box. Distinguere bene kebab messi da noi e quelli messi dagli utenti, però rendere molto più visibili le recensioni del pubblico. Come sono ora neanche si vedono.
+Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
+Magari tasto per aggiungere i kebabbari nella mappa o nel profilo
+-> idee: mettere toggle per kebab postati da tutti e kebab postati da noi. Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
+
+
+- [ ] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
+- [ ] sezione medaglie che non deve essere scorrevole
+- [ ] sezioni review e kebab salvati del profilo molto sus
+- [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
+- [ ] Notifiche
+- [ ] Sezione Offerte e Promozioni Esclusive
+- [ ] delete cascade da followed_user quando un utente viene eliminato
+- [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+- [ ] Togliere compilato da github
+
+
+# DONE
+
+
 Pareggiare Kebabbo Web:
 
 - [x] maps in homepage
@@ -66,9 +88,6 @@ Feature lancio:
 - [x] review visibili da account + profilo di altri
 - [x] aggiornare numero commenti e like quando viene messo un'altro post (il post appena messo prende già il numero di commenti e like del precedente, perché non viene aggiornata la UI)
 - [x] design account e single user page
-- [ ] delete cascade da followed_user quando un utente viene eliminato
-- [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
-- [ ] Togliere compilato da github
 - [x] Gluten free tag metterlo in tutti i kebab item come in quello principale della home
 - [x] Badge sezione troppo lunga
 - [x] Grafico kebabbari con scritte asse x troppo grandi e tagliate sotto
@@ -82,52 +101,5 @@ Feature lancio:
 - [x] traduzioni stringhe
 - [x] Cambiare UI modulo di cambio account info
 - [x] aggiungere murgulet card
-
-Feature extra:
-- [ ] pack opening pokemon pocket style con carte kebabbari da collezionare
-- [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
-- [ ] Notifiche
-- [ ] Sezione Offerte e Promozioni Esclusive
-
-Non dev:
-
 - [x] Design loghi vari da mettere in giro
-- [ ] Pensare piano marketing con CMO dell'azienda
-- [ ] Sponsor
-
-Brand Identity:
-
-- logo (
-    5 logo variations that brand needs:
-        - primary logo (abbastanza completo quindi: immagine, nome e magari anche date e robe varie)
-        - primary logo versione black and white nei due contrasti
-        - secondary logo (invece di avere nome e immagine insieme abbiamo immagine sulla sx e nome a dx per layout orizzontali)
-        - submark (solo nome)
-        - favicon (solo iconcina)
-)
-- color palette (
-    red = Color.fromRGBO(187, 0, 0, 1.0);
-    yellow = Color.fromRGBO(255, 186, 28, 1.0);
-    altro colore minore. Opzioni:
-        #666370
-        #31231E
-        #ECF0F1
-        #7B7554
-        #2D3047
-)
-
-- typography
-
-- extra(
-    Photography
-    Illustration
-    Iconography
-    Data visualization
-)
-
-prima di iniziare:
-
-- Brand Heart: Scopo, visione, missione, valori -> Aiutare universitari a trovare un pasto top che costi poco e che sia buono. Senza farsi fregare da recensioni google non vere, mensa o posti turistici. ✅
-- Brand name: Kebabbo ✅
-- Brand essence: Voce, tono, personalità -> amichevole, da universitario a universitario ✅
-- Messaging: Frasi principali, slogan, messaggi che vogliamo mandare
+- [x] pack opening pokemon pocket style con carte kebabbari da collezionare
