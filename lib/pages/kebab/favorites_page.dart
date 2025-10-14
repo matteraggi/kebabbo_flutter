@@ -75,42 +75,52 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   ? Center(
                       child: Text(S.of(context).nessun_kebab_tra_i_preferiti),
                     )
-                  : Column(
-                      children: [
-                        const SizedBox(height: 32),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: _favoriteKebabs.length,
-                            itemBuilder: (context, index) {
-                              final kebab = _favoriteKebabs[index];
-                              return KebabListItemFavorite(
-                                id: kebab['id'].toString(),
-                                name: kebab['name'] ?? '',
-                                description: kebab['description'] ?? '',
-                                rating: (kebab['rating'] ?? 0.0).toDouble(),
-                                quality: (kebab['quality'] ?? 0.0).toDouble(),
-                                price: (kebab['price'] ?? 0.0).toDouble(),
-                                dimension:
-                                    (kebab['dimension'] ?? 0.0).toDouble(),
-                                menu: (kebab['menu'] ?? 0.0).toDouble(),
-                                fun: (kebab['fun'] ?? 0.0).toDouble(),
-                                map: kebab['map'] ?? '',
-                                lat: (kebab['lat'] ?? 0.0).toDouble(),
-                                lng: (kebab['lng'] ?? 0.0).toDouble(),
-                                vegetables:
-                                    (kebab['vegetables'] ?? 0.0).toDouble(),
-                                yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
-                                spicy: (kebab['spicy'] ?? 0.0).toDouble(),
-                                onion: (kebab['onion'] ?? 0.0).toDouble(),
-                                tag: (kebab['tag'] ?? ''),
-                                isOpen: kebab['isOpen'] ?? false,
-                                glutenFree: kebab['gluten_free'] ?? false,
-                                expanded: false,
-                              );
-                            },
+                  : LayoutBuilder(
+                      builder: (context, constraints) {
+                        return SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: constraints.maxHeight,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 32),
+                                // 👇 Usa direttamente Column + map invece di ListView.builder
+                                ..._favoriteKebabs.map((kebab) {
+                                  return KebabListItemFavorite(
+                                    id: kebab['id'].toString(),
+                                    name: kebab['name'] ?? '',
+                                    description: kebab['description'] ?? '',
+                                    rating: (kebab['rating'] ?? 0.0).toDouble(),
+                                    quality:
+                                        (kebab['quality'] ?? 0.0).toDouble(),
+                                    price: (kebab['price'] ?? 0.0).toDouble(),
+                                    dimension:
+                                        (kebab['dimension'] ?? 0.0).toDouble(),
+                                    menu: (kebab['menu'] ?? 0.0).toDouble(),
+                                    fun: (kebab['fun'] ?? 0.0).toDouble(),
+                                    map: kebab['map'] ?? '',
+                                    lat: (kebab['lat'] ?? 0.0).toDouble(),
+                                    lng: (kebab['lng'] ?? 0.0).toDouble(),
+                                    vegetables:
+                                        (kebab['vegetables'] ?? 0.0).toDouble(),
+                                    yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
+                                    spicy: (kebab['spicy'] ?? 0.0).toDouble(),
+                                    onion: (kebab['onion'] ?? 0.0).toDouble(),
+                                    tag: kebab['tag'] ?? '',
+                                    isOpen: kebab['isOpen'] ?? false,
+                                    glutenFree: kebab['gluten_free'] ?? false,
+                                    expanded: false,
+                                  );
+                                }).toList(),
+                                const SizedBox(height: 16),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
         ),
       ),
