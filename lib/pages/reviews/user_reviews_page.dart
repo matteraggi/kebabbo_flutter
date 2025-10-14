@@ -70,10 +70,11 @@ class UserReviewsState extends State<UserReviewsPage> {
     return Scaffold(
       body: Column(
         children: [
+          const SizedBox(height: 25),
           // Pill-shaped button at the top
           Padding(
             padding: const EdgeInsets.all(
-                10.0), // Add some padding for better spacing
+                12.0), // Add some padding for better spacing
             child: SizedBox(
               width: double.infinity, // Full width button
               child: ElevatedButton(

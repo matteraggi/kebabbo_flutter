@@ -7,7 +7,7 @@ Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamifi
 Magari tasto per aggiungere i kebabbari nella mappa o nel profilo
 -> idee: mettere toggle per kebab postati da tutti e kebab postati da noi. Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
 
-
+- [ ] Codice imbarazzante in alcune pagine: servono file di logica con le funzioni e anche più componenti
 - [ ] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
 - [ ] sezione medaglie che non deve essere scorrevole
 - [ ] sezioni review e kebab salvati del profilo molto sus

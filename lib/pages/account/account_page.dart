@@ -21,8 +21,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
-
 class AccountPage extends StatefulWidget {
   final Position? currentPosition;
   const AccountPage({super.key, required this.currentPosition});
@@ -278,7 +276,7 @@ class _AccountPageState extends State<AccountPage> {
         Navigator.of(context).pop(); // Chiudi il dialog
       } catch (error) {
         if (mounted) {
-          print( "Error uploading avatar: $error");
+          print("Error uploading avatar: $error");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
           );
@@ -312,7 +310,7 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
   }
- 
+
 /*
   Future<Map<String, dynamic>>? _fetchFavoriteKebab() async {
     if (_favoriteKebab == null || _favoriteKebab!.isEmpty) return {};
@@ -390,6 +388,20 @@ class _AccountPageState extends State<AccountPage> {
     final now = DateTime.now().toUtc();
     final difference = now.difference(lastPackTime);
     return difference.inSeconds < 12 * 60 * 60;
+  }
+
+  Future<void> _signOut() async {
+    try {
+      setState(() {});
+      await supabase.auth.signOut();
+      // Navigate immediately after sign out
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).unexpected_error_occurred)),
+        );
+      }
+    }
   }
 
   @override
@@ -580,7 +592,7 @@ class _AccountPageState extends State<AccountPage> {
                             onTap: _isTimerActive
                                 ? null // Disable if timer is active
                                 : () {
-                                  _isTimerActive= false;
+                                    _isTimerActive = false;
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) =>
@@ -669,73 +681,69 @@ class _AccountPageState extends State<AccountPage> {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            backgroundColor: Colors.transparent,
-                            child: Stack(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog when tapped again
-                                  },
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.8, // Adjust size
-                                    height: MediaQuery.of(context).size.height *
-                                        0.5, // Adjust size
-                                    child: Image(
-                                      image: (_avatarUrl != null &&
-                                              _avatarUrl!.isNotEmpty)
-                                          ? NetworkImage(_avatarUrl!)
-                                          : const AssetImage(
-                                                  'assets/logos/small_logo.png')
-                                              as ImageProvider,
-                                      fit: BoxFit
-                                          .cover, // Fit the image within the dialog
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 10, // Adjust positioning as necessary
-                                  right: 10, // Adjust positioning as necessary
-                                  child: Container(
-                                    padding: const EdgeInsets.all(
-                                        4.0), // Add padding around the icon
-                                    decoration: BoxDecoration(
-                                      color: Colors
-                                          .white, // White background color
-                                      shape: BoxShape
-                                          .circle, // Circular shape for the container
-                                    ),
-                                    child: IconButton(
-                                      padding: EdgeInsets
-                                          .zero, // Remove extra padding around the icon
-                                      constraints: const BoxConstraints(),
-                                      icon: Icon(
-                                        Icons.camera_alt,
-                                        size: 25, // Smaller icon size
-                                        color: main.red, // Red icon color
+// Profilo + Statistiche nella stessa riga
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Avatar a sinistra
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                backgroundColor: Colors.transparent,
+                                child: Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => Navigator.of(context).pop(),
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.5,
+                                        child: Image(
+                                          image: (_avatarUrl != null &&
+                                                  _avatarUrl!.isNotEmpty)
+                                              ? NetworkImage(_avatarUrl!)
+                                              : const AssetImage(
+                                                      'assets/logos/small_logo.png')
+                                                  as ImageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                      onPressed:
-                                          _changeAvatar, // Action to change the avatar
                                     ),
-                                  ),
+                                    Positioned(
+                                      top: 10,
+                                      right: 10,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4.0),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                          icon: Icon(
+                                            Icons.camera_alt,
+                                            size: 25,
+                                            color: main.red,
+                                          ),
+                                          onPressed: _changeAvatar,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Container(
+                        child: Container(
                           width: 100,
                           height: 100,
                           decoration: BoxDecoration(
@@ -752,88 +760,105 @@ class _AccountPageState extends State<AccountPage> {
                                         as ImageProvider,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    UserPostsPage(userId: _id)));
-                          },
-                          child: Column(
-                            children: [
-                              Text(
-                                "$_postCount",
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Text(
-                                'Posts',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
+
+                      // Spazio orizzontale
+                      const SizedBox(width: 24),
+
+                      // Statistiche a destra
                       Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    FollowersPage(userId: _id)));
-                          },
-                          child: Column(
-                            children: [
-                              Text(
-                                '$_followersCount',
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // POSTS
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        UserPostsPage(userId: _id),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "$_postCount",
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Posts',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
                               ),
-                              const Text(
-                                'Followers',
-                                style: TextStyle(fontSize: 14),
+                            ),
+
+                            // FOLLOWERS
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        FollowersPage(userId: _id),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '$_followersCount',
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Followers',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    SeguitiPage(userId: _id)));
-                          },
-                          child: Column(
-                            children: [
-                              Text(
-                                '$_seguitiCount',
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            ),
+
+                            // SEGUITI
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SeguitiPage(userId: _id),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '$_seguitiCount',
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Seguiti',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
                               ),
-                              const Text(
-                                'Seguiti',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 25),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 16),
                     padding: EdgeInsets.all(12),
@@ -905,7 +930,10 @@ class _AccountPageState extends State<AccountPage> {
                           child: TabBarView(
                             children: [
                               MedalPage(userId: _id),
-                              UserReviewsPage(userId: _id, initialPosition:  widget.currentPosition,),
+                              UserReviewsPage(
+                                userId: _id,
+                                initialPosition: widget.currentPosition,
+                              ),
                               FavoritesPage(userId: _id),
                             ],
                           ),
@@ -919,20 +947,7 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Future<void> _signOut() async {
-    try {
-      setState(() {});
-      await supabase.auth.signOut();
-      // Navigate immediately after sign out
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).unexpected_error_occurred)),
-        );
-      }
-    }
-  }
-
+// DELETE ACCOUNT
   /* Future<void> _deleteAccount(BuildContext context) async {
   final userId = supabase.auth.currentUser!.id;
   final allMyPosts = await supabase
