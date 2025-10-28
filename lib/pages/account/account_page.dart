@@ -20,6 +20,7 @@ import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:kebabbo_flutter/pages/kebab/add_kebab.dart';
 
 class AccountPage extends StatefulWidget {
   final Position? currentPosition;
@@ -531,6 +532,26 @@ class _AccountPageState extends State<AccountPage> {
                                   ],
                                 ),
                               ),
+                              PopupMenuItem<int>(
+                                value: 6,
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.add_business,
+                                        color: Colors.black),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Aggiungi un Kebab',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
                               // Add "Delete account" button in red
                             ],
                             shape: RoundedRectangleBorder(
@@ -573,6 +594,11 @@ class _AccountPageState extends State<AccountPage> {
                                     builder: (context) => KebabCarouselPage()));
                               } else if (value == 5) {
                                 _signOut();
+                              } else if (value == 6) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => const AddKebab()),
+                                );
                               }
                             }
                           });

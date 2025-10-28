@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // <── Aggiunto
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
@@ -25,13 +26,13 @@ import 'package:url_launcher/url_launcher.dart';
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
 
-final supabaseUrl = const String.fromEnvironment('SUPABASE_URL');
-final supabaseAnonKey = const String.fromEnvironment('SUPABASE_ANON_KEY');
-final firebaseKey = const String.fromEnvironment('FIREBASE_KEY');
+const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+const firebaseKey = String.fromEnvironment('FIREBASE_KEY');
 
 Future<void> main() async {
   if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
-    print('⚠️ ATTENZIONE: SUPABASE_URL o SUPABASE_ANON_KEY non impostati!');
+    print('⚠️ ATTENZIONE: variabili SUPABASE mancanti nel file .env');
   }
 
   await Supabase.initialize(
@@ -211,59 +212,60 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-Future<void> _getLocation() async {
-  try { // ADD THIS
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // If service is disabled, set position to null and show a message.
+  Future<void> _getLocation() async {
+    try {
+      // ADD THIS
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // If service is disabled, set position to null and show a message.
+        _currentPositionNotifier.value = null;
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location services are disabled.')),
+          );
+        }
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        // If permission is still denied after asking, we will throw an error
+        // that our catch block will handle.
+        if (permission == LocationPermission.denied) {
+          throw Exception('Location permissions are denied.');
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('Location permissions are permanently denied.');
+      }
+
+      // If we have permission, get the location
+      print('Getting current location...');
+      Position position = await Geolocator.getCurrentPosition();
+      _currentPositionNotifier.value = position;
+
+      // This part remains the same, to update pages that are already built
+      if (selectedIndex == 3 && _mapPageKey.currentState != null) {
+        _mapPageKey.currentState!.updatePosition(position);
+      }
+      if (_reviewsPageKey.currentState != null) {
+        _reviewsPageKey.currentState!.updatePosition(position);
+      }
+    } catch (e) {
+      // ADD THIS CATCH BLOCK
+      // If any error occurs (denied permission, etc.), set position to null
+      // and show the error message.
       _currentPositionNotifier.value = null;
       if (mounted) {
-         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location services are disabled.')),
-         );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
       }
-      return;
+      print("Error getting location: $e");
     }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      // If permission is still denied after asking, we will throw an error
-      // that our catch block will handle.
-      if (permission == LocationPermission.denied) {
-         throw Exception('Location permissions are denied.');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-       throw Exception('Location permissions are permanently denied.');
-    }
-
-    // If we have permission, get the location
-    print('Getting current location...');
-    Position position = await Geolocator.getCurrentPosition();
-    _currentPositionNotifier.value = position;
-    
-    // This part remains the same, to update pages that are already built
-    if (selectedIndex == 3 && _mapPageKey.currentState != null) {
-      _mapPageKey.currentState!.updatePosition(position);
-    }
-    if (_reviewsPageKey.currentState != null) {
-      _reviewsPageKey.currentState!.updatePosition(position);
-    }
-
-  } catch (e) { // ADD THIS CATCH BLOCK
-    // If any error occurs (denied permission, etc.), set position to null
-    // and show the error message.
-    _currentPositionNotifier.value = null;
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
-    print("Error getting location: $e");
   }
-}
 
   Future<void> _checkIfAppInstalled() async {
     String appUrl =
