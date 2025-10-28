@@ -1,15 +1,18 @@
 # TODO
 
 - [ ] RENDERE KEBABBO SOCIAL
-Kebabbo è il sito da consultare per dei buoni consigli sul kebab, consigli da esperti. Ma una guida non la guarda nessuno più di 1 volta al mese. E i kebab recensiti saranno sempre pochi. E non aumenteranno molto con la fine dell'Uni. 
-Soluzione: gli utenti possono caricare i posti che trovano (con approvazione nostra dalla piattaforma moderatori) con la propria review. Click sulla mappa per prendere le coordinate, niente recensione scritta visibile nel box. Distinguere bene kebab messi da noi e quelli messi dagli utenti, però rendere molto più visibili le recensioni del pubblico. Come sono ora neanche si vedono.
+Gli utenti possono caricare i posti che trovano (con approvazione nostra dalla piattaforma moderatori) con la propria review. Click sulla mappa per prendere le coordinate, niente recensione scritta visibile nel box. Distinguere bene kebab messi da noi e quelli messi dagli utenti, però rendere molto più visibili le recensioni del pubblico. Come sono ora neanche si vedono.
 Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
 Magari tasto per aggiungere i kebabbari nella mappa o nel profilo
 -> idee: mettere toggle per kebab postati da tutti e kebab postati da noi. Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
 
-- [ ] Codice imbarazzante in alcune pagine: servono file di logica con le funzioni e anche più componenti
+- [ ] style di: card kebab, pack opening, carte, carte display, create kebab, pagina profilo utenti
+- [ ] compressioni immagini soprattutto avatar
+- [ ] spostare info carta kebab in pagina dedicata
+- [ ] grafico a barre
+- [ ] cambiare messaggio iniziale
+- [ ] Codice da sistemare in alcune pagine: servono file di logica con le funzioni e anche più componenti
 - [ ] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
-- [ ] sezione medaglie che non deve essere scorrevole
 - [ ] sezioni review e kebab salvati del profilo molto sus
 - [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
 - [ ] Notifiche
@@ -36,6 +39,7 @@ Pareggiare Kebabbo Web:
 
 Ancora non fatte in kebabbo Web:
 
+- [x] sezione medaglie che non deve essere scorrevole
 - [x] Stella simpatia + rifare tot rating senza simpatia
 - [x] Rimuovere linea sotto tab World-Special
 - [x] Icona app senza sfondo

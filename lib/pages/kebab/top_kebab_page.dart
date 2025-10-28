@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/order_bar.dart';
 import 'package:kebabbo_flutter/components/list_items/kebab_item.dart';
-import 'package:kebabbo_flutter/pages/kebab/special_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
@@ -29,7 +29,10 @@ class TopKebabPageState extends State<TopKebabPage> {
   TextEditingController searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _hasAutoScrolled = false;
-  String? _expandedKebabId; // NUOVA VARIABILE DI STATO
+  String? _expandedKebabId;
+  bool showStaffRatings = true;
+  double maxDistance = double.infinity; // nessun limite all'inizio
+  bool useDistanceFilter = false; // lo switch nella bottom sheet
 
   @override
   void initState() {
@@ -65,6 +68,20 @@ class TopKebabPageState extends State<TopKebabPage> {
             kebab['distance'] = distanceInMeters / 1000;
           }
           kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
+        }
+
+        if (userPosition != null &&
+            useDistanceFilter &&
+            !maxDistance.isInfinite) {
+          kebabs = kebabs
+              .where((kebab) =>
+                  (kebab['distance'] ?? double.infinity) <= maxDistance)
+              .toList();
+        }
+
+        // Filtro staff / utenti
+        if (showStaffRatings) {
+          kebabs = kebabs.where((kebab) => kebab['is_staff'] == true).toList();
         }
 
         // Sort the kebabs using the utility function
@@ -255,18 +272,20 @@ class TopKebabPageState extends State<TopKebabPage> {
                         children: [
                           const SizedBox(height: 16),
                           OrderBar(
-                              orderByField: orderByField,
-                              orderDirection: orderDirection,
-                              onChangeOrderByField: changeOrderByField,
-                              onChangeOrderDirection: changeOrderDirection,
-                              showOnlyKebab: showOnlyKebab,
-                              changeShowOnlyKebab: toggleShowOnlyKebab),
+                            showStaffRatings: showStaffRatings,
+                            onToggleShowStaffRatings: () {
+                              setState(() {
+                                showStaffRatings = !showStaffRatings;
+                                fetchKebab(widget.currentPosition);
+                              });
+                            },
+                          ),
                           const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: Row(
                               children: [
-                                // Make the TextField take up the maximum available space
+                                // La barra di ricerca ora prende molto più spazio
                                 Expanded(
                                   child: TextField(
                                     controller: searchController,
@@ -294,62 +313,85 @@ class TopKebabPageState extends State<TopKebabPage> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                    width:
-                                        8), // Spacing between TextField and button
 
-                                // Set the button to a constrained width and height for consistent sizing
-                                ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 150, // Set a max width
-                                    minWidth:
-                                        80, // Optional: set a minimum width
+                                const SizedBox(width: 12),
+
+                                // Nuovo bottone filtro (sostituisce il toggle "Aperti ora")
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
                                   ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        showOnlyOpen = !showOnlyOpen;
-                                        fetchKebab(widget.currentPosition);
-                                      });
+                                  child: IconButton(
+                                    icon: const Icon(Icons.filter_list,
+                                        color: Colors.black, size: 28),
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20)),
+                                        ),
+                                        builder: (context) => FilterSearch(
+                                          showOnlyOpen: showOnlyOpen,
+                                          onToggleShowOnlyOpen: (value) {
+                                            setState(() {
+                                              showOnlyOpen = value;
+                                              fetchKebab(
+                                                  widget.currentPosition);
+                                            });
+                                          },
+                                          showOnlyKebab: showOnlyKebab,
+                                          onToggleShowOnlyKebab: () {
+                                            setState(() {
+                                              showOnlyKebab = !showOnlyKebab;
+                                              fetchKebab(
+                                                  widget.currentPosition);
+                                            });
+                                          },
+                                          orderByField: orderByField,
+                                          orderDirection: orderDirection,
+                                          onChangeOrderByField: (value) {
+                                            setState(() {
+                                              orderByField = value;
+                                              fetchKebab(
+                                                  widget.currentPosition);
+                                            });
+                                          },
+                                          onChangeOrderByDirection: (value) {
+                                            setState(() {
+                                              orderDirection = value;
+                                              fetchKebab(
+                                                  widget.currentPosition);
+                                            });
+                                          },
+                                          useDistanceFilter: useDistanceFilter,
+                                          maxDistanceKm: maxDistance.isInfinite
+                                              ? 50
+                                              : maxDistance,
+                                          onToggleUseDistanceFilter: (enabled) {
+                                            setState(() {
+                                              useDistanceFilter = enabled;
+                                              // se lo spegne => infinito
+                                              maxDistance = enabled
+                                                  ? maxDistance
+                                                  : double.infinity;
+                                              fetchKebab(
+                                                  widget.currentPosition);
+                                            });
+                                          },
+                                          onChangeMaxDistanceKm: (km) {
+                                            setState(() {
+                                              maxDistance = km;
+                                              useDistanceFilter = true;
+                                              fetchKebab(
+                                                  widget.currentPosition);
+                                            });
+                                          },
+                                        ),
+                                      );
                                     },
-                                    child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 15,
-                                          horizontal: 16), // Inner padding
-                                      decoration: BoxDecoration(
-                                        color:
-                                            showOnlyOpen ? red : Colors.white,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            showOnlyOpen
-                                                ? Icons.check
-                                                : Icons.close,
-                                            color: showOnlyOpen
-                                                ? Colors.white
-                                                : Colors.black,
-                                            size: 20,
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            S.of(context).aperti_ora,
-                                            style: TextStyle(
-                                              color: showOnlyOpen
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ],
@@ -410,25 +452,6 @@ class TopKebabPageState extends State<TopKebabPage> {
                                   ),
                                 ),
                         ],
-                      ),
-                      // Icona circolare "kebab special" in basso a sinistra
-                      Positioned(
-                        bottom: 20.0,
-                        right: 8.0,
-                        child: FloatingActionButton(
-                          backgroundColor: red,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SpecialPage(
-                                  currentPosition: widget.currentPosition,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.public, color: Colors.white),
-                        ),
                       ),
                     ],
                   ),
