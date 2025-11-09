@@ -96,14 +96,25 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
     // Get the new kebab recommendation during the cloud animation
     Map<String, dynamic>? result = await buildKebab(widget.ingredients,
         rerollCounter, widget.maxDistance, widget.currentPosition);
-    if (result != null) {
+    if (result == null) {
+      // No more kebabs available
       setState(() {
-        _currentKebab = result['kebab'];
-        _currentKebab['isFavorite'] = false;
-        _calculateDistance(); // Recalculate the distance for the new kebab
+        showCloud = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Non ci sono altri kebab disponibili da consigliare."),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
     }
-
+    setState(() {
+      _currentKebab = result['kebab'];
+      _currentKebab['isFavorite'] = false;
+      _calculateDistance(); // Recalculate the distance for the new kebab
+    });
+  
     // Pause for a short time before moving the cloud back down
     await Future.delayed(const Duration(milliseconds: 500));
 

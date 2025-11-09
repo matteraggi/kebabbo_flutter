@@ -54,3 +54,4 @@ android/
 ios/
 
 .env
+/android/app/upload-keystore.jks

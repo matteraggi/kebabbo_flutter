@@ -256,9 +256,13 @@ class _AccountPageState extends State<AccountPage> {
       final userId = supabase.auth.currentSession!.user.id;
 
       try {
+        if (processedImage == null) {
+          throw Exception("Image processing failed.");
+        }
+
         await supabase.storage.from('avatars').uploadBinary(
               '$userId.png',
-              processedImage!,
+              processedImage,
               fileOptions: const FileOptions(upsert: true),
             );
 

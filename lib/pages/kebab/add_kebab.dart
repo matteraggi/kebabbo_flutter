@@ -105,7 +105,7 @@ class _AddKebabState extends State<AddKebab> {
       title: Text(label),
       value: value,
       onChanged: onChanged,
-      activeColor: main.red,
+      activeThumbColor: main.red,
     );
   }
 

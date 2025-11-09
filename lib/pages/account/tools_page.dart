@@ -437,10 +437,10 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
           int availableKebabs = 0;
 
           if (result != null) {
-            bestKebab = result['kebab'];
-            availableKebabs = result['availableKebabs'];
+          bestKebab = result['kebab'];
+          availableKebabs = result['availableKebabs'];
           }
-
+        
           if (bestKebab != null) {
             if (mounted) {
               Navigator.push(

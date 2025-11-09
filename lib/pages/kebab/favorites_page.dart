@@ -114,7 +114,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                     glutenFree: kebab['gluten_free'] ?? false,
                                     expanded: false,
                                   );
-                                }).toList(),
+                                }),
                                 const SizedBox(height: 16),
                               ],
                             ),

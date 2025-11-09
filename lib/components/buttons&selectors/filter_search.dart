@@ -345,7 +345,7 @@ class _FilterSearchState extends State<FilterSearch> {
                 ),
                 Switch(
                   value: _localUseDistanceFilter,
-                  activeColor: red,
+                  activeThumbColor: red,
                   onChanged: (enabled) {
                     setState(() {
                       _localUseDistanceFilter = enabled;
