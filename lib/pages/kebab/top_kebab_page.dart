@@ -37,7 +37,7 @@ class TopKebabPageState extends State<TopKebabPage> {
   @override
   void initState() {
     super.initState();
-    fetchKebab(widget.currentPosition);
+    fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
   }
 
   @override
@@ -45,12 +45,12 @@ class TopKebabPageState extends State<TopKebabPage> {
     super.didUpdateWidget(oldWidget);
     if (widget.currentPosition != oldWidget.currentPosition &&
         oldWidget.currentPosition == null) {
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     }
   }
 
-  Future<void> fetchKebab(Position? userPosition) async {
-    try {
+  Future<void> fetchKebab(Position? userPosition, {required bool useStaffRatings}) async {
+        try {
       final PostgrestList response = await supabase.from('kebab').select('*');
 
       if (mounted) {
@@ -78,10 +78,12 @@ class TopKebabPageState extends State<TopKebabPage> {
                   (kebab['distance'] ?? double.infinity) <= maxDistance)
               .toList();
         }
-
         // Filtro staff / utenti
-        if (showStaffRatings) {
+        if (useStaffRatings) {
           kebabs = kebabs.where((kebab) => kebab['is_staff'] == true).toList();
+        }
+        else{
+          kebabs = kebabs.where((kebab) => kebab['user_reviewed'] == true).toList();
         }
 
         // Sort the kebabs using the utility function
@@ -234,21 +236,21 @@ class TopKebabPageState extends State<TopKebabPage> {
   void changeOrderByField(String field) {
     setState(() {
       orderByField = field;
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     });
   }
 
   void changeOrderDirection(bool direction) {
     setState(() {
       orderDirection = direction;
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition,  useStaffRatings: showStaffRatings);
     });
   }
 
   void toggleShowOnlyKebab() {
     setState(() {
       showOnlyKebab = !showOnlyKebab;
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     });
   }
 
@@ -273,12 +275,22 @@ class TopKebabPageState extends State<TopKebabPage> {
                           const SizedBox(height: 16),
                           OrderBar(
                             showStaffRatings: showStaffRatings,
-                            onToggleShowStaffRatings: () {
-                              setState(() {
-                                showStaffRatings = !showStaffRatings;
-                                fetchKebab(widget.currentPosition);
-                              });
-                            },
+                            onToggleShowStaffRatings: () async {
+                            // 1. Define the new state
+                            final bool newStaffRatingsValue = !showStaffRatings;
+
+                            // 2. Await the fetch *with the new value*.
+                            //    fetchKebab will call its own setState internally to update the list.
+                            await fetchKebab(
+                              widget.currentPosition,
+                              useStaffRatings: newStaffRatingsValue
+                            );
+
+                            // 3. AFTER the await, update the class variable to change the color.
+                            setState(() {
+                              showStaffRatings = newStaffRatingsValue;
+                            });
+                          },
                           ),
                           const SizedBox(height: 16),
                           Padding(
@@ -339,7 +351,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             setState(() {
                                               showOnlyOpen = value;
                                               fetchKebab(
-                                                  widget.currentPosition);
+                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
                                             });
                                           },
                                           showOnlyKebab: showOnlyKebab,
@@ -347,7 +359,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             setState(() {
                                               showOnlyKebab = !showOnlyKebab;
                                               fetchKebab(
-                                                  widget.currentPosition);
+                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
                                             });
                                           },
                                           orderByField: orderByField,
@@ -356,14 +368,14 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             setState(() {
                                               orderByField = value;
                                               fetchKebab(
-                                                  widget.currentPosition);
+                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
                                             });
                                           },
                                           onChangeOrderByDirection: (value) {
                                             setState(() {
                                               orderDirection = value;
                                               fetchKebab(
-                                                  widget.currentPosition);
+                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
                                             });
                                           },
                                           useDistanceFilter: useDistanceFilter,
@@ -378,7 +390,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                                   ? maxDistance
                                                   : double.infinity;
                                               fetchKebab(
-                                                  widget.currentPosition);
+                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
                                             });
                                           },
                                           onChangeMaxDistanceKm: (km) {
@@ -386,7 +398,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                               maxDistance = km;
                                               useDistanceFilter = true;
                                               fetchKebab(
-                                                  widget.currentPosition);
+                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
                                             });
                                           },
                                         ),
@@ -411,6 +423,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                       final kebabId = kebab['id']
                                           .toString(); // Ottieni l'ID
                                       return KebabListItem(
+                                        key: ValueKey("${kebab['id']}_${showStaffRatings.toString()}"),
                                         id: kebab['id'].toString(),
                                         name: kebab['name'] ?? '',
                                         description: kebab['description'] ?? '',
@@ -447,6 +460,8 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             kebab['gluten_free'] ?? false,
                                         initiallyExpanded:
                                             kebabId == _expandedKebabId,
+                                        hasUserReview: kebab['user_reviewed'] ?? false,
+                                        flipped: !showStaffRatings,
                                       );
                                     },
                                   ),

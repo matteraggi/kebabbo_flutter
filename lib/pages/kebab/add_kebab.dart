@@ -13,22 +13,28 @@ class _AddKebabState extends State<AddKebab> {
   final _formKey = GlobalKey<FormState>();
   final supabase = Supabase.instance.client;
 
+  // Controller per i campi di testo rimasti
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _qualityController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _dimensionController = TextEditingController();
-  final TextEditingController _funController = TextEditingController();
-  final TextEditingController _menuController = TextEditingController();
-  final TextEditingController _latController = TextEditingController();
-  final TextEditingController _lngController = TextEditingController();
-  final TextEditingController _meatController = TextEditingController();
-  final TextEditingController _tagController = TextEditingController();
 
-  bool _yogurt = false;
-  bool _spicy = false;
-  bool _onion = false;
-  bool _vegetables = false;
+  // Valori per gli slider da 1 a 5
+  double _quality = 3.0;
+  double _price = 3.0;
+  double _dimension = 3.0;
+  double _fun = 3.0;
+  double _menu = 3.0;
+
+  // Valori per gli slider da 1 a 10
+  double _meat = 5.0;
+  double _yogurt = 5.0;
+  double _spicy = 5.0;
+  double _onion = 5.0;
+  double _vegetables = 5.0;
+
+  // Valore per il tag switch
+  String _tag = 'kebab'; // 'kebab' o 'sandwich'
+
+  // Valore per lo switch glutine
   bool _glutenFree = false;
 
   bool _loading = false;
@@ -42,19 +48,21 @@ class _AddKebabState extends State<AddKebab> {
       await supabase.from('kebab').insert({
         'name': _nameController.text.trim(),
         'description': _descriptionController.text.trim(),
-        'quality': _qualityController.text.trim(),
-        'price': double.tryParse(_priceController.text.trim()) ?? 0.0,
-        'dimension': _dimensionController.text.trim(),
-        'fun': _funController.text.trim(),
-        'menu': _menuController.text.trim(),
-        'lat': double.tryParse(_latController.text.trim()),
-        'lng': double.tryParse(_lngController.text.trim()),
+        // Valori dagli slider 1-5
+        'quality': _quality,
+        'price': _price,
+        'dimension': _dimension,
+        'fun': _fun,
+        'menu': _menu,
+        // Valori dagli slider 1-10
         'yogurt': _yogurt,
         'spicy': _spicy,
-        'meat': _meatController.text.trim(),
+        'meat': _meat,
         'onion': _onion,
-        'tag': _tagController.text.trim(),
         'vegetables': _vegetables,
+        // Valore dal tag switch
+        'tag': _tag,
+        // Valore dallo switch glutine
         'gluten_free': _glutenFree,
       });
 
@@ -81,6 +89,7 @@ class _AddKebabState extends State<AddKebab> {
     }
   }
 
+  // Helper per i campi di testo (con sfondo bianco)
   Widget _buildTextField(
       {required String label,
       required TextEditingController controller,
@@ -93,6 +102,8 @@ class _AddKebabState extends State<AddKebab> {
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: Colors.white, // Sfondo bianco
         ),
         validator: (value) =>
             value == null || value.trim().isEmpty ? 'Campo obbligatorio' : null,
@@ -100,12 +111,55 @@ class _AddKebabState extends State<AddKebab> {
     );
   }
 
+  // Helper per gli switch on/off
   Widget _buildSwitch(String label, bool value, void Function(bool) onChanged) {
     return SwitchListTile(
       title: Text(label),
       value: value,
       onChanged: onChanged,
-      activeThumbColor: main.red,
+      activeColor: main.red,
+      activeTrackColor: main.red.withOpacity(0.5),
+    );
+  }
+
+  // Helper per gli slider
+  Widget _buildSlider(
+    String label,
+    double value,
+    double min,
+    double max,
+    int divisions,
+    void Function(double) onChanged,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(value.toStringAsFixed(0),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: main.red)),
+            ],
+          ),
+          Slider(
+            value: value,
+            min: min,
+            max: max,
+            divisions: divisions,
+            label: value.toStringAsFixed(0),
+            activeColor: main.red,
+            onChanged: onChanged,
+          ),
+        ],
+      ),
     );
   }
 
@@ -128,51 +182,121 @@ class _AddKebabState extends State<AddKebab> {
                     _buildTextField(
                         label: 'Descrizione',
                         controller: _descriptionController),
-                    _buildTextField(
-                        label: 'Qualità', controller: _qualityController),
-                    _buildTextField(
-                        label: 'Prezzo',
-                        controller: _priceController,
-                        inputType: const TextInputType.numberWithOptions(
-                            decimal: true)),
-                    _buildTextField(
-                        label: 'Dimensione', controller: _dimensionController),
-                    _buildTextField(
-                        label: 'Divertimento', controller: _funController),
-                    _buildTextField(label: 'Menu', controller: _menuController),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: _buildTextField(
-                                label: 'Latitudine',
-                                controller: _latController,
-                                inputType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true))),
-                        const SizedBox(width: 8),
-                        Expanded(
-                            child: _buildTextField(
-                                label: 'Longitudine',
-                                controller: _lngController,
-                                inputType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true))),
-                      ],
+                    const SizedBox(height: 16),
+
+                    // --- Switch per Tag (Kebab/Sandwich) ---
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => setState(() => _tag = 'kebab'),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: _tag == 'kebab'
+                                      ? main.red
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.kebab_dining,
+                                        color: _tag == 'kebab'
+                                            ? Colors.white
+                                            : Colors.black54),
+                                    const SizedBox(width: 8),
+                                    Text('Kebab',
+                                        style: TextStyle(
+                                            color: _tag == 'kebab'
+                                                ? Colors.white
+                                                : Colors.black87,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => setState(() => _tag = 'sandwich'),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: _tag == 'sandwich'
+                                      ? main.red
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.fastfood,
+                                        color: _tag == 'sandwich'
+                                            ? Colors.white
+                                            : Colors.black54),
+                                    const SizedBox(width: 8),
+                                    Text('Sandwich',
+                                        style: TextStyle(
+                                            color: _tag == 'sandwich'
+                                                ? Colors.white
+                                                : Colors.black87,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    _buildTextField(
-                        label: 'Carne', controller: _meatController),
-                    _buildTextField(label: 'Tag', controller: _tagController),
-                    const SizedBox(height: 12),
-                    _buildSwitch('Yogurt', _yogurt,
-                        (value) => setState(() => _yogurt = value)),
-                    _buildSwitch('Piccante', _spicy,
-                        (value) => setState(() => _spicy = value)),
-                    _buildSwitch('Cipolla', _onion,
-                        (value) => setState(() => _onion = value)),
-                    _buildSwitch('Verdure', _vegetables,
-                        (value) => setState(() => _vegetables = value)),
+                    const SizedBox(height: 24),
+
+                    // --- Slider da 1 a 5 ---
+                    _buildSlider('Qualità', _quality, 1, 5, 4,
+                        (val) => setState(() => _quality = val)),
+                    _buildSlider('Prezzo', _price, 1, 5, 4,
+                        (val) => setState(() => _price = val)),
+                    _buildSlider('Dimensione', _dimension, 1, 5, 4,
+                        (val) => setState(() => _dimension = val)),
+                    _buildSlider('Fun', _fun, 1, 5, 4,
+                        (val) => setState(() => _fun = val)),
+                    _buildSlider('Menu', _menu, 1, 5, 4,
+                        (val) => setState(() => _menu = val)),
+
+                    const SizedBox(height: 16),
+                    const Divider(),
+                    const SizedBox(height: 16),
+
+                    // --- Slider da 1 a 10 ---
+                    _buildSlider('Carne', _meat, 1, 10, 9,
+                        (val) => setState(() => _meat = val)),
+                    _buildSlider('Yogurt', _yogurt, 1, 10, 9,
+                        (val) => setState(() => _yogurt = val)),
+                    _buildSlider('Piccante', _spicy, 1, 10, 9,
+                        (val) => setState(() => _spicy = val)),
+                    _buildSlider('Cipolla', _onion, 1, 10, 9,
+                        (val) => setState(() => _onion = val)),
+                    _buildSlider('Verdure', _vegetables, 1, 10, 9,
+                        (val) => setState(() => _vegetables = val)),
+
+                    const SizedBox(height: 16),
+                    const Divider(),
+                    const SizedBox(height: 16),
+
+                    // --- Switch Senza Glutine ---
                     _buildSwitch('Senza Glutine', _glutenFree,
                         (value) => setState(() => _glutenFree = value)),
+
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
                       icon: const Icon(Icons.add),

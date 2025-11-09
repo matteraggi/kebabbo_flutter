@@ -182,6 +182,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                           special: false,
                           initiallyExpanded: true,
                           glutenFree: _currentKebab['gluten_free'] ?? false,
+                          hasUserReview: _currentKebab['user_reviewed'] ?? false,
                         ),
                       ],
                     ),

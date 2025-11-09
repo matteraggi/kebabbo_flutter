@@ -33,6 +33,8 @@ class KebabListItem extends StatefulWidget {
   final bool special;
   final bool initiallyExpanded;
   final bool glutenFree;
+  final bool hasUserReview;
+  final bool flipped;
 
   const KebabListItem({
     super.key,
@@ -60,6 +62,8 @@ class KebabListItem extends StatefulWidget {
     required this.special,
     this.initiallyExpanded = false,
     required this.glutenFree,
+    required this.hasUserReview,
+    this.flipped= false,
   });
 
   @override
@@ -78,11 +82,18 @@ class KebabListItemState extends State<KebabListItem> {
   double overallAvgRating = 0.0;
 
   @override
-  void initState() {
+  void initState() {  
     super.initState();
     isExpanded = widget.initiallyExpanded;
     _controller = FlipCardController();
-    getUsersReviews();
+    if (widget.flipped) {
+      // This is a user review card
+      isFront = false; // Start on the "back"
+      getUsersReviews(); // Fetch user reviews immediately
+    } else {
+      // This is a staff review card
+      isFront = true; // Start on the "front"
+    }
   }
 Future<void> getUsersReviews() async {
   try {
@@ -230,10 +241,13 @@ Future<void> getUsersReviews() async {
                       isFront: true,
                     ),
                     const SizedBox(width: 16),
+                    if(widget.hasUserReview)
                     IconButton(
                       onPressed: () {
-                        setState(() {
+                        setState(() {    
+                        getUsersReviews();
                           _controller.toggleCard();
+                          
                         });
                       },
                       icon: Icon(
@@ -371,8 +385,6 @@ Future<void> getUsersReviews() async {
                 ],
               ),
 
-            // Expanded per spingere i bottoni verso il fondo
-            const Spacer(), // Si assicura che i bottoni siano sempre in basso
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -555,14 +567,14 @@ Future<void> getUsersReviews() async {
                           isFront = !isFront;
                         });
                       },
-                      front: _buildFront(),
-                      back: _buildBack())),
-            ],
+                      front: widget.flipped ? _buildBack() : _buildFront(),
+                      back: widget.flipped ? _buildFront() : _buildBack(),))
+              ],
             onExpansionChanged: (bool expanding) {
               setState(() {
                 isExpanded = expanding;
                 if (!expanding) {
-                  isFront = true;
+                  isFront = !widget.flipped;
                 }
               });
             },
