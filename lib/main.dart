@@ -9,7 +9,7 @@ import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
 import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
-import 'package:kebabbo_flutter/pages/feed&socials/search_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/games_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -356,7 +356,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         return const FeedPage();
       case 1:
-        return SearchPage();
+        return GamesPage(currentPosition: _currentPositionNotifier.value);
       case 2:
         return ValueListenableBuilder<Position?>(
           valueListenable: _currentPositionNotifier,

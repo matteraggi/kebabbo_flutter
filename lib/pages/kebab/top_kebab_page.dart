@@ -49,8 +49,9 @@ class TopKebabPageState extends State<TopKebabPage> {
     }
   }
 
-  Future<void> fetchKebab(Position? userPosition, {required bool useStaffRatings}) async {
-        try {
+  Future<void> fetchKebab(Position? userPosition,
+      {required bool useStaffRatings}) async {
+    try {
       final PostgrestList response = await supabase.from('kebab').select('*');
 
       if (mounted) {
@@ -68,6 +69,23 @@ class TopKebabPageState extends State<TopKebabPage> {
             kebab['distance'] = distanceInMeters / 1000;
           }
           kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
+          // 1. Controlla se lat e lng sono validi
+          final double lat = kebab['lat'] ?? 0.0;
+          final double lng = kebab['lng'] ?? 0.0;
+
+          if (userPosition != null && (lat != 0.0 || lng != 0.0)) {
+            // 2. Calcola la distanza SOLO se le coordinate sono valide
+            double distanceInMeters = Geolocator.distanceBetween(
+              userPosition.latitude,
+              userPosition.longitude,
+              lat,
+              lng,
+            );
+            kebab['distance'] = distanceInMeters / 1000;
+          } else {
+            // 3. Altrimenti, imposta la distanza a null
+            kebab['distance'] = null;
+          }
         }
 
         if (userPosition != null &&
@@ -81,9 +99,12 @@ class TopKebabPageState extends State<TopKebabPage> {
         // Filtro staff / utenti
         if (useStaffRatings) {
           kebabs = kebabs.where((kebab) => kebab['is_staff'] == true).toList();
-        }
-        else{
-          kebabs = kebabs.where((kebab) => kebab['user_reviewed'] == true).toList();
+        } else {
+          kebabs = kebabs
+              .where((kebab) =>
+                  kebab['user_reviewed'] == true && kebab['approved'] != false)
+              .toList();
+          print(kebabs);
         }
 
         // Sort the kebabs using the utility function
@@ -97,7 +118,6 @@ class TopKebabPageState extends State<TopKebabPage> {
                       (next['distance'] ?? double.infinity)
                   ? curr
                   : next);
-          print(tempClosest);
           if ((tempClosest['distance'] ?? double.infinity) < 0.2) {
             closestKebab = tempClosest;
           }
@@ -121,13 +141,25 @@ class TopKebabPageState extends State<TopKebabPage> {
         if (mounted) {
           setState(() {
             dashList = kebabs;
-            searchResultList = kebabs;
+            searchResultList = fuzzySearchAndSort(
+                dashList,
+                searchController.text, // Usa il testo già presente nella barra
+                'name',
+                showOnlyOpen,
+                showOnlyKebab);
             isLoading = false;
 
-            // AGGIORNAMENTO: Se troviamo un kebab vicino, salviamo il suo ID
-            if (closestKebab != null && !_hasAutoScrolled) {
-              _expandedKebabId = closestKebab['id'].toString();
-            }
+            setState(() {
+              dashList = dashList; // Salva la master list
+              searchResultList =
+                  searchResultList; // Salva la display list filtrata
+              isLoading = false;
+
+              // AGGIORNAMENTO: Se troviamo un kebab vicino, salviamo il suo ID
+              if (closestKebab != null && !_hasAutoScrolled) {
+                _expandedKebabId = closestKebab['id'].toString();
+              }
+            });
           });
 
           // Lo scroll viene attivato qui, dopo che lo stato è stato aggiornato
@@ -243,7 +275,7 @@ class TopKebabPageState extends State<TopKebabPage> {
   void changeOrderDirection(bool direction) {
     setState(() {
       orderDirection = direction;
-      fetchKebab(widget.currentPosition,  useStaffRatings: showStaffRatings);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     });
   }
 
@@ -276,21 +308,20 @@ class TopKebabPageState extends State<TopKebabPage> {
                           OrderBar(
                             showStaffRatings: showStaffRatings,
                             onToggleShowStaffRatings: () async {
-                            // 1. Define the new state
-                            final bool newStaffRatingsValue = !showStaffRatings;
+                              // 1. Define the new state
+                              final bool newStaffRatingsValue =
+                                  !showStaffRatings;
 
-                            // 2. Await the fetch *with the new value*.
-                            //    fetchKebab will call its own setState internally to update the list.
-                            await fetchKebab(
-                              widget.currentPosition,
-                              useStaffRatings: newStaffRatingsValue
-                            );
+                              // 2. Await the fetch *with the new value*.
+                              //    fetchKebab will call its own setState internally to update the list.
+                              await fetchKebab(widget.currentPosition,
+                                  useStaffRatings: newStaffRatingsValue);
 
-                            // 3. AFTER the await, update the class variable to change the color.
-                            setState(() {
-                              showStaffRatings = newStaffRatingsValue;
-                            });
-                          },
+                              // 3. AFTER the await, update the class variable to change the color.
+                              setState(() {
+                                showStaffRatings = newStaffRatingsValue;
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
                           Padding(
@@ -350,16 +381,18 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           onToggleShowOnlyOpen: (value) {
                                             setState(() {
                                               showOnlyOpen = value;
-                                              fetchKebab(
-                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
                                             });
                                           },
                                           showOnlyKebab: showOnlyKebab,
                                           onToggleShowOnlyKebab: () {
                                             setState(() {
                                               showOnlyKebab = !showOnlyKebab;
-                                              fetchKebab(
-                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
                                             });
                                           },
                                           orderByField: orderByField,
@@ -367,15 +400,17 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           onChangeOrderByField: (value) {
                                             setState(() {
                                               orderByField = value;
-                                              fetchKebab(
-                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
                                             });
                                           },
                                           onChangeOrderByDirection: (value) {
                                             setState(() {
                                               orderDirection = value;
-                                              fetchKebab(
-                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
                                             });
                                           },
                                           useDistanceFilter: useDistanceFilter,
@@ -389,16 +424,18 @@ class TopKebabPageState extends State<TopKebabPage> {
                                               maxDistance = enabled
                                                   ? maxDistance
                                                   : double.infinity;
-                                              fetchKebab(
-                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
                                             });
                                           },
                                           onChangeMaxDistanceKm: (km) {
                                             setState(() {
                                               maxDistance = km;
                                               useDistanceFilter = true;
-                                              fetchKebab(
-                                                  widget.currentPosition, useStaffRatings: showStaffRatings);
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
                                             });
                                           },
                                         ),
@@ -423,7 +460,8 @@ class TopKebabPageState extends State<TopKebabPage> {
                                       final kebabId = kebab['id']
                                           .toString(); // Ottieni l'ID
                                       return KebabListItem(
-                                        key: ValueKey("${kebab['id']}_${showStaffRatings.toString()}"),
+                                        key: ValueKey(
+                                            "${kebab['id']}_${showStaffRatings.toString()}"),
                                         id: kebab['id'].toString(),
                                         name: kebab['name'] ?? '',
                                         description: kebab['description'] ?? '',
@@ -460,8 +498,10 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             kebab['gluten_free'] ?? false,
                                         initiallyExpanded:
                                             kebabId == _expandedKebabId,
-                                        hasUserReview: kebab['user_reviewed'] ?? false,
+                                        hasUserReview:
+                                            kebab['user_reviewed'] ?? false,
                                         flipped: !showStaffRatings,
+                                        approved: kebab['approved'],
                                       );
                                     },
                                   ),

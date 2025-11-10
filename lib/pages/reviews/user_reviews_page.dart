@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/components/misc/info_dialog.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/kebab/add_kebab.dart';
 import 'package:kebabbo_flutter/pages/reviews/review_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
@@ -27,37 +28,62 @@ class UserReviewsState extends State<UserReviewsPage> {
     super.initState();
     _fetchReviews(widget.userId);
   }
-
-  Future<void> _fetchReviews(String userId) async {
-    // Recupera tutti i profili che hanno l'userId nel campo 'followed_users'
+Future<void> _fetchReviews(String userId) async {
     final response =
         await supabase.from('reviews').select('*').eq('user_id', userId);
+    
+    // Lista temporanea per i kebab da fetchare
+    final kebabIds = response.map((review) => review['kebabber_id'].toString()).toSet().toList();
+
+    // Se non ci sono recensioni, esci
+    if (kebabIds.isEmpty) {
+      setState(() {
+        reviews = [];
+        isLoading = false;
+      });
+      return;
+    }
+
+    // --- OTTIMIZZAZIONE: Fetcha tutti i kebab in UNA SOLA chiamata ---
+    final kebabResponse = await supabase
+        .from('kebab')
+        .select('*')
+        .inFilter('id', kebabIds); // .in_() per fetchare tutti gli ID
+
+    // Mappa i kebab per ID per un accesso rapido
+    final kebabMap = {
+      for (var kebab in kebabResponse) kebab['id'].toString(): kebab
+    };
+    // -------------------------------------------------------------
+
     for (var review in response) {
       final kebabberId = review['kebabber_id'].toString();
-      final kebabberResponse = await supabase
-          .from('kebab')
-          .select('*')
-          .eq('id', kebabberId)
-          .single();
-      review['name'] = kebabberResponse['name'];
-      review['map'] = kebabberResponse['map'];
-      review['lat'] = kebabberResponse['lat'];
-      review['lng'] = kebabberResponse['lng'];
-      review['gluten_free'] = kebabberResponse['gluten_free'];
-      review['is_open'] = isKebabOpen(
-        kebabberResponse['orari_apertura'],
-      );
-      review['tag'] = kebabberResponse['tag'];
-      review['vegetables'] = kebabberResponse['vegetables'];
-      review['yogurt'] = kebabberResponse['yogurt'];
-      review['spicy'] = kebabberResponse['spicy'];
-      review['onion'] = kebabberResponse['onion'];
+      final kebabberData = kebabMap[kebabberId]; // Prendi i dati dalla mappa
 
-      review['rating'] = (review['quality'] +
-              review['price'] +
-              review['quantity'] +
-              review['menu']) /
-          4;
+      if (kebabberData != null) {
+        review['name'] = kebabberData['name'] ?? 'Nome non disponibile';
+        review['map'] = kebabberData['map'] ?? '';
+        review['lat'] = kebabberData['lat'] ?? 0.0;
+        review['lng'] = kebabberData['lng'] ?? 0.0;
+        review['gluten_free'] = kebabberData['gluten_free'] ?? false;
+        review['is_open'] = isKebabOpen(
+          kebabberData['orari_apertura'],
+        );
+        review['tag'] = kebabberData['tag'] ?? 'kebab';
+        review['vegetables'] = kebabberData['vegetables'] ?? 0.0;
+        review['yogurt'] = kebabberData['yogurt'] ?? 0.0;
+        review['spicy'] = kebabberData['spicy'] ?? 0.0;
+        review['onion'] = kebabberData['onion'] ?? 0.0;
+
+        review['rating'] = (review['quality'] +
+                review['price'] +
+                review['quantity'] +
+                review['menu']) /
+            4;
+      } else {
+        // Gestisci il caso in cui il kebab è stato cancellato
+        review['name'] = 'Kebab non più disponibile';
+      }
     }
     setState(() {
       reviews = List<Map<String, dynamic>>.from(response);
@@ -90,9 +116,7 @@ class UserReviewsState extends State<UserReviewsPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReviewPage(
-                        hash: "nearme",
-                        initialPosition: widget.initialPosition,
+                      builder: (context) => AddKebab(
                       ),
                     ),
                   );
@@ -152,6 +176,7 @@ class UserReviewsState extends State<UserReviewsPage> {
                             isOpen: review['is_open'],
                             glutenFree: review['gluten_free'],
                             expanded: false,
+                            
                           );
                         },
                       ),

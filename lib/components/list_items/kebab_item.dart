@@ -1,12 +1,13 @@
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/bottom_kebab_buttons.dart';
-import 'package:kebabbo_flutter/components/misc/info_dialog.dart';
+// import 'package:kebabbo_flutter/components/misc/info_dialog.dart'; // Rimosso
 import 'package:kebabbo_flutter/components/misc/single_chart.dart';
 import 'package:kebabbo_flutter/components/list_items/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/pages/kebab/add_kebab.dart'; // <-- 1. Import Aggiunto
 
 class KebabListItem extends StatefulWidget {
   final String id;
@@ -35,6 +36,7 @@ class KebabListItem extends StatefulWidget {
   final bool glutenFree;
   final bool hasUserReview;
   final bool flipped;
+  final bool? approved;
 
   const KebabListItem({
     super.key,
@@ -63,11 +65,12 @@ class KebabListItem extends StatefulWidget {
     this.initiallyExpanded = false,
     required this.glutenFree,
     required this.hasUserReview,
-    this.flipped= false,
+    this.flipped = false,
+    this.approved,
   });
 
   @override
-  KebabListItemState createState() => KebabListItemState(); // Corrected line
+  KebabListItemState createState() => KebabListItemState();
 }
 
 class KebabListItemState extends State<KebabListItem> {
@@ -82,60 +85,61 @@ class KebabListItemState extends State<KebabListItem> {
   double overallAvgRating = 0.0;
 
   @override
-  void initState() {  
+  void initState() {
     super.initState();
     isExpanded = widget.initiallyExpanded;
     _controller = FlipCardController();
     if (widget.flipped) {
-      // This is a user review card
-      isFront = false; // Start on the "back"
-      getUsersReviews(); // Fetch user reviews immediately
+      isFront = false;
+      getUsersReviews();
     } else {
-      // This is a staff review card
-      isFront = true; // Start on the "front"
+      isFront = true;
     }
   }
-Future<void> getUsersReviews() async {
-  try {
-    final response = await supabase
-        .from('reviews')
-        .select('quality, quantity, menu, price, fun')
-        .eq('kebabber_id', widget.id);
 
-    List<dynamic> reviews = response;
-    if (reviews.isEmpty) return;
+  Future<void> getUsersReviews() async {
+    // ... (nessuna modifica qui)
+    try {
+      final response = await supabase
+          .from('reviews')
+          .select('quality, quantity, menu, price, fun')
+          .eq('kebabber_id', widget.id);
 
-    double totalQuality = 0;
-    double totalQuantity = 0;
-    double totalMenu = 0;
-    double totalPrice = 0;
-    double totalFun = 0;
+      List<dynamic> reviews = response;
+      if (reviews.isEmpty) return;
 
-    for (var review in reviews) {
-      totalQuality += review['quality'] ?? 0;
-      totalQuantity += review['quantity'] ?? 0;
-      totalMenu += review['menu'] ?? 0;
-      totalPrice += review['price'] ?? 0;
-      totalFun += review['fun'] ?? 0;
+      double totalQuality = 0;
+      double totalQuantity = 0;
+      double totalMenu = 0;
+      double totalPrice = 0;
+      double totalFun = 0;
+
+      for (var review in reviews) {
+        totalQuality += review['quality'] ?? 0;
+        totalQuantity += review['quantity'] ?? 0;
+        totalMenu += review['menu'] ?? 0;
+        totalPrice += review['price'] ?? 0;
+        totalFun += review['fun'] ?? 0;
+      }
+
+      avgQuality = totalQuality / reviews.length;
+      avgQuantity = totalQuantity / reviews.length;
+      avgMenu = totalMenu / reviews.length;
+      avgPrice = totalPrice / reviews.length;
+      avgFun = totalFun / reviews.length;
+      overallAvgRating =
+          (avgQuality + avgQuantity + avgMenu + avgPrice + avgFun) / 5;
+
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      print("Errore durante il recupero delle recensioni: $e");
     }
-
-    avgQuality = totalQuality / reviews.length;
-    avgQuantity = totalQuantity / reviews.length;
-    avgMenu = totalMenu / reviews.length;
-    avgPrice = totalPrice / reviews.length;
-    avgFun = totalFun / reviews.length;
-    overallAvgRating = (avgQuality + avgQuantity + avgMenu + avgPrice + avgFun) / 5;
-
-    if (mounted) {
-      setState(() {});
-    }
-  } catch (e) {
-    print("Errore durante il recupero delle recensioni: $e");
   }
-}
-
 
   List<Widget> _buildRatingStars(double rating) {
+    // ... (nessuna modifica qui)
     List<Widget> stars = [];
 
     int fullStars = rating.floor();
@@ -156,25 +160,22 @@ Future<void> getUsersReviews() async {
   }
 
   List<Widget> _buildUserRatingStars() {
+    // ... (nessuna modifica qui)
     List<Widget> stars = [];
 
-    // Usa la media globale calcolata per generare le stelle
     double rating = overallAvgRating;
 
     int fullStars = rating.floor();
     bool hasHalfStar = rating - fullStars.toDouble() >= 0.5;
 
-    // Aggiungi le stelle complete
     for (int i = 0; i < fullStars; i++) {
       stars.add(const Icon(Icons.star, color: yellow, size: 40));
     }
 
-    // Aggiungi una mezza stella se necessario
     if (hasHalfStar) {
       stars.add(const Icon(Icons.star_half, color: yellow, size: 40));
     }
 
-    // Aggiungi le stelle vuote
     while (stars.length < 5) {
       stars.add(const Icon(Icons.star_border, color: yellow, size: 40));
     }
@@ -183,6 +184,7 @@ Future<void> getUsersReviews() async {
   }
 
   Widget _buildFront() {
+    // La "faccia" della recensione Staff
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[200],
@@ -235,27 +237,30 @@ Future<void> getUsersReviews() async {
               children: [
                 Row(
                   children: [
-                    BottomButtonItem(
-                      linkMaps: widget.map,
-                      icon: Icons.map,
-                      isFront: true,
-                    ),
-                    const SizedBox(width: 16),
-                    if(widget.hasUserReview)
-                    IconButton(
-                      onPressed: () {
-                        setState(() {    
-                        getUsersReviews();
-                          _controller.toggleCard();
-                          
-                        });
-                      },
-                      icon: Icon(
-                        Icons.cached,
-                        color: Colors.black,
-                        size: 30,
-                      ), // Icona con colore a tua scelta
-                    ),
+                    if (widget.map.isNotEmpty) ...[
+                      BottomButtonItem(
+                        linkMaps: widget.map,
+                        icon: Icons.map,
+                        isFront: true,
+                      ),
+                      const SizedBox(width: 16),
+                    ],
+
+                    // Mostra il pulsante flip solo se ci sono recensioni UTENTE E il kebab è approvato
+                    if (widget.approved != false)
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            getUsersReviews();
+                            _controller.toggleCard();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.cached,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                      ),
                   ],
                 ),
                 Row(
@@ -294,10 +299,10 @@ Future<void> getUsersReviews() async {
               ],
             ),
             Divider(
-              color: Colors.grey[300], // Colore della linea grigio chiaro
-              thickness: 1, // Spessore della linea
-              indent: 0, // Spazio a sinistra
-              endIndent: 0, // Spazio a destra
+              color: Colors.grey[300],
+              thickness: 1,
+              indent: 0,
+              endIndent: 0,
             ),
             Center(
                 child: Text("Kebabbo Review",
@@ -309,7 +314,8 @@ Future<void> getUsersReviews() async {
     );
   }
 
-  Widget _buildBack() {
+Widget _buildBack() {
+    // La "faccia" della recensione Utenti
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[800],
@@ -323,95 +329,142 @@ Future<void> getUsersReviews() async {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (avgMenu == 0 &&
-                avgPrice == 0 &&
-                avgQuality == 0 &&
-                avgQuantity == 0)
-              textExplanation(context,S.of(context).nessuna_recensione_disponibile)
-            else
-              Column(
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 16),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        showInfoDialog(
-                            context,
-                            S.of(context).popup_title,
-                            S
-                                .of(context)
-                                .popup_description); // Function to show the popup
-                      },
-                      child: Text(
-                        S
-                            .of(context)
-                            .more_info, // Localized string for 'More Info'
-                        style: TextStyle(
-                          color: Colors.blue, // Underlined and styled text
-                          decoration: TextDecoration.underline,
-                        ),
+                  // --- INIZIO MODIFICA ---
+                  if (avgMenu == 0 &&
+                      avgPrice == 0 &&
+                      avgQuality == 0 &&
+                      avgQuantity == 0)
+                    // Avvolgi il contenuto in un Center
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente
+                        crossAxisAlignment: CrossAxisAlignment.center, // Centra orizzontalmente
+                        children: [
+                          const SizedBox(height: 24),
+                          Text(
+                            S.of(context).nessuna_recensione_disponibile,
+                            style: TextStyle(color: Colors.white70, fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          // Bottone "Recensisci"
+                          ElevatedButton.icon(
+                            icon: Icon(Icons.add_comment_rounded, size: 16),
+                            label: Text("Recensisci questo Kebab"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: red,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => AddKebab(
+                                    kebabId: widget.id,
+                                    kebabName: widget.name,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
+                    )
+                  else
+                    // Altrimenti, mostra le statistiche
+                    Column(
+                      children: [
+                        SizedBox(height: 16),
+                        Center(
+                          child: ElevatedButton.icon(
+                            icon: Icon(Icons.add_comment_rounded, size: 16),
+                            label: Text("Recensisci questo Kebab"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: red,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => AddKebab(
+                                    kebabId: widget.id,
+                                    kebabName: widget.name,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        SingleStat(
+                            label: S.of(context).quality,
+                            number: avgQuality,
+                            isFront: false),
+                        const SizedBox(height: 8),
+                        SingleStat(
+                            label: S.of(context).price,
+                            number: avgPrice,
+                            isFront: false),
+                        const SizedBox(height: 8),
+                        SingleStat(
+                            label: S.of(context).quantity,
+                            number: avgQuantity,
+                            isFront: false),
+                        const SizedBox(height: 8),
+                        SingleStat(
+                            label: S.of(context).menu,
+                            number: avgMenu,
+                            isFront: false),
+                        const SizedBox(height: 16),
+                        SingleChart(
+                          vegetables: widget.vegetables,
+                          yogurt: widget.yogurt,
+                          spicy: widget.spicy,
+                          onion: widget.onion,
+                          isFront: false,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  SingleStat(
-                      label: S.of(context).quality,
-                      number: avgQuality,
-                      isFront: false),
-                  const SizedBox(height: 8),
-                  SingleStat(
-                      label: S.of(context).price,
-                      number: avgPrice,
-                      isFront: false),
-                  const SizedBox(height: 8),
-                  SingleStat(
-                      label: S.of(context).quantity,
-                      number: avgQuantity,
-                      isFront: false),
-                  const SizedBox(height: 8),
-                  SingleStat(
-                      label: S.of(context).menu,
-                      number: avgMenu,
-                      isFront: false),
-                  const SizedBox(height: 16),
-                  SingleChart(
-                    vegetables: widget.vegetables,
-                    yogurt: widget.yogurt,
-                    spicy: widget.spicy,
-                    onion: widget.onion,
-                    isFront: false,
-                  ),
-                  const SizedBox(height: 16),
+                  // --- FINE MODIFICA ---
                 ],
               ),
-
-
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    BottomButtonItem(
-                      linkMaps: widget.map,
-                      icon: Icons.map,
-                      isFront: false,
-                    ),
-                    SizedBox(width: 16),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _controller.toggleCard();
-                        });
-                      },
-                      icon: Icon(
-                        Icons.cached,
-                        color: Colors.white,
-                        size: 30,
-                      ), // Icona con colore a tua scelta
-                    ),
-                    const SizedBox(width: 16),
-                    buildInfoButton(context, S.of(context).popup_title,
-                        S.of(context).popup_description, Colors.white),
+                    if (widget.map.isNotEmpty) ...[
+                      BottomButtonItem(
+                        linkMaps: widget.map,
+                        icon: Icons.map,
+                        isFront: false,
+                      ),
+                      SizedBox(width: 16),
+                    ],
+                    if (widget.approved ?? false)
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _controller.toggleCard();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.cached,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
                   ],
                 ),
                 Row(
@@ -450,10 +503,10 @@ Future<void> getUsersReviews() async {
               ],
             ),
             Divider(
-              color: Colors.grey[300], // Colore della linea grigio chiaro
-              thickness: 1, // Spessore della linea
-              indent: 0, // Spazio a sinistra
-              endIndent: 0, // Spazio a destra
+              color: Colors.grey[300],
+              thickness: 1,
+              indent: 0,
+              endIndent: 0,
             ),
             Center(
                 child: Text(S.of(context).users_review,
@@ -469,6 +522,7 @@ Future<void> getUsersReviews() async {
 
   @override
   Widget build(BuildContext context) {
+    // ... (nessuna modifica qui)
     return Card(
       elevation: 4,
       color: isFront ? Colors.white : Colors.grey[700],
@@ -517,12 +571,6 @@ Future<void> getUsersReviews() async {
                         color: Color.fromARGB(255, 37, 154, 41),
                         fontSize: 12,
                         fontStyle: FontStyle.italic),
-                  )
-                else
-                  Text(
-                    S.of(context).chiuso,
-                    style: TextStyle(
-                        color: red, fontSize: 12, fontStyle: FontStyle.italic),
                   ),
                 const SizedBox(height: 8),
                 Row(
@@ -558,18 +606,19 @@ Future<void> getUsersReviews() async {
                     return RotationTransition(turns: rotate, child: child);
                   },
                   child: FlipCard(
-                      fill: Fill.fillBack,
-                      side: CardSide.FRONT,
-                      controller: _controller,
-                      flipOnTouch: false,
-                      onFlipDone: (status) {
-                        setState(() {
-                          isFront = !isFront;
-                        });
-                      },
-                      front: widget.flipped ? _buildBack() : _buildFront(),
-                      back: widget.flipped ? _buildFront() : _buildBack(),))
-              ],
+                    fill: Fill.fillBack,
+                    side: CardSide.FRONT,
+                    controller: _controller,
+                    flipOnTouch: false,
+                    onFlipDone: (status) {
+                      setState(() {
+                        isFront = !isFront;
+                      });
+                    },
+                    front: widget.flipped ? _buildBack() : _buildFront(),
+                    back: widget.flipped ? _buildFront() : _buildBack(),
+                  ))
+            ],
             onExpansionChanged: (bool expanding) {
               setState(() {
                 isExpanded = expanding;

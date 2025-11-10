@@ -202,6 +202,7 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          if (widget.map.isNotEmpty)
                           BottomButtonItem(
                             linkMaps: widget.map,
                             icon: Icons.map,

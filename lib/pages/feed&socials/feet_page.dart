@@ -4,11 +4,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/list_items/feed_list_item.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
+import 'package:kebabbo_flutter/components/misc/user_item.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -18,65 +19,74 @@ class FeedPage extends StatefulWidget {
 }
 
 class FeedPageState extends State<FeedPage> {
+  // --- Variabili di Stato Unificate ---
   List<Map<String, dynamic>> feedList = [];
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
+  
+  // Variabili per la ricerca
+  List<Map<String, dynamic>> userList = [];
+  final TextEditingController searchController = TextEditingController();
+
+  // Variabili per la creazione post
+  final TextEditingController postController = TextEditingController();
   Uint8List? imageBytes;
   String? imagePath = "";
-  final TextEditingController postController = TextEditingController();
-  List<String> userList = [];
   List<String> userSuggestion = [];
-  bool showSuggestions = false;
   OverlayEntry? suggestionOverlay;
   String? selectedKebabId;
   String? selectedKebabName;
   List<Map<String, dynamic>> kebabbariList = [];
 
+  // --- NUOVA VARIABILE DI STATO ---
+  bool _showFriendsOnly = false; // Default: mostra tutti i post
+
   @override
   void initState() {
     super.initState();
-    _checkAuthAndFetchFeed();
+    _fetchFeed();
     fetchUserNames();
+    searchController.addListener(_onSearchTextChanged);
     postController.addListener(_onTextChanged);
   }
-    @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // Use S.of(context) here after dependencies are initialized
-    if (Supabase.instance.client.auth.currentSession == null && errorMessage == null) {
-      setState(() {
-        errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
-        isLoading = false;
-      });
-    }
-  }
-
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchTextChanged);
+    searchController.dispose();
     postController.removeListener(_onTextChanged);
     postController.dispose();
     suggestionOverlay?.remove();
     super.dispose();
   }
 
+  // --- Funzioni di Logica ---
+
+  void _onSearchTextChanged() {
+    final query = searchController.text.toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        searchResultList = feedList;
+      } else {
+        searchResultList = fuzzySearchAndSort(
+          userList,
+          query,
+          'username',
+          false,
+          false,
+        );
+      }
+    });
+  }
+
   Future<void> fetchUserNames() async {
     try {
       final PostgrestList response =
-          await supabase.from('profiles').select('username');
-
+          await supabase.from('profiles').select('id, username, avatar_url');
       if (mounted) {
-        List<Map<String, dynamic>> users =
-            List<Map<String, dynamic>>.from(response as List);
-
         setState(() {
-          userList = users
-              .map((user) => user['username'])
-              .where((username) => username != null) // Filtra i valori null
-              .map((username) => username.toString()) // Converte a stringa
-              .toList();
+          userList = List<Map<String, dynamic>>.from(response as List);
         });
       }
     } catch (error) {
@@ -88,32 +98,118 @@ class FeedPageState extends State<FeedPage> {
     }
   }
 
-// Function to fetch top 3 fuzzy matches or random users
-  List<String> getTopUserSuggestions(String query, List<String> userList) {
+  // --- FUNZIONE _fetchFeed MODIFICATA ---
+  Future<void> _fetchFeed() async {
+    // Inizia a caricare
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      final PostgrestList response;
+
+      if (userId == null) {
+        // --- Utente Anonimo ---
+        // Può vedere solo i post pubblici
+        setState(() => _showFriendsOnly = false); 
+        response = await supabase.rpc('get_recent_posts');
+      } else {
+        // --- Utente Loggato ---
+        if (_showFriendsOnly) {
+          // --- Logica "SOLO AMICI" (dalla vecchia FeedPage) ---
+          final profileResponse = await supabase
+              .from('profiles')
+              .select('followed_users')
+              .eq('id', userId)
+              .single();
+
+          final followedUsers = List<String>.from(profileResponse['followed_users'] ?? []);
+          followedUsers.add(userId); // Include i post dell'utente stesso
+
+          if (followedUsers.isEmpty) {
+            response = []; // Lista vuota
+          } else {
+            // Costruisci il filtro "OR"
+            final String orCondition = followedUsers.map((id) => 'user_id.eq.$id').join(',');
+            response = await supabase
+                .from('posts')
+                .select('*')
+                .or(orCondition)
+                .filter('comment', 'is', null)
+                .order('created_at', ascending: false);
+          }
+        } else {
+          // --- Logica "TUTTI I POST" (dalla vecchia SearchPage) ---
+          response = await supabase
+              .from('posts')
+              .select('*')
+              .filter('comment', 'is', null)
+              .neq('user_id', userId) // Esclude i post dell'utente
+              .order('created_at', ascending: false);
+        }
+      }
+
+      if (mounted) {
+        List<Map<String, dynamic>> posts =
+            List<Map<String, dynamic>>.from(response as List);
+        setState(() {
+          feedList = posts;
+          // Assicura che la lista visualizzata si aggiorni
+          // e rispetti il filtro di ricerca (se presente)
+          _onSearchTextChanged(); 
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          errorMessage = error.toString();
+        });
+      }
+    } finally {
+      // Smetti di caricare
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  // --- Funzioni da FeedPage (Logica di Creazione Post) ---
+  // (Nessuna modifica a getTopUserSuggestions, _showSuggestionOverlay, 
+  // _onTextChanged, _removeSuggestionOverlay, _postFeed, _pickImage, 
+  // _tagKebab, fetchKebabNames)
+  
+  List<String> getTopUserSuggestions(String query, List<Map<String, dynamic>> userListMap) {
+    final userListNames = userListMap
+        .map((user) => user['username'])
+        .where((username) => username != null)
+        .map((username) => username.toString())
+        .toList();
+
     if (query.isEmpty) {
-      // If no query, return 3 random users
-      userList.shuffle();
-      return userList.take(3).toList();
+      userListNames.shuffle();
+      return userListNames.take(3).toList();
     } else {
-      // Perform fuzzy search for top 3 matches
       List<Map<String, dynamic>> fuzzyResults = fuzzySearchAndSort(
-        userList.map((user) => {'username': user}).toList(),
+        userListMap,
         query,
         'username',
-        false, // showOnlyOpen
-        false, // showOnlyKebab
+        false, 
+        false,
       );
       return fuzzyResults
           .map((result) => result['username'].toString())
           .take(3)
-          .toList(); // Take top 3 matches sorted by closest score
+          .toList();
     }
   }
 
-// Show overlay with suggestions below the text field
   void _showSuggestionOverlay(BuildContext context) {
     if (suggestionOverlay != null) {
-      _removeSuggestionOverlay(); // Remove existing overlay before showing a new one
+      _removeSuggestionOverlay();
     }
 
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
@@ -124,14 +220,13 @@ class FeedPageState extends State<FeedPage> {
     suggestionOverlay = OverlayEntry(
       builder: (context) => Positioned(
         left: offset.dx,
-        top: offset.dy + 70, // Adjust position below the text field
+        top: offset.dy + 70,
         width: textFieldSize.width,
         child: Material(
           elevation: 4,
           borderRadius: BorderRadius.circular(8),
           child: SizedBox(
-            height: min(180,
-                200), // Height to fit up to 4 items, with each ListTile about 48px in height
+            height: min(180, 200),
             child: userSuggestion.isEmpty
                 ? Center(
                     child: Text(S.of(context).no_suggestions_available,
@@ -175,7 +270,6 @@ class FeedPageState extends State<FeedPage> {
     overlay.insert(suggestionOverlay!);
   }
 
-// Update suggestions when text changes
   void _onTextChanged() {
     final text = postController.text;
     if (text.contains('@')) {
@@ -185,7 +279,7 @@ class FeedPageState extends State<FeedPage> {
       setState(() {
         userSuggestion = getTopUserSuggestions(query, userList);
         if (userSuggestion.isNotEmpty) {
-          _showSuggestionOverlay(context); // Pass context
+          _showSuggestionOverlay(context);
         } else {
           _removeSuggestionOverlay();
         }
@@ -195,7 +289,6 @@ class FeedPageState extends State<FeedPage> {
     }
   }
 
-// Remove overlay
   void _removeSuggestionOverlay() {
     if (suggestionOverlay != null) {
       suggestionOverlay!.remove();
@@ -203,215 +296,146 @@ class FeedPageState extends State<FeedPage> {
     }
   }
 
-  Future<void> _checkAuthAndFetchFeed() async {
-    final session = Supabase.instance.client.auth.currentSession;
-    if (session != null) {
-      await _fetchFeed();
-    } else {
+  Future<void> _postFeed() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) {
       setState(() {
-        isLoading = false;
-        // Moved the S.of(context) call to didChangeDependencies()
-        // errorMessage = S.of(context).registrati_per_poter_visualizzare_il_feed;
-      });
-    }
-  }
-
-  Future<void> _fetchFeed() async {
-    try {
-      final profileResponse = await supabase
-          .from('profiles')
-          .select('followed_users')
-          .eq('id', supabase.auth.currentSession!.user.id)
-          .single();
-
-      final followedUsers =
-          List<String>.from(profileResponse['followed_users'] ?? []);
-
-      followedUsers.add(supabase.auth.currentSession!.user.id);
-
-      if (followedUsers.isNotEmpty) {
-        final String orCondition =
-            followedUsers.map((userId) => 'user_id.eq.$userId').join(',');
-
-        final PostgrestList response = await supabase
-            .from('posts')
-            .select('*')
-            .or(orCondition)
-            .filter('comment', 'is', null)
-            .order('created_at', ascending: false);
-
-        if (mounted) {
-          List<Map<String, dynamic>> posts =
-              List<Map<String, dynamic>>.from(response as List);
-          setState(() {
-            feedList = posts;
-            searchResultList = posts;
-            isLoading = false;
-          });
-        }
-      } else {
-        setState(() {
-          feedList = [];
-          searchResultList = [];
-          isLoading = false;
-        });
-      }
-    } catch (error) {
-      if (mounted) {
-        setState(() {
-          errorMessage = error.toString();
-          isLoading = false;
-        });
-      }
-    }
-  }
-Future<void> _postFeed() async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) {
-    setState(() {
-      errorMessage = S.of(context).devi_essere_autenticato_per_postare;
-    });
-    return;
-  }
-
-  final String text = postController.text.trim();
-  if (text.isEmpty) {
-    setState(() {
-      errorMessage = S.of(context).il_testo_non_puo_essere_vuoto;
-    });
-    return;
-  }
-
-  String? imageUrl;
-
-  if (imageBytes != null) {
-    final filePath = '${user.id}-${DateTime.now().millisecondsSinceEpoch}.png';
-    try {
-      await supabase.storage.from('posts').uploadBinary(
-            filePath,
-            imageBytes!,
-            fileOptions: const FileOptions(upsert: true),
-          );
-      imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
-    } catch (error) {
-      setState(() {
-        errorMessage = S.of(context).errore_nel_caricamento_dellimage + error.toString();
+        errorMessage = S.of(context).devi_essere_autenticato_per_postare;
       });
       return;
     }
-  }
+    final String text = postController.text.trim();
+    if (text.isEmpty) {
+      setState(() {
+        errorMessage = S.of(context).il_testo_non_puo_essere_vuoto;
+      });
+      return;
+    }
 
-  final Map<String, dynamic> postData = {
-    'text': text,
-    'user_id': user.id,
-    'created_at': DateTime.now().toIso8601String(),
-  };
+    String? imageUrl;
 
-  if (imageUrl != null) {
-    postData['image_url'] = imageUrl;
-  }
-  if (selectedKebabId != null) {
-    postData['kebab_tag_id'] = selectedKebabId;
-    postData['kebab_tag_name'] = selectedKebabName;
-  }
+    if (imageBytes != null) {
+      final filePath = '${user.id}-${DateTime.now().millisecondsSinceEpoch}.png';
+      try {
+        await supabase.storage.from('posts').uploadBinary(
+              filePath,
+              imageBytes!,
+              fileOptions: const FileOptions(upsert: true),
+            );
+        imageUrl = supabase.storage.from('posts').getPublicUrl(filePath);
+      } catch (error) {
+        setState(() {
+          errorMessage =
+              S.of(context).errore_nel_caricamento_dellimage + error.toString();
+        });
+        return;
+      }
+    }
 
-  try {
-    // Insert the post and retrieve the inserted row
-    final response = await supabase
-        .from('posts')
-        .insert(postData)
-        .select()
-        .single(); // Retrieve the inserted post
+    final Map<String, dynamic> postData = {
+      'text': text,
+      'user_id': user.id,
+      'created_at': DateTime.now().toIso8601String(),
+    };
 
-    // Clear input fields after post submission
-    postController.clear();
-    setState(() {
-      imageBytes = null;
-      imagePath = null;
-      selectedKebabId = null;
-      selectedKebabName = null;
-    });
+    if (imageUrl != null) {
+      postData['image_url'] = imageUrl;
+    }
+    if (selectedKebabId != null) {
+      postData['kebab_tag_id'] = selectedKebabId;
+      postData['kebab_tag_name'] = selectedKebabName;
+    }
 
-    // Get the ID of the new post
-    final int newPostId = response['id'];
+    try {
+      final response = await supabase
+          .from('posts')
+          .insert(postData)
+          .select()
+          .single();
 
-    // Add the new post to the feed list with the retrieved ID
-    setState(() {
-      feedList.insert(0, {...postData, 'id': newPostId}); // Add the new post to the top of the feed list
-    });
+      postController.clear();
+      setState(() {
+        imageBytes = null;
+        imagePath = null;
+        selectedKebabId = null;
+        selectedKebabName = null;
+      });
 
-    // Fetch post count and award medals
-    final postCountResponse = await supabase
-        .from('posts')
-        .select('id')
-        .eq('user_id', user.id)
+      final int newPostId = response['id'];
+      
+      feedList.insert(0, {...postData, 'id': newPostId});
+      _onSearchTextChanged(); 
+
+      final postCountResponse = await supabase
+          .from('posts')
+          .select('id')
+          .eq('user_id', user.id)
           .filter('comment', 'is', null)
           .count(CountOption.exact);
 
-    final postCount = postCountResponse.count;
+      final postCount = postCountResponse.count;
 
-    if (postCount > 0) {
-      final profileResponse = await supabase
-          .from('profiles')
-          .select('medals')
-          .eq('id', user.id)
-          .single();
+      if (postCount > 0) {
+        final profileResponse = await supabase
+            .from('profiles')
+            .select('medals')
+            .eq('id', user.id)
+            .single();
 
-      List<dynamic> medals = List.from(profileResponse['medals'] ?? []);
-      bool newMedal = false;
+        List<dynamic> medals = List.from(profileResponse['medals'] ?? []);
+        bool newMedal = false;
 
-      // Check and award medals
-      if (!medals.contains(5)) {
-        medals.add(5);
-        newMedal = true;
-      }
-      if (postCount > 4 && !medals.contains(6)) {
-        medals.add(6);
-        newMedal = true;
-      }
-      if (postCount > 9 && !medals.contains(7)) {
-        medals.add(7);
-        newMedal = true;
-      }
-      if (postCount > 49 && !medals.contains(8)) {
-        medals.add(8);
-        newMedal = true;
-      }
+        if (!medals.contains(5)) {
+          medals.add(5);
+          newMedal = true;
+        }
+        if (postCount > 4 && !medals.contains(6)) {
+          medals.add(6);
+          newMedal = true;
+        }
+        if (postCount > 9 && !medals.contains(7)) {
+          medals.add(7);
+          newMedal = true;
+        }
+        if (postCount > 49 && !medals.contains(8)) {
+          medals.add(8);
+          newMedal = true;
+        }
 
-      await supabase.from('profiles').update({'medals': medals}).eq('id', user.id);
+        await supabase.from('profiles').update({'medals': medals}).eq('id', user.id);
 
-      if (newMedal) {
-        showMedalDialog(context);
+        if (newMedal) {
+          showMedalDialog(context);
+        }
       }
+    } catch (error) {
+      setState(() {
+        errorMessage = error.toString();
+      });
     }
-  } catch (error) {
-    setState(() {
-      errorMessage = error.toString();
-    });
   }
-}
 
-Future<void> _pickImage() async {
-  final result = await FilePicker.platform.pickFiles(
-    type: FileType.image,
-    allowCompression: true,
-    allowMultiple: false,
-  );
+  Future<void> _pickImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowCompression: true,
+      allowMultiple: false,
+    );
 
-  if (result != null) {
-    Uint8List imageData = result.files.single.bytes!;
-    Uint8List? compressedImage = await ImageUtils.compressImage(
-        imageData, 400 * 1024, 1200, 1200); // Use the utility function
+    if (result != null) {
+      Uint8List imageData = result.files.single.bytes!;
+      Uint8List? compressedImage = await ImageUtils.compressImage(
+          imageData, 400 * 1024, 1200, 1200);
 
-    setState(() {
-      imageBytes = compressedImage;
-      imagePath = result.files.single.name;
-    });
+      setState(() {
+        imageBytes = compressedImage;
+        imagePath = result.files.single.name;
+      });
+    }
   }
-}
 
   Future<void> _tagKebab() async {
-    await fetchKebabNames(); // Popola la lista dei kebabbari
+    await fetchKebabNames();
 
     if (!mounted) return;
 
@@ -430,7 +454,7 @@ Future<void> _pickImage() async {
                   selectedKebabId = kebab['id'];
                   selectedKebabName = kebabName;
                 });
-                Navigator.pop(context); // Chiude il modal dopo la selezione
+                Navigator.pop(context);
               },
             );
           },
@@ -464,8 +488,12 @@ Future<void> _pickImage() async {
     }
   }
 
+  // --- Build Method Unificato ---
+
   @override
   Widget build(BuildContext context) {
+    final bool isLoggedIn = supabase.auth.currentUser != null;
+
     return Scaffold(
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -477,94 +505,184 @@ Future<void> _pickImage() async {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // --- Barra di Ricerca (MODIFICATA) ---
+                      // --- Barra di Ricerca (MODIFICATA) ---
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Row(
                           children: [
                             Expanded(
-                              child: TextField(
-                                controller: postController,
-                                maxLines: 1,
-                                minLines: 1,
-                                decoration: InputDecoration(
-                                  hintText: S.of(context).scrivi_un_post,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                child: TextField(
+                              controller: searchController,
+                              enabled: isLoggedIn,
+                              decoration: InputDecoration(
+                                hintText: isLoggedIn
+                                    ? S.of(context).cerca_utenti
+                                    : S.of(context).accedi_per_cercare,
+                                prefixIcon: Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                              ),
+                            )),
+                            
+                            // --- MODIFIED TOGGLE BUTTON ---
+                            if (isLoggedIn)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                // Replaced IconButton with a styled TextButton
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: _showFriendsOnly ? red : const Color.fromARGB(255, 202, 202, 202),
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: const Color.fromARGB(255, 77, 77, 77),
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
                                   ),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  suffixIcon: Row(
+                                  onPressed: () {
+                                    // Pulisci la ricerca quando cambi tipo di feed
+                                    searchController.clear(); 
+                                    // Cambia stato e ricarica i post
+                                    setState(() {
+                                      _showFriendsOnly = !_showFriendsOnly;
+                                    });
+                                    _fetchFeed();
+                                  },
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      IconButton(
-                                        onPressed: _tagKebab,
-                                        icon: (selectedKebabId != null)
-                                            ? const Icon(
-                                                Icons.place_rounded,
-                                                color: red,
-                                              )
-                                            : const Icon(Icons.place_rounded),
+                                      // Text ("All" or "Followed")
+                                      Text(
+                                        _showFriendsOnly ? "Followed" : "All",
+                                        style: TextStyle(
+                                          color: _showFriendsOnly ? Colors.white : Colors.black87,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
                                       ),
-                                      IconButton(
-                                        onPressed: _pickImage,
-                                        icon: (imagePath != null &&
-                                                imagePath!.isNotEmpty)
-                                            ? const Icon(Icons.photo,
-                                                color: red)
-                                            : const Icon(Icons.photo),
+                                      const SizedBox(width: 6),
+                                      // Icon (public or people)
+                                      Icon(
+                                        _showFriendsOnly ? Icons.people : Icons.public,
+                                        color: _showFriendsOnly ? Colors.white : Colors.black87,
+                                        size: 20,
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: red,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: IconButton(
-                                onPressed: _postFeed,
-                                icon: const Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                            // --- END MODIFIED TOGGLE ---
                           ],
                         ),
                       ),
+                      
+                      // --- Lista (Logica invariata) ---
                       Expanded(
-                        child: searchResultList.isNotEmpty
-                            ? ListView.builder(
-                                itemCount: searchResultList.length,
-                                itemBuilder: (context, index) {
-                                  final post = searchResultList[index];
-                                  return FeedListItem(
-                                    key: ValueKey(post['created_at']),
-                                    text: post['text'] ??
-                                        S.of(context).testo_non_disponibile,
-                                    createdAt: post['created_at'] ?? '',
-                                    userId: post['user_id'].toString(),
-                                    imageUrl: post['image_url'] ?? '',
-                                    postId: post['id'],
-                                    likeList: post['like'] ?? [],
-                                    commentNumber: post['comments_number'] ?? 0,
-                                    kebabTagId: post['kebab_tag_id'] ?? 0,
-                                    kebabName: post['kebab_tag_name'] ?? '',
-                                  );
-                                },
-                              )
-                            : Center(
-                                child: Text(
-                                    S.of(context).non_segui_ancora_nessuno),
-                              ),
+                        child: ListView.builder(
+                          itemCount: searchResultList.length,
+                          itemBuilder: (context, index) {
+                            final item = searchResultList[index];
+
+                            if (searchController.text.isEmpty) {
+                              // Se non c'è testo, visualizza i post
+                              return FeedListItem(
+                                text: item['text'] ??
+                                    S.of(context).testo_non_disponibile,
+                                createdAt: item['created_at'] ?? '',
+                                userId: item['user_id'].toString(),
+                                imageUrl: item['image_url'] ?? '',
+                                postId: item['id'] ?? '',
+                                likeList: item['like'] ?? [],
+                                commentNumber: item['comments_number'] ?? 0,
+                                kebabTagId: item['kebab_tag_id'] ?? 0,
+                                kebabName: item['kebab_tag_name'] ?? '',
+                              );
+                            } else {
+                              // Se c'è testo, visualizza gli utenti
+                              return UserItem(
+                                  userId: item['id'] ?? "",
+                                  username:
+                                      item["username"] ?? S.of(context).anonimo,
+                                  avatarUrl: item["avatar_url"] ?? "");
+                            }
+                          },
+                        ),
                       ),
+
+                      // --- Barra Creazione Post (Logica invariata) ---
+                      if (isLoggedIn)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: postController,
+                                  maxLines: 1,
+                                  minLines: 1,
+                                  decoration: InputDecoration(
+                                    hintText: S.of(context).scrivi_un_post,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
+                                    suffixIcon: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          onPressed: _tagKebab,
+                                          icon: (selectedKebabId != null)
+                                              ? const Icon(
+                                                  Icons.place_rounded,
+                                                  color: red,
+                                                )
+                                              : const Icon(Icons.place_rounded),
+                                        ),
+                                        IconButton(
+                                          onPressed: _pickImage,
+                                          icon: (imagePath != null &&
+                                                  imagePath!.isNotEmpty)
+                                              ? const Icon(Icons.photo,
+                                                  color: red)
+                                              : const Icon(Icons.photo),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: red,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: IconButton(
+                                  onPressed: _postFeed,
+                                  icon: const Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),
