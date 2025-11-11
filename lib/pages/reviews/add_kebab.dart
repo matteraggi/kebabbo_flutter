@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
 // Importa la tua funzione di fuzzy search
@@ -23,7 +24,6 @@ class _AddKebabState extends State<AddKebab> {
 
   // Controller per i campi di testo
   final TextEditingController _nameController = TextEditingController();
-  // MODIFICA: Questo ora è il testo della recensione
   final TextEditingController _reviewTextController = TextEditingController();
 
   // Lista di tutti i kebab per l'autocomplete
@@ -51,7 +51,6 @@ class _AddKebabState extends State<AddKebab> {
     super.initState();
     _fetchAllKebabs();
 
-    // --- AGGIUNGI QUESTA LOGICA ---
     // Pre-compila il form se i dati sono stati passati
     if (widget.kebabId != null && widget.kebabName != null) {
       _nameController.text = widget.kebabName!;
@@ -98,7 +97,6 @@ class _AddKebabState extends State<AddKebab> {
         _selectedKebab!['name'] == _nameController.text) {
       // Caso 1: L'utente ha selezionato un kebab esistente
       setState(() => _loading = true);
-      // MODIFICA: Converte l'ID (int) in String
       await _addReviewToDatabase(_selectedKebab!['id'].toString());
       setState(() => _loading = false);
     } else {
@@ -188,7 +186,6 @@ class _AddKebabState extends State<AddKebab> {
           .select()
           .single();
 
-      // MODIFICA: Converte il nuovo ID (int) in String
       final newKebabId = response['id'].toString();
 
       // Aggiungi la recensione per il nuovo kebab
@@ -212,9 +209,9 @@ class _AddKebabState extends State<AddKebab> {
       if (userId == null) throw Exception('Utente non autenticato');
 
       await supabase.from('reviews').insert({
-        'kebabber_id': kebabId, // Ora è una stringa (o uuid), corretto
+        'kebabber_id': kebabId,
         'user_id': userId,
-        'description': _reviewTextController.text.trim(), // Aggiunto il testo
+        'description': _reviewTextController.text.trim(),
         'quality': _quality,
         'price': _price,
         'quantity': _dimension,
@@ -229,13 +226,10 @@ class _AddKebabState extends State<AddKebab> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Recensione aggiunta con successo!'),
-            backgroundColor: Colors.green,
-          ),
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ThankYouPage()),
         );
-        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
@@ -248,7 +242,6 @@ class _AddKebabState extends State<AddKebab> {
       }
     }
   }
-
   // --- Widget Builders ---
 
   // Autocomplete
@@ -374,12 +367,11 @@ class _AddKebabState extends State<AddKebab> {
       title: Text(label),
       value: value,
       onChanged: onChanged,
-      activeColor: main.red,
-      activeTrackColor: main.red.withOpacity(0.5),
+      activeThumbColor: main.red,
+      activeTrackColor: main.red.withValues(alpha: 0.5),
     );
   }
 
-  // MODIFICA: Aggiornato per mostrare .5
   Widget _buildSlider(
     String label,
     double value,
@@ -440,7 +432,6 @@ class _AddKebabState extends State<AddKebab> {
                     _buildNameAutocomplete(),
                     const SizedBox(height: 8),
 
-                    // MODIFICA: Il campo recensione è stato spostato qui
                     _buildTextField(
                       label: 'La tua recensione (opzionale)',
                       controller: _reviewTextController,
@@ -550,8 +541,7 @@ class _AddKebabState extends State<AddKebab> {
                     ),
                     const SizedBox(height: 24),
 
-                    // --- Slider (Sempre visibili) ---
-                    // MODIFICA: divisions 4 -> 8
+                    // Slider (Sempre visibili)
                     _buildSlider('Qualità', _quality, 1, 5, 8,
                         (val) => setState(() => _quality = val)),
                     _buildSlider('Prezzo', _price, 1, 5, 8,

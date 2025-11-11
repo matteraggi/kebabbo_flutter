@@ -32,19 +32,18 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
       if (response.isNotEmpty) {
         final List<int> tcgIds = List<int>.from(
             response[0]['tcg']); // Get list of ids from "tcg" column
-        print('tcgIds: $tcgIds');
         if (tcgIds.isNotEmpty) {
           // Fetch the names from "kebab" table where the "id" is in the list of tcgIds
           final kebabResponse = await supabase
               .from('kebab')
               .select('name')
               .filter('id', 'in', tcgIds);
-          print('kebabResponse: $kebabResponse');
           List<String> kebabList=kebabResponse.map<String>((kebabs) {
               final String kebabberId =
                   kebabs['name'].toLowerCase().replaceAll(' ', '-');
               return 'assets/kebab-card/$kebabberId.png';}
             ).toList();
+            if (!mounted) return;
             for (var item in kebabList) {
               await precacheImage(AssetImage('assets/kebab-card/$item.png'), context);
             }
@@ -54,7 +53,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
         }
       }
     } catch (e) {
-      print('Unexpected error: $e');
+      debugPrint('Unexpected error: $e');
     }
     finally {
       setState(() {

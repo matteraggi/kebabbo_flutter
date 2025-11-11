@@ -101,6 +101,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
       setState(() {
         showCloud = false;
       });
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Non ci sono altri kebab disponibili da consigliare."),

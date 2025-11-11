@@ -26,11 +26,11 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
       await Supabase.instance.client.auth.updateUser(
         UserAttributes(password: _newPasswordController.text.trim()),
       );
-
+      if (!mounted) return;
       context.showSnackBar(S.of(context).password_reset_success);
     } catch (e) {
       context.showSnackBar('Failed to reset password: ${e.toString()}', isError: true);
-      print(e.toString());
+      debugPrint(e.toString());
     } finally {
       setState(() => _isLoading = false);
     }

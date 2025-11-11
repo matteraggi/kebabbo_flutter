@@ -161,6 +161,7 @@ Future<void> _loadUserPosts() async {
         _seguitiCount = _followed.length; // Aggiorna il numero di seguiti
       });
     } catch (error) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context).failed_to_update_follow_status)),
       );

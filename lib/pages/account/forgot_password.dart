@@ -38,11 +38,13 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
         Navigator.of(context).pop(); // Go back after success
       }
     } on AuthException catch (error) {
+      debugPrint('Error: ${error.message}');
+      if (!mounted) return;
       context.showSnackBar(error.message, isError: true);
-      print('Error: ${error.message}');
     } catch (error) {
+      debugPrint('Error: $error');
+      if (!mounted) return;
       context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
-      print('Error: $error');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

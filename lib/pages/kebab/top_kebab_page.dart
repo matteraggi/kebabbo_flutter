@@ -104,7 +104,6 @@ class TopKebabPageState extends State<TopKebabPage> {
               .where((kebab) =>
                   kebab['user_reviewed'] == true && kebab['approved'] != false)
               .toList();
-          print(kebabs);
         }
 
         // Sort the kebabs using the utility function
@@ -155,7 +154,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                   searchResultList; // Salva la display list filtrata
               isLoading = false;
 
-              // AGGIORNAMENTO: Se troviamo un kebab vicino, salviamo il suo ID
+              // Se troviamo un kebab vicino, salviamo il suo ID
               if (closestKebab != null && !_hasAutoScrolled) {
                 _expandedKebabId = closestKebab['id'].toString();
               }
@@ -190,7 +189,6 @@ class TopKebabPageState extends State<TopKebabPage> {
       const double itemHeight = 180.0; // L'altezza dell'elemento CHIUSO
       final topOfItemOffset = index * itemHeight;
 
-      // LA MODIFICA È QUI:
       // Aggiungiamo un "margine di sicurezza" in alto per dare spazio all'espansione.
       // Puoi modificare questo valore per trovare quello perfetto per il tuo layout.
       const double topPadding = 430.0;
@@ -200,7 +198,6 @@ class TopKebabPageState extends State<TopKebabPage> {
         0.0,
         _scrollController.position.maxScrollExtent,
       );
-      print(targetOffset);
       // Anima lo scroll fino al nuovo offset calcolato
       _scrollController.animateTo(
         targetOffset,
@@ -254,7 +251,7 @@ class TopKebabPageState extends State<TopKebabPage> {
 
       // Log del nuovo stato
     } else {
-      print("Kebab con id $kebabId non trovato in dashList.");
+      debugPrint("Kebab con id $kebabId non trovato in dashList.");
     }
   }
 

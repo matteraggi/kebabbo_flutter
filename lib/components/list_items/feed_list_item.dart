@@ -108,7 +108,7 @@ Future<void> _fetchUserProfile(String userId) async {
         isLoading = false;
       });
     }
-    print('Errore nel recupero del profilo: $error');
+    debugPrint('Errore nel recupero del profilo: $error');
   }
 }
 
@@ -124,7 +124,7 @@ Future<void> _fetchUserProfile(String userId) async {
         });
       }
     } catch (error) {
-      print('Errore nel controllo dei like: $error');
+      debugPrint('Errore nel controllo dei like: $error');
     }
   }
 
@@ -156,7 +156,7 @@ Future<void> _fetchUserProfile(String userId) async {
         hasLiked = !hasLiked;
       });
     } catch (error) {
-      print('Errore durante l\'aggiornamento dei like: $error');
+      debugPrint('Errore durante l\'aggiornamento dei like: $error');
     }
   }
 
@@ -203,7 +203,7 @@ Future<void> _fetchUserProfile(String userId) async {
       // Resetta il controller del commento
       commentController.clear();
     } catch (error) {
-      print("Errore durante la pubblicazione del commento: $error");
+      debugPrint("Errore durante la pubblicazione del commento: $error");
     }
   }
 
@@ -299,7 +299,7 @@ Future<void> _fetchUserProfile(String userId) async {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         await _postComment();
-                        if (mounted) {
+                        if (!context.mounted) return;
                           Navigator.pop(context);
 
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -308,7 +308,6 @@ Future<void> _fetchUserProfile(String userId) async {
                                     .of(context)
                                     .il_commento_e_stato_aggiunto_con_successo)),
                           );
-                        }
                       },
                     ),
                   ],
@@ -352,7 +351,7 @@ Future<void> _fetchUserProfile(String userId) async {
 
       return List<Map<String, dynamic>>.from(comments);
     } catch (error) {
-      print('Errore nel recupero dei commenti: $error');
+      debugPrint('Errore nel recupero dei commenti: $error');
       return []; // Restituisci una lista vuota in caso di errore
     }
   }
@@ -410,6 +409,8 @@ Future<void> _fetchUserProfile(String userId) async {
               }
               final userId = await _fetchUserIdByUsername(tagText);
               if (userId != null) {
+                
+                if (!mounted) return;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -419,11 +420,13 @@ Future<void> _fetchUserProfile(String userId) async {
                   ),
                 );
               } else {
+                if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(S.of(context).user_not_found)),
                 );
               }
             } catch (e) {
+              if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(S.of(context).an_error_occurred)),
               );

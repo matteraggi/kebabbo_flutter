@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image/image.dart' as img;
@@ -225,7 +226,7 @@ Future<Map<String, int>> calculateAvailableKebabsPerDistance(
 
     return kebabsInRange; // Return available kebab counts for each range
   } catch (error) {
-    print('Error calculating kebab distance: $error');
+    debugPrint('Error calculating kebab distance: $error');
     return {'200m': 0, '500m': 0, '1km': 0, '10km': 0, 'unlimited': 0};
   }
 }

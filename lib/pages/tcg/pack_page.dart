@@ -122,7 +122,6 @@ class PackPageState extends State<PackPage> {
         'last_pack': DateTime.now().toUtc().toIso8601String(),
       }).eq('id', userId);
 
-      print('Added kebab ID $foundKebabId to user $userId');
       String imageName = kebabDisplayName.toLowerCase().replaceAll(' ', '-');
 
       // Precache the image before starting the animation
@@ -139,8 +138,8 @@ class PackPageState extends State<PackPage> {
       }
 
     } catch (e, stacktrace) {
-      print('Error opening pack: $e');
-      print('Stacktrace: $stacktrace');
+      debugPrint('Error opening pack: $e');
+      debugPrint('Stacktrace: $stacktrace');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('An error occurred: ${e.toString()}')), // Provide a user-friendly error

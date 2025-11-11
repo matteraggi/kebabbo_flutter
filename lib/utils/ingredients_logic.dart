@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -70,7 +71,7 @@ Future<Map<String, dynamic>?> buildKebab(Map<String, int> ingredientAmounts,
 
     return null;
   } catch (error) {
-    print('Error building kebab: $error');
+    debugPrint('Error building kebab: $error');
     return null;
   }
 }

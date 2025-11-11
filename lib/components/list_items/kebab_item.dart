@@ -7,7 +7,7 @@ import 'package:kebabbo_flutter/components/list_items/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
-import 'package:kebabbo_flutter/pages/kebab/add_kebab.dart'; // <-- 1. Import Aggiunto
+import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart'; // <-- 1. Import Aggiunto
 
 class KebabListItem extends StatefulWidget {
   final String id;
@@ -134,7 +134,7 @@ class KebabListItemState extends State<KebabListItem> {
         setState(() {});
       }
     } catch (e) {
-      print("Errore durante il recupero delle recensioni: $e");
+      debugPrint("Errore durante il recupero delle recensioni: $e");
     }
   }
 
@@ -333,7 +333,6 @@ Widget _buildBack() {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- INIZIO MODIFICA ---
                   if (avgMenu == 0 &&
                       avgPrice == 0 &&
                       avgQuality == 0 &&
@@ -435,7 +434,6 @@ Widget _buildBack() {
                         const SizedBox(height: 16),
                       ],
                     ),
-                  // --- FINE MODIFICA ---
                 ],
               ),
             ),

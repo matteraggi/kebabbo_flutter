@@ -41,11 +41,14 @@ class SignUpPageState extends State<SignUpPage> {
         context.showSnackBar(S.of(context).check_your_email_for_a_verification_link);
         Navigator.of(context).pop(); // Go back after sign-up
       } else {
+        if (!mounted) return;
         context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
       }
     } on AuthException catch (error) {
+      if (!mounted) return;
       context.showSnackBar(error.message, isError: true);
     } catch (error) {
+      if (!mounted) return;
       context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -105,7 +108,7 @@ class SignUpPageState extends State<SignUpPage> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
+                      color: Colors.grey.withValues(alpha: 0.3),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),

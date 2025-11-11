@@ -102,10 +102,10 @@ class MyScenerState extends State<MyScener> with SingleTickerProviderStateMixin 
       var c = addCard(vo); // The method below handles tap for each card
       var mt2 = Matrix4.identity();
       mt2.setEntry(3, 2, 0.001); // Perspective effect
-      mt2.translate(vo.x, vo.y, -vo.z);
+      mt2.translateByDouble(vo.x, vo.y, -vo.z, 1.0);
 
       double scale = 1 + (vo.z / radio) * 0.5;
-      mt2.scale(scale, scale); // Scaling for perspective
+      mt2.scaleByDouble(scale, scale, 1.0, 1.0); // Scaling for perspective
 
       c = Transform(
         alignment: Alignment.center,

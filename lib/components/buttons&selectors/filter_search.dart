@@ -61,9 +61,7 @@ class _FilterSearchState extends State<FilterSearch> {
   }
 @override
   Widget build(BuildContext context) {
-    // 1. REMOVE FractionallySizedBox wrapper
     return Column(
-      // 2. ADD mainAxisSize: MainAxisSize.min
       mainAxisSize: MainAxisSize.min,
       children: [
         // --- Handle per la sheet ---
@@ -400,9 +398,9 @@ class _FilterSearchState extends State<FilterSearch> {
                           SliderTheme(
                             data: SliderTheme.of(context).copyWith(
                               activeTrackColor: red,
-                              inactiveTrackColor: Colors.red.withOpacity(0.2),
+                              inactiveTrackColor: Colors.red.withValues(alpha: 0.2),
                               thumbColor: red,
-                              overlayColor: red.withOpacity(0.1),
+                              overlayColor: red.withValues(alpha: 0.1),
                               trackHeight: 6,
                               thumbShape: const RoundSliderThumbShape(
                                   enabledThumbRadius: 10),
@@ -441,10 +439,8 @@ class _FilterSearchState extends State<FilterSearch> {
                 ),
         ),
 
-        // 3. REMOVE the Spacer
         // const Spacer(), 
 
-        // 4. ADD a SizedBox for padding
         const SizedBox(height: 24),
 
         // --- Pulsante Chiudi ---

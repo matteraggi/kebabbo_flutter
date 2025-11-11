@@ -8,7 +8,6 @@ import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
-import 'package:kebabbo_flutter/pages/reviews/review_page.dart'; // Import ReviewPage
 import 'package:kebabbo_flutter/pages/feed&socials/games_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +31,7 @@ const firebaseKey = String.fromEnvironment('FIREBASE_KEY');
 
 Future<void> main() async {
   if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
-    print('⚠️ ATTENZIONE: variabili SUPABASE mancanti nel file .env');
+    debugPrint('⚠️ ATTENZIONE: variabili SUPABASE mancanti nel file .env');
   }
 
   await Supabase.initialize(
@@ -40,14 +39,11 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
   );
 
-  String? reviewHash;
   String? otherPaths;
 
   // Handle deep links based on URL path
   if (Uri.base.pathSegments.isNotEmpty) {
-    if (Uri.base.pathSegments[0] == 'reviews') {
-      reviewHash = Uri.base.pathSegments[1];
-    } else if (Uri.base.pathSegments[0] == 'privacy-policy') {
+    if (Uri.base.pathSegments[0] == 'privacy-policy') {
       otherPaths = "privacy-policy";
     } else if (Uri.base.pathSegments[0] == 'reset-password') {
       otherPaths = "reset-password";
@@ -76,16 +72,15 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  runApp(MyApp(reviewHash: reviewHash, otherPaths: otherPaths));
+  runApp(MyApp(otherPaths: otherPaths));
 }
 
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
-  final String? reviewHash;
   final String? otherPaths;
 
-  const MyApp({super.key, this.reviewHash, this.otherPaths});
+  const MyApp({super.key, this.otherPaths});
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +123,6 @@ class MyApp extends StatelessWidget {
         );
       },
       home: MyHomePage(
-        reviewHash: reviewHash,
         otherPaths: otherPaths,
       ), // Set MyHomePage as the home
     );
@@ -149,17 +143,15 @@ extension ContextExtension on BuildContext {
 }
 
 class MyHomePage extends StatefulWidget {
-  final String? reviewHash;
   final String? otherPaths;
 
-  const MyHomePage({super.key, this.reviewHash, this.otherPaths});
+  const MyHomePage({super.key, this.otherPaths});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String? reviewHash; // Now a mutable state variable
   String? otherPaths; // Now a mutable state variable
 
   var selectedIndex = 2; // Home page by default
@@ -168,14 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
   late Stream<Position> _positionStream;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
-  final GlobalKey<ReviewPageState> _reviewsPageKey =
-      GlobalKey<ReviewPageState>();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
-    reviewHash = widget.reviewHash;
     otherPaths = widget.otherPaths;
     _checkFirstTimeOpen();
     _checkIfAppInstalled();
@@ -214,7 +203,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _getLocation() async {
     try {
-      // ADD THIS
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         // If service is disabled, set position to null and show a message.
@@ -242,7 +230,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       // If we have permission, get the location
-      print('Getting current location...');
       Position position = await Geolocator.getCurrentPosition();
       _currentPositionNotifier.value = position;
 
@@ -250,11 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (selectedIndex == 3 && _mapPageKey.currentState != null) {
         _mapPageKey.currentState!.updatePosition(position);
       }
-      if (_reviewsPageKey.currentState != null) {
-        _reviewsPageKey.currentState!.updatePosition(position);
-      }
     } catch (e) {
-      // ADD THIS CATCH BLOCK
       // If any error occurs (denied permission, etc.), set position to null
       // and show the error message.
       _currentPositionNotifier.value = null;
@@ -263,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
           SnackBar(content: Text(e.toString())),
         );
       }
-      print("Error getting location: $e");
+      debugPrint("Error getting location: $e");
     }
   }
 
@@ -278,6 +261,7 @@ class _MyHomePageState extends State<MyHomePage> {
         await launchUrl(Uri.parse(appUrl));
       } else {
         //App is not installed
+        if (!mounted) return;
         showAppInstallDialog(context);
       }
     }
@@ -287,14 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     Widget page;
 
-    if (reviewHash != null) {
-      // Handle Review Page
-      page = ReviewPage(
-        hash: reviewHash!,
-        initialPosition: _currentPositionNotifier.value,
-        key: _reviewsPageKey,
-      );
-    } else if (otherPaths != null) {
+    if (otherPaths != null) {
       // Check if otherPaths is NOT null BEFORE comparing it
       if (otherPaths == "privacy-policy") {
         // Handle Privacy Policy Page
@@ -312,7 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      body: mounted ? page : Container(), // Wrap the page,
+      body: mounted ? page : Container(), // Wraps the page,
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: true,
         showUnselectedLabels: false,
@@ -320,7 +297,6 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: (index) {
           setState(() {
             selectedIndex = index;
-            reviewHash = null; // Reset reviewHash so the nav bar takes control
             otherPaths = null; // Reset policy
           });
         },

@@ -60,7 +60,7 @@ class SeguitiPageState extends State<SeguitiPage> {
       setState(() {
         isLoading = false;
       });
-      print('Errore nel recupero dei seguiti: $error');
+      debugPrint('Errore nel recupero dei seguiti: $error');
     }
   }
 

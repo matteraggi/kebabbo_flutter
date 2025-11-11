@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
-import 'package:kebabbo_flutter/pages/kebab/add_kebab.dart';
+import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
 import 'package:kebabbo_flutter/pages/tcg/carousel.dart';
 import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
@@ -22,7 +22,6 @@ class _GamesPageState extends State<GamesPage> {
   bool _loading = true;
   List<int> _ingredients = [5, 5, 5, 5, 5];
   DateTime _lastPack = DateTime.now().toUtc();
-  bool _isTimerActive = false;
   final supabase = Supabase.instance.client;
   String? _id;
 
@@ -44,7 +43,6 @@ class _GamesPageState extends State<GamesPage> {
       if (profileData != null && mounted) {
         setState(() {
           _lastPack = DateTime.parse(profileData['last_pack']).toUtc();
-          _isTimerActive = _calculateIsTimerActive(_lastPack);
           _ingredients = List<int>.from(profileData['ingredients']);
           _loading = false;
         });
@@ -52,15 +50,9 @@ class _GamesPageState extends State<GamesPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _loading = false);
-        print("Error loading game data: $e");
+        debugPrint("Error loading game data: $e");
       }
     }
-  }
-
-  bool _calculateIsTimerActive(DateTime lastPackTime) {
-    final now = DateTime.now().toUtc();
-    final difference = now.difference(lastPackTime);
-    return difference.inSeconds < 12 * 60 * 60;
   }
 
   String _formatDuration(Duration duration) {
@@ -79,8 +71,6 @@ class _GamesPageState extends State<GamesPage> {
     required VoidCallback? onTap,
     Widget? trailing,
   }) {
-    // --- MODIFICA 1 ---
-    // Rimossa l'opacità, ora il bottone è disabilitato solo dal GestureDetector
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -91,7 +81,7 @@ class _GamesPageState extends State<GamesPage> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: onTap != null ? color.withOpacity(0.3) : Colors.black12,
+              color: onTap != null ? color.withValues(alpha: 0.3) : Colors.black12,
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -120,7 +110,7 @@ class _GamesPageState extends State<GamesPage> {
             Text(
               subtitle,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 fontSize: 14,
               ),
             ),
@@ -151,8 +141,6 @@ class _GamesPageState extends State<GamesPage> {
           }
         }
         
-        // --- MODIFICA 1 ---
-        // Il colore viene deciso qui, il builder non applicherà più l'opacità
         final bool isButtonEnabled = !isTimerActive && supabase.auth.currentUser != null;
         final Color buttonColor = isTimerActive ? const Color.fromARGB(255, 127, 127, 127) : const Color.fromARGB(255, 44, 157, 237);
 
@@ -177,7 +165,7 @@ class _GamesPageState extends State<GamesPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -225,12 +213,10 @@ class _GamesPageState extends State<GamesPage> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          // --- MODIFICA 2: Aggiunto SingleChildScrollView ---
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // --- Sezione bottoni ---
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -306,8 +292,6 @@ class _GamesPageState extends State<GamesPage> {
                     ),
                   ),
                   const Divider(height: 1, indent: 20, endIndent: 20),
-                  
-                  // --- MODIFICA 2: Rimossa Expanded, Aggiunto SizedBox ---
                   SizedBox(
                     height: 250, // Altezza fissa per la griglia
                     child: MedalPage(userId: _id!),

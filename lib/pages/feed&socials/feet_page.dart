@@ -98,7 +98,6 @@ class FeedPageState extends State<FeedPage> {
     }
   }
 
-  // --- FUNZIONE _fetchFeed MODIFICATA ---
   Future<void> _fetchFeed() async {
     // Inizia a caricare
     setState(() {
@@ -404,7 +403,7 @@ class FeedPageState extends State<FeedPage> {
 
         await supabase.from('profiles').update({'medals': medals}).eq('id', user.id);
 
-        if (newMedal) {
+        if (newMedal && mounted){
           showMedalDialog(context);
         }
       }
@@ -505,8 +504,6 @@ class FeedPageState extends State<FeedPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // --- Barra di Ricerca (MODIFICATA) ---
-                      // --- Barra di Ricerca (MODIFICATA) ---
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Row(
@@ -531,8 +528,6 @@ class FeedPageState extends State<FeedPage> {
                                 ),
                               ),
                             )),
-                            
-                            // --- MODIFIED TOGGLE BUTTON ---
                             if (isLoggedIn)
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
@@ -581,12 +576,11 @@ class FeedPageState extends State<FeedPage> {
                                   ),
                                 ),
                               ),
-                            // --- END MODIFIED TOGGLE ---
                           ],
                         ),
                       ),
                       
-                      // --- Lista (Logica invariata) ---
+                      // Lista
                       Expanded(
                         child: ListView.builder(
                           itemCount: searchResultList.length,

@@ -51,8 +51,10 @@ class LoginPageState extends State<LoginPage> {
         });
       }
     } on AuthException catch (error) {
+      if (!mounted) return;
       context.showSnackBar(error.message, isError: true);
     } catch (error) {
+      if (!mounted) return;
       context.showSnackBar(S.of(context).unexpected_error_occurred,
           isError: true);
     } finally {

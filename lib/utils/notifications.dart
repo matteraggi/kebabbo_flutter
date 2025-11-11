@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  debugPrint("Handling a background message: ${message.messageId}");
 }
 
 
@@ -15,9 +15,9 @@ void requestNotificationPermissions(FirebaseMessaging messaging) async {
   );
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    print('User granted permission');
+    debugPrint('User granted permission');
   } else {
-    print('User declined or has not accepted permission');
+    debugPrint('User declined or has not accepted permission');
   }
 }
 
@@ -51,7 +51,7 @@ void requestNotificationPermissions(FirebaseMessaging messaging) async {
 
   // Foreground notification listener
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Received a foreground message: ${message.notification?.title}');
+    debugPrint('Received a foreground message: ${message.notification?.title}');
 
     // Display a notification using flutter_local_notifications
     RemoteNotification? notification = message.notification;
@@ -75,13 +75,11 @@ void requestNotificationPermissions(FirebaseMessaging messaging) async {
 
   // App opened from a background message (when the user taps on the notification)
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print('App opened by notification: ${message.notification?.title}');
-
-    // ... other navigation logic based on message.data
+    debugPrint('App opened by notification: ${message.notification?.title}');
   });
   }
 
 void subscribeToGlobalTopic(FirebaseMessaging messaging) async {
   await messaging.subscribeToTopic('global');
-  print('Subscribed to global topic');
+  debugPrint('Subscribed to global topic');
 }

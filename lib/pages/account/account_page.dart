@@ -10,17 +10,14 @@ import 'package:kebabbo_flutter/pages/feed&socials/followers_page.dart';
 import 'package:kebabbo_flutter/pages/misc/about_page.dart';
 import 'package:kebabbo_flutter/pages/misc/medal_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/seguiti_page.dart';
-// import 'package:kebabbo_flutter/pages/account/tools_page.dart'; // No longer needed
 import 'package:kebabbo_flutter/pages/feed&socials/user_posts_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/user_reviews_page.dart';
-// import 'package:kebabbo_flutter/pages/tcg/carousel.dart'; // No longer needed
-// import 'package:kebabbo_flutter/pages/tcg/pack_page.dart'; // No longer needed
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:kebabbo_flutter/pages/kebab/add_kebab.dart';
+import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
 
 class AccountPage extends StatefulWidget {
   final Position? currentPosition;
@@ -36,15 +33,12 @@ class _AccountPageState extends State<AccountPage> {
   String? _avatarUrl;
   int _postCount = 0;
   bool _loading = true;
-  List<int> _ingredients = [5, 5, 5, 5, 5];
   final TextEditingController _usernameController = TextEditingController();
   int _followersCount = 0;
   int _seguitiCount = 0;
   Map<String, dynamic>? _favoriteKebab;
   final String privacyPolicyUrl = "https://kebabbo.top/privacy-policy";
   bool _isAvatarLoading = false;
-  DateTime _lastPack = DateTime.now().toUtc();
-  // bool _isTimerActive = false; // No longer needed
 
   @override
   void initState() {
@@ -92,9 +86,6 @@ class _AccountPageState extends State<AccountPage> {
     setState(() {
       _username = profileData['username'];
       _avatarUrl = profileData['avatarUrl'];
-      _lastPack = DateTime.parse(profileData['last_pack']).toUtc();
-      // _isTimerActive = _calculateIsTimerActive(_lastPack); // No longer needed
-      _ingredients = List<int>.from(profileData['ingredients']);
       _seguitiCount = (profileData['seguitiCount'] != null)
           ? profileData['seguitiCount'].length
           : 0;
@@ -284,10 +275,11 @@ class _AccountPageState extends State<AccountPage> {
 
         await _updateProfile();
 
+        if (!mounted) return;
         Navigator.of(context).pop(); // Chiudi il dialog
       } catch (error) {
         if (mounted) {
-          print("Error uploading avatar: $error");
+          debugPrint("Error uploading avatar: $error");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).failed_to_upload_avatar)),
           );
@@ -323,24 +315,22 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 Future<void> _openFavoriteKebabSelection() async {
-    // ... (this function remains unchanged)
     List<Map<String, dynamic>> kebabItems = await fetchKebab();
 
+    if (!mounted) return;
     showModalBottomSheet(
       backgroundColor: yellow,
       context: context,
       builder: (BuildContext context) {
-        // --- INIZIO MODIFICA ---
-        return Column( // 1. Avvolto in un Column
+        return Column( 
           children: [
-            // 2. Aggiunto il "grabber"
             Padding(
               padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
               child: Container(
                 height: 5,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.2), // Colore scuro per contrasto
+                  color: Colors.black.withValues(alpha: 0.2), // Colore scuro per contrasto
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -371,7 +361,6 @@ Future<void> _openFavoriteKebabSelection() async {
             ),
           ],
         );
-        // --- FINE MODIFICA ---
       },
     );
   }
@@ -386,7 +375,7 @@ Future<void> _openFavoriteKebabSelection() async {
   Future<Map<String, dynamic>> fetchSelectedKebab(String id) async {
     // ... (this function remains unchanged)
     if (id.isEmpty || id == "0") {
-      print("Error: No valid kebab id found.");
+      debugPrint("Error: No valid kebab id found.");
       return {};
     }
     final response =
@@ -397,7 +386,7 @@ Future<void> _openFavoriteKebabSelection() async {
         _favoriteKebab = response;
       });
     } else {
-      print("Error: No valid response or name found.");
+      debugPrint("Error: No valid response or name found.");
     }
 
     return response;
@@ -442,7 +431,6 @@ Future<void> _openFavoriteKebabSelection() async {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  // --- MODIFICA: Top Row per centrare username ---
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -464,7 +452,6 @@ Future<void> _openFavoriteKebabSelection() async {
                                 position.dx + renderBox.size.width,
                                 position.dy + 60,
                               ),
-                              // --- MODIFICA: Menu items aggiornati ---
                               items: [
                                 PopupMenuItem<int>(
                                   value: 1,
@@ -568,7 +555,7 @@ Future<void> _openFavoriteKebabSelection() async {
                               elevation: 5,
                               color: Colors.white,
                             ).then((value) {
-                              // --- MODIFICA: Logica .then() aggiornata ---
+                              if (!context.mounted) return;
                               if (value != null) {
                                 if (value == 1) {
                                   Future.delayed(Duration(milliseconds: 100),
@@ -579,7 +566,6 @@ Future<void> _openFavoriteKebabSelection() async {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => const AboutPage()));
                                 } else if (value == 3) {
-                                  print("Opening privacy policy");
                                   () async {
                                     final url = Uri.parse(privacyPolicyUrl);
                                     if (await canLaunchUrl(url)) {
@@ -588,6 +574,7 @@ Future<void> _openFavoriteKebabSelection() async {
                                         mode: LaunchMode.inAppWebView,
                                       );
                                     } else {
+                                      if (!context.mounted) return;
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
@@ -614,7 +601,6 @@ Future<void> _openFavoriteKebabSelection() async {
                               Icon(Icons.menu, color: Colors.black, size: 24),
                         ),
                       ),
-                      // --- MODIFICA: Username centrato ---
                       Expanded(
                         child: Text(
                           _username,
@@ -625,7 +611,6 @@ Future<void> _openFavoriteKebabSelection() async {
                           textAlign: TextAlign.center, // Centra il testo
                         ),
                       ),
-                      // --- MODIFICA: Rimossi bottoni Pack e Tools ---
                       const SizedBox(width: 48), // Spazio vuoto per bilanciare
                     ],
                   ),
@@ -636,7 +621,6 @@ Future<void> _openFavoriteKebabSelection() async {
                         .spaceEvenly, // Mantenuto spaceEvenly
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // --- MODIFICA: PFP spostato a destra con Padding ---
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0), // Aggiunto padding
                         child: GestureDetector(

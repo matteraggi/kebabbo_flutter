@@ -1,4 +1,5 @@
 // lib/components/misc/app_launcher_mobile.dart
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void openApp() async {
@@ -7,7 +8,7 @@ void openApp() async {
   if (await canLaunchUrl(uri)) {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   } else {
-    print('Could not launch app intent.');
+    debugPrint('Could not launch app intent.');
     // You could add a fallback here to open your website
     // await launchUrl(Uri.parse('https://kebabbologna.com/'));
   }
