@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 class OrderBar extends StatefulWidget {
@@ -125,7 +126,7 @@ class _OrderBarState extends State<OrderBar>
                   _buildTab(
                     isActive: widget.showStaffRatings,
                     icon: Icons.workspace_premium,
-                    text: "Staff",
+                    text: S.of(context).staff,
                     onTap: () {
                       if (!widget.showStaffRatings) {
                         widget.onToggleShowStaffRatings();
@@ -135,7 +136,7 @@ class _OrderBarState extends State<OrderBar>
                   _buildTab(
                     isActive: !widget.showStaffRatings,
                     icon: Icons.people_alt_outlined,
-                    text: "Users",
+                    text: S.of(context).users,
                     onTap: () {
                       if (widget.showStaffRatings) {
                         widget.onToggleShowStaffRatings();

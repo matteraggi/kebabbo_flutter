@@ -119,6 +119,24 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
     });
   }
 
+  // Helper to get localized names
+  String _getLocalizedIngredientName(String key) {
+    switch (key) {
+      case 'meat':
+        return S.of(context).meat;
+      case 'onion':
+        return S.of(context).onion;
+      case 'spicy':
+        return S.of(context).spicy;
+      case 'yogurt':
+        return S.of(context).yogurt;
+      case 'vegetables':
+        return S.of(context).vegetables;
+      default:
+        return key;
+    }
+  }
+
   @override
   void dispose() {
     _ingredientController.dispose();
@@ -209,8 +227,10 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
+                                                // UPDATED: Use localized name here
                                                 Text(
-                                                  ingredient,
+                                                  _getLocalizedIngredientName(
+                                                      ingredient),
                                                   style: const TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
@@ -290,8 +310,9 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
                                     isNavigatingAway: isNavigatingAway,
                                   ),
                                 ),
+                                // UPDATED: Use localized name here instead of raw 'ingredient' key
                                 Text(
-                                  ingredientAmounts[ingredient]!.toString(),
+                                  _getLocalizedIngredientName(ingredient),
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -481,9 +502,9 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
       ),
-      child: const Text(
-        'Build!',
-        style: TextStyle(
+      child: Text(
+        S.of(context).build_button, // Updated to use S.of(context)
+        style: const TextStyle(
           fontSize: 18,
           color: Colors.white,
         ),

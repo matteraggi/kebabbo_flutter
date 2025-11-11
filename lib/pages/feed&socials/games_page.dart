@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
 import 'package:kebabbo_flutter/pages/tcg/carousel.dart';
@@ -149,10 +150,10 @@ class _GamesPageState extends State<GamesPage> {
             : const Color.fromARGB(255, 44, 157, 237);
 
         return _buildGameButton(
-          title: "Pacchetto",
-          subtitle: "spacchetta il tuo kebab preferito",
+          title: S.of(context).pack_button_title,
+          subtitle: S.of(context).pack_button_subtitle,
           icon: Icons.card_giftcard,
-          color: buttonColor, // Colore dinamico
+          color: buttonColor,
           onTap: isButtonEnabled
               ? () {
                   Navigator.of(context)
@@ -162,7 +163,7 @@ class _GamesPageState extends State<GamesPage> {
                       )
                       .then((_) => _loadPageData());
                 }
-              : null, // Disabilitato
+              : null,
           trailing: isTimerActive
               ? Container(
                   padding:
@@ -193,14 +194,14 @@ class _GamesPageState extends State<GamesPage> {
     if (!isLoggedIn) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Games & Tools'),
+          title: Text(S.of(context).games_tools_title),
           backgroundColor: main.red,
         ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              "Devi effettuare l'accesso per usare questa sezione.",
+              S.of(context).login_required_section,
               style: TextStyle(fontSize: 18, color: Colors.grey[700]),
               textAlign: TextAlign.center,
             ),
@@ -211,7 +212,7 @@ class _GamesPageState extends State<GamesPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Games & Tools'),
+        title: Text(S.of(context).games_tools_title),
         backgroundColor: main.red,
       ),
       body: _loading
@@ -225,8 +226,8 @@ class _GamesPageState extends State<GamesPage> {
                     child: Column(
                       children: [
                         _buildGameButton(
-                          title: "Aggiungi Recensione",
-                          subtitle: "Hai provato un nuovo kebab?",
+                          title: S.of(context).add_review_title,
+                          subtitle: S.of(context).add_review_subtitle,
                           icon: Icons.add_comment_rounded,
                           color: main.red,
                           onTap: () {
@@ -240,13 +241,13 @@ class _GamesPageState extends State<GamesPage> {
                         Row(
                           children: [
                             Expanded(
-                              child: _buildPackButton(), // Bottone con timer
+                              child: _buildPackButton(),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: _buildGameButton(
-                                title: "Collezione",
-                                subtitle: "controlla le tue kebabbo cards",
+                                title: S.of(context).collection_title,
+                                subtitle: S.of(context).collection_subtitle,
                                 icon: Icons.collections_bookmark,
                                 color: Colors.deepPurple,
                                 onTap: () {
@@ -260,8 +261,8 @@ class _GamesPageState extends State<GamesPage> {
                         ),
                         const SizedBox(height: 16),
                         _buildGameButton(
-                          title: "Crea il Kebab",
-                          subtitle: "crea il tuo kebab",
+                          title: S.of(context).create_kebab_title,
+                          subtitle: S.of(context).create_kebab_subtitle,
                           icon: Icons.build_rounded,
                           color: Colors.teal,
                           onTap: () {
@@ -281,8 +282,6 @@ class _GamesPageState extends State<GamesPage> {
                       ],
                     ),
                   ),
-
-                  // --- Sezione Medaglie ---
                   const Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
@@ -296,7 +295,7 @@ class _GamesPageState extends State<GamesPage> {
                   ),
                   const Divider(height: 1, indent: 20, endIndent: 20),
                   SizedBox(
-                    height: 250, // Altezza fissa per la griglia
+                    height: 250,
                     child: MedalPage(userId: _id!),
                   ),
                 ],

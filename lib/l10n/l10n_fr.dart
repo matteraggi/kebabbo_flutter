@@ -584,4 +584,214 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get found_all_cards => 'Toutes les cartes trouvées.';
+
+  @override
+  String get about => 'À propos';
+
+  @override
+  String get privacy_policy => 'Politique de Confidentialité';
+
+  @override
+  String get add_kebab => 'Ajouter un Kebab';
+
+  @override
+  String get logout => 'Se déconnecter';
+
+  @override
+  String get could_not_open_link => 'Impossible d\'ouvrir le lien.';
+
+  @override
+  String get generic_error => 'Erreur : ';
+
+  @override
+  String get posts => 'Publications';
+
+  @override
+  String get followers => 'Abonnés';
+
+  @override
+  String get following => 'Abonnements';
+
+  @override
+  String get error_processing_image =>
+      'Erreur lors du traitement de l\'image :';
+
+  @override
+  String get followed_filter => 'Abonnements';
+
+  @override
+  String get all_filter => 'Tous';
+
+  @override
+  String get games_tools_title => 'Jeux & Outils';
+
+  @override
+  String get login_required_section =>
+      'Vous devez vous connecter pour utiliser cette section.';
+
+  @override
+  String get add_review_title => 'Ajouter un Avis';
+
+  @override
+  String get add_review_subtitle => 'Vous avez testé un nouveau kebab ?';
+
+  @override
+  String get pack_button_title => 'Paquet';
+
+  @override
+  String get pack_button_subtitle => 'ouvrez votre paquet kebab préféré';
+
+  @override
+  String get collection_title => 'Collection';
+
+  @override
+  String get collection_subtitle => 'voir vos cartes kebabbo';
+
+  @override
+  String get create_kebab_title => 'Créer un Kebab';
+
+  @override
+  String get create_kebab_subtitle => 'composez votre propre kebab';
+
+  @override
+  String get your_medals_title => 'Vos Médailles';
+
+  @override
+  String get add_review_appbar_title => 'Ajouter un Avis';
+
+  @override
+  String get error_loading_kebabs => 'Erreur lors du chargement des kebabs : ';
+
+  @override
+  String get kebab_not_found => 'Kebab introuvable';
+
+  @override
+  String get add_new_kebab_confirmation =>
+      'Vous allez ajouter \"\$name\" comme nouveau kebab. Êtes-vous sûr qu\'il n\'existe pas déjà ?';
+
+  @override
+  String get city => 'Ville';
+
+  @override
+  String get yes_create_new => 'Oui, créer nouveau';
+
+  @override
+  String get user_not_authenticated => 'Utilisateur non authentifié';
+
+  @override
+  String get error_adding_review => 'Erreur lors de l\'ajout de l\'avis : ';
+
+  @override
+  String get name_label => 'Nom';
+
+  @override
+  String get required_field => 'Champ obligatoire';
+
+  @override
+  String get kebab_already_exists => 'Le kebab existe déjà';
+
+  @override
+  String get your_review_optional => 'Votre avis (optionnel)';
+
+  @override
+  String get kebab_tag => 'Kebab';
+
+  @override
+  String get sandwich_tag => 'Sandwich';
+
+  @override
+  String get dimension => 'Taille';
+
+  @override
+  String get meat => 'Viande';
+
+  @override
+  String get onion => 'Oignon';
+
+  @override
+  String get vegetables => 'Légumes';
+
+  @override
+  String get gluten_free => 'Sans Gluten';
+
+  @override
+  String get advanced_filters => 'Filtres Avancés';
+
+  @override
+  String get open_now => 'Ouvert Maintenant';
+
+  @override
+  String get sandwiches => 'Sandwichs';
+
+  @override
+  String get order_by => 'Trier par';
+
+  @override
+  String get filter_by_distance => 'Filtrer par distance';
+
+  @override
+  String get sort_stars => 'étoiles';
+
+  @override
+  String get sort_quality => 'qualité';
+
+  @override
+  String get sort_price => 'prix';
+
+  @override
+  String get sort_dimension => 'taille';
+
+  @override
+  String get sort_menu => 'menu';
+
+  @override
+  String get sort_name => 'nom';
+
+  @override
+  String get sort_distance => 'distance';
+
+  @override
+  String get fun_exclamation => 'fun !';
+
+  @override
+  String get kebabbo_review => 'Avis Kebabbo';
+
+  @override
+  String get review_this_kebab => 'Noter ce Kebab';
+
+  @override
+  String get staff => 'Équipe';
+
+  @override
+  String get users => 'Utilisateurs';
+
+  @override
+  String get one_review => '1 avis';
+
+  @override
+  String get five_reviews => '5 avis';
+
+  @override
+  String get ten_reviews => '10 avis';
+
+  @override
+  String get twenty_reviews => '20 avis';
+
+  @override
+  String get thirty_reviews => '30 avis';
+
+  @override
+  String get one_post => '1 publication';
+
+  @override
+  String get five_posts => '5 publications';
+
+  @override
+  String get ten_posts => '10 publications';
+
+  @override
+  String get fifty_posts => '50 publications';
+
+  @override
+  String get build_button => 'Composer !';
 }

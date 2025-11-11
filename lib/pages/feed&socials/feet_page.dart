@@ -212,7 +212,7 @@ class FeedPageState extends State<FeedPage> {
             child: userSuggestion.isEmpty
                 ? Center(
                     child: Text(S.of(context).no_suggestions_available,
-                        style: TextStyle(color: Colors.grey)),
+                        style: const TextStyle(color: Colors.grey)),
                   )
                 : ListView.separated(
                     itemCount: userSuggestion.length,
@@ -408,34 +408,29 @@ class FeedPageState extends State<FeedPage> {
     );
 
     if (result != null) {
-      // 1. Start Loading
       setState(() {
         _isImageLoading = true;
       });
 
-      // 2. FORCE UI REFRESH: This pause allows the loader to appear before the freeze starts
       await Future.delayed(const Duration(milliseconds: 100));
 
       try {
         Uint8List imageData = result.files.single.bytes!;
-
-        // This is the line blocking your browser
         Uint8List? compressedImage =
             await ImageUtils.compressImage(imageData, 400 * 1024, 1200, 1200);
 
-        // 3. Update State on Success
         if (mounted) {
           setState(() {
             imageBytes = compressedImage;
             imagePath = result.files.single.name;
-            _isImageLoading = false; // Stop loading
+            _isImageLoading = false;
           });
         }
       } catch (e) {
         if (mounted) {
           setState(() {
-            errorMessage = "Error processing image: $e";
-            _isImageLoading = false; // Stop loading on error
+            errorMessage = "${S.of(context).error_processing_image} $e";
+            _isImageLoading = false;
           });
         }
       }
@@ -525,7 +520,7 @@ class FeedPageState extends State<FeedPage> {
                                 hintText: isLoggedIn
                                     ? S.of(context).cerca_utenti
                                     : S.of(context).accedi_per_cercare,
-                                prefixIcon: Icon(Icons.search),
+                                prefixIcon: const Icon(Icons.search),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
@@ -562,7 +557,9 @@ class FeedPageState extends State<FeedPage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        _showFriendsOnly ? "Followed" : "All",
+                                        _showFriendsOnly
+                                            ? S.of(context).followed_filter
+                                            : S.of(context).all_filter,
                                         style: TextStyle(
                                           color: _showFriendsOnly
                                               ? Colors.white
@@ -647,7 +644,6 @@ class FeedPageState extends State<FeedPage> {
                                             onPressed: _tagKebab,
                                             icon: Icon(
                                               Icons.place_rounded,
-                                              // Assuming 'red' is your defined constant color
                                               color: (selectedKebabId != null)
                                                   ? red
                                                   : Colors.grey,
@@ -671,7 +667,6 @@ class FeedPageState extends State<FeedPage> {
                                               onPressed: _pickImage,
                                               icon: Icon(
                                                 Icons.photo,
-                                                // Check imageBytes (data) instead of just the path string
                                                 color: (imageBytes != null)
                                                     ? red
                                                     : Colors.grey,
