@@ -398,7 +398,7 @@ class _FilterSearchState extends State<FilterSearch> {
                           SliderTheme(
                             data: SliderTheme.of(context).copyWith(
                               activeTrackColor: red,
-                              inactiveTrackColor: Colors.red.withValues(alpha: 0.2),
+                              inactiveTrackColor: red.withValues(alpha: 0.2),
                               thumbColor: red,
                               overlayColor: red.withValues(alpha: 0.1),
                               trackHeight: 6,

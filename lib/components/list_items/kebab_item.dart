@@ -83,6 +83,10 @@ class KebabListItemState extends State<KebabListItem> {
   double avgPrice = 0.0;
   double avgFun = 0.0;
   double overallAvgRating = 0.0;
+  double avgVegetables = 0.0;
+  double avgYogurt = 0.0;
+  double avgSpicy = 0.0;
+  double avgOnion = 0.0;
 
   @override
   void initState() {
@@ -97,12 +101,12 @@ class KebabListItemState extends State<KebabListItem> {
     }
   }
 
-  Future<void> getUsersReviews() async {
-    // ... (nessuna modifica qui)
+Future<void> getUsersReviews() async {
     try {
       final response = await supabase
           .from('reviews')
-          .select('quality, quantity, menu, price, fun')
+          // 🆕 UPDATE: Select ingredient columns
+          .select('quality, quantity, menu, price, fun, vegetables, yogurt, spicy, onion')
           .eq('kebabber_id', widget.id);
 
       List<dynamic> reviews = response;
@@ -113,6 +117,12 @@ class KebabListItemState extends State<KebabListItem> {
       double totalMenu = 0;
       double totalPrice = 0;
       double totalFun = 0;
+      
+      // 🆕 UPDATE: Initialize ingredient totals
+      double totalVegetables = 0;
+      double totalYogurt = 0;
+      double totalSpicy = 0;
+      double totalOnion = 0;
 
       for (var review in reviews) {
         totalQuality += review['quality'] ?? 0;
@@ -120,16 +130,31 @@ class KebabListItemState extends State<KebabListItem> {
         totalMenu += review['menu'] ?? 0;
         totalPrice += review['price'] ?? 0;
         totalFun += review['fun'] ?? 0;
+
+        // 🆕 UPDATE: Sum ingredients (handling nulls)
+        // Note: Ensure your DB columns are named exactly like this, or adjust accordingly
+        totalVegetables += (review['vegetables'] ?? 0).toDouble(); 
+        totalYogurt += (review['yogurt'] ?? 0).toDouble();
+        totalSpicy += (review['spicy'] ?? 0).toDouble();
+        totalOnion += (review['onion'] ?? 0).toDouble();
       }
 
-      avgQuality = totalQuality / reviews.length;
-      avgQuantity = totalQuantity / reviews.length;
-      avgMenu = totalMenu / reviews.length;
-      avgPrice = totalPrice / reviews.length;
-      avgFun = totalFun / reviews.length;
+      int count = reviews.length;
+
+      avgQuality = totalQuality / count;
+      avgQuantity = totalQuantity / count;
+      avgMenu = totalMenu / count;
+      avgPrice = totalPrice / count;
+      avgFun = totalFun / count;
+      
+      // 🆕 UPDATE: Calculate ingredient averages
+      avgVegetables = totalVegetables / count;
+      avgYogurt = totalYogurt / count;
+      avgSpicy = totalSpicy / count;
+      avgOnion = totalOnion / count;
+
       overallAvgRating =
           (avgQuality + avgQuantity + avgMenu + avgPrice + avgFun) / 5;
-
       if (mounted) {
         setState(() {});
       }
@@ -183,7 +208,7 @@ class KebabListItemState extends State<KebabListItem> {
     return stars;
   }
 
-  Widget _buildFront() {
+Widget _buildFront() {
     // La "faccia" della recensione Staff
     return Container(
       decoration: BoxDecoration(
@@ -193,330 +218,338 @@ class KebabListItemState extends State<KebabListItem> {
           bottomRight: Radius.circular(12),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.description,
-              style: const TextStyle(
-                color: Colors.black,
+      child: ConstrainedBox(
+        // 🆕 FIX: Apply the same minHeight to the front to prevent cropping
+        // when flipping from the back.
+        constraints: const BoxConstraints(minHeight: 460),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            // 🆕 FIX: Use spaceBetween to push buttons to the bottom
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.description,
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SingleStat(
+                    label: S.of(context).quality,
+                    number: widget.quality,
+                    isFront: true,
+                  ),
+                  const SizedBox(height: 8),
+                  SingleStat(
+                      label: S.of(context).price,
+                      number: widget.price,
+                      isFront: true),
+                  const SizedBox(height: 8),
+                  SingleStat(
+                      label: S.of(context).quantity,
+                      number: widget.dimension,
+                      isFront: true),
+                  const SizedBox(height: 8),
+                  SingleStat(
+                      label: S.of(context).menu,
+                      number: widget.menu,
+                      isFront: true),
+                  const SizedBox(height: 16),
+                  SingleChart(
+                    vegetables: widget.vegetables,
+                    yogurt: widget.yogurt,
+                    spicy: widget.spicy,
+                    onion: widget.onion,
+                    isFront: true,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-            SingleStat(
-              label: S.of(context).quality,
-              number: widget.quality,
-              isFront: true,
-            ),
-            const SizedBox(height: 8),
-            SingleStat(
-                label: S.of(context).price,
-                number: widget.price,
-                isFront: true),
-            const SizedBox(height: 8),
-            SingleStat(
-                label: S.of(context).quantity,
-                number: widget.dimension,
-                isFront: true),
-            const SizedBox(height: 8),
-            SingleStat(
-                label: S.of(context).menu, number: widget.menu, isFront: true),
-            const SizedBox(height: 16),
-            SingleChart(
-              vegetables: widget.vegetables,
-              yogurt: widget.yogurt,
-              spicy: widget.spicy,
-              onion: widget.onion,
-              isFront: true,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    if (widget.map.isNotEmpty) ...[
-                      BottomButtonItem(
-                        linkMaps: widget.map,
-                        icon: Icons.map,
-                        isFront: true,
-                      ),
-                      const SizedBox(width: 16),
-                    ],
-
-                    // Mostra il pulsante flip solo se ci sono recensioni UTENTE E il kebab è approvato
-                    if (widget.approved != false)
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            getUsersReviews();
-                            _controller.toggleCard();
-                          });
-                        },
-                        icon: Icon(
-                          Icons.cached,
-                          color: Colors.black,
-                          size: 30,
-                        ),
-                      ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    if (widget.glutenFree)
-                      Image.asset(
-                        "assets/images/gluten_free.png",
-                        height: 40,
-                        width: 40,
-                      ),
-                    const SizedBox(width: 16),
-                    if (widget.fun >= 4)
-                      Transform.rotate(
-                        angle: -0.2,
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.sentiment_very_satisfied,
-                              color: yellow,
-                              size: 30,
+              // 🆕 FIX: Footer section (Buttons + Gluten Free + Fun)
+              Column(
+                children: [
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          if (widget.map.isNotEmpty) ...[
+                            BottomButtonItem(
+                              linkMaps: widget.map,
+                              icon: Icons.map,
+                              isFront: true,
                             ),
-                            Text(
-                              'fun!',
-                              style: TextStyle(
-                                color: yellow,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                            const SizedBox(width: 16),
+                          ],
+
+                          // Mostra il pulsante flip solo se ci sono recensioni UTENTE E il kebab è approvato
+                          if (widget.approved != false)
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  getUsersReviews();
+                                  _controller.toggleCard();
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.cached,
+                                color: Colors.black,
+                                size: 30,
                               ),
                             ),
-                          ],
-                        ),
+                        ],
                       ),
-                  ],
-                )
-              ],
-            ),
-            Divider(
-              color: Colors.grey[300],
-              thickness: 1,
-              indent: 0,
-              endIndent: 0,
-            ),
-            Center(
-                child: Text("Kebabbo Review",
-                    style:
-                        TextStyle(fontStyle: FontStyle.italic, fontSize: 12))),
-          ],
+                      Row(
+                        children: [
+                          if (widget.glutenFree)
+                            Image.asset(
+                              "assets/images/gluten_free.png",
+                              height: 40,
+                              width: 40,
+                            ),
+                          const SizedBox(width: 16),
+                          if (widget.fun >= 4)
+                            Transform.rotate(
+                              angle: -0.2,
+                              child: const Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.sentiment_very_satisfied,
+                                    color: yellow,
+                                    size: 30,
+                                  ),
+                                  Text(
+                                    'fun!',
+                                    style: TextStyle(
+                                      color: yellow,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Divider(
+                    color: Colors.grey[300],
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 0,
+                  ),
+                  const Center(
+                    child: Text(
+                      "Kebabbo Review",
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic, fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
 Widget _buildBack() {
-    // La "faccia" della recensione Utenti
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[800],
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(12),
-          bottomRight: Radius.circular(12),
-        ),
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.grey[800],
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(12),
+        bottomRight: Radius.circular(12),
       ),
+    ),
+    child: ConstrainedBox(
+      // 1. FIX CLIPPING: Set a minHeight roughly equal to your Front card height.
+      // Adjust '460' up or down depending on your average front card size.
+      constraints: const BoxConstraints(minHeight: 460),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          // 2. FIX BUTTONS: Push content to edges (Top vs Bottom)
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (avgMenu == 0 &&
-                      avgPrice == 0 &&
-                      avgQuality == 0 &&
-                      avgQuantity == 0)
-                    // Avvolgi il contenuto in un Center
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente
-                        crossAxisAlignment: CrossAxisAlignment.center, // Centra orizzontalmente
-                        children: [
-                          const SizedBox(height: 24),
-                          Text(
-                            S.of(context).nessuna_recensione_disponibile,
-                            style: TextStyle(color: Colors.white70, fontSize: 16),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
-                          // Bottone "Recensisci"
-                          ElevatedButton.icon(
-                            icon: Icon(Icons.add_comment_rounded, size: 16),
-                            label: Text("Recensisci questo Kebab"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: red,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => AddKebab(
-                                    kebabId: widget.id,
-                                    kebabName: widget.name,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    // Altrimenti, mostra le statistiche
-                    Column(
+            // --- UPPER PART: Stats and Chart ---
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (avgMenu == 0 &&
+                    avgPrice == 0 &&
+                    avgQuality == 0 &&
+                    avgQuantity == 0)
+                  Center(
+                    child: Column(
                       children: [
-                        SizedBox(height: 16),
-                        Center(
-                          child: ElevatedButton.icon(
-                            icon: Icon(Icons.add_comment_rounded, size: 16),
-                            label: Text("Recensisci questo Kebab"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: red,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => AddKebab(
-                                    kebabId: widget.id,
-                                    kebabName: widget.name,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                        const SizedBox(height: 24),
+                        Text(
+                          S.of(context).nessuna_recensione_disponibile,
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 16),
+                          textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
-                        SingleStat(
-                            label: S.of(context).quality,
-                            number: avgQuality,
-                            isFront: false),
-                        const SizedBox(height: 8),
-                        SingleStat(
-                            label: S.of(context).price,
-                            number: avgPrice,
-                            isFront: false),
-                        const SizedBox(height: 8),
-                        SingleStat(
-                            label: S.of(context).quantity,
-                            number: avgQuantity,
-                            isFront: false),
-                        const SizedBox(height: 8),
-                        SingleStat(
-                            label: S.of(context).menu,
-                            number: avgMenu,
-                            isFront: false),
-                        const SizedBox(height: 16),
-                        SingleChart(
-                          vegetables: widget.vegetables,
-                          yogurt: widget.yogurt,
-                          spicy: widget.spicy,
-                          onion: widget.onion,
-                          isFront: false,
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.add_comment_rounded, size: 16),
+                          label: const Text("Recensisci questo Kebab"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: red,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => AddKebab(
+                                  kebabId: widget.id,
+                                  kebabName: widget.name,
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 16),
                       ],
                     ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    if (widget.map.isNotEmpty) ...[
-                      BottomButtonItem(
-                        linkMaps: widget.map,
-                        icon: Icons.map,
+                  )
+                else
+                  Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      SingleStat(
+                          label: S.of(context).quality,
+                          number: avgQuality,
+                          isFront: false),
+                      const SizedBox(height: 8),
+                      SingleStat(
+                          label: S.of(context).price,
+                          number: avgPrice,
+                          isFront: false),
+                      const SizedBox(height: 8),
+                      SingleStat(
+                          label: S.of(context).quantity,
+                          number: avgQuantity,
+                          isFront: false),
+                      const SizedBox(height: 8),
+                      SingleStat(
+                          label: S.of(context).menu,
+                          number: avgMenu,
+                          isFront: false),
+                      const SizedBox(height: 16),
+                      
+                      // 3. CHART: Ensure data is passed correctly. 
+                      // If this is still invisible, check if avgVegetables etc. are > 0.
+                      SingleChart(
+                        vegetables: avgVegetables,
+                        yogurt: avgYogurt,
+                        spicy: avgSpicy,
+                        onion: avgOnion,
                         isFront: false,
                       ),
-                      SizedBox(width: 16),
                     ],
-                    if (widget.approved ?? false)
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _controller.toggleCard();
-                          });
-                        },
-                        icon: Icon(
-                          Icons.cached,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    if (widget.glutenFree)
-                      Image.asset(
-                        "assets/images/gluten_free.png",
-                        height: 40,
-                        width: 40,
-                      ),
-                    const SizedBox(width: 16),
-                    if (widget.fun >= 4)
-                      Transform.rotate(
-                        angle: -0.2,
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.sentiment_very_satisfied,
-                              color: yellow,
-                              size: 30,
-                            ),
-                            Text(
-                              'fun!',
-                              style: TextStyle(
-                                color: yellow,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                )
+                  ),
               ],
             ),
-            Divider(
-              color: Colors.grey[300],
-              thickness: 1,
-              indent: 0,
-              endIndent: 0,
-            ),
-            Center(
-                child: Text(S.of(context).users_review,
-                    style: TextStyle(
+
+            // --- LOWER PART: Buttons and Footer ---
+            Column(
+              children: [
+                const Divider(color: Colors.white24),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        if (widget.map.isNotEmpty) ...[
+                          BottomButtonItem(
+                            linkMaps: widget.map,
+                            icon: Icons.map,
+                            isFront: false,
+                          ),
+                          const SizedBox(width: 16),
+                        ],
+                        // Only show flip button if approved
+                        if (widget.approved ?? false)
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _controller.toggleCard();
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.cached,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        if (widget.glutenFree)
+                          Image.asset(
+                            "assets/images/gluten_free.png",
+                            height: 40,
+                            width: 40,
+                          ),
+                        const SizedBox(width: 16),
+                        if (widget.fun >= 4)
+                          Transform.rotate(
+                            angle: -0.2,
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.sentiment_very_satisfied,
+                                  color: yellow,
+                                  size: 30,
+                                ),
+                                Text(
+                                  'fun!',
+                                  style: TextStyle(
+                                    color: yellow,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    S.of(context).users_review,
+                    style: const TextStyle(
                         fontStyle: FontStyle.italic,
                         fontSize: 12,
-                        color: Colors.white))),
+                        color: Colors.white54),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -605,7 +638,7 @@ Widget _buildBack() {
                   },
                   child: FlipCard(
                     fill: Fill.fillBack,
-                    side: CardSide.FRONT,
+                    side: isFront ? CardSide.FRONT : CardSide.BACK,
                     controller: _controller,
                     flipOnTouch: false,
                     onFlipDone: (status) {
@@ -613,8 +646,8 @@ Widget _buildBack() {
                         isFront = !isFront;
                       });
                     },
-                    front: widget.flipped ? _buildBack() : _buildFront(),
-                    back: widget.flipped ? _buildFront() : _buildBack(),
+                    front: _buildFront(),
+                    back: _buildBack(),
                   ))
             ],
             onExpansionChanged: (bool expanding) {

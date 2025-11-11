@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/pages/tcg/rotation_scene_v1.dart';
@@ -67,7 +68,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).my_cards),
-        backgroundColor: Colors.red,
+        backgroundColor: red,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

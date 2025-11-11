@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
 import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
@@ -81,7 +82,7 @@ class _AddKebabState extends State<AddKebab> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Errore nel caricare i kebab: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: red,
           ),
         );
       }
@@ -195,7 +196,7 @@ class _AddKebabState extends State<AddKebab> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Errore: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: red,
           ),
         );
       }
@@ -236,7 +237,7 @@ class _AddKebabState extends State<AddKebab> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Errore durante l\'aggiunta della recensione: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: red,
           ),
         );
       }

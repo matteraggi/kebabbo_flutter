@@ -19,28 +19,25 @@ class FeedPage extends StatefulWidget {
 }
 
 class FeedPageState extends State<FeedPage> {
-  // --- Variabili di Stato Unificate ---
   List<Map<String, dynamic>> feedList = [];
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
   
-  // Variabili per la ricerca
   List<Map<String, dynamic>> userList = [];
   final TextEditingController searchController = TextEditingController();
 
-  // Variabili per la creazione post
   final TextEditingController postController = TextEditingController();
   Uint8List? imageBytes;
   String? imagePath = "";
+  bool _isImageLoading = false; 
   List<String> userSuggestion = [];
   OverlayEntry? suggestionOverlay;
   String? selectedKebabId;
   String? selectedKebabName;
   List<Map<String, dynamic>> kebabbariList = [];
 
-  // --- NUOVA VARIABILE DI STATO ---
-  bool _showFriendsOnly = false; // Default: mostra tutti i post
+  bool _showFriendsOnly = false; 
 
   @override
   void initState() {
@@ -60,8 +57,6 @@ class FeedPageState extends State<FeedPage> {
     suggestionOverlay?.remove();
     super.dispose();
   }
-
-  // --- Funzioni di Logica ---
 
   void _onSearchTextChanged() {
     final query = searchController.text.toLowerCase();
@@ -99,7 +94,6 @@ class FeedPageState extends State<FeedPage> {
   }
 
   Future<void> _fetchFeed() async {
-    // Inizia a caricare
     setState(() {
       isLoading = true;
       errorMessage = null;
@@ -110,14 +104,10 @@ class FeedPageState extends State<FeedPage> {
       final PostgrestList response;
 
       if (userId == null) {
-        // --- Utente Anonimo ---
-        // Può vedere solo i post pubblici
         setState(() => _showFriendsOnly = false); 
         response = await supabase.rpc('get_recent_posts');
       } else {
-        // --- Utente Loggato ---
         if (_showFriendsOnly) {
-          // --- Logica "SOLO AMICI" (dalla vecchia FeedPage) ---
           final profileResponse = await supabase
               .from('profiles')
               .select('followed_users')
@@ -125,12 +115,11 @@ class FeedPageState extends State<FeedPage> {
               .single();
 
           final followedUsers = List<String>.from(profileResponse['followed_users'] ?? []);
-          followedUsers.add(userId); // Include i post dell'utente stesso
+          followedUsers.add(userId);
 
           if (followedUsers.isEmpty) {
-            response = []; // Lista vuota
+            response = [];
           } else {
-            // Costruisci il filtro "OR"
             final String orCondition = followedUsers.map((id) => 'user_id.eq.$id').join(',');
             response = await supabase
                 .from('posts')
@@ -140,12 +129,11 @@ class FeedPageState extends State<FeedPage> {
                 .order('created_at', ascending: false);
           }
         } else {
-          // --- Logica "TUTTI I POST" (dalla vecchia SearchPage) ---
           response = await supabase
               .from('posts')
               .select('*')
               .filter('comment', 'is', null)
-              .neq('user_id', userId) // Esclude i post dell'utente
+              .neq('user_id', userId)
               .order('created_at', ascending: false);
         }
       }
@@ -155,8 +143,6 @@ class FeedPageState extends State<FeedPage> {
             List<Map<String, dynamic>>.from(response as List);
         setState(() {
           feedList = posts;
-          // Assicura che la lista visualizzata si aggiorni
-          // e rispetti il filtro di ricerca (se presente)
           _onSearchTextChanged(); 
         });
       }
@@ -167,7 +153,6 @@ class FeedPageState extends State<FeedPage> {
         });
       }
     } finally {
-      // Smetti di caricare
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -175,11 +160,6 @@ class FeedPageState extends State<FeedPage> {
       }
     }
   }
-
-  // --- Funzioni da FeedPage (Logica di Creazione Post) ---
-  // (Nessuna modifica a getTopUserSuggestions, _showSuggestionOverlay, 
-  // _onTextChanged, _removeSuggestionOverlay, _postFeed, _pickImage, 
-  // _tagKebab, fetchKebabNames)
   
   List<String> getTopUserSuggestions(String query, List<Map<String, dynamic>> userListMap) {
     final userListNames = userListMap
@@ -335,13 +315,17 @@ class FeedPageState extends State<FeedPage> {
       'text': text,
       'user_id': user.id,
       'created_at': DateTime.now().toIso8601String(),
+      // --- FIX 2: Initialize stats for local display ---
+      'like': [], 
+      'comments_number': 0,
     };
 
     if (imageUrl != null) {
       postData['image_url'] = imageUrl;
     }
+    
     if (selectedKebabId != null) {
-      postData['kebab_tag_id'] = selectedKebabId;
+      postData['kebab_tag_id'] = int.tryParse(selectedKebabId!) ?? 0;
       postData['kebab_tag_name'] = selectedKebabName;
     }
 
@@ -414,7 +398,7 @@ class FeedPageState extends State<FeedPage> {
     }
   }
 
-  Future<void> _pickImage() async {
+Future<void> _pickImage() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowCompression: true,
@@ -422,14 +406,37 @@ class FeedPageState extends State<FeedPage> {
     );
 
     if (result != null) {
-      Uint8List imageData = result.files.single.bytes!;
-      Uint8List? compressedImage = await ImageUtils.compressImage(
-          imageData, 400 * 1024, 1200, 1200);
-
+      // 1. Start Loading
       setState(() {
-        imageBytes = compressedImage;
-        imagePath = result.files.single.name;
+        _isImageLoading = true;
       });
+
+      // 2. FORCE UI REFRESH: This pause allows the loader to appear before the freeze starts
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      try {
+        Uint8List imageData = result.files.single.bytes!;
+        
+        // This is the line blocking your browser
+        Uint8List? compressedImage = await ImageUtils.compressImage(
+            imageData, 400 * 1024, 1200, 1200);
+
+        // 3. Update State on Success
+        if (mounted) {
+          setState(() {
+            imageBytes = compressedImage;
+            imagePath = result.files.single.name;
+            _isImageLoading = false; // Stop loading
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            errorMessage = "Error processing image: $e";
+            _isImageLoading = false; // Stop loading on error
+          });
+        }
+      }
     }
   }
 
@@ -482,12 +489,12 @@ class FeedPageState extends State<FeedPage> {
       }
     } catch (error) {
       if (mounted) {
-        // gestione errori
+        setState(() {
+          errorMessage = error.toString();
+        });
       }
     }
   }
-
-  // --- Build Method Unificato ---
 
   @override
   Widget build(BuildContext context) {
@@ -528,26 +535,20 @@ class FeedPageState extends State<FeedPage> {
                                 ),
                               ),
                             )),
+                            
                             if (isLoggedIn)
                               Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                // Replaced IconButton with a styled TextButton
+                                padding: const EdgeInsets.only(left: 8.0),
                                 child: TextButton(
                                   style: TextButton.styleFrom(
-                                    backgroundColor: _showFriendsOnly ? red : const Color.fromARGB(255, 202, 202, 202),
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+                                    backgroundColor: _showFriendsOnly ? red : Colors.grey[300],
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                        color: const Color.fromARGB(255, 77, 77, 77),
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(20.0),
                                     ),
                                   ),
                                   onPressed: () {
-                                    // Pulisci la ricerca quando cambi tipo di feed
                                     searchController.clear(); 
-                                    // Cambia stato e ricarica i post
                                     setState(() {
                                       _showFriendsOnly = !_showFriendsOnly;
                                     });
@@ -556,7 +557,6 @@ class FeedPageState extends State<FeedPage> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      // Text ("All" or "Followed")
                                       Text(
                                         _showFriendsOnly ? "Followed" : "All",
                                         style: TextStyle(
@@ -566,7 +566,6 @@ class FeedPageState extends State<FeedPage> {
                                         ),
                                       ),
                                       const SizedBox(width: 6),
-                                      // Icon (public or people)
                                       Icon(
                                         _showFriendsOnly ? Icons.people : Icons.public,
                                         color: _showFriendsOnly ? Colors.white : Colors.black87,
@@ -580,7 +579,6 @@ class FeedPageState extends State<FeedPage> {
                         ),
                       ),
                       
-                      // Lista
                       Expanded(
                         child: ListView.builder(
                           itemCount: searchResultList.length,
@@ -588,8 +586,10 @@ class FeedPageState extends State<FeedPage> {
                             final item = searchResultList[index];
 
                             if (searchController.text.isEmpty) {
-                              // Se non c'è testo, visualizza i post
                               return FeedListItem(
+                                // --- FIX 1: ADD KEY ---
+                                key: ValueKey(item['id']), 
+                                // ----------------------
                                 text: item['text'] ??
                                     S.of(context).testo_non_disponibile,
                                 createdAt: item['created_at'] ?? '',
@@ -602,7 +602,6 @@ class FeedPageState extends State<FeedPage> {
                                 kebabName: item['kebab_tag_name'] ?? '',
                               );
                             } else {
-                              // Se c'è testo, visualizza gli utenti
                               return UserItem(
                                   userId: item['id'] ?? "",
                                   username:
@@ -613,7 +612,6 @@ class FeedPageState extends State<FeedPage> {
                         ),
                       ),
 
-                      // --- Barra Creazione Post (Logica invariata) ---
                       if (isLoggedIn)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -639,26 +637,38 @@ class FeedPageState extends State<FeedPage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
-                                          onPressed: _tagKebab,
-                                          icon: (selectedKebabId != null)
-                                              ? const Icon(
-                                                  Icons.place_rounded,
-                                                  color: red,
-                                                )
-                                              : const Icon(Icons.place_rounded),
-                                        ),
-                                        IconButton(
-                                          onPressed: _pickImage,
-                                          icon: (imagePath != null &&
-                                                  imagePath!.isNotEmpty)
-                                              ? const Icon(Icons.photo,
-                                                  color: red)
-                                              : const Icon(Icons.photo),
-                                        ),
-                                      ],
-                                    ),
+                                            onPressed: _tagKebab,
+                                            icon: Icon(
+                                              Icons.place_rounded,
+                                              // Assuming 'red' is your defined constant color
+                                              color: (selectedKebabId != null) ? red : Colors.grey, 
+                                            ),
+                                          ),
+                                        if (_isImageLoading)
+                                          const Padding(
+                                            padding: EdgeInsets.all(12.0),
+                                            child: SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.5,
+                                                color: red, 
+                                              ),
+                                            ),
+                                          )
+                                        else
+                                          IconButton(
+                                            onPressed: _pickImage,
+                                            icon: Icon(
+                                              Icons.photo,
+                                              // Check imageBytes (data) instead of just the path string
+                                              color: (imageBytes != null) ? red : Colors.grey,
+                                            ),
+                                          ),
+                                    ],
                                   ),
-                                ),
+                                )
+                                  ),
                               ),
                               const SizedBox(width: 8),
                               Container(

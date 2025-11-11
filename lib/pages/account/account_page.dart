@@ -192,7 +192,7 @@ class _AccountPageState extends State<AccountPage> {
                         SizedBox(height: 4),
                         Text(
                           errorMessage ?? ' \n ',
-                          style: const TextStyle(color: Colors.red),
+                          style: const TextStyle(color: red),
                         ),
                       ],
                     ),

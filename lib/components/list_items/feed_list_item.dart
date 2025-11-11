@@ -546,7 +546,7 @@ Future<void> _fetchUserProfile(String userId) async {
                     IconButton(
                       icon: Icon(
                         hasLiked ? Icons.favorite : Icons.favorite_border,
-                        color: hasLiked ? Colors.red : Colors.black,
+                        color: hasLiked ? red : Colors.black,
                       ),
                       onPressed: () => _toggleLike(widget.postId),
                     ),

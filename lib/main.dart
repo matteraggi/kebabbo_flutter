@@ -306,8 +306,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: S.of(context).seguiti,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: S.of(context).esplora,
+            icon: Icon(Icons.sports_esports),
+            label: "Games",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.kebab_dining),
