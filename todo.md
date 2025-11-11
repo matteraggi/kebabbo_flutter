@@ -1,32 +1,35 @@
 # TODO
 
-- [ ] RENDERE KEBABBO SOCIAL
-Gli utenti possono caricare i posti che trovano (con approvazione nostra dalla piattaforma moderatori) con la propria review. Click sulla mappa per prendere le coordinate, niente recensione scritta visibile nel box. Distinguere bene kebab messi da noi e quelli messi dagli utenti, però rendere molto più visibili le recensioni del pubblico. Come sono ora neanche si vedono.
-Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
-Magari tasto per aggiungere i kebabbari nella mappa o nel profilo
--> idee: mettere toggle per kebab postati da tutti e kebab postati da noi. Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
-
-- [ ] style di: card kebab, pack opening, carte, carte display, create kebab, pagina profilo utenti
-- [ ] compressioni immagini soprattutto avatar
-- [ ] spostare info carta kebab in pagina dedicata
-- [ ] grafico a barre
-- [ ] cambiare messaggio iniziale
-- [ ] Codice da sistemare in alcune pagine: servono file di logica con le funzioni e anche più componenti
-- [ ] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
-- [ ] sezioni review e kebab salvati del profilo molto sus
-- [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
-- [ ] Notifiche
+funzionalità:
+- [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
+- [ ] Click sulla mappa per prendere le coordinate
 - [ ] Sezione Offerte e Promozioni Esclusive
-- [ ] delete cascade da followed_user quando un utente viene eliminato
-- [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+- [ ] Magari tasto per aggiungere i kebabbari nella mappa
+- [ ] fare pagina per singolo kebab con info approfondite (anche per smaltire il contenuto della card)
+- [ ] Foto dei post con tag del luogo -> tutte le foto degli utenti nella pagina del luogo
+- [ ] Notifiche
+
+bugfix:
+
+design:
+- [ ] mettere il grafico a barre
+- [ ] cambiare messaggio iniziale
+- [ ] rifare style di: card kebab, pack opening, carte, carte display, create kebab, pagina profilo utenti
+- [ ] Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
+- [ ] sezioni review e kebab salvati del profilo molto sus
+
+extra:
+- [ ] compressioni immagini soprattutto avatar
 - [ ] Togliere compilato da github
+- [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+- [ ] delete cascade da followed_user quando un utente viene eliminato
+- [ ] Codice da sistemare in alcune pagine: servono file di logica con le funzioni e anche più componenti
 
 
 # DONE
 
-
-Pareggiare Kebabbo Web:
-
+- [x] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
+- [x] mettere toggle per kebab postati da tutti e kebab postati da noi. 
 - [x] maps in homepage
 - [x] user position in homepage
 - [x] special page style like top kebab
@@ -34,11 +37,8 @@ Pareggiare Kebabbo Web:
 - [x] working search bar
 - [x] distance in kebab card - order by distance
 - [x] about page
-
----
-
-Ancora non fatte in kebabbo Web:
-
+- [x] Gli utenti possono caricare i posti che trovano (con approvazione nostra dalla piattaforma moderatori) con la propria review
+- [x] Distinguere bene kebab messi da noi e quelli messi dagli utenti, però rendere molto più visibili le recensioni del pubblico. Come sono ora neanche si vedono
 - [x] sezione medaglie che non deve essere scorrevole
 - [x] Stella simpatia + rifare tot rating senza simpatia
 - [x] Rimuovere linea sotto tab World-Special
@@ -72,9 +72,6 @@ Ancora non fatte in kebabbo Web:
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
 - [x] Sistemare caricamento immagini
 - [x] Pulsante build non visibile da mobile
-
-Feature lancio:
-
 - [x] Build in account
 - [x] Utenti si possono seguire
 - [x] Pagina feed diventa pagina seguiti
