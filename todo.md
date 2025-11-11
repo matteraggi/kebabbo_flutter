@@ -1,6 +1,7 @@
 # TODO
 
 funzionalità:
+- [ ] tasto nuovo kebab separato da recensione
 - [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
 - [ ] Click sulla mappa per prendere le coordinate
 - [ ] Sezione Offerte e Promozioni Esclusive
@@ -12,9 +13,9 @@ funzionalità:
 bugfix:
 
 design:
+- [ ] rifare style di: card kebab, pack opening, carte, carte display, create kebab, pagina profilo utenti, recensione kebab, aggiunta kebab, schermata giochi (togliere medaglie)
 - [ ] mettere il grafico a barre
 - [ ] cambiare messaggio iniziale
-- [ ] rifare style di: card kebab, pack opening, carte, carte display, create kebab, pagina profilo utenti
 - [ ] Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
 - [ ] sezioni review e kebab salvati del profilo molto sus
 
