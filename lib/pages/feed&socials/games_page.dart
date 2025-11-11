@@ -81,7 +81,8 @@ class _GamesPageState extends State<GamesPage> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: onTap != null ? color.withValues(alpha: 0.3) : Colors.black12,
+              color:
+                  onTap != null ? color.withValues(alpha: 0.3) : Colors.black12,
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -140,9 +141,12 @@ class _GamesPageState extends State<GamesPage> {
             timerText = _formatDuration(remainingTime);
           }
         }
-        
-        final bool isButtonEnabled = !isTimerActive && supabase.auth.currentUser != null;
-        final Color buttonColor = isTimerActive ? const Color.fromARGB(255, 127, 127, 127) : const Color.fromARGB(255, 44, 157, 237);
+
+        final bool isButtonEnabled =
+            !isTimerActive && supabase.auth.currentUser != null;
+        final Color buttonColor = isTimerActive
+            ? const Color.fromARGB(255, 127, 127, 127)
+            : const Color.fromARGB(255, 44, 157, 237);
 
         return _buildGameButton(
           title: "Pacchetto",
@@ -156,8 +160,7 @@ class _GamesPageState extends State<GamesPage> {
                         MaterialPageRoute(
                             builder: (context) => const PackPage()),
                       )
-                      .then((_) =>
-                          _loadPageData());
+                      .then((_) => _loadPageData());
                 }
               : null, // Disabilitato
           trailing: isTimerActive

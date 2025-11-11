@@ -23,21 +23,21 @@ class FeedPageState extends State<FeedPage> {
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
   String? errorMessage;
-  
+
   List<Map<String, dynamic>> userList = [];
   final TextEditingController searchController = TextEditingController();
 
   final TextEditingController postController = TextEditingController();
   Uint8List? imageBytes;
   String? imagePath = "";
-  bool _isImageLoading = false; 
+  bool _isImageLoading = false;
   List<String> userSuggestion = [];
   OverlayEntry? suggestionOverlay;
   String? selectedKebabId;
   String? selectedKebabName;
   List<Map<String, dynamic>> kebabbariList = [];
 
-  bool _showFriendsOnly = false; 
+  bool _showFriendsOnly = false;
 
   @override
   void initState() {
@@ -104,7 +104,7 @@ class FeedPageState extends State<FeedPage> {
       final PostgrestList response;
 
       if (userId == null) {
-        setState(() => _showFriendsOnly = false); 
+        setState(() => _showFriendsOnly = false);
         response = await supabase.rpc('get_recent_posts');
       } else {
         if (_showFriendsOnly) {
@@ -114,13 +114,15 @@ class FeedPageState extends State<FeedPage> {
               .eq('id', userId)
               .single();
 
-          final followedUsers = List<String>.from(profileResponse['followed_users'] ?? []);
+          final followedUsers =
+              List<String>.from(profileResponse['followed_users'] ?? []);
           followedUsers.add(userId);
 
           if (followedUsers.isEmpty) {
             response = [];
           } else {
-            final String orCondition = followedUsers.map((id) => 'user_id.eq.$id').join(',');
+            final String orCondition =
+                followedUsers.map((id) => 'user_id.eq.$id').join(',');
             response = await supabase
                 .from('posts')
                 .select('*')
@@ -143,7 +145,7 @@ class FeedPageState extends State<FeedPage> {
             List<Map<String, dynamic>>.from(response as List);
         setState(() {
           feedList = posts;
-          _onSearchTextChanged(); 
+          _onSearchTextChanged();
         });
       }
     } catch (error) {
@@ -160,8 +162,9 @@ class FeedPageState extends State<FeedPage> {
       }
     }
   }
-  
-  List<String> getTopUserSuggestions(String query, List<Map<String, dynamic>> userListMap) {
+
+  List<String> getTopUserSuggestions(
+      String query, List<Map<String, dynamic>> userListMap) {
     final userListNames = userListMap
         .map((user) => user['username'])
         .where((username) => username != null)
@@ -176,7 +179,7 @@ class FeedPageState extends State<FeedPage> {
         userListMap,
         query,
         'username',
-        false, 
+        false,
         false,
       );
       return fuzzyResults
@@ -294,7 +297,8 @@ class FeedPageState extends State<FeedPage> {
     String? imageUrl;
 
     if (imageBytes != null) {
-      final filePath = '${user.id}-${DateTime.now().millisecondsSinceEpoch}.png';
+      final filePath =
+          '${user.id}-${DateTime.now().millisecondsSinceEpoch}.png';
       try {
         await supabase.storage.from('posts').uploadBinary(
               filePath,
@@ -316,25 +320,22 @@ class FeedPageState extends State<FeedPage> {
       'user_id': user.id,
       'created_at': DateTime.now().toIso8601String(),
       // --- FIX 2: Initialize stats for local display ---
-      'like': [], 
+      'like': [],
       'comments_number': 0,
     };
 
     if (imageUrl != null) {
       postData['image_url'] = imageUrl;
     }
-    
+
     if (selectedKebabId != null) {
       postData['kebab_tag_id'] = int.tryParse(selectedKebabId!) ?? 0;
       postData['kebab_tag_name'] = selectedKebabName;
     }
 
     try {
-      final response = await supabase
-          .from('posts')
-          .insert(postData)
-          .select()
-          .single();
+      final response =
+          await supabase.from('posts').insert(postData).select().single();
 
       postController.clear();
       setState(() {
@@ -345,9 +346,9 @@ class FeedPageState extends State<FeedPage> {
       });
 
       final int newPostId = response['id'];
-      
+
       feedList.insert(0, {...postData, 'id': newPostId});
-      _onSearchTextChanged(); 
+      _onSearchTextChanged();
 
       final postCountResponse = await supabase
           .from('posts')
@@ -385,9 +386,11 @@ class FeedPageState extends State<FeedPage> {
           newMedal = true;
         }
 
-        await supabase.from('profiles').update({'medals': medals}).eq('id', user.id);
+        await supabase
+            .from('profiles')
+            .update({'medals': medals}).eq('id', user.id);
 
-        if (newMedal && mounted){
+        if (newMedal && mounted) {
           showMedalDialog(context);
         }
       }
@@ -398,7 +401,7 @@ class FeedPageState extends State<FeedPage> {
     }
   }
 
-Future<void> _pickImage() async {
+  Future<void> _pickImage() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowCompression: true,
@@ -416,10 +419,10 @@ Future<void> _pickImage() async {
 
       try {
         Uint8List imageData = result.files.single.bytes!;
-        
+
         // This is the line blocking your browser
-        Uint8List? compressedImage = await ImageUtils.compressImage(
-            imageData, 400 * 1024, 1200, 1200);
+        Uint8List? compressedImage =
+            await ImageUtils.compressImage(imageData, 400 * 1024, 1200, 1200);
 
         // 3. Update State on Success
         if (mounted) {
@@ -535,20 +538,22 @@ Future<void> _pickImage() async {
                                 ),
                               ),
                             )),
-                            
                             if (isLoggedIn)
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: TextButton(
                                   style: TextButton.styleFrom(
-                                    backgroundColor: _showFriendsOnly ? red : Colors.grey[300],
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    backgroundColor: _showFriendsOnly
+                                        ? red
+                                        : Colors.grey[300],
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
                                     ),
                                   ),
                                   onPressed: () {
-                                    searchController.clear(); 
+                                    searchController.clear();
                                     setState(() {
                                       _showFriendsOnly = !_showFriendsOnly;
                                     });
@@ -560,15 +565,21 @@ Future<void> _pickImage() async {
                                       Text(
                                         _showFriendsOnly ? "Followed" : "All",
                                         style: TextStyle(
-                                          color: _showFriendsOnly ? Colors.white : Colors.black87,
+                                          color: _showFriendsOnly
+                                              ? Colors.white
+                                              : Colors.black87,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
                                         ),
                                       ),
                                       const SizedBox(width: 6),
                                       Icon(
-                                        _showFriendsOnly ? Icons.people : Icons.public,
-                                        color: _showFriendsOnly ? Colors.white : Colors.black87,
+                                        _showFriendsOnly
+                                            ? Icons.people
+                                            : Icons.public,
+                                        color: _showFriendsOnly
+                                            ? Colors.white
+                                            : Colors.black87,
                                         size: 20,
                                       ),
                                     ],
@@ -578,7 +589,6 @@ Future<void> _pickImage() async {
                           ],
                         ),
                       ),
-                      
                       Expanded(
                         child: ListView.builder(
                           itemCount: searchResultList.length,
@@ -588,7 +598,7 @@ Future<void> _pickImage() async {
                             if (searchController.text.isEmpty) {
                               return FeedListItem(
                                 // --- FIX 1: ADD KEY ---
-                                key: ValueKey(item['id']), 
+                                key: ValueKey(item['id']),
                                 // ----------------------
                                 text: item['text'] ??
                                     S.of(context).testo_non_disponibile,
@@ -611,7 +621,6 @@ Future<void> _pickImage() async {
                           },
                         ),
                       ),
-
                       if (isLoggedIn)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -619,56 +628,61 @@ Future<void> _pickImage() async {
                             children: [
                               Expanded(
                                 child: TextField(
-                                  controller: postController,
-                                  maxLines: 1,
-                                  minLines: 1,
-                                  decoration: InputDecoration(
-                                    hintText: S.of(context).scrivi_un_post,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 12,
-                                    ),
-                                    suffixIcon: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
+                                    controller: postController,
+                                    maxLines: 1,
+                                    minLines: 1,
+                                    decoration: InputDecoration(
+                                      hintText: S.of(context).scrivi_un_post,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.grey[200],
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                      suffixIcon: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
                                             onPressed: _tagKebab,
                                             icon: Icon(
                                               Icons.place_rounded,
                                               // Assuming 'red' is your defined constant color
-                                              color: (selectedKebabId != null) ? red : Colors.grey, 
+                                              color: (selectedKebabId != null)
+                                                  ? red
+                                                  : Colors.grey,
                                             ),
                                           ),
-                                        if (_isImageLoading)
-                                          const Padding(
-                                            padding: EdgeInsets.all(12.0),
-                                            child: SizedBox(
-                                              width: 24,
-                                              height: 24,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2.5,
-                                                color: red, 
+                                          if (_isImageLoading)
+                                            const Padding(
+                                              padding: EdgeInsets.all(12.0),
+                                              child: SizedBox(
+                                                width: 24,
+                                                height: 24,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2.5,
+                                                  color: red,
+                                                ),
+                                              ),
+                                            )
+                                          else
+                                            IconButton(
+                                              onPressed: _pickImage,
+                                              icon: Icon(
+                                                Icons.photo,
+                                                // Check imageBytes (data) instead of just the path string
+                                                color: (imageBytes != null)
+                                                    ? red
+                                                    : Colors.grey,
                                               ),
                                             ),
-                                          )
-                                        else
-                                          IconButton(
-                                            onPressed: _pickImage,
-                                            icon: Icon(
-                                              Icons.photo,
-                                              // Check imageBytes (data) instead of just the path string
-                                              color: (imageBytes != null) ? red : Colors.grey,
-                                            ),
-                                          ),
-                                    ],
-                                  ),
-                                )
-                                  ),
+                                        ],
+                                      ),
+                                    )),
                               ),
                               const SizedBox(width: 8),
                               Container(

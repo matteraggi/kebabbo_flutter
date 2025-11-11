@@ -19,7 +19,6 @@ class FeedListItem extends StatefulWidget {
   final int kebabTagId;
   final String kebabName;
   final bool canBeEliminated;
-  
 
   const FeedListItem({
     super.key,
@@ -51,9 +50,8 @@ class FeedListItemState extends State<FeedListItem> {
   List<Map<String, dynamic>> userProfiles = [];
   late int _currentCommentNumber;
   List<String> userList = [];
-  String anonymous ="Anonimo";
+  String anonymous = "Anonimo";
   bool deleted = false;
-  
 
   @override
   void initState() {
@@ -64,7 +62,8 @@ class FeedListItemState extends State<FeedListItem> {
     _currentCommentNumber = widget.commentNumber;
     timeago_it.setLocaleMessages('it', timeago_it.ItMessages());
   }
-   @override
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
@@ -76,46 +75,47 @@ class FeedListItemState extends State<FeedListItem> {
     }
   }
 
-Future<void> _fetchUserProfile(String userId) async {
-  try {
-    // If userId is null or empty, set default values
-    if (supabase.auth.currentUser == null) {
+  Future<void> _fetchUserProfile(String userId) async {
+    try {
+      // If userId is null or empty, set default values
+      if (supabase.auth.currentUser == null) {
+        if (mounted) {
+          setState(() {
+            userName = anonymous;
+            avatarUrl = null;
+            isLoading = false;
+          });
+        }
+        return; // Exit early since no user ID is provided
+      }
+
+      final response =
+          await supabase.from('profiles').select('*').eq('id', userId).single();
+
       if (mounted) {
         setState(() {
-          userName = anonymous;
-          avatarUrl = null;
+          userName = response['username'] ?? anonymous;
+          avatarUrl = response['avatar_url'] as String?;
           isLoading = false;
         });
       }
-      return; // Exit early since no user ID is provided
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          userName = anonymous;
+          avatarUrl = null; // No avatar if there's an error
+          isLoading = false;
+        });
+      }
+      debugPrint('Errore nel recupero del profilo: $error');
     }
-
-    final response =
-        await supabase.from('profiles').select('*').eq('id', userId).single();
-
-    if (mounted) {
-      setState(() {
-        userName = response['username'] ?? anonymous;
-        avatarUrl = response['avatar_url'] as String?;
-        isLoading = false;
-      });
-    }
-  } catch (error) {
-    if (mounted) {
-      setState(() {
-        userName = anonymous;
-        avatarUrl = null; // No avatar if there's an error
-        isLoading = false;
-      });
-    }
-    debugPrint('Errore nel recupero del profilo: $error');
   }
-}
 
   Future<void> _checkIfLiked() async {
     try {
       final userId = supabase.auth.currentSession?.user.id;
-      bool userLiked = userId != null ? widget.likeList.contains(userId) : false;
+      bool userLiked =
+          userId != null ? widget.likeList.contains(userId) : false;
 
       if (mounted) {
         setState(() {
@@ -139,7 +139,9 @@ Future<void> _fetchUserProfile(String userId) async {
       if (userId == null) {
         //show a toast
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).devi_essere_autenticato_per_mettere_mi_piace)),
+          SnackBar(
+              content: Text(
+                  S.of(context).devi_essere_autenticato_per_mettere_mi_piace)),
         );
         return;
       }
@@ -169,14 +171,14 @@ Future<void> _fetchUserProfile(String userId) async {
     final user = supabase.auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).autenticazione_necessaria)));
+          SnackBar(content: Text(S.of(context).autenticazione_necessaria)));
       return;
     }
 
     final String commentText = commentController.text.trim();
     if (commentText.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).commento_vuoto))); 
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(S.of(context).commento_vuoto)));
       return;
     }
 
@@ -288,7 +290,9 @@ Future<void> _fetchUserProfile(String userId) async {
                         decoration: InputDecoration(
                           hintText: supabase.auth.currentUser != null
                               ? S.of(context).scrivi_un_commento
-                              : S.of(context).devi_essere_autenticato_per_commentare,
+                              : S
+                                  .of(context)
+                                  .devi_essere_autenticato_per_commentare,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -300,14 +304,14 @@ Future<void> _fetchUserProfile(String userId) async {
                       onPressed: () async {
                         await _postComment();
                         if (!context.mounted) return;
-                          Navigator.pop(context);
+                        Navigator.pop(context);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(S
-                                    .of(context)
-                                    .il_commento_e_stato_aggiunto_con_successo)),
-                          );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(S
+                                  .of(context)
+                                  .il_commento_e_stato_aggiunto_con_successo)),
+                        );
                       },
                     ),
                   ],
@@ -323,9 +327,10 @@ Future<void> _fetchUserProfile(String userId) async {
   Future<List<Map<String, dynamic>>> _fetchComments(int postId) async {
     try {
       //use edge function get_comments_for_post
-      final comments = await supabase.rpc('get_comments_for_post',params:  {'post_id': postId});
+      final comments = await supabase
+          .rpc('get_comments_for_post', params: {'post_id': postId});
       userProfiles = [];
-      
+
       if (supabase.auth.currentUser == null) {
         for (var comment in comments) {
           comment['user_profile'] = {'username': 'Anonimo', 'avatar_url': null};
@@ -400,16 +405,18 @@ Future<void> _fetchUserProfile(String userId) async {
         recognizer: TapGestureRecognizer()
           ..onTap = () async {
             try {
-              if(supabase.auth.currentUser == null) {
+              if (supabase.auth.currentUser == null) {
                 //show toast
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(S.of(context).devi_essere_autenticato_per_visualizzare_il_profilo)),
+                  SnackBar(
+                      content: Text(S
+                          .of(context)
+                          .devi_essere_autenticato_per_visualizzare_il_profilo)),
                 );
                 return;
               }
               final userId = await _fetchUserIdByUsername(tagText);
               if (userId != null) {
-                
                 if (!mounted) return;
                 Navigator.push(
                   context,
@@ -447,143 +454,149 @@ Future<void> _fetchUserProfile(String userId) async {
     return spans;
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     // Get the current user's ID (Supabase auth example)
     final currentUserId = Supabase.instance.client.auth.currentUser?.id;
 
-    return deleted ? Container() : Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                isLoading
-                    ? const CircularProgressIndicator()
-                    : InkWell(
-                        onTap: () {
-                          if(supabase.auth.currentUser == null){
-                            //show toast
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(S.of(context).devi_essere_autenticato_per_visualizzare_il_profilo)),
+    return deleted
+        ? Container()
+        : Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      isLoading
+                          ? const CircularProgressIndicator()
+                          : InkWell(
+                              onTap: () {
+                                if (supabase.auth.currentUser == null) {
+                                  //show toast
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(S
+                                            .of(context)
+                                            .devi_essere_autenticato_per_visualizzare_il_profilo)),
+                                  );
+                                  return;
+                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SingleUserPage(
+                                      userId: widget.userId,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: avatarUrl != null &&
+                                            avatarUrl!.isNotEmpty
+                                        ? NetworkImage(avatarUrl!)
+                                        : const AssetImage(
+                                                'assets/logos/small_logo.png')
+                                            as ImageProvider,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    userName ?? S.of(context).anonimo,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                      const SizedBox(height: 8),
+                      if (widget.kebabName.isNotEmpty)
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => KebabSinglePage(
+                                  kebabId: widget.kebabTagId,
+                                ),
+                              ),
                             );
-                            return;
-                          }
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SingleUserPage(
-                                userId: widget.userId,
+                          },
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.place_outlined,
+                                color: Colors.grey,
+                                size: 16,
                               ),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: avatarUrl != null &&
-                                      avatarUrl!.isNotEmpty
-                                  ? NetworkImage(avatarUrl!)
-                                  : const AssetImage('assets/logos/small_logo.png')
-                                      as ImageProvider,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              userName ?? S.of(context).anonimo,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                              const SizedBox(width: 2),
+                              Text(
+                                widget.kebabName,
+                                style: const TextStyle(color: Colors.grey),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                const SizedBox(height: 8),
-                if (widget.kebabName.isNotEmpty)
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => KebabSinglePage(
-                            kebabId: widget.kebabTagId,
+                            ],
                           ),
                         ),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.place_outlined,
-                          color: Colors.grey,
-                          size: 16,
+                      const SizedBox(height: 8),
+                      Text.rich(
+                        TextSpan(
+                          children: _highlightUserTags(widget.text),
                         ),
-                        const SizedBox(width: 2),
-                        Text(
-                          widget.kebabName,
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 8),
-                Text.rich(
-                  TextSpan(
-                    children: _highlightUserTags(widget.text),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                widget.imageUrl.isNotEmpty
-                    ? Image.network(widget.imageUrl)
-                    : const SizedBox.shrink(),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('$likeCount'),
-                    IconButton(
-                      icon: Icon(
-                        hasLiked ? Icons.favorite : Icons.favorite_border,
-                        color: hasLiked ? red : Colors.black,
                       ),
-                      onPressed: () => _toggleLike(widget.postId),
+                      const SizedBox(height: 8),
+                      widget.imageUrl.isNotEmpty
+                          ? Image.network(widget.imageUrl)
+                          : const SizedBox.shrink(),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('$likeCount'),
+                          IconButton(
+                            icon: Icon(
+                              hasLiked ? Icons.favorite : Icons.favorite_border,
+                              color: hasLiked ? red : Colors.black,
+                            ),
+                            onPressed: () => _toggleLike(widget.postId),
+                          ),
+                          const SizedBox(width: 16),
+                          Text('$_currentCommentNumber'),
+                          IconButton(
+                            icon: const Icon(Icons.comment_outlined,
+                                color: Colors.black),
+                            onPressed: _showCommentsDialog,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _formatTimestamp(widget.createdAt),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  // Add the trash icon if the post belongs to the current user
+                  if (widget.canBeEliminated &&
+                      currentUserId != null &&
+                      currentUserId == widget.userId)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.black),
+                        onPressed: () {
+                          _showDeleteConfirmationDialog();
+                        },
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    Text('$_currentCommentNumber'),
-                    IconButton(
-                      icon: const Icon(Icons.comment_outlined,
-                          color: Colors.black),
-                      onPressed: _showCommentsDialog,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _formatTimestamp(widget.createdAt),
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-            // Add the trash icon if the post belongs to the current user
-            if (widget.canBeEliminated &&
-                currentUserId != null &&
-                currentUserId == widget.userId)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.black),
-                  onPressed: () {
-                    _showDeleteConfirmationDialog();
-                  },
-                ),
+                ],
               ),
-          ],
-        ),
-      ),
-    );
+            ),
+          );
   }
 
   // Function to show a confirmation dialog before deleting
@@ -597,14 +610,14 @@ Future<void> _fetchUserProfile(String userId) async {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();  // Close dialog
+                Navigator.of(context).pop(); // Close dialog
               },
               child: Text(S.of(context).annulla),
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();  // Close dialog
-                await _deletePost(widget.postId);  // Call the delete function
+                Navigator.of(context).pop(); // Close dialog
+                await _deletePost(widget.postId); // Call the delete function
               },
               child: Text(S.of(context).elimina),
             ),
@@ -616,53 +629,49 @@ Future<void> _fetchUserProfile(String userId) async {
 
 // in FeedListItemState...
 
-Future<void> _deletePost(int postId) async {
-  // 1. Get the current user's ID
-  final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+  Future<void> _deletePost(int postId) async {
+    // 1. Get the current user's ID
+    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
 
-  // 2. Add a guard clause in case the user is not logged in
-  if (currentUserId == null) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.of(context).autenticazione_necessaria)),
-      );
+    // 2. Add a guard clause in case the user is not logged in
+    if (currentUserId == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).autenticazione_necessaria)),
+        );
+      }
+      return;
     }
-    return;
-  }
 
-  try {
-    // 3. Use .match() to specify BOTH conditions for the delete
-    await Supabase.instance.client
-        .from('posts')
-        .delete()
-        .match({
-          'id': postId,
-          'user_id': currentUserId // This is the crucial line
-        });
-
-    if (mounted) {
-      // Show a confirmation message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.of(context).post_eliminato)),
-      );
-      setState(() {
-        // Hide the post from the UI
-        deleted = true;
+    try {
+      // 3. Use .match() to specify BOTH conditions for the delete
+      await Supabase.instance.client.from('posts').delete().match({
+        'id': postId,
+        'user_id': currentUserId // This is the crucial line
       });
-    }
-  } catch (error) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error deleting post: $error")),
-      );
+
+      if (mounted) {
+        // Show a confirmation message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).post_eliminato)),
+        );
+        setState(() {
+          // Hide the post from the UI
+          deleted = true;
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error deleting post: $error")),
+        );
+      }
     }
   }
-}
-
 }
 
 Future<String?> _fetchUserIdByUsername(String username) async {
-  if(supabase.auth.currentUser == null) {
+  if (supabase.auth.currentUser == null) {
     return null;
   }
   final response = await supabase

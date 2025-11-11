@@ -26,8 +26,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
 
   Future<void> fetchReviews() async {
     try {
-      final response = await supabase.from('profiles').select('tcg').eq(
-          'id',
+      final response = await supabase.from('profiles').select('tcg').eq('id',
           supabase.auth.currentUser?.id ?? ""); // Fetch current user's tcg list
 
       if (response.isNotEmpty) {
@@ -39,15 +38,16 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
               .from('kebab')
               .select('name')
               .filter('id', 'in', tcgIds);
-          List<String> kebabList=kebabResponse.map<String>((kebabs) {
-              final String kebabberId =
-                  kebabs['name'].toLowerCase().replaceAll(' ', '-');
-              return 'assets/kebab-card/$kebabberId.png';}
-            ).toList();
-            if (!mounted) return;
-            for (var item in kebabList) {
-              await precacheImage(AssetImage('assets/kebab-card/$item.png'), context);
-            }
+          List<String> kebabList = kebabResponse.map<String>((kebabs) {
+            final String kebabberId =
+                kebabs['name'].toLowerCase().replaceAll(' ', '-');
+            return 'assets/kebab-card/$kebabberId.png';
+          }).toList();
+          if (!mounted) return;
+          for (var item in kebabList) {
+            await precacheImage(
+                AssetImage('assets/kebab-card/$item.png'), context);
+          }
           setState(() {
             imagePaths = kebabList;
           });
@@ -55,8 +55,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
       }
     } catch (e) {
       debugPrint('Unexpected error: $e');
-    }
-    finally {
+    } finally {
       setState(() {
         isLoading = false;
       });
@@ -73,26 +72,28 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : imagePaths.isEmpty
-              ? Center(child: Column(
-      mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-      crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(S.of(context).no_cards_yet),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PackPage()),
-                  );
-                },
-                child: Text(S.of(context).go_back),
-              ),
-            ],
-          ))
-              : imagePaths.length==1?
-                SingleCard(imagePath: imagePaths[0]):
-                RotationSceneV1(imagePaths: imagePaths),
+              ? Center(
+                  child: Column(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // Center vertically
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(S.of(context).no_cards_yet),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PackPage()),
+                        );
+                      },
+                      child: Text(S.of(context).go_back),
+                    ),
+                  ],
+                ))
+              : imagePaths.length == 1
+                  ? SingleCard(imagePath: imagePaths[0])
+                  : RotationSceneV1(imagePaths: imagePaths),
     );
   }
 }

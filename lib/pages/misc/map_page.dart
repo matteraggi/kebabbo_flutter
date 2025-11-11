@@ -98,7 +98,7 @@ class MapPageState extends State<MapPage> {
         child: Image.asset("assets/images/user.png"),
         key: const ValueKey('user_marker'),
       ),
-      
+
       // --- START OF FIX 1 ---
       // Filter dashList to only include items with valid lat/lng
       ...dashList
@@ -158,7 +158,7 @@ class MapPageState extends State<MapPage> {
                     final item = dashList.firstWhere((element) =>
                         marker.point.latitude == element['lat'] &&
                         marker.point.longitude == element['lng']);
-                    
+
                     // --- START OF FIX 2 ---
                     // Use default values (??) to prevent crashes if data is null
                     return PopupKebabItem(

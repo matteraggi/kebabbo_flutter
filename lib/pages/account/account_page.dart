@@ -314,7 +314,8 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
   }
-Future<void> _openFavoriteKebabSelection() async {
+
+  Future<void> _openFavoriteKebabSelection() async {
     List<Map<String, dynamic>> kebabItems = await fetchKebab();
 
     if (!mounted) return;
@@ -322,7 +323,7 @@ Future<void> _openFavoriteKebabSelection() async {
       backgroundColor: yellow,
       context: context,
       builder: (BuildContext context) {
-        return Column( 
+        return Column(
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
@@ -330,7 +331,8 @@ Future<void> _openFavoriteKebabSelection() async {
                 height: 5,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.2), // Colore scuro per contrasto
+                  color: Colors.black
+                      .withValues(alpha: 0.2), // Colore scuro per contrasto
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -585,13 +587,14 @@ Future<void> _openFavoriteKebabSelection() async {
                                       );
                                     }
                                   }();
-                                } else if (value == 5) { // Valore 5
+                                } else if (value == 5) {
+                                  // Valore 5
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const AddKebab()),
+                                        builder: (context) => const AddKebab()),
                                   );
-                                } else if (value == 6) { // Valore 6
+                                } else if (value == 6) {
+                                  // Valore 6
                                   _signOut();
                                 }
                               }
@@ -617,12 +620,13 @@ Future<void> _openFavoriteKebabSelection() async {
                   const SizedBox(height: 15),
                   // Profilo + Statistiche nella stessa riga
                   Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceEvenly, // Mantenuto spaceEvenly
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly, // Mantenuto spaceEvenly
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 16.0), // Aggiunto padding
+                        padding: const EdgeInsets.only(
+                            left: 16.0), // Aggiunto padding
                         child: GestureDetector(
                           onTap: () {
                             showDialog(
@@ -666,8 +670,7 @@ Future<void> _openFavoriteKebabSelection() async {
                                           ),
                                           child: IconButton(
                                             padding: EdgeInsets.zero,
-                                            constraints:
-                                                const BoxConstraints(),
+                                            constraints: const BoxConstraints(),
                                             icon: Icon(
                                               Icons.camera_alt,
                                               size: 25,

@@ -1,11 +1,10 @@
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint("Handling a background message: ${message.messageId}");
 }
-
 
 void requestNotificationPermissions(FirebaseMessaging messaging) async {
   NotificationSettings settings = await messaging.requestPermission(
@@ -21,7 +20,7 @@ void requestNotificationPermissions(FirebaseMessaging messaging) async {
   }
 }
 
-  void registerNotificationListeners(BuildContext context) {
+void registerNotificationListeners(BuildContext context) {
   // Initialize flutter_local_notifications
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -36,7 +35,8 @@ void requestNotificationPermissions(FirebaseMessaging messaging) async {
 
   // Initialize the plugin
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher'); // Replace with your icon
+      AndroidInitializationSettings(
+          '@mipmap/ic_launcher'); // Replace with your icon
   final DarwinInitializationSettings initializationSettingsIOS =
       DarwinInitializationSettings();
   final InitializationSettings initializationSettings = InitializationSettings(
@@ -77,7 +77,7 @@ void requestNotificationPermissions(FirebaseMessaging messaging) async {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     debugPrint('App opened by notification: ${message.notification?.title}');
   });
-  }
+}
 
 void subscribeToGlobalTopic(FirebaseMessaging messaging) async {
   await messaging.subscribeToTopic('global');

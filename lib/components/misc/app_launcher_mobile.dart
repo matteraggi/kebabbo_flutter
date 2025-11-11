@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void openApp() async {
-  final uri = Uri.parse('intent://kebabbologna.com/path#Intent;scheme=https;package=com.canny.kebabbologna;end');
-  
+  final uri = Uri.parse(
+      'intent://kebabbologna.com/path#Intent;scheme=https;package=com.canny.kebabbologna;end');
+
   if (await canLaunchUrl(uri)) {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   } else {

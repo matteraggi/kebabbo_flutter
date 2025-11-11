@@ -115,7 +115,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
       _currentKebab['isFavorite'] = false;
       _calculateDistance(); // Recalculate the distance for the new kebab
     });
-  
+
     // Pause for a short time before moving the cloud back down
     await Future.delayed(const Duration(milliseconds: 500));
 
@@ -183,7 +183,8 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                           special: false,
                           initiallyExpanded: true,
                           glutenFree: _currentKebab['gluten_free'] ?? false,
-                          hasUserReview: _currentKebab['user_reviewed'] ?? false,
+                          hasUserReview:
+                              _currentKebab['user_reviewed'] ?? false,
                         ),
                       ],
                     ),

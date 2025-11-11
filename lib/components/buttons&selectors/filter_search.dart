@@ -59,7 +59,8 @@ class _FilterSearchState extends State<FilterSearch> {
     _localUseDistanceFilter = widget.useDistanceFilter;
     _localMaxDistanceKm = widget.maxDistanceKm;
   }
-@override
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -99,8 +100,7 @@ class _FilterSearchState extends State<FilterSearch> {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
               decoration: BoxDecoration(
                 color: _localShowOnlyOpen ? red : Colors.white,
                 borderRadius: BorderRadius.circular(50),
@@ -121,8 +121,7 @@ class _FilterSearchState extends State<FilterSearch> {
                   Text(
                     "Aperti ora",
                     style: TextStyle(
-                      color:
-                          _localShowOnlyOpen ? Colors.white : Colors.black87,
+                      color: _localShowOnlyOpen ? Colors.white : Colors.black87,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -201,8 +200,7 @@ class _FilterSearchState extends State<FilterSearch> {
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
-                        color:
-                            !_localShowOnlyKebab ? red : Colors.transparent,
+                        color: !_localShowOnlyKebab ? red : Colors.transparent,
                         borderRadius: BorderRadius.circular(40),
                       ),
                       child: Center(
@@ -439,7 +437,7 @@ class _FilterSearchState extends State<FilterSearch> {
                 ),
         ),
 
-        // const Spacer(), 
+        // const Spacer(),
 
         const SizedBox(height: 24),
 

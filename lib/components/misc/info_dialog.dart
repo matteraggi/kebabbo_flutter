@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 
- void showInfoDialog(BuildContext context, String title, String description) {
+void showInfoDialog(BuildContext context, String title, String description) {
   AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
@@ -14,11 +14,11 @@ import 'package:kebabbo_flutter/main.dart';
       btnOkColor: red,
       btnOkOnPress: () {},
       customHeader: Icon(
-      Icons.info_outline,
-      color: red,
-      size: 100,
-    )  // No animation for the image
-    ).show();
+        Icons.info_outline,
+        color: red,
+        size: 100,
+      ) // No animation for the image
+      ).show();
 }
 
 // The "i" circular button widget
@@ -36,7 +36,8 @@ Widget textExplanation(BuildContext context, String text) {
   return Center(
     // Center the text within the available space
     child: Column(
-      mainAxisSize: MainAxisSize.min, // Use min to only take needed vertical space
+      mainAxisSize:
+          MainAxisSize.min, // Use min to only take needed vertical space
       children: [
         Text(
           text,
@@ -48,7 +49,6 @@ Widget textExplanation(BuildContext context, String text) {
     ),
   );
 }
-
 
 Widget linkExplanation(BuildContext context) {
   return GestureDetector(

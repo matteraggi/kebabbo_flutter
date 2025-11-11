@@ -5,7 +5,6 @@ import 'package:kebabbo_flutter/components/list_items/single_stat.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
-
 class KebabListItemFavorite extends StatefulWidget {
   final String id;
   final String name;
@@ -203,11 +202,11 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           if (widget.map.isNotEmpty)
-                          BottomButtonItem(
-                            linkMaps: widget.map,
-                            icon: Icons.map,
-                            isFront: true,
-                          ),
+                            BottomButtonItem(
+                              linkMaps: widget.map,
+                              icon: Icons.map,
+                              isFront: true,
+                            ),
                           Row(
                             children: [
                               if (widget.glutenFree)

@@ -22,10 +22,10 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
     };
   } catch (error) {
     debugPrint(error.toString());
-    if (context.mounted){
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Unexpected error occurred')),
-    );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unexpected error occurred')),
+      );
     }
     return null;
   }

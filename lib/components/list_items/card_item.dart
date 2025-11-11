@@ -8,7 +8,8 @@ class CardItem extends StatelessWidget {
   final List<IconData> icons;
   final List<Uri> url;
 
-  const CardItem({super.key, 
+  const CardItem({
+    super.key,
     required this.image,
     required this.name,
     required this.description,
@@ -49,7 +50,8 @@ class CardItem extends StatelessWidget {
                 Text(
                   name,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                      fontSize: 25, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -67,8 +69,7 @@ class CardItem extends StatelessWidget {
                   children: List.generate(icons.length, (index) {
                     return GestureDetector(
                       onTap: () {
-                        _launchUrl(url[
-                            index]);
+                        _launchUrl(url[index]);
                       },
                       child: Row(
                         children: [

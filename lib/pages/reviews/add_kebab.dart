@@ -47,7 +47,7 @@ class _AddKebabState extends State<AddKebab> {
   bool _glutenFree = false;
   bool _loading = false;
 
-@override
+  @override
   void initState() {
     super.initState();
     _fetchAllKebabs();
@@ -60,7 +60,7 @@ class _AddKebabState extends State<AddKebab> {
         'id': widget.kebabId!, // Assicurati che il tipo sia corretto
         'name': widget.kebabName!,
       };
-      
+
       // Sposta il cursore alla fine
       _nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: _nameController.text.length),
@@ -299,12 +299,13 @@ class _AddKebabState extends State<AddKebab> {
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             // Colora di grigio se disabilitato
-            fillColor: isPreFilled ? Colors.grey[200] : Colors.white, 
+            fillColor: isPreFilled ? Colors.grey[200] : Colors.white,
           ),
-          validator: (value) =>
-              value == null || value.trim().isEmpty ? 'Campo obbligatorio' : null,
+          validator: (value) => value == null || value.trim().isEmpty
+              ? 'Campo obbligatorio'
+              : null,
           onChanged: (value) {
-            _nameController.text = value; 
+            _nameController.text = value;
             if (_selectedKebab != null) {
               setState(() => _selectedKebab = null);
             }

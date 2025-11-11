@@ -20,7 +20,8 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Future<void> _sendResetPasswordEmail() async {
     if (_emailController.text.isEmpty) {
-      context.showSnackBar(S.of(context).please_fill_in_all_fields, isError: true);
+      context.showSnackBar(S.of(context).please_fill_in_all_fields,
+          isError: true);
       return;
     }
     final isValid = _formKey.currentState!.validate();
@@ -31,7 +32,8 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     try {
       await supabase.auth.resetPasswordForEmail(
         _emailController.text.trim(),
-        redirectTo: kIsWeb ? Uri.base.origin : 'io.supabase.flutter://reset-callback/',
+        redirectTo:
+            kIsWeb ? Uri.base.origin : 'io.supabase.flutter://reset-callback/',
       );
       if (mounted) {
         context.showSnackBar(S.of(context).check_your_email_for_a_reset_link);
@@ -44,7 +46,8 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     } catch (error) {
       debugPrint('Error: $error');
       if (!mounted) return;
-      context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
+      context.showSnackBar(S.of(context).unexpected_error_occurred,
+          isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -128,7 +131,8 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ElevatedButton(
               onPressed: _isLoading ? null : _sendResetPasswordEmail,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

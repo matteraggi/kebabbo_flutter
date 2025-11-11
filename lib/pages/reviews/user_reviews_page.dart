@@ -27,12 +27,16 @@ class UserReviewsState extends State<UserReviewsPage> {
     super.initState();
     _fetchReviews(widget.userId);
   }
-Future<void> _fetchReviews(String userId) async {
+
+  Future<void> _fetchReviews(String userId) async {
     final response =
         await supabase.from('reviews').select('*').eq('user_id', userId);
-    
+
     // Lista temporanea per i kebab da fetchare
-    final kebabIds = response.map((review) => review['kebabber_id'].toString()).toSet().toList();
+    final kebabIds = response
+        .map((review) => review['kebabber_id'].toString())
+        .toSet()
+        .toList();
 
     // Se non ci sono recensioni, esci
     if (kebabIds.isEmpty) {
@@ -115,8 +119,7 @@ Future<void> _fetchReviews(String userId) async {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddKebab(
-                      ),
+                      builder: (context) => AddKebab(),
                     ),
                   );
                 },
@@ -175,7 +178,6 @@ Future<void> _fetchReviews(String userId) async {
                             isOpen: review['is_open'],
                             glutenFree: review['gluten_free'],
                             expanded: false,
-                            
                           );
                         },
                       ),
