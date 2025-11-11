@@ -319,7 +319,6 @@ class FeedPageState extends State<FeedPage> {
       'text': text,
       'user_id': user.id,
       'created_at': DateTime.now().toIso8601String(),
-      // --- FIX 2: Initialize stats for local display ---
       'like': [],
       'comments_number': 0,
     };
@@ -597,9 +596,7 @@ class FeedPageState extends State<FeedPage> {
 
                             if (searchController.text.isEmpty) {
                               return FeedListItem(
-                                // --- FIX 1: ADD KEY ---
                                 key: ValueKey(item['id']),
-                                // ----------------------
                                 text: item['text'] ??
                                     S.of(context).testo_non_disponibile,
                                 createdAt: item['created_at'] ?? '',

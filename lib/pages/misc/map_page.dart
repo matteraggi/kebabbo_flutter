@@ -99,7 +99,6 @@ class MapPageState extends State<MapPage> {
         key: const ValueKey('user_marker'),
       ),
 
-      // --- START OF FIX 1 ---
       // Filter dashList to only include items with valid lat/lng
       ...dashList
           .where((item) => item['lat'] != null && item['lng'] != null)
@@ -114,7 +113,6 @@ class MapPageState extends State<MapPage> {
           key: ValueKey('kebab_marker_${item['id']}'),
         );
       })
-      // --- END OF FIX 1 ---
     ];
 
     return Stack(
@@ -159,7 +157,6 @@ class MapPageState extends State<MapPage> {
                         marker.point.latitude == element['lat'] &&
                         marker.point.longitude == element['lng']);
 
-                    // --- START OF FIX 2 ---
                     // Use default values (??) to prevent crashes if data is null
                     return PopupKebabItem(
                       name: item['name'] ?? 'Nome non disponibile',
@@ -170,7 +167,6 @@ class MapPageState extends State<MapPage> {
                       dimension: (item['dimension'] ?? 0.0).toDouble(),
                       menu: (item['menu'] ?? 0.0).toDouble(),
                     );
-                    // --- END OF FIX 2 ---
                   },
                 ),
                 markers: markers, // This uses the filtered list of markers

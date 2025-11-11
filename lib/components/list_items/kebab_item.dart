@@ -220,13 +220,11 @@ class KebabListItemState extends State<KebabListItem> {
         ),
       ),
       child: ConstrainedBox(
-        // 🆕 FIX: Apply the same minHeight to the front to prevent cropping
         // when flipping from the back.
         constraints: const BoxConstraints(minHeight: 460),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            // 🆕 FIX: Use spaceBetween to push buttons to the bottom
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -270,7 +268,6 @@ class KebabListItemState extends State<KebabListItem> {
                   ),
                 ],
               ),
-              // 🆕 FIX: Footer section (Buttons + Gluten Free + Fun)
               Column(
                 children: [
                   const SizedBox(height: 16),
@@ -372,13 +369,11 @@ class KebabListItemState extends State<KebabListItem> {
         ),
       ),
       child: ConstrainedBox(
-        // 1. FIX CLIPPING: Set a minHeight roughly equal to your Front card height.
         // Adjust '460' up or down depending on your average front card size.
         constraints: const BoxConstraints(minHeight: 460),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            // 2. FIX BUTTONS: Push content to edges (Top vs Bottom)
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -51,13 +51,12 @@ class UserReviewsState extends State<UserReviewsPage> {
     final kebabResponse = await supabase
         .from('kebab')
         .select('*')
-        .inFilter('id', kebabIds); // .in_() per fetchare tutti gli ID
+        .inFilter('id', kebabIds);
 
     // Mappa i kebab per ID per un accesso rapido
     final kebabMap = {
       for (var kebab in kebabResponse) kebab['id'].toString(): kebab
     };
-    // -------------------------------------------------------------
 
     for (var review in response) {
       final kebabberId = review['kebabber_id'].toString();
