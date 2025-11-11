@@ -22,7 +22,7 @@ design:
 extra:
 - [ ] compressioni immagini soprattutto avatar
 - [ ] Togliere compilato da github
-- [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+- [x] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
 - [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] Codice da sistemare in alcune pagine: servono file di logica con le funzioni e anche più componenti
 
