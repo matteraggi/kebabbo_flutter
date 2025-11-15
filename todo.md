@@ -4,6 +4,8 @@ URGENTI PER RELEASE:
 - [ ] controllare bugfix
 - [ ] controllare sicurezza app
 - [ ] design sezioni più importanti
+- [ ] nuovo kebab che almeno chiede la provincia
+- [ ] nuova review che non chiede gluten free
 
 funzionalità:
 - [ ] Click sulla mappa per prendere le coordinate
