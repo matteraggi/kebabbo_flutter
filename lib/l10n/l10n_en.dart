@@ -569,4 +569,212 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get found_all_cards => 'All cards found.';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get privacy_policy => 'Privacy Policy';
+
+  @override
+  String get add_kebab => 'Add a Kebab';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get could_not_open_link => 'Could not open the link.';
+
+  @override
+  String get generic_error => 'Error: ';
+
+  @override
+  String get posts => 'Posts';
+
+  @override
+  String get followers => 'Followers';
+
+  @override
+  String get following => 'Following';
+
+  @override
+  String get error_processing_image => 'Error processing image:';
+
+  @override
+  String get followed_filter => 'Following';
+
+  @override
+  String get all_filter => 'All';
+
+  @override
+  String get games_tools_title => 'Games & Tools';
+
+  @override
+  String get login_required_section => 'You must log in to use this section.';
+
+  @override
+  String get add_review_title => 'Add Review';
+
+  @override
+  String get add_review_subtitle => 'Tried a new kebab?';
+
+  @override
+  String get pack_button_title => 'Pack';
+
+  @override
+  String get pack_button_subtitle => 'open your favorite kebab pack';
+
+  @override
+  String get collection_title => 'Collection';
+
+  @override
+  String get collection_subtitle => 'check your kebabbo cards';
+
+  @override
+  String get create_kebab_title => 'Create Kebab';
+
+  @override
+  String get create_kebab_subtitle => 'build your own kebab';
+
+  @override
+  String get your_medals_title => 'Your Medals';
+
+  @override
+  String get add_review_appbar_title => 'Add Review';
+
+  @override
+  String get error_loading_kebabs => 'Error loading kebabs: ';
+
+  @override
+  String get kebab_not_found => 'Kebab not found';
+
+  @override
+  String get add_new_kebab_confirmation =>
+      'You are about to add \"\$name\" as a new kebab. Are you sure it doesn\'t already exist?';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get yes_create_new => 'Yes, create new';
+
+  @override
+  String get user_not_authenticated => 'User not authenticated';
+
+  @override
+  String get error_adding_review => 'Error adding review: ';
+
+  @override
+  String get name_label => 'Name';
+
+  @override
+  String get required_field => 'Required field';
+
+  @override
+  String get kebab_already_exists => 'Kebab already exists';
+
+  @override
+  String get your_review_optional => 'Your review (optional)';
+
+  @override
+  String get kebab_tag => 'Kebab';
+
+  @override
+  String get sandwich_tag => 'Sandwich';
+
+  @override
+  String get dimension => 'Size';
+
+  @override
+  String get meat => 'Meat';
+
+  @override
+  String get onion => 'Onion';
+
+  @override
+  String get vegetables => 'Vegetables';
+
+  @override
+  String get gluten_free => 'Gluten Free';
+
+  @override
+  String get advanced_filters => 'Advanced Filters';
+
+  @override
+  String get open_now => 'Open Now';
+
+  @override
+  String get sandwiches => 'Sandwiches';
+
+  @override
+  String get order_by => 'Order by';
+
+  @override
+  String get filter_by_distance => 'Filter by distance';
+
+  @override
+  String get sort_stars => 'stars';
+
+  @override
+  String get sort_quality => 'quality';
+
+  @override
+  String get sort_price => 'price';
+
+  @override
+  String get sort_dimension => 'size';
+
+  @override
+  String get sort_menu => 'menu';
+
+  @override
+  String get sort_name => 'name';
+
+  @override
+  String get sort_distance => 'distance';
+
+  @override
+  String get fun_exclamation => 'fun!';
+
+  @override
+  String get kebabbo_review => 'Kebabbo Review';
+
+  @override
+  String get review_this_kebab => 'Review this Kebab';
+
+  @override
+  String get staff => 'Staff';
+
+  @override
+  String get users => 'Users';
+
+  @override
+  String get one_review => '1 review';
+
+  @override
+  String get five_reviews => '5 reviews';
+
+  @override
+  String get ten_reviews => '10 reviews';
+
+  @override
+  String get twenty_reviews => '20 reviews';
+
+  @override
+  String get thirty_reviews => '30 reviews';
+
+  @override
+  String get one_post => '1 post';
+
+  @override
+  String get five_posts => '5 posts';
+
+  @override
+  String get ten_posts => '10 posts';
+
+  @override
+  String get fifty_posts => '50 posts';
+
+  @override
+  String get build_button => 'Build!';
 }

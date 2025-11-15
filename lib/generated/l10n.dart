@@ -1570,6 +1570,501 @@ class S {
       args: [],
     );
   }
+
+  /// `About`
+  String get about {
+    return Intl.message('About', name: 'about', desc: '', args: []);
+  }
+
+  /// `Privacy Policy`
+  String get privacy_policy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacy_policy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a Kebab`
+  String get add_kebab {
+    return Intl.message('Add a Kebab', name: 'add_kebab', desc: '', args: []);
+  }
+
+  /// `Logout`
+  String get logout {
+    return Intl.message('Logout', name: 'logout', desc: '', args: []);
+  }
+
+  /// `Could not open the link.`
+  String get could_not_open_link {
+    return Intl.message(
+      'Could not open the link.',
+      name: 'could_not_open_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error: `
+  String get generic_error {
+    return Intl.message('Error: ', name: 'generic_error', desc: '', args: []);
+  }
+
+  /// `Posts`
+  String get posts {
+    return Intl.message('Posts', name: 'posts', desc: '', args: []);
+  }
+
+  /// `Followers`
+  String get followers {
+    return Intl.message('Followers', name: 'followers', desc: '', args: []);
+  }
+
+  /// `Following`
+  String get following {
+    return Intl.message('Following', name: 'following', desc: '', args: []);
+  }
+
+  /// `Error processing image:`
+  String get error_processing_image {
+    return Intl.message(
+      'Error processing image:',
+      name: 'error_processing_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Following`
+  String get followed_filter {
+    return Intl.message(
+      'Following',
+      name: 'followed_filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get all_filter {
+    return Intl.message('All', name: 'all_filter', desc: '', args: []);
+  }
+
+  /// `Games & Tools`
+  String get games_tools_title {
+    return Intl.message(
+      'Games & Tools',
+      name: 'games_tools_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must log in to use this section.`
+  String get login_required_section {
+    return Intl.message(
+      'You must log in to use this section.',
+      name: 'login_required_section',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Review`
+  String get add_review_title {
+    return Intl.message(
+      'Add Review',
+      name: 'add_review_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tried a new kebab?`
+  String get add_review_subtitle {
+    return Intl.message(
+      'Tried a new kebab?',
+      name: 'add_review_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pack`
+  String get pack_button_title {
+    return Intl.message('Pack', name: 'pack_button_title', desc: '', args: []);
+  }
+
+  /// `open your favorite kebab pack`
+  String get pack_button_subtitle {
+    return Intl.message(
+      'open your favorite kebab pack',
+      name: 'pack_button_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Collection`
+  String get collection_title {
+    return Intl.message(
+      'Collection',
+      name: 'collection_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `check your kebabbo cards`
+  String get collection_subtitle {
+    return Intl.message(
+      'check your kebabbo cards',
+      name: 'collection_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Kebab`
+  String get create_kebab_title {
+    return Intl.message(
+      'Create Kebab',
+      name: 'create_kebab_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `build your own kebab`
+  String get create_kebab_subtitle {
+    return Intl.message(
+      'build your own kebab',
+      name: 'create_kebab_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Medals`
+  String get your_medals_title {
+    return Intl.message(
+      'Your Medals',
+      name: 'your_medals_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Review`
+  String get add_review_appbar_title {
+    return Intl.message(
+      'Add Review',
+      name: 'add_review_appbar_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error loading kebabs: `
+  String get error_loading_kebabs {
+    return Intl.message(
+      'Error loading kebabs: ',
+      name: 'error_loading_kebabs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebab not found`
+  String get kebab_not_found {
+    return Intl.message(
+      'Kebab not found',
+      name: 'kebab_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are about to add "$name" as a new kebab. Are you sure it doesn't already exist?`
+  String get add_new_kebab_confirmation {
+    return Intl.message(
+      'You are about to add "\$name" as a new kebab. Are you sure it doesn\'t already exist?',
+      name: 'add_new_kebab_confirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `City`
+  String get city {
+    return Intl.message('City', name: 'city', desc: '', args: []);
+  }
+
+  /// `Yes, create new`
+  String get yes_create_new {
+    return Intl.message(
+      'Yes, create new',
+      name: 'yes_create_new',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User not authenticated`
+  String get user_not_authenticated {
+    return Intl.message(
+      'User not authenticated',
+      name: 'user_not_authenticated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error adding review: `
+  String get error_adding_review {
+    return Intl.message(
+      'Error adding review: ',
+      name: 'error_adding_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get name_label {
+    return Intl.message('Name', name: 'name_label', desc: '', args: []);
+  }
+
+  /// `Required field`
+  String get required_field {
+    return Intl.message(
+      'Required field',
+      name: 'required_field',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebab already exists`
+  String get kebab_already_exists {
+    return Intl.message(
+      'Kebab already exists',
+      name: 'kebab_already_exists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your review (optional)`
+  String get your_review_optional {
+    return Intl.message(
+      'Your review (optional)',
+      name: 'your_review_optional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebab`
+  String get kebab_tag {
+    return Intl.message('Kebab', name: 'kebab_tag', desc: '', args: []);
+  }
+
+  /// `Sandwich`
+  String get sandwich_tag {
+    return Intl.message('Sandwich', name: 'sandwich_tag', desc: '', args: []);
+  }
+
+  /// `Size`
+  String get dimension {
+    return Intl.message('Size', name: 'dimension', desc: '', args: []);
+  }
+
+  /// `Meat`
+  String get meat {
+    return Intl.message('Meat', name: 'meat', desc: '', args: []);
+  }
+
+  /// `Onion`
+  String get onion {
+    return Intl.message('Onion', name: 'onion', desc: '', args: []);
+  }
+
+  /// `Vegetables`
+  String get vegetables {
+    return Intl.message('Vegetables', name: 'vegetables', desc: '', args: []);
+  }
+
+  /// `Gluten Free`
+  String get gluten_free {
+    return Intl.message('Gluten Free', name: 'gluten_free', desc: '', args: []);
+  }
+
+  /// `Advanced Filters`
+  String get advanced_filters {
+    return Intl.message(
+      'Advanced Filters',
+      name: 'advanced_filters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Now`
+  String get open_now {
+    return Intl.message('Open Now', name: 'open_now', desc: '', args: []);
+  }
+
+  /// `Sandwiches`
+  String get sandwiches {
+    return Intl.message('Sandwiches', name: 'sandwiches', desc: '', args: []);
+  }
+
+  /// `Order by`
+  String get order_by {
+    return Intl.message('Order by', name: 'order_by', desc: '', args: []);
+  }
+
+  /// `Filter by distance`
+  String get filter_by_distance {
+    return Intl.message(
+      'Filter by distance',
+      name: 'filter_by_distance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `stars`
+  String get sort_stars {
+    return Intl.message('stars', name: 'sort_stars', desc: '', args: []);
+  }
+
+  /// `quality`
+  String get sort_quality {
+    return Intl.message('quality', name: 'sort_quality', desc: '', args: []);
+  }
+
+  /// `price`
+  String get sort_price {
+    return Intl.message('price', name: 'sort_price', desc: '', args: []);
+  }
+
+  /// `size`
+  String get sort_dimension {
+    return Intl.message('size', name: 'sort_dimension', desc: '', args: []);
+  }
+
+  /// `menu`
+  String get sort_menu {
+    return Intl.message('menu', name: 'sort_menu', desc: '', args: []);
+  }
+
+  /// `name`
+  String get sort_name {
+    return Intl.message('name', name: 'sort_name', desc: '', args: []);
+  }
+
+  /// `distance`
+  String get sort_distance {
+    return Intl.message('distance', name: 'sort_distance', desc: '', args: []);
+  }
+
+  /// `fun!`
+  String get fun_exclamation {
+    return Intl.message('fun!', name: 'fun_exclamation', desc: '', args: []);
+  }
+
+  /// `Build!`
+  String get build_button {
+    return Intl.message('Build!', name: 'build_button', desc: '', args: []);
+  }
+
+  /// `Kebabbo Review`
+  String get kebabbo_review {
+    return Intl.message(
+      'Kebabbo Review',
+      name: 'kebabbo_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review this Kebab`
+  String get review_this_kebab {
+    return Intl.message(
+      'Review this Kebab',
+      name: 'review_this_kebab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Staff`
+  String get staff {
+    return Intl.message('Staff', name: 'staff', desc: '', args: []);
+  }
+
+  /// `Users`
+  String get users {
+    return Intl.message('Users', name: 'users', desc: '', args: []);
+  }
+
+  /// `1 review`
+  String get one_review {
+    return Intl.message('1 review', name: 'one_review', desc: '', args: []);
+  }
+
+  /// `5 reviews`
+  String get five_reviews {
+    return Intl.message('5 reviews', name: 'five_reviews', desc: '', args: []);
+  }
+
+  /// `10 reviews`
+  String get ten_reviews {
+    return Intl.message('10 reviews', name: 'ten_reviews', desc: '', args: []);
+  }
+
+  /// `20 reviews`
+  String get twenty_reviews {
+    return Intl.message(
+      '20 reviews',
+      name: 'twenty_reviews',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `30 reviews`
+  String get thirty_reviews {
+    return Intl.message(
+      '30 reviews',
+      name: 'thirty_reviews',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 post`
+  String get one_post {
+    return Intl.message('1 post', name: 'one_post', desc: '', args: []);
+  }
+
+  /// `5 posts`
+  String get five_posts {
+    return Intl.message('5 posts', name: 'five_posts', desc: '', args: []);
+  }
+
+  /// `10 posts`
+  String get ten_posts {
+    return Intl.message('10 posts', name: 'ten_posts', desc: '', args: []);
+  }
+
+  /// `50 posts`
+  String get fifty_posts {
+    return Intl.message('50 posts', name: 'fifty_posts', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

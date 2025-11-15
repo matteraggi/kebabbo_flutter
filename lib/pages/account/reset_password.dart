@@ -26,11 +26,12 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
       await Supabase.instance.client.auth.updateUser(
         UserAttributes(password: _newPasswordController.text.trim()),
       );
-
+      if (!mounted) return;
       context.showSnackBar(S.of(context).password_reset_success);
     } catch (e) {
-      context.showSnackBar('Failed to reset password: ${e.toString()}', isError: true);
-      print(e.toString());
+      context.showSnackBar('Failed to reset password: ${e.toString()}',
+          isError: true);
+      debugPrint(e.toString());
     } finally {
       setState(() => _isLoading = false);
     }
@@ -56,16 +57,20 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                   labelText: S.of(context).new_password,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
-                        _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                        _isPasswordVisible =
+                            !_isPasswordVisible; // Toggle visibility
                       });
                     },
                   ),
                 ),
-                obscureText: !_isPasswordVisible, // Updated to control visibility
+                obscureText:
+                    !_isPasswordVisible, // Updated to control visibility
                 validator: (value) {
                   if (value == null || value.length < 6) {
                     return S.of(context).password_must_be_at_least_6_characters;

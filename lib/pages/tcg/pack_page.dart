@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart'; // Assuming S.of(context) comes from here
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/main.dart';
+
 class PackPage extends StatefulWidget {
   const PackPage({super.key});
 
@@ -12,8 +13,10 @@ class PackPage extends StatefulWidget {
 class PackPageState extends State<PackPage> {
   final SupabaseClient supabase = Supabase.instance.client;
   String? _kebabName; // Name of the kebab to display, triggers animation
-  bool _isOpeningLogicRunning = false; // True while fetching data and before animation starts
-  bool _isAnimationInProgress = false; // True while the pack opening animation is playing
+  bool _isOpeningLogicRunning =
+      false; // True while fetching data and before animation starts
+  bool _isAnimationInProgress =
+      false; // True while the pack opening animation is playing
 
   @override
   void initState() {
@@ -59,7 +62,8 @@ class PackPageState extends State<PackPage> {
 
       final lastPackTimestamp = profileResponse['last_pack'] as String?;
       // Ensure tcgArray is correctly typed, e.g., List<int> or List<String> if IDs are such
-      final List<dynamic> tcgArray = List<dynamic>.from(profileResponse['tcg'] ?? []);
+      final List<dynamic> tcgArray =
+          List<dynamic>.from(profileResponse['tcg'] ?? []);
 
       // Check if user can open a pack based on timestamp
       if (lastPackTimestamp != null) {
@@ -92,8 +96,10 @@ class PackPageState extends State<PackPage> {
       final kebabResponse = await supabase
           .from('kebab')
           .select('id, name')
-          .not('id', 'in', tcgArray.cast<Object>()) // Cast to List<Object> if necessary
-          .limit(1) // You might want .order('random()') if your DB supports it and you need true randomness
+          .not('id', 'in',
+              tcgArray.cast<Object>()) // Cast to List<Object> if necessary
+          .limit(
+              1) // You might want .order('random()') if your DB supports it and you need true randomness
           .maybeSingle(); // Use maybeSingle to get null if no matching kebab is found
 
       if (kebabResponse == null) {
@@ -113,7 +119,8 @@ class PackPageState extends State<PackPage> {
       }
 
       final foundKebabId = kebabResponse['id'];
-      final String kebabDisplayName = kebabResponse['name']; // Original name for processing
+      final String kebabDisplayName =
+          kebabResponse['name']; // Original name for processing
 
       // Update the user's profile with the new kebab ID and timestamp
       final updatedTcgArray = [...tcgArray, foundKebabId];
@@ -122,28 +129,31 @@ class PackPageState extends State<PackPage> {
         'last_pack': DateTime.now().toUtc().toIso8601String(),
       }).eq('id', userId);
 
-      print('Added kebab ID $foundKebabId to user $userId');
       String imageName = kebabDisplayName.toLowerCase().replaceAll(' ', '-');
 
       // Precache the image before starting the animation
       if (mounted) {
-        await precacheImage(AssetImage('assets/kebab-card/$imageName.png'), context);
+        await precacheImage(
+            AssetImage('assets/kebab-card/$imageName.png'), context);
         setState(() {
-          _kebabName = imageName;         // Set kebabName to trigger UI update and animation
+          _kebabName =
+              imageName; // Set kebabName to trigger UI update and animation
           _isOpeningLogicRunning = false; // Logic part is now complete
-          _isAnimationInProgress = true;  // Animation will start due to _kebabName change
+          _isAnimationInProgress =
+              true; // Animation will start due to _kebabName change
         });
       } else {
-         // Widget was disposed before we could update UI, ensure flag is reset
+        // Widget was disposed before we could update UI, ensure flag is reset
         _isOpeningLogicRunning = false;
       }
-
     } catch (e, stacktrace) {
-      print('Error opening pack: $e');
-      print('Stacktrace: $stacktrace');
+      debugPrint('Error opening pack: $e');
+      debugPrint('Stacktrace: $stacktrace');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: ${e.toString()}')), // Provide a user-friendly error
+          SnackBar(
+              content: Text(
+                  'An error occurred: ${e.toString()}')), // Provide a user-friendly error
         );
         // It's often good to pop on error to prevent user being stuck
         Navigator.pop(context);
@@ -177,80 +187,84 @@ class PackPageState extends State<PackPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Pack Opening")),
-      body: Container(
+        appBar: AppBar(title: const Text("Pack Opening")),
+        body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.white,red],
+              colors: [Colors.white, red],
               stops: [0, 1],
             ),
           ),
-          child:  Center(
-        child: GestureDetector(
-          onTap: _handleTap, // Use the new tap handler
-          child: SizedBox(
-            width: 300,
-            height: 600,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Hidden Card (becomes visible and positioned when _kebabName is set)
-                if (_kebabName != null)
-                  Positioned(
-                    top: 0, // Ensure this aligns correctly behind the pack halves before animation
-                    child: Image.asset(
-                      'assets/kebab-card/$_kebabName.png',
-                      width: 250,
-                      height: 500,
-                      fit: BoxFit.cover,
+          child: Center(
+            child: GestureDetector(
+              onTap: _handleTap, // Use the new tap handler
+              child: SizedBox(
+                width: 300,
+                height: 600,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Hidden Card (becomes visible and positioned when _kebabName is set)
+                    if (_kebabName != null)
+                      Positioned(
+                        top:
+                            0, // Ensure this aligns correctly behind the pack halves before animation
+                        child: Image.asset(
+                          'assets/kebab-card/$_kebabName.png',
+                          width: 250,
+                          height: 500,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+
+                    // Top Half of the Pack
+                    AnimatedPositioned(
+                      duration: const Duration(seconds: 3),
+                      curve: Curves.easeInExpo,
+                      top: _kebabName != null
+                          ? -350
+                          : -36, // Moves up when _kebabName is set
+                      onEnd: () {
+                        // This callback fires when the top half's animation finishes.
+                        // We consider the overall animation finished at this point.
+                        if (_kebabName != null && _isAnimationInProgress) {
+                          setState(() {
+                            _isAnimationInProgress = false;
+                          });
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pack_top.png',
+                        width: 267,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
 
-                // Top Half of the Pack
-                AnimatedPositioned(
-                  duration: const Duration(seconds: 3),
-                  curve: Curves.easeInExpo,
-                  top: _kebabName != null ? -350 : -36, // Moves up when _kebabName is set
-                  onEnd: () {
-                    // This callback fires when the top half's animation finishes.
-                    // We consider the overall animation finished at this point.
-                    if (_kebabName != null && _isAnimationInProgress) {
-                      setState(() {
-                        _isAnimationInProgress = false;
-                      });
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pack_top.png',
-                    width: 267,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),
+                    // Bottom Half of the Pack
+                    AnimatedPositioned(
+                      duration: const Duration(seconds: 3),
+                      curve: Curves.easeInExpo,
+                      right: 2,
+                      bottom: _kebabName != null
+                          ? -550
+                          : 37, // Moves down when _kebabName is set
+                      // No onEnd needed here if the top one handles the state reset,
+                      // assuming they have the same duration and curve.
+                      child: Image.asset(
+                        'assets/images/pack_bottom.png',
+                        width: 300,
+                        height: 500,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
                 ),
-
-                // Bottom Half of the Pack
-                AnimatedPositioned(
-                  duration: const Duration(seconds: 3),
-                  curve: Curves.easeInExpo,
-                  right: 2,
-                  bottom: _kebabName != null ? -550 : 37, // Moves down when _kebabName is set
-                  // No onEnd needed here if the top one handles the state reset,
-                  // assuming they have the same duration and curve.
-                  child: Image.asset(
-                    'assets/images/pack_bottom.png',
-                    width: 300,
-                    height: 500,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-      )
-    );
+        ));
   }
 }

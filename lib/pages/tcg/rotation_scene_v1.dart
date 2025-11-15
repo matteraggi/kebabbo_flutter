@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/tcg/single_card.dart';
+
 class RotationSceneV1 extends StatefulWidget {
   final List<String> imagePaths;
   const RotationSceneV1({super.key, required this.imagePaths});
@@ -13,18 +14,18 @@ class RotationSceneV1 extends StatefulWidget {
 class RotationSceneV1State extends State<RotationSceneV1> {
   double rotationOffset = 0.0; // Tracks rotation due to drag
 
-    @override
+  @override
   void initState() {
     super.initState();
 
     // Calculate initial offset to center the first card
-    _setInitialRotationOffset(); 
+    _setInitialRotationOffset();
   }
 
   void _setInitialRotationOffset() {
     // Set the initial rotation offset
     setState(() {
-      rotationOffset = pi / widget.imagePaths.length; 
+      rotationOffset = pi / widget.imagePaths.length;
     });
   }
 
@@ -43,12 +44,13 @@ class RotationSceneV1State extends State<RotationSceneV1> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.white,red],
+              colors: [Colors.white, red],
               stops: [0, 1],
             ),
           ),
           child: Center(
-            child: MyScener(imagePaths: widget.imagePaths, rotationOffset: rotationOffset),
+            child: MyScener(
+                imagePaths: widget.imagePaths, rotationOffset: rotationOffset),
           ),
         ),
       ),
@@ -56,20 +58,20 @@ class RotationSceneV1State extends State<RotationSceneV1> {
   }
 }
 
-
-
 // MyScener widget (carousel scene) modification
 class MyScener extends StatefulWidget {
   final List<String> imagePaths;
   final double rotationOffset;
 
-  const MyScener({super.key, required this.imagePaths, required this.rotationOffset});
+  const MyScener(
+      {super.key, required this.imagePaths, required this.rotationOffset});
 
   @override
   MyScenerState createState() => MyScenerState();
 }
 
-class MyScenerState extends State<MyScener> with SingleTickerProviderStateMixin {
+class MyScenerState extends State<MyScener>
+    with SingleTickerProviderStateMixin {
   List<CardData> cardData = [];
   late int numItems;
   double radio = 200.0;
@@ -102,10 +104,10 @@ class MyScenerState extends State<MyScener> with SingleTickerProviderStateMixin 
       var c = addCard(vo); // The method below handles tap for each card
       var mt2 = Matrix4.identity();
       mt2.setEntry(3, 2, 0.001); // Perspective effect
-      mt2.translate(vo.x, vo.y, -vo.z);
+      mt2.translateByDouble(vo.x, vo.y, -vo.z, 1.0);
 
       double scale = 1 + (vo.z / radio) * 0.5;
-      mt2.scale(scale, scale); // Scaling for perspective
+      mt2.scaleByDouble(scale, scale, 1.0, 1.0); // Scaling for perspective
 
       c = Transform(
         alignment: Alignment.center,
@@ -133,7 +135,9 @@ class MyScenerState extends State<MyScener> with SingleTickerProviderStateMixin 
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SingleCard(imagePath: widget.imagePaths[vo.idx % widget.imagePaths.length]),
+            builder: (context) => SingleCard(
+                imagePath:
+                    widget.imagePaths[vo.idx % widget.imagePaths.length]),
           ),
         );
       },

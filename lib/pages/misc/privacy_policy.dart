@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
@@ -26,7 +27,7 @@ class PrivacyPolicyPage extends StatelessWidget {
               return Center(
                 child: Text(
                   'Errore nel caricamento della Privacy Policy',
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: red),
                 ),
               );
             }

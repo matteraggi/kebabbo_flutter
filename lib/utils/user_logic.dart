@@ -21,10 +21,12 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
       'favoriteKebab': data['favorite_kebab'] ?? 0,
     };
   } catch (error) {
-    print(error);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Unexpected error occurred')),
-    );
+    debugPrint(error.toString());
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unexpected error occurred')),
+      );
+    }
     return null;
   }
 }
@@ -52,12 +54,14 @@ Future<void> updateProfile(BuildContext context, String? username,
   };
   try {
     await Supabase.instance.client.from('profiles').upsert(updates);
+    if (!context.mounted) return;
     if (username != null || avatarUrl != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context).successfully_updated_profile)),
       );
     }
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(S.of(context).unexpected_error_occurred)),
     );

@@ -28,20 +28,21 @@ class SingleCardState extends State<SingleCard> {
         });
       },
       child: Scaffold(
-        appBar: AppBar(title:  Text(S.of(context).single_card)),
+        appBar: AppBar(title: Text(S.of(context).single_card)),
         body: Container(
           // Apply the black-to-white gradient background
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [ Colors.white, red],
+              colors: [Colors.white, red],
               stops: [0, 1],
             ),
           ),
           child: Center(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 50), // Add padding to prevent cutting
+              padding: const EdgeInsets.symmetric(
+                  vertical: 50), // Add padding to prevent cutting
               child: Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.identity()

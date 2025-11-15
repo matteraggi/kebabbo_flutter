@@ -1,29 +1,49 @@
 # TODO
 
-- [ ] RENDERE KEBABBO SOCIAL
-Kebabbo è il sito da consultare per dei buoni consigli sul kebab, consigli da esperti. Ma una guida non la guarda nessuno più di 1 volta al mese. E i kebab recensiti saranno sempre pochi. E non aumenteranno molto con la fine dell'Uni. 
-Soluzione: gli utenti possono caricare i posti che trovano (con approvazione nostra dalla piattaforma moderatori) con la propria review. Click sulla mappa per prendere le coordinate, niente recensione scritta visibile nel box. Distinguere bene kebab messi da noi e quelli messi dagli utenti, però rendere molto più visibili le recensioni del pubblico. Come sono ora neanche si vedono.
-Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
-Magari tasto per aggiungere i kebabbari nella mappa o nel profilo
--> idee: mettere toggle per kebab postati da tutti e kebab postati da noi. Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
+URGENTI PER RELEASE:
+- [ ] controllare bugfix
+- [ ] controllare sicurezza app
+- [ ] design sezioni più importanti
+- [ ] nuovo kebab che almeno chiede la provincia
+- [ ] nuova review che non chiede gluten free
 
-- [ ] Codice imbarazzante in alcune pagine: servono file di logica con le funzioni e anche più componenti
-- [ ] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
-- [ ] sezione medaglie che non deve essere scorrevole
-- [ ] sezioni review e kebab salvati del profilo molto sus
-- [ ] Foto dei post con tag del luogo -> foto degli utenti nella pagina del luogo
+funzionalità:
+- [ ] Click sulla mappa per prendere le coordinate
+- [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
+- [ ] Magari tasto per aggiungere i kebabbari nella mappa
+- [ ] fare pagina per singolo kebab con info approfondite (anche per smaltire il contenuto della card)
+- [ ] Foto dei post con tag del luogo -> tutte le foto degli utenti nella pagina del luogo
+
+bugfix:
+- [ ] se metti nei preferiti un posto con categoria panini, ti tolgono tutti i preferiti della categoria kebab e viceversa
+- [ ] quando segui una persona, cambia il numero dei suoi seguiti (invece che follower)
+- [ ] ogni tanto non va l'animazione delle carte
+- [ ] bordo non esiste in follower e followed
+- [ ] quando scrivi il commento l'input di testo rimane basso e non si vede
+
+design:
+- [ ] design card recensioni utenti (numero di recensioni e altro)
+- [ ] rifare style di: pack opening, carte, carte display, create kebab, pagina profilo utenti, recensione kebab, aggiunta kebab
+- [ ] mettere il grafico a barre
+- [ ] Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
+- [ ] sezioni review e kebab salvati del profilo molto sus e strani soprattutto in prod
+
+extra:
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
-- [ ] delete cascade da followed_user quando un utente viene eliminato
-- [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+- [ ] compressioni immagini soprattutto avatar
 - [ ] Togliere compilato da github
+- [x] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
+- [ ] delete cascade da followed_user quando un utente viene eliminato
+- [ ] Codice da sistemare in alcune pagine: servono file di logica con le funzioni e anche più componenti
 
 
 # DONE
 
-
-Pareggiare Kebabbo Web:
-
+- [X] tasto nuovo kebab separato da recensione
+- [x] cambiare messaggio iniziale
+- [x] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
+- [x] mettere toggle per kebab postati da tutti e kebab postati da noi. 
 - [x] maps in homepage
 - [x] user position in homepage
 - [x] special page style like top kebab
@@ -31,11 +51,9 @@ Pareggiare Kebabbo Web:
 - [x] working search bar
 - [x] distance in kebab card - order by distance
 - [x] about page
-
----
-
-Ancora non fatte in kebabbo Web:
-
+- [x] Gli utenti possono caricare i posti che trovano (con approvazione nostra dalla piattaforma moderatori) con la propria review
+- [x] Distinguere bene kebab messi da noi e quelli messi dagli utenti, però rendere molto più visibili le recensioni del pubblico. Come sono ora neanche si vedono
+- [x] sezione medaglie che non deve essere scorrevole
 - [x] Stella simpatia + rifare tot rating senza simpatia
 - [x] Rimuovere linea sotto tab World-Special
 - [x] Icona app senza sfondo
@@ -68,9 +86,6 @@ Ancora non fatte in kebabbo Web:
 - [x] Ricerca avanzata (build your kebab in db) (-> Build)
 - [x] Sistemare caricamento immagini
 - [x] Pulsante build non visibile da mobile
-
-Feature lancio:
-
 - [x] Build in account
 - [x] Utenti si possono seguire
 - [x] Pagina feed diventa pagina seguiti

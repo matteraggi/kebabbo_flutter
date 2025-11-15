@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 List<Map<String, dynamic>> fuzzySearchAndSort(List<Map<String, dynamic>> items,
     String query, String searchKey, bool showOnlyOpen, bool showOnlyKebab) {
   List<Map<String, dynamic>> tempList = items;
@@ -225,7 +227,7 @@ Future<Map<String, int>> calculateAvailableKebabsPerDistance(
 
     return kebabsInRange; // Return available kebab counts for each range
   } catch (error) {
-    print('Error calculating kebab distance: $error');
+    debugPrint('Error calculating kebab distance: $error');
     return {'200m': 0, '500m': 0, '1km': 0, '10km': 0, 'unlimited': 0};
   }
 }
@@ -241,4 +243,3 @@ Future<Uint8List?> compressImage(Uint8List imageData) async {
   // Codifica nuovamente l'immagine in JPEG con qualità ridotta
   return Uint8List.fromList(img.encodeJpg(resizedImage, quality: 60));
 }
-

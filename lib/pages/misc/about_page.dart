@@ -91,10 +91,11 @@ class AboutPageState extends State<AboutPage> {
     );
 
     if (response.statusCode == 200) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(('Email inviata con successo!'))));
+          SnackBar(content: Text(('Email inviata con successo!'))));
     } else {
-      print('Errore nell\'invio dell\'email: ${response.body}');
+      debugPrint('Errore nell\'invio dell\'email: ${response.body}');
     }
   }
 

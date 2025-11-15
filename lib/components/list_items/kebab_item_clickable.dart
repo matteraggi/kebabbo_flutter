@@ -59,8 +59,8 @@ class KebabListItemClickableState extends State<KebabListItemClickable> {
     final user = Supabase.instance.client.auth.currentUser;
 
     if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(('Utente non autenticato'))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(('Utente non autenticato'))));
       return;
     }
 

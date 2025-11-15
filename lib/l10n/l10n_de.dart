@@ -583,4 +583,213 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get found_all_cards => 'Alle Karten gefunden.';
+
+  @override
+  String get about => 'Über uns';
+
+  @override
+  String get privacy_policy => 'Datenschutzerklärung';
+
+  @override
+  String get add_kebab => 'Kebab hinzufügen';
+
+  @override
+  String get logout => 'Abmelden';
+
+  @override
+  String get could_not_open_link => 'Link konnte nicht geöffnet werden.';
+
+  @override
+  String get generic_error => 'Fehler: ';
+
+  @override
+  String get posts => 'Beiträge';
+
+  @override
+  String get followers => 'Follower';
+
+  @override
+  String get following => 'Gefolgt';
+
+  @override
+  String get error_processing_image => 'Fehler beim Verarbeiten des Bildes:';
+
+  @override
+  String get followed_filter => 'Gefolgt';
+
+  @override
+  String get all_filter => 'Alle';
+
+  @override
+  String get games_tools_title => 'Spiele & Tools';
+
+  @override
+  String get login_required_section =>
+      'Du musst dich anmelden, um diesen Bereich zu nutzen.';
+
+  @override
+  String get add_review_title => 'Bewertung hinzufügen';
+
+  @override
+  String get add_review_subtitle => 'Einen neuen Döner probiert?';
+
+  @override
+  String get pack_button_title => 'Pack';
+
+  @override
+  String get pack_button_subtitle => 'öffne dein Lieblings-Döner-Pack';
+
+  @override
+  String get collection_title => 'Sammlung';
+
+  @override
+  String get collection_subtitle => 'checke deine Kebabbo-Karten';
+
+  @override
+  String get create_kebab_title => 'Kebab erstellen';
+
+  @override
+  String get create_kebab_subtitle => 'bau deinen eigenen Döner';
+
+  @override
+  String get your_medals_title => 'Deine Medaillen';
+
+  @override
+  String get add_review_appbar_title => 'Bewertung hinzufügen';
+
+  @override
+  String get error_loading_kebabs => 'Fehler beim Laden der Dönerläden: ';
+
+  @override
+  String get kebab_not_found => 'Dönerladen nicht gefunden';
+
+  @override
+  String get add_new_kebab_confirmation =>
+      'Du bist dabei, \"\$name\" als neuen Dönerladen hinzuzufügen. Bist du sicher, dass er noch nicht existiert?';
+
+  @override
+  String get city => 'Stadt';
+
+  @override
+  String get yes_create_new => 'Ja, neu erstellen';
+
+  @override
+  String get user_not_authenticated => 'Benutzer nicht authentifiziert';
+
+  @override
+  String get error_adding_review => 'Fehler beim Hinzufügen der Bewertung: ';
+
+  @override
+  String get name_label => 'Name';
+
+  @override
+  String get required_field => 'Pflichtfeld';
+
+  @override
+  String get kebab_already_exists => 'Dönerladen existiert bereits';
+
+  @override
+  String get your_review_optional => 'Deine Bewertung (optional)';
+
+  @override
+  String get kebab_tag => 'Kebab';
+
+  @override
+  String get sandwich_tag => 'Sandwich';
+
+  @override
+  String get dimension => 'Größe';
+
+  @override
+  String get meat => 'Fleisch';
+
+  @override
+  String get onion => 'Zwiebel';
+
+  @override
+  String get vegetables => 'Gemüse';
+
+  @override
+  String get gluten_free => 'Glutenfrei';
+
+  @override
+  String get advanced_filters => 'Erweiterte Filter';
+
+  @override
+  String get open_now => 'Jetzt geöffnet';
+
+  @override
+  String get sandwiches => 'Sandwiches';
+
+  @override
+  String get order_by => 'Sortieren nach';
+
+  @override
+  String get filter_by_distance => 'Nach Entfernung filtern';
+
+  @override
+  String get sort_stars => 'Sterne';
+
+  @override
+  String get sort_quality => 'Qualität';
+
+  @override
+  String get sort_price => 'Preis';
+
+  @override
+  String get sort_dimension => 'Größe';
+
+  @override
+  String get sort_menu => 'Menü';
+
+  @override
+  String get sort_name => 'Name';
+
+  @override
+  String get sort_distance => 'Entfernung';
+
+  @override
+  String get fun_exclamation => 'Spaß!';
+
+  @override
+  String get kebabbo_review => 'Kebabbo Bewertung';
+
+  @override
+  String get review_this_kebab => 'Diesen Döner bewerten';
+
+  @override
+  String get staff => 'Personal';
+
+  @override
+  String get users => 'Benutzer';
+
+  @override
+  String get one_review => '1 Bewertung';
+
+  @override
+  String get five_reviews => '5 Bewertungen';
+
+  @override
+  String get ten_reviews => '10 Bewertungen';
+
+  @override
+  String get twenty_reviews => '20 Bewertungen';
+
+  @override
+  String get thirty_reviews => '30 Bewertungen';
+
+  @override
+  String get one_post => '1 Beitrag';
+
+  @override
+  String get five_posts => '5 Beiträge';
+
+  @override
+  String get ten_posts => '10 Beiträge';
+
+  @override
+  String get fifty_posts => '50 Beiträge';
+
+  @override
+  String get build_button => 'Bauen!';
 }

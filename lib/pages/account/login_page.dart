@@ -47,12 +47,14 @@ class LoginPageState extends State<LoginPage> {
         _emailController.clear();
         _passwordController.clear();
         setState(() {
-        widget.authCallback?.call(4);
+          widget.authCallback?.call(4);
         });
       }
     } on AuthException catch (error) {
+      if (!mounted) return;
       context.showSnackBar(error.message, isError: true);
     } catch (error) {
+      if (!mounted) return;
       context.showSnackBar(S.of(context).unexpected_error_occurred,
           isError: true);
     } finally {
@@ -98,7 +100,7 @@ class LoginPageState extends State<LoginPage> {
               AnimatedOpacity(
                 opacity: 1.0,
                 duration: const Duration(seconds: 1),
-                child: Image.asset( 
+                child: Image.asset(
                   'assets/logos/big_logo_name_blackred.png', // Use your logo here
                   height: 300,
                 ),
@@ -123,8 +125,7 @@ class LoginPageState extends State<LoginPage> {
                             BorderRadius.circular(12), // Rounded corners
                         boxShadow: [
                           BoxShadow(
-                            color:
-                                Colors.grey.withAlpha(77), // Subtle shadow
+                            color: Colors.grey.withAlpha(77), // Subtle shadow
                             blurRadius: 10,
                             offset: Offset(0, 5),
                           ),

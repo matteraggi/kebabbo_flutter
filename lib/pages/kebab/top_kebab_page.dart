@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/order_bar.dart';
 import 'package:kebabbo_flutter/components/list_items/kebab_item.dart';
-import 'package:kebabbo_flutter/pages/kebab/special_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
@@ -29,12 +29,15 @@ class TopKebabPageState extends State<TopKebabPage> {
   TextEditingController searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _hasAutoScrolled = false;
-  String? _expandedKebabId; // NUOVA VARIABILE DI STATO
+  String? _expandedKebabId;
+  bool showStaffRatings = true;
+  double maxDistance = double.infinity; // nessun limite all'inizio
+  bool useDistanceFilter = false; // lo switch nella bottom sheet
 
   @override
   void initState() {
     super.initState();
-    fetchKebab(widget.currentPosition);
+    fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
   }
 
   @override
@@ -42,11 +45,12 @@ class TopKebabPageState extends State<TopKebabPage> {
     super.didUpdateWidget(oldWidget);
     if (widget.currentPosition != oldWidget.currentPosition &&
         oldWidget.currentPosition == null) {
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     }
   }
 
-  Future<void> fetchKebab(Position? userPosition) async {
+  Future<void> fetchKebab(Position? userPosition,
+      {required bool useStaffRatings}) async {
     try {
       final PostgrestList response = await supabase.from('kebab').select('*');
 
@@ -65,6 +69,41 @@ class TopKebabPageState extends State<TopKebabPage> {
             kebab['distance'] = distanceInMeters / 1000;
           }
           kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
+          // 1. Controlla se lat e lng sono validi
+          final double lat = kebab['lat'] ?? 0.0;
+          final double lng = kebab['lng'] ?? 0.0;
+
+          if (userPosition != null && (lat != 0.0 || lng != 0.0)) {
+            // 2. Calcola la distanza SOLO se le coordinate sono valide
+            double distanceInMeters = Geolocator.distanceBetween(
+              userPosition.latitude,
+              userPosition.longitude,
+              lat,
+              lng,
+            );
+            kebab['distance'] = distanceInMeters / 1000;
+          } else {
+            // 3. Altrimenti, imposta la distanza a null
+            kebab['distance'] = null;
+          }
+        }
+
+        if (userPosition != null &&
+            useDistanceFilter &&
+            !maxDistance.isInfinite) {
+          kebabs = kebabs
+              .where((kebab) =>
+                  (kebab['distance'] ?? double.infinity) <= maxDistance)
+              .toList();
+        }
+        // Filtro staff / utenti
+        if (useStaffRatings) {
+          kebabs = kebabs.where((kebab) => kebab['is_staff'] == true).toList();
+        } else {
+          kebabs = kebabs
+              .where((kebab) =>
+                  kebab['user_reviewed'] == true && kebab['approved'] != false)
+              .toList();
         }
 
         // Sort the kebabs using the utility function
@@ -78,7 +117,6 @@ class TopKebabPageState extends State<TopKebabPage> {
                       (next['distance'] ?? double.infinity)
                   ? curr
                   : next);
-          print(tempClosest);
           if ((tempClosest['distance'] ?? double.infinity) < 0.2) {
             closestKebab = tempClosest;
           }
@@ -102,13 +140,25 @@ class TopKebabPageState extends State<TopKebabPage> {
         if (mounted) {
           setState(() {
             dashList = kebabs;
-            searchResultList = kebabs;
+            searchResultList = fuzzySearchAndSort(
+                dashList,
+                searchController.text, // Usa il testo già presente nella barra
+                'name',
+                showOnlyOpen,
+                showOnlyKebab);
             isLoading = false;
 
-            // AGGIORNAMENTO: Se troviamo un kebab vicino, salviamo il suo ID
-            if (closestKebab != null && !_hasAutoScrolled) {
-              _expandedKebabId = closestKebab['id'].toString();
-            }
+            setState(() {
+              dashList = dashList; // Salva la master list
+              searchResultList =
+                  searchResultList; // Salva la display list filtrata
+              isLoading = false;
+
+              // Se troviamo un kebab vicino, salviamo il suo ID
+              if (closestKebab != null && !_hasAutoScrolled) {
+                _expandedKebabId = closestKebab['id'].toString();
+              }
+            });
           });
 
           // Lo scroll viene attivato qui, dopo che lo stato è stato aggiornato
@@ -139,7 +189,6 @@ class TopKebabPageState extends State<TopKebabPage> {
       const double itemHeight = 180.0; // L'altezza dell'elemento CHIUSO
       final topOfItemOffset = index * itemHeight;
 
-      // LA MODIFICA È QUI:
       // Aggiungiamo un "margine di sicurezza" in alto per dare spazio all'espansione.
       // Puoi modificare questo valore per trovare quello perfetto per il tuo layout.
       const double topPadding = 430.0;
@@ -149,7 +198,6 @@ class TopKebabPageState extends State<TopKebabPage> {
         0.0,
         _scrollController.position.maxScrollExtent,
       );
-      print(targetOffset);
       // Anima lo scroll fino al nuovo offset calcolato
       _scrollController.animateTo(
         targetOffset,
@@ -169,7 +217,7 @@ class TopKebabPageState extends State<TopKebabPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).preferiti_solo_per_utenti_registrati),
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
       return;
@@ -203,7 +251,7 @@ class TopKebabPageState extends State<TopKebabPage> {
 
       // Log del nuovo stato
     } else {
-      print("Kebab con id $kebabId non trovato in dashList.");
+      debugPrint("Kebab con id $kebabId non trovato in dashList.");
     }
   }
 
@@ -217,21 +265,21 @@ class TopKebabPageState extends State<TopKebabPage> {
   void changeOrderByField(String field) {
     setState(() {
       orderByField = field;
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     });
   }
 
   void changeOrderDirection(bool direction) {
     setState(() {
       orderDirection = direction;
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     });
   }
 
   void toggleShowOnlyKebab() {
     setState(() {
       showOnlyKebab = !showOnlyKebab;
-      fetchKebab(widget.currentPosition);
+      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
     });
   }
 
@@ -255,18 +303,29 @@ class TopKebabPageState extends State<TopKebabPage> {
                         children: [
                           const SizedBox(height: 16),
                           OrderBar(
-                              orderByField: orderByField,
-                              orderDirection: orderDirection,
-                              onChangeOrderByField: changeOrderByField,
-                              onChangeOrderDirection: changeOrderDirection,
-                              showOnlyKebab: showOnlyKebab,
-                              changeShowOnlyKebab: toggleShowOnlyKebab),
+                            showStaffRatings: showStaffRatings,
+                            onToggleShowStaffRatings: () async {
+                              // 1. Define the new state
+                              final bool newStaffRatingsValue =
+                                  !showStaffRatings;
+
+                              // 2. Await the fetch *with the new value*.
+                              //    fetchKebab will call its own setState internally to update the list.
+                              await fetchKebab(widget.currentPosition,
+                                  useStaffRatings: newStaffRatingsValue);
+
+                              // 3. AFTER the await, update the class variable to change the color.
+                              setState(() {
+                                showStaffRatings = newStaffRatingsValue;
+                              });
+                            },
+                          ),
                           const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: Row(
                               children: [
-                                // Make the TextField take up the maximum available space
+                                // La barra di ricerca ora prende molto più spazio
                                 Expanded(
                                   child: TextField(
                                     controller: searchController,
@@ -294,62 +353,91 @@ class TopKebabPageState extends State<TopKebabPage> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                    width:
-                                        8), // Spacing between TextField and button
 
-                                // Set the button to a constrained width and height for consistent sizing
-                                ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 150, // Set a max width
-                                    minWidth:
-                                        80, // Optional: set a minimum width
+                                const SizedBox(width: 12),
+
+                                // Nuovo bottone filtro (sostituisce il toggle "Aperti ora")
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
                                   ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        showOnlyOpen = !showOnlyOpen;
-                                        fetchKebab(widget.currentPosition);
-                                      });
+                                  child: IconButton(
+                                    icon: const Icon(Icons.filter_list,
+                                        color: Colors.black, size: 28),
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20)),
+                                        ),
+                                        builder: (context) => FilterSearch(
+                                          showOnlyOpen: showOnlyOpen,
+                                          onToggleShowOnlyOpen: (value) {
+                                            setState(() {
+                                              showOnlyOpen = value;
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
+                                            });
+                                          },
+                                          showOnlyKebab: showOnlyKebab,
+                                          onToggleShowOnlyKebab: () {
+                                            setState(() {
+                                              showOnlyKebab = !showOnlyKebab;
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
+                                            });
+                                          },
+                                          orderByField: orderByField,
+                                          orderDirection: orderDirection,
+                                          onChangeOrderByField: (value) {
+                                            setState(() {
+                                              orderByField = value;
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
+                                            });
+                                          },
+                                          onChangeOrderByDirection: (value) {
+                                            setState(() {
+                                              orderDirection = value;
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
+                                            });
+                                          },
+                                          useDistanceFilter: useDistanceFilter,
+                                          maxDistanceKm: maxDistance.isInfinite
+                                              ? 50
+                                              : maxDistance,
+                                          onToggleUseDistanceFilter: (enabled) {
+                                            setState(() {
+                                              useDistanceFilter = enabled;
+                                              // se lo spegne => infinito
+                                              maxDistance = enabled
+                                                  ? maxDistance
+                                                  : double.infinity;
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
+                                            });
+                                          },
+                                          onChangeMaxDistanceKm: (km) {
+                                            setState(() {
+                                              maxDistance = km;
+                                              useDistanceFilter = true;
+                                              fetchKebab(widget.currentPosition,
+                                                  useStaffRatings:
+                                                      showStaffRatings);
+                                            });
+                                          },
+                                        ),
+                                      );
                                     },
-                                    child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 15,
-                                          horizontal: 16), // Inner padding
-                                      decoration: BoxDecoration(
-                                        color:
-                                            showOnlyOpen ? red : Colors.white,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            showOnlyOpen
-                                                ? Icons.check
-                                                : Icons.close,
-                                            color: showOnlyOpen
-                                                ? Colors.white
-                                                : Colors.black,
-                                            size: 20,
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            S.of(context).aperti_ora,
-                                            style: TextStyle(
-                                              color: showOnlyOpen
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ],
@@ -369,6 +457,8 @@ class TopKebabPageState extends State<TopKebabPage> {
                                       final kebabId = kebab['id']
                                           .toString(); // Ottieni l'ID
                                       return KebabListItem(
+                                        key: ValueKey(
+                                            "${kebab['id']}_${showStaffRatings.toString()}"),
                                         id: kebab['id'].toString(),
                                         name: kebab['name'] ?? '',
                                         description: kebab['description'] ?? '',
@@ -405,30 +495,15 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             kebab['gluten_free'] ?? false,
                                         initiallyExpanded:
                                             kebabId == _expandedKebabId,
+                                        hasUserReview:
+                                            kebab['user_reviewed'] ?? false,
+                                        flipped: !showStaffRatings,
+                                        approved: kebab['approved'],
                                       );
                                     },
                                   ),
                                 ),
                         ],
-                      ),
-                      // Icona circolare "kebab special" in basso a sinistra
-                      Positioned(
-                        bottom: 20.0,
-                        right: 8.0,
-                        child: FloatingActionButton(
-                          backgroundColor: red,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SpecialPage(
-                                  currentPosition: widget.currentPosition,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.public, color: Colors.white),
-                        ),
                       ),
                     ],
                   ),

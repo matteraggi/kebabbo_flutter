@@ -37,7 +37,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
     _loadUserPosts(); // Passa l'ID utente anche qui
   }
 
-Future<void> _loadUserPosts() async {
+  Future<void> _loadUserPosts() async {
     setState(() {
       _loading = true;
     });
@@ -161,6 +161,7 @@ Future<void> _loadUserPosts() async {
         _seguitiCount = _followed.length; // Aggiorna il numero di seguiti
       });
     } catch (error) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context).failed_to_update_follow_status)),
       );
@@ -187,206 +188,214 @@ Future<void> _loadUserPosts() async {
       }
     }
   }
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      backgroundColor: yellow,
-    ),
-    body: _loading
-        ? const Center(child: CircularProgressIndicator())
-        : SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              _username,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: red, width: 3),
-              ),
-              child: CircleAvatar(
-                radius: 47,
-                backgroundImage: (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                    ? NetworkImage(_avatarUrl!)
-                    : const AssetImage('assets/logos/small_logo.png')
-                        as ImageProvider,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ElevatedButton(
-                  onPressed: _toggleFollow,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isFollowing ? Colors.black12 : red,
-                  ),
-                  child: Text(_isFollowing ? S.of(context).segui_gia : S.of(context).segui),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              UserPostsPage(userId: widget.userId)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          "$_postCount",
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Text(
-                          'Posts',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FollowersPage(
-                                userId: widget.userId,
-                              )));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          '$_followerCount',
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Text(
-                          'Followers',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              SeguitiPage(userId: widget.userId)));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          '$_seguitiCount',
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          S.of(context).seguiti,
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            if (_favoriteKebab.isNotEmpty)
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(Icons.star, color: yellow, size: 24),
-                    Row(
-                      children: [
-                        Image.asset(
-                          _favoriteKebab["tag"] == "kebab"
-                              ? "assets/images/kebabcolored.png"
-                              : "assets/images/sandwitch.png",
-                          height: 24,
-                          width: 24,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          "${_favoriteKebab["name"] ?? S.of(context).nome_non_disponibile}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Icon(Icons.star, color: yellow, size: 24),
-                  ],
-                ),
-              ),
-            const SizedBox(height: 20),
 
-            // List of user posts
-            ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true, // Let ListView take up only the necessary space
-              itemCount: _userPosts.length,
-              itemBuilder: (context, index) {
-                final post = _userPosts[index];
-                return FeedListItem(
-                  text: post['text'] ?? S.of(context).testo_non_disponibile,
-                  createdAt: post['created_at'] ?? '',
-                  userId: post['user_id'],
-                  imageUrl: post['image_url'] ?? '',
-                  postId: post['id'],
-                  likeList: post['like'] ?? [],
-                  commentNumber: post['comments_number'] ?? 0,
-                  kebabTagId: post['kebab_tag_id'] ?? 0,
-                  kebabName: post['kebab_tag_name'] ?? '',
-                  canBeEliminated: widget.userId == supabase.auth.currentUser!.id,
-                );
-              },
-            ),
-          ],
-        ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: yellow,
       ),
-    ),
-  );
-}
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      _username,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: red, width: 3),
+                      ),
+                      child: CircleAvatar(
+                        radius: 47,
+                        backgroundImage: (_avatarUrl != null &&
+                                _avatarUrl!.isNotEmpty)
+                            ? NetworkImage(_avatarUrl!)
+                            : const AssetImage('assets/logos/small_logo.png')
+                                as ImageProvider,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _toggleFollow,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                _isFollowing ? Colors.black12 : red,
+                          ),
+                          child: Text(_isFollowing
+                              ? S.of(context).segui_gia
+                              : S.of(context).segui),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      UserPostsPage(userId: widget.userId)));
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  "$_postCount",
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Text(
+                                  'Posts',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => FollowersPage(
+                                        userId: widget.userId,
+                                      )));
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  '$_followerCount',
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Text(
+                                  'Followers',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      SeguitiPage(userId: widget.userId)));
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  '$_seguitiCount',
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  S.of(context).seguiti,
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if (_favoriteKebab.isNotEmpty)
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Icon(Icons.star, color: yellow, size: 24),
+                            Row(
+                              children: [
+                                Image.asset(
+                                  _favoriteKebab["tag"] == "kebab"
+                                      ? "assets/images/kebabcolored.png"
+                                      : "assets/images/sandwitch.png",
+                                  height: 24,
+                                  width: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "${_favoriteKebab["name"] ?? S.of(context).nome_non_disponibile}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Icon(Icons.star, color: yellow, size: 24),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+
+                    // List of user posts
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap:
+                          true, // Let ListView take up only the necessary space
+                      itemCount: _userPosts.length,
+                      itemBuilder: (context, index) {
+                        final post = _userPosts[index];
+                        return FeedListItem(
+                          text: post['text'] ??
+                              S.of(context).testo_non_disponibile,
+                          createdAt: post['created_at'] ?? '',
+                          userId: post['user_id'],
+                          imageUrl: post['image_url'] ?? '',
+                          postId: post['id'],
+                          likeList: post['like'] ?? [],
+                          commentNumber: post['comments_number'] ?? 0,
+                          kebabTagId: post['kebab_tag_id'] ?? 0,
+                          kebabName: post['kebab_tag_name'] ?? '',
+                          canBeEliminated:
+                              widget.userId == supabase.auth.currentUser!.id,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
 }

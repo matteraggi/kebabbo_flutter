@@ -90,6 +90,7 @@ class MapPageState extends State<MapPage> {
         LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
 
     List<Marker> markers = [
+      // User's location marker
       Marker(
         width: 50.0,
         height: 50.0,
@@ -97,11 +98,15 @@ class MapPageState extends State<MapPage> {
         child: Image.asset("assets/images/user.png"),
         key: const ValueKey('user_marker'),
       ),
-      ...dashList.map((item) {
+
+      // Filter dashList to only include items with valid lat/lng
+      ...dashList
+          .where((item) => item['lat'] != null && item['lng'] != null)
+          .map((item) {
         return Marker(
           width: 40.0,
           height: 40.0,
-          point: LatLng(item['lat'], item['lng']),
+          point: LatLng(item['lat'], item['lng']), // This is now safe
           child: Image.asset(item['tag'] == 'kebab'
               ? "assets/images/kebab.png"
               : "assets/images/sandwitch.png"),
@@ -147,21 +152,24 @@ class MapPageState extends State<MapPage> {
                     if (marker.key == const ValueKey('user_marker')) {
                       return const SizedBox.shrink();
                     }
+                    // Find the item
                     final item = dashList.firstWhere((element) =>
                         marker.point.latitude == element['lat'] &&
                         marker.point.longitude == element['lng']);
+
+                    // Use default values (??) to prevent crashes if data is null
                     return PopupKebabItem(
-                      name: item['name'],
-                      description: item['description'],
-                      rating: item['rating'].toDouble(),
-                      quality: item['quality'].toDouble(),
-                      price: item['price'].toDouble(),
-                      dimension: item['dimension'].toDouble(),
-                      menu: item['menu'].toDouble(),
+                      name: item['name'] ?? 'Nome non disponibile',
+                      description: item['description'] ?? '',
+                      rating: (item['rating'] ?? 0.0).toDouble(),
+                      quality: (item['quality'] ?? 0.0).toDouble(),
+                      price: (item['price'] ?? 0.0).toDouble(),
+                      dimension: (item['dimension'] ?? 0.0).toDouble(),
+                      menu: (item['menu'] ?? 0.0).toDouble(),
                     );
                   },
                 ),
-              markers: markers,
+                markers: markers, // This uses the filtered list of markers
               ),
             ),
           ],

@@ -35,7 +35,6 @@ class GoogleLoginButton extends StatelessWidget {
       idToken: idToken,
       accessToken: accessToken,
     );
-
   }
 
   @override

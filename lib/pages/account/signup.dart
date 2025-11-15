@@ -21,7 +21,8 @@ class SignUpPageState extends State<SignUpPage> {
 
   Future<void> _signUp() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      context.showSnackBar(S.of(context).please_fill_in_all_fields, isError: true);
+      context.showSnackBar(S.of(context).please_fill_in_all_fields,
+          isError: true);
       return;
     }
     final isValid = _formKey.currentState!.validate();
@@ -33,20 +34,25 @@ class SignUpPageState extends State<SignUpPage> {
       final AuthResponse res = await supabase.auth.signUp(
         email: _emailController.text.trim(),
         password: _passwordController.text,
-        emailRedirectTo: kIsWeb
-            ? Uri.base.origin
-            : 'io.supabase.flutter://login-callback/',
+        emailRedirectTo:
+            kIsWeb ? Uri.base.origin : 'io.supabase.flutter://login-callback/',
       );
       if (res.user != null && mounted) {
-        context.showSnackBar(S.of(context).check_your_email_for_a_verification_link);
+        context.showSnackBar(
+            S.of(context).check_your_email_for_a_verification_link);
         Navigator.of(context).pop(); // Go back after sign-up
       } else {
-        context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
+        if (!mounted) return;
+        context.showSnackBar(S.of(context).unexpected_error_occurred,
+            isError: true);
       }
     } on AuthException catch (error) {
+      if (!mounted) return;
       context.showSnackBar(error.message, isError: true);
     } catch (error) {
-      context.showSnackBar(S.of(context).unexpected_error_occurred, isError: true);
+      if (!mounted) return;
+      context.showSnackBar(S.of(context).unexpected_error_occurred,
+          isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -78,21 +84,15 @@ class SignUpPageState extends State<SignUpPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-          SizedBox(height: 24),
-              AnimatedOpacity(
-
+            SizedBox(height: 24),
+            AnimatedOpacity(
               opacity: 1.0,
-
               duration: const Duration(seconds: 1),
-
               child: Image.asset(
-
                 'assets/logos/big_logo_name_blackred.png', // Use your logo here
 
                 height: 300,
-
               ),
-
             ),
             const SizedBox(height: 24),
 
@@ -105,7 +105,7 @@ class SignUpPageState extends State<SignUpPage> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
+                      color: Colors.grey.withValues(alpha: 0.3),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -158,7 +158,8 @@ class SignUpPageState extends State<SignUpPage> {
             ElevatedButton(
               onPressed: _isLoading ? null : _signUp,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

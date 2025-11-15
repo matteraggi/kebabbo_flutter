@@ -74,7 +74,8 @@ class _UserPostsPageState extends State<UserPostsPage> {
                       itemBuilder: (context, index) {
                         final post = _userPosts[index];
                         return FeedListItem(
-                          text: post['text'] ?? S.of(context).testo_non_disponibile,
+                          text: post['text'] ??
+                              S.of(context).testo_non_disponibile,
                           createdAt: post['created_at'] ?? '',
                           userId: post['user_id'],
                           imageUrl: post['image_url'] ?? '',
@@ -83,7 +84,8 @@ class _UserPostsPageState extends State<UserPostsPage> {
                           commentNumber: post['comments_number'] ?? 0,
                           kebabTagId: post['kebab_tag_id'] ?? 0,
                           kebabName: post['kebab_tag_name'] ?? '',
-                          canBeEliminated: widget.userId == supabase.auth.currentUser!.id,
+                          canBeEliminated:
+                              widget.userId == supabase.auth.currentUser!.id,
                         );
                       },
                     ),

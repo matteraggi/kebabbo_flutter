@@ -1,125 +1,154 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 
-class OrderBar extends StatelessWidget {
-  final String orderByField;
-  final bool orderDirection;
-  final Function(String) onChangeOrderByField;
-  final Function(bool) onChangeOrderDirection;
-  final Function() changeShowOnlyKebab;
-  final bool showOnlyKebab;
+class OrderBar extends StatefulWidget {
+  final bool showStaffRatings;
+  final VoidCallback onToggleShowStaffRatings;
 
   const OrderBar({
     super.key,
-    required this.orderByField,
-    required this.orderDirection,
-    required this.onChangeOrderByField,
-    required this.onChangeOrderDirection,
-    required this.changeShowOnlyKebab,
-    required this.showOnlyKebab,
+    required this.showStaffRatings,
+    required this.onToggleShowStaffRatings,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: red,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+  State<OrderBar> createState() => _OrderBarState();
+}
+
+class _OrderBarState extends State<OrderBar>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    if (widget.showStaffRatings) {
+      _controller.value = 0.0;
+    } else {
+      _controller.value = 1.0;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant OrderBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.showStaffRatings != oldWidget.showStaffRatings) {
+      widget.showStaffRatings ? _controller.reverse() : _controller.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Widget _buildTab({
+    required bool isActive,
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: isActive ? red : Colors.transparent,
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 250),
+            style: TextStyle(
+              color: isActive ? Colors.white : Colors.black87,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.fastfood,
-                    color: showOnlyKebab
-                        ? const Color.fromARGB(255, 185, 184, 184)
-                        : yellow),
-                SizedBox(width: 8),
-                Switch(
-                  value: showOnlyKebab,
-                  onChanged: (bool value) {
-                    changeShowOnlyKebab();
-                  },
-                  thumbColor: WidgetStateProperty.all(Colors.white),
-                  activeTrackColor: yellow,
+                Icon(
+                  icon,
+                  color: isActive ? Colors.white : Colors.black54,
+                  size: 22,
                 ),
-                SizedBox(width: 8),
-                Icon(Icons.kebab_dining,
-                    color: showOnlyKebab
-                        ? yellow
-                        : const Color.fromARGB(255, 185, 184, 184)),
+                const SizedBox(width: 6),
+                Text(text),
               ],
             ),
-            Row(
-              children: [
-                DropdownButtonHideUnderline(
-                  child: Container(
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: red, width: 4),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-                    child: DropdownButton<String>(
-                      borderRadius: BorderRadius.circular(30),
-                      alignment: Alignment.center,
-                      enableFeedback: true,
-                      value: orderByField,
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          onChangeOrderByField(newValue);
-                        }
-                      },
-                      iconSize: 0,
-                      icon: const SizedBox(
-                        width: 5,
-                      ),
-                      style: const TextStyle(color: red),
-                      items: <String>[
-                        'stelle',
-                        'qualità',
-                        'prezzo',
-                        'dimensione',
-                        'menu',
-                        'nome',
-                        'distanza',
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          alignment: Alignment.center,
-                          value: value,
-                          child: Text(
-                            value.toUpperCase(),
-                            style: const TextStyle(
-                                color: red,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    onChangeOrderDirection(!orderDirection);
-                  },
-                  child: Icon(
-                    orderDirection ? Icons.arrow_downward : Icons.arrow_upward,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (_, __) {
+        return Container(
+          width: double.infinity,
+          height: 50,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF2F2F2),
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Stack(
+            children: [
+              // Indicator animato dietro il tab attivo
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final tabWidth = constraints.maxWidth / 2;
+                  return Transform.translate(
+                    offset: Offset(tabWidth * _controller.value, 0),
+                    child: Container(
+                      width: tabWidth,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: red,
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              Row(
+                children: [
+                  _buildTab(
+                    isActive: widget.showStaffRatings,
+                    icon: Icons.workspace_premium,
+                    text: S.of(context).staff,
+                    onTap: () {
+                      if (!widget.showStaffRatings) {
+                        widget.onToggleShowStaffRatings();
+                      }
+                    },
+                  ),
+                  _buildTab(
+                    isActive: !widget.showStaffRatings,
+                    icon: Icons.people_alt_outlined,
+                    text: S.of(context).users,
+                    onTap: () {
+                      if (widget.showStaffRatings) {
+                        widget.onToggleShowStaffRatings();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
