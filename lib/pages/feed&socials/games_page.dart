@@ -6,7 +6,6 @@ import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
 import 'package:kebabbo_flutter/pages/tcg/carousel.dart';
 import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
-import 'package:kebabbo_flutter/pages/misc/medal_page.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -23,7 +22,6 @@ class _GamesPageState extends State<GamesPage> {
   List<int> _ingredients = [5, 5, 5, 5, 5];
   DateTime _lastPack = DateTime.now().toUtc();
   final supabase = Supabase.instance.client;
-  String? _id;
 
   @override
   void initState() {
@@ -36,7 +34,6 @@ class _GamesPageState extends State<GamesPage> {
       setState(() => _loading = false);
       return;
     }
-    _id = supabase.auth.currentUser!.id;
 
     try {
       final profileData = await getProfile(context);
@@ -62,8 +59,7 @@ class _GamesPageState extends State<GamesPage> {
     return '$hours:$minutes:$seconds';
   }
 
-  /// Helper to build the navigation buttons
-  Widget _buildGameButton({
+  Widget _buildCreateKebabButton({
     required String title,
     required String subtitle,
     required IconData icon,
@@ -76,7 +72,6 @@ class _GamesPageState extends State<GamesPage> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          // Se onTap è nullo, usa un colore grigio
           color: onTap != null ? color : Colors.grey[400],
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
@@ -88,101 +83,343 @@ class _GamesPageState extends State<GamesPage> {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(icon, color: Colors.white, size: 32),
-                if (trailing != null) trailing,
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(
+            // ICONA CON SFONDO BIANCO OPACO (rettangolo arrotondato)
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                icon,
                 color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+                size: 32,
               ),
             ),
-            Text(
-              subtitle,
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
-                fontSize: 14,
+
+            const SizedBox(width: 16),
+
+            // TITOLO + SOTTOTITOLO A DESTRA DELL'ICONA
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.85),
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            if (trailing != null) trailing,
           ],
         ),
       ),
     );
   }
 
-  /// Special builder for the Pack Page button with timer
-  Widget _buildPackButton() {
+  Widget buildReviewSection({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onAddReview,
+    required VoidCallback onAddKebabbaro,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [color.withValues(alpha: 0.9), color],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // TOP ----------------------------------------------------
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Icona grande a sinistra
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(icon, size: 32, color: Colors.white),
+              ),
+              const SizedBox(width: 16),
+
+              // Titolo + sottotitolo
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 22),
+
+          // BOTTOM BUTTONS -----------------------------------------
+          Row(
+            children: [
+// ────────────────────────────────────────────────
+// BOTTONE 1 – Aggiungi Recensione
+// ────────────────────────────────────────────────
+              Expanded(
+                child: GestureDetector(
+                  onTap: onAddReview,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white.withValues(alpha: 0.25),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        width: 1.6,
+                      ),
+                    ),
+                    child: Column(
+                      children: const [
+                        Icon(Icons.star_border, color: Colors.white, size: 30),
+                        SizedBox(height: 6),
+                        Text(
+                          "Aggiungi Recensione",
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 14),
+
+// ────────────────────────────────────────────────
+// BOTTONE 2 – Aggiungi Kebabbaro
+// ────────────────────────────────────────────────
+              Expanded(
+                child: GestureDetector(
+                  onTap: onAddKebabbaro,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white.withValues(alpha: 0.25),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        width: 1.6,
+                      ),
+                    ),
+                    child: Column(
+                      children: const [
+                        Icon(Icons.location_on_outlined,
+                            color: Colors.white, size: 28),
+                        SizedBox(height: 6),
+                        Text(
+                          "Aggiungi Kebabbaro",
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCollectionSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // TITOLO
+          const Text(
+            "Colleziona le carte di Kebabbo!",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: 6),
+
+          // SOTTOTITOLO
+          const Text(
+            "Trova tutte le carte dei tuoi kebabbari preferiti",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black54,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          // IMMAGINE DEI 4 PACCHETTI (immagine unica)
+          Image.asset(
+            "assets/images/kebabbo_packs_row.png",
+            width: double.infinity,
+            fit: BoxFit.contain,
+          ),
+
+          // DUE BOTTONI IN RIGA (PACK + COLLEZIONE)
+          Row(
+            children: [
+              Expanded(child: _buildSmallButtonPack()),
+              const SizedBox(width: 16),
+              Expanded(child: _buildSmallButtonCollection()),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSmallButtonPack() {
     return StreamBuilder<DateTime>(
-      stream: Stream.periodic(
-          const Duration(seconds: 1), (_) => DateTime.now().toUtc()),
+      stream:
+          Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now()),
       builder: (context, snapshot) {
         bool isTimerActive = false;
         String timerText = "";
 
         if (supabase.auth.currentUser != null) {
-          final now = snapshot.data ?? DateTime.now().toUtc();
+          final now = snapshot.data ?? DateTime.now();
           final difference = now.difference(_lastPack);
           final remainingTime = const Duration(hours: 12) - difference;
 
-          if (difference.inSeconds < 12 * 60 * 60 &&
-              !remainingTime.isNegative) {
+          if (difference.inSeconds < 43200 && !remainingTime.isNegative) {
             isTimerActive = true;
             timerText = _formatDuration(remainingTime);
           }
         }
 
-        final bool isButtonEnabled =
+        final bool enabled =
             !isTimerActive && supabase.auth.currentUser != null;
-        final Color buttonColor = isTimerActive
-            ? const Color.fromARGB(255, 127, 127, 127)
-            : const Color.fromARGB(255, 44, 157, 237);
 
-        return _buildGameButton(
-          title: "Pacchetto",
-          subtitle: "spacchetta il tuo kebab preferito",
-          icon: Icons.card_giftcard,
-          color: buttonColor, // Colore dinamico
-          onTap: isButtonEnabled
+        return GestureDetector(
+          onTap: enabled
               ? () {
-                  Navigator.of(context)
-                      .push(
-                        MaterialPageRoute(
-                            builder: (context) => const PackPage()),
-                      )
-                      .then((_) => _loadPageData());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const PackPage()),
+                  ).then((_) => _loadPageData());
                 }
-              : null, // Disabilitato
-          trailing: isTimerActive
-              ? Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    timerText,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
               : null,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.card_giftcard,
+                  size: 32,
+                  color: enabled ? main.red : Colors.grey,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  isTimerActive ? timerText : "Pacchetto",
+                  style: TextStyle(
+                    color: enabled ? Colors.white : Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
+    );
+  }
+
+  Widget _buildSmallButtonCollection() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => KebabCarouselPage()),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        decoration: BoxDecoration(
+          color: main.red,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: const [
+            Icon(Icons.collections_bookmark, size: 32, color: Colors.white),
+            SizedBox(height: 8),
+            Text(
+              "Collezione",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -192,10 +429,6 @@ class _GamesPageState extends State<GamesPage> {
 
     if (!isLoggedIn) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Games & Tools'),
-          backgroundColor: main.red,
-        ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -210,10 +443,6 @@ class _GamesPageState extends State<GamesPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Games & Tools'),
-        backgroundColor: main.red,
-      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -224,46 +453,34 @@ class _GamesPageState extends State<GamesPage> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        _buildGameButton(
-                          title: "Aggiungi Recensione",
-                          subtitle: "Hai provato un nuovo kebab?",
-                          icon: Icons.add_comment_rounded,
+                        buildReviewSection(
+                          icon: Icons.add,
+                          title: "Hai provato un nuovo kebab?",
+                          subtitle: "Facci sapere cosa ne pensi!",
                           color: main.red,
-                          onTap: () {
-                            Navigator.of(context).push(
+                          onAddReview: () {
+                            Navigator.push(
+                              context,
                               MaterialPageRoute(
-                                  builder: (context) => const AddKebab()),
+                                  builder: (_) => const AddKebab()),
+                            );
+                          },
+                          onAddKebabbaro: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const AddKebab()),
                             );
                           },
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildPackButton(), // Bottone con timer
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _buildGameButton(
-                                title: "Collezione",
-                                subtitle: "controlla le tue kebabbo cards",
-                                icon: Icons.collections_bookmark,
-                                color: Colors.deepPurple,
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          KebabCarouselPage()));
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                        buildCollectionSection(),
                         const SizedBox(height: 16),
-                        _buildGameButton(
-                          title: "Crea il Kebab",
-                          subtitle: "crea il tuo kebab",
+                        _buildCreateKebabButton(
+                          title: "Costruisci il tuo Kebab",
+                          subtitle: "E trova il kebabbaro perfetto per te!",
                           icon: Icons.build_rounded,
-                          color: Colors.teal,
+                          color: main.red,
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ToolsPage(
@@ -280,24 +497,6 @@ class _GamesPageState extends State<GamesPage> {
                         ),
                       ],
                     ),
-                  ),
-
-                  // --- Sezione Medaglie ---
-                  const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                    child: Text(
-                      "Le tue Medaglie",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const Divider(height: 1, indent: 20, endIndent: 20),
-                  SizedBox(
-                    height: 250, // Altezza fissa per la griglia
-                    child: MedalPage(userId: _id!),
                   ),
                 ],
               ),

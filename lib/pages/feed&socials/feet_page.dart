@@ -503,204 +503,196 @@ class FeedPageState extends State<FeedPage> {
     final bool isLoggedIn = supabase.auth.currentUser != null;
 
     return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : errorMessage != null
-              ? Center(child: Text(errorMessage!))
-              : SafeArea(
-                  minimum:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child: TextField(
-                              controller: searchController,
-                              enabled: isLoggedIn,
-                              decoration: InputDecoration(
-                                hintText: isLoggedIn
-                                    ? S.of(context).cerca_utenti
-                                    : S.of(context).accedi_per_cercare,
-                                prefixIcon: Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
+      body: errorMessage != null
+          ? Center(child: Text(errorMessage!))
+          : SafeArea(
+              minimum: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: TextField(
+                          controller: searchController,
+                          enabled: isLoggedIn,
+                          decoration: InputDecoration(
+                            hintText: isLoggedIn
+                                ? S.of(context).cerca_utenti
+                                : S.of(context).accedi_per_cercare,
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                          ),
+                        )),
+                        if (isLoggedIn)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor:
+                                    _showFriendsOnly ? red : Colors.grey[300],
+                                minimumSize: const Size(
+                                    50, 50), // bottone perfettamente rotondo
+                                padding:
+                                    EdgeInsets.zero, // niente padding extra
+                                shape:
+                                    const CircleBorder(), // forma circolare vera
+                              ),
+                              onPressed: () {
+                                searchController.clear();
+                                setState(() {
+                                  _showFriendsOnly = !_showFriendsOnly;
+                                });
+                                _fetchFeed();
+                              },
+                              child: Icon(
+                                _showFriendsOnly ? Icons.people : Icons.public,
+                                color: _showFriendsOnly
+                                    ? Colors.white
+                                    : Colors.black87,
+                                size: 25,
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: isLoading
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  color: red,
                                 ),
                               ),
-                            )),
-                            if (isLoggedIn)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: _showFriendsOnly
-                                        ? red
-                                        : Colors.grey[300],
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 8),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    searchController.clear();
-                                    setState(() {
-                                      _showFriendsOnly = !_showFriendsOnly;
-                                    });
-                                    _fetchFeed();
-                                  },
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        _showFriendsOnly ? "Followed" : "All",
-                                        style: TextStyle(
-                                          color: _showFriendsOnly
-                                              ? Colors.white
-                                              : Colors.black87,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Icon(
-                                        _showFriendsOnly
-                                            ? Icons.people
-                                            : Icons.public,
-                                        color: _showFriendsOnly
-                                            ? Colors.white
-                                            : Colors.black87,
-                                        size: 20,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: searchResultList.length,
-                          itemBuilder: (context, index) {
-                            final item = searchResultList[index];
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: searchResultList.length,
+                            itemBuilder: (context, index) {
+                              final item = searchResultList[index];
 
-                            if (searchController.text.isEmpty) {
-                              return FeedListItem(
-                                key: ValueKey(item['id']),
-                                text: item['text'] ??
-                                    S.of(context).testo_non_disponibile,
-                                createdAt: item['created_at'] ?? '',
-                                userId: item['user_id'].toString(),
-                                imageUrl: item['image_url'] ?? '',
-                                postId: item['id'] ?? '',
-                                likeList: item['like'] ?? [],
-                                commentNumber: item['comments_number'] ?? 0,
-                                kebabTagId: item['kebab_tag_id'] ?? 0,
-                                kebabName: item['kebab_tag_name'] ?? '',
-                              );
-                            } else {
-                              return UserItem(
+                              if (searchController.text.isEmpty) {
+                                return FeedListItem(
+                                  key: ValueKey(item['id']),
+                                  text: item['text'] ??
+                                      S.of(context).testo_non_disponibile,
+                                  createdAt: item['created_at'] ?? '',
+                                  userId: item['user_id'].toString(),
+                                  imageUrl: item['image_url'] ?? '',
+                                  postId: item['id'] ?? '',
+                                  likeList: item['like'] ?? [],
+                                  commentNumber: item['comments_number'] ?? 0,
+                                  kebabTagId: item['kebab_tag_id'] ?? 0,
+                                  kebabName: item['kebab_tag_name'] ?? '',
+                                );
+                              } else {
+                                return UserItem(
                                   userId: item['id'] ?? "",
                                   username:
                                       item["username"] ?? S.of(context).anonimo,
-                                  avatarUrl: item["avatar_url"] ?? "");
-                            }
-                          },
-                        ),
-                      ),
-                      if (isLoggedIn)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                    controller: postController,
-                                    maxLines: 1,
-                                    minLines: 1,
-                                    decoration: InputDecoration(
-                                      hintText: S.of(context).scrivi_un_post,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                  avatarUrl: item["avatar_url"] ?? "",
+                                );
+                              }
+                            },
+                          ),
+                  ),
+                  if (isLoggedIn)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                                controller: postController,
+                                maxLines: 1,
+                                minLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: S.of(context).scrivi_un_post,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        onPressed: _tagKebab,
+                                        icon: Icon(
+                                          Icons.place_rounded,
+                                          // Assuming 'red' is your defined constant color
+                                          color: (selectedKebabId != null)
+                                              ? red
+                                              : Colors.grey,
+                                        ),
                                       ),
-                                      filled: true,
-                                      fillColor: Colors.grey[200],
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 12,
-                                      ),
-                                      suffixIcon: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            onPressed: _tagKebab,
-                                            icon: Icon(
-                                              Icons.place_rounded,
-                                              // Assuming 'red' is your defined constant color
-                                              color: (selectedKebabId != null)
-                                                  ? red
-                                                  : Colors.grey,
+                                      if (_isImageLoading)
+                                        const Padding(
+                                          padding: EdgeInsets.all(12.0),
+                                          child: SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.5,
+                                              color: red,
                                             ),
                                           ),
-                                          if (_isImageLoading)
-                                            const Padding(
-                                              padding: EdgeInsets.all(12.0),
-                                              child: SizedBox(
-                                                width: 24,
-                                                height: 24,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2.5,
-                                                  color: red,
-                                                ),
-                                              ),
-                                            )
-                                          else
-                                            IconButton(
-                                              onPressed: _pickImage,
-                                              icon: Icon(
-                                                Icons.photo,
-                                                // Check imageBytes (data) instead of just the path string
-                                                color: (imageBytes != null)
-                                                    ? red
-                                                    : Colors.grey,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    )),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: red,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: IconButton(
-                                  onPressed: _postFeed,
-                                  icon: const Icon(
-                                    Icons.send,
-                                    color: Colors.white,
+                                        )
+                                      else
+                                        IconButton(
+                                          onPressed: _pickImage,
+                                          icon: Icon(
+                                            Icons.photo,
+                                            // Check imageBytes (data) instead of just the path string
+                                            color: (imageBytes != null)
+                                                ? red
+                                                : Colors.grey,
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
+                                )),
                           ),
-                        ),
-                    ],
-                  ),
-                ),
+                          const SizedBox(width: 8),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: red,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: IconButton(
+                              onPressed: _postFeed,
+                              icon: const Icon(
+                                Icons.send,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
     );
   }
 }

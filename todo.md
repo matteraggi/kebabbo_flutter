@@ -1,25 +1,34 @@
 # TODO
 
+URGENTI PER RELEASE:
+- [ ] controllare bugfix
+- [ ] controllare sicurezza app
+- [ ] design sezioni più importanti
+
 funzionalità:
-- [ ] tasto nuovo kebab separato da recensione
-- [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
 - [ ] Click sulla mappa per prendere le coordinate
-- [ ] Sezione Offerte e Promozioni Esclusive
+- [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
 - [ ] Magari tasto per aggiungere i kebabbari nella mappa
 - [ ] fare pagina per singolo kebab con info approfondite (anche per smaltire il contenuto della card)
 - [ ] Foto dei post con tag del luogo -> tutte le foto degli utenti nella pagina del luogo
-- [ ] Notifiche
 
 bugfix:
+- [ ] se metti nei preferiti un posto con categoria panini, ti tolgono tutti i preferiti della categoria kebab e viceversa
+- [ ] quando segui una persona, cambia il numero dei suoi seguiti (invece che follower)
+- [ ] ogni tanto non va l'animazione delle carte
+- [ ] bordo non esiste in follower e followed
+- [ ] quando scrivi il commento l'input di testo rimane basso e non si vede
 
 design:
-- [ ] rifare style di: card kebab, pack opening, carte, carte display, create kebab, pagina profilo utenti, recensione kebab, aggiunta kebab, schermata giochi (togliere medaglie)
+- [ ] design card recensioni utenti (numero di recensioni e altro)
+- [ ] rifare style di: pack opening, carte, carte display, create kebab, pagina profilo utenti, recensione kebab, aggiunta kebab
 - [ ] mettere il grafico a barre
-- [ ] cambiare messaggio iniziale
 - [ ] Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
-- [ ] sezioni review e kebab salvati del profilo molto sus
+- [ ] sezioni review e kebab salvati del profilo molto sus e strani soprattutto in prod
 
 extra:
+- [ ] Notifiche
+- [ ] Sezione Offerte e Promozioni Esclusive
 - [ ] compressioni immagini soprattutto avatar
 - [ ] Togliere compilato da github
 - [ ] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
@@ -29,6 +38,8 @@ extra:
 
 # DONE
 
+- [X] tasto nuovo kebab separato da recensione
+- [x] cambiare messaggio iniziale
 - [x] togliere ripetizione di pagina seguiti ed esplora (troppo simili)
 - [x] mettere toggle per kebab postati da tutti e kebab postati da noi. 
 - [x] maps in homepage
