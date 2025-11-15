@@ -985,7 +985,7 @@ abstract class AppLocalizations {
   /// No description provided for @cambia_profilepic.
   ///
   /// In it, this message translates to:
-  /// **'Cambia profile pic'**
+  /// **'Cambia foto profilo'**
   String get cambia_profilepic;
 
   /// No description provided for @please_fill_in_all_fields.
@@ -1137,6 +1137,420 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Tutte le carte trovate.'**
   String get found_all_cards;
+
+  /// No description provided for @about.
+  ///
+  /// In it, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @privacy_policy.
+  ///
+  /// In it, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy;
+
+  /// No description provided for @add_kebab.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi un Kebab'**
+  String get add_kebab;
+
+  /// No description provided for @logout.
+  ///
+  /// In it, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @could_not_open_link.
+  ///
+  /// In it, this message translates to:
+  /// **'Impossibile aprire il link.'**
+  String get could_not_open_link;
+
+  /// No description provided for @generic_error.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore: '**
+  String get generic_error;
+
+  /// No description provided for @posts.
+  ///
+  /// In it, this message translates to:
+  /// **'Posts'**
+  String get posts;
+
+  /// No description provided for @followers.
+  ///
+  /// In it, this message translates to:
+  /// **'Followers'**
+  String get followers;
+
+  /// No description provided for @following.
+  ///
+  /// In it, this message translates to:
+  /// **'Followed'**
+  String get following;
+
+  /// No description provided for @error_processing_image.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore durante l\'elaborazione dell\'immagine:'**
+  String get error_processing_image;
+
+  /// No description provided for @followed_filter.
+  ///
+  /// In it, this message translates to:
+  /// **'Seguiti'**
+  String get followed_filter;
+
+  /// No description provided for @all_filter.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutti'**
+  String get all_filter;
+
+  /// No description provided for @games_tools_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Giochi & Strumenti'**
+  String get games_tools_title;
+
+  /// No description provided for @login_required_section.
+  ///
+  /// In it, this message translates to:
+  /// **'Devi effettuare l\'accesso per usare questa sezione.'**
+  String get login_required_section;
+
+  /// No description provided for @add_review_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi Recensione'**
+  String get add_review_title;
+
+  /// No description provided for @add_review_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai provato un nuovo kebab?'**
+  String get add_review_subtitle;
+
+  /// No description provided for @pack_button_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Pacchetto'**
+  String get pack_button_title;
+
+  /// No description provided for @pack_button_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'spacchetta il tuo kebab preferito'**
+  String get pack_button_subtitle;
+
+  /// No description provided for @collection_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Collezione'**
+  String get collection_title;
+
+  /// No description provided for @collection_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'controlla le tue kebabbo cards'**
+  String get collection_subtitle;
+
+  /// No description provided for @create_kebab_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Crea il Kebab'**
+  String get create_kebab_title;
+
+  /// No description provided for @create_kebab_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'crea il tuo kebab'**
+  String get create_kebab_subtitle;
+
+  /// No description provided for @your_medals_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Le tue Medaglie'**
+  String get your_medals_title;
+
+  /// No description provided for @add_review_appbar_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi Recensione'**
+  String get add_review_appbar_title;
+
+  /// No description provided for @error_loading_kebabs.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore nel caricare i kebab: '**
+  String get error_loading_kebabs;
+
+  /// No description provided for @kebab_not_found.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebab non trovato'**
+  String get kebab_not_found;
+
+  /// No description provided for @add_new_kebab_confirmation.
+  ///
+  /// In it, this message translates to:
+  /// **'Stai per aggiungere \"\$name\" come nuovo kebab. Sei sicuro che non sia già presente?'**
+  String get add_new_kebab_confirmation;
+
+  /// No description provided for @city.
+  ///
+  /// In it, this message translates to:
+  /// **'Città'**
+  String get city;
+
+  /// No description provided for @yes_create_new.
+  ///
+  /// In it, this message translates to:
+  /// **'Sì, crea nuovo'**
+  String get yes_create_new;
+
+  /// No description provided for @user_not_authenticated.
+  ///
+  /// In it, this message translates to:
+  /// **'Utente non autenticato'**
+  String get user_not_authenticated;
+
+  /// No description provided for @error_adding_review.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore durante l\'aggiunta della recensione: '**
+  String get error_adding_review;
+
+  /// No description provided for @name_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Nome'**
+  String get name_label;
+
+  /// No description provided for @required_field.
+  ///
+  /// In it, this message translates to:
+  /// **'Campo obbligatorio'**
+  String get required_field;
+
+  /// No description provided for @kebab_already_exists.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebab già esistente'**
+  String get kebab_already_exists;
+
+  /// No description provided for @your_review_optional.
+  ///
+  /// In it, this message translates to:
+  /// **'La tua recensione (opzionale)'**
+  String get your_review_optional;
+
+  /// No description provided for @kebab_tag.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebab'**
+  String get kebab_tag;
+
+  /// No description provided for @sandwich_tag.
+  ///
+  /// In it, this message translates to:
+  /// **'Sandwich'**
+  String get sandwich_tag;
+
+  /// No description provided for @dimension.
+  ///
+  /// In it, this message translates to:
+  /// **'Dimensione'**
+  String get dimension;
+
+  /// No description provided for @meat.
+  ///
+  /// In it, this message translates to:
+  /// **'Carne'**
+  String get meat;
+
+  /// No description provided for @onion.
+  ///
+  /// In it, this message translates to:
+  /// **'Cipolla'**
+  String get onion;
+
+  /// No description provided for @vegetables.
+  ///
+  /// In it, this message translates to:
+  /// **'Verdure'**
+  String get vegetables;
+
+  /// No description provided for @gluten_free.
+  ///
+  /// In it, this message translates to:
+  /// **'Senza Glutine'**
+  String get gluten_free;
+
+  /// No description provided for @advanced_filters.
+  ///
+  /// In it, this message translates to:
+  /// **'Filtri avanzati'**
+  String get advanced_filters;
+
+  /// No description provided for @open_now.
+  ///
+  /// In it, this message translates to:
+  /// **'Aperti ora'**
+  String get open_now;
+
+  /// No description provided for @sandwiches.
+  ///
+  /// In it, this message translates to:
+  /// **'Panini'**
+  String get sandwiches;
+
+  /// No description provided for @order_by.
+  ///
+  /// In it, this message translates to:
+  /// **'Ordina per'**
+  String get order_by;
+
+  /// No description provided for @filter_by_distance.
+  ///
+  /// In it, this message translates to:
+  /// **'Filtra per distanza'**
+  String get filter_by_distance;
+
+  /// No description provided for @sort_stars.
+  ///
+  /// In it, this message translates to:
+  /// **'stelle'**
+  String get sort_stars;
+
+  /// No description provided for @sort_quality.
+  ///
+  /// In it, this message translates to:
+  /// **'qualità'**
+  String get sort_quality;
+
+  /// No description provided for @sort_price.
+  ///
+  /// In it, this message translates to:
+  /// **'prezzo'**
+  String get sort_price;
+
+  /// No description provided for @sort_dimension.
+  ///
+  /// In it, this message translates to:
+  /// **'dimensione'**
+  String get sort_dimension;
+
+  /// No description provided for @sort_menu.
+  ///
+  /// In it, this message translates to:
+  /// **'menu'**
+  String get sort_menu;
+
+  /// No description provided for @sort_name.
+  ///
+  /// In it, this message translates to:
+  /// **'nome'**
+  String get sort_name;
+
+  /// No description provided for @sort_distance.
+  ///
+  /// In it, this message translates to:
+  /// **'distanza'**
+  String get sort_distance;
+
+  /// No description provided for @fun_exclamation.
+  ///
+  /// In it, this message translates to:
+  /// **'fun!'**
+  String get fun_exclamation;
+
+  /// No description provided for @kebabbo_review.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebabbo Review'**
+  String get kebabbo_review;
+
+  /// No description provided for @review_this_kebab.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensisci questo Kebab'**
+  String get review_this_kebab;
+
+  /// No description provided for @staff.
+  ///
+  /// In it, this message translates to:
+  /// **'Staff'**
+  String get staff;
+
+  /// No description provided for @users.
+  ///
+  /// In it, this message translates to:
+  /// **'Utenti'**
+  String get users;
+
+  /// No description provided for @one_review.
+  ///
+  /// In it, this message translates to:
+  /// **'1 recensione'**
+  String get one_review;
+
+  /// No description provided for @five_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'5 recensioni'**
+  String get five_reviews;
+
+  /// No description provided for @ten_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'10 recensioni'**
+  String get ten_reviews;
+
+  /// No description provided for @twenty_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'20 recensioni'**
+  String get twenty_reviews;
+
+  /// No description provided for @thirty_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'30 recensioni'**
+  String get thirty_reviews;
+
+  /// No description provided for @one_post.
+  ///
+  /// In it, this message translates to:
+  /// **'1 post'**
+  String get one_post;
+
+  /// No description provided for @five_posts.
+  ///
+  /// In it, this message translates to:
+  /// **'5 post'**
+  String get five_posts;
+
+  /// No description provided for @ten_posts.
+  ///
+  /// In it, this message translates to:
+  /// **'10 post'**
+  String get ten_posts;
+
+  /// No description provided for @fifty_posts.
+  ///
+  /// In it, this message translates to:
+  /// **'50 post'**
+  String get fifty_posts;
+
+  /// No description provided for @build_button.
+  ///
+  /// In it, this message translates to:
+  /// **'Costruisci!'**
+  String get build_button;
 }
 
 class _AppLocalizationsDelegate

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
 import 'package:kebabbo_flutter/pages/tcg/carousel.dart';
@@ -433,7 +434,7 @@ class _GamesPageState extends State<GamesPage> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              "Devi effettuare l'accesso per usare questa sezione.",
+              S.of(context).login_required_section,
               style: TextStyle(fontSize: 18, color: Colors.grey[700]),
               textAlign: TextAlign.center,
             ),

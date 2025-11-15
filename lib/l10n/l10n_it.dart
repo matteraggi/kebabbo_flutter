@@ -500,7 +500,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cambia_profilo => 'Cambia profilo';
 
   @override
-  String get cambia_profilepic => 'Cambia profile pic';
+  String get cambia_profilepic => 'Cambia foto profilo';
 
   @override
   String get please_fill_in_all_fields => 'Compila tutti i campi';
@@ -581,4 +581,215 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get found_all_cards => 'Tutte le carte trovate.';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get privacy_policy => 'Privacy Policy';
+
+  @override
+  String get add_kebab => 'Aggiungi un Kebab';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get could_not_open_link => 'Impossibile aprire il link.';
+
+  @override
+  String get generic_error => 'Errore: ';
+
+  @override
+  String get posts => 'Posts';
+
+  @override
+  String get followers => 'Followers';
+
+  @override
+  String get following => 'Followed';
+
+  @override
+  String get error_processing_image =>
+      'Errore durante l\'elaborazione dell\'immagine:';
+
+  @override
+  String get followed_filter => 'Seguiti';
+
+  @override
+  String get all_filter => 'Tutti';
+
+  @override
+  String get games_tools_title => 'Giochi & Strumenti';
+
+  @override
+  String get login_required_section =>
+      'Devi effettuare l\'accesso per usare questa sezione.';
+
+  @override
+  String get add_review_title => 'Aggiungi Recensione';
+
+  @override
+  String get add_review_subtitle => 'Hai provato un nuovo kebab?';
+
+  @override
+  String get pack_button_title => 'Pacchetto';
+
+  @override
+  String get pack_button_subtitle => 'spacchetta il tuo kebab preferito';
+
+  @override
+  String get collection_title => 'Collezione';
+
+  @override
+  String get collection_subtitle => 'controlla le tue kebabbo cards';
+
+  @override
+  String get create_kebab_title => 'Crea il Kebab';
+
+  @override
+  String get create_kebab_subtitle => 'crea il tuo kebab';
+
+  @override
+  String get your_medals_title => 'Le tue Medaglie';
+
+  @override
+  String get add_review_appbar_title => 'Aggiungi Recensione';
+
+  @override
+  String get error_loading_kebabs => 'Errore nel caricare i kebab: ';
+
+  @override
+  String get kebab_not_found => 'Kebab non trovato';
+
+  @override
+  String get add_new_kebab_confirmation =>
+      'Stai per aggiungere \"\$name\" come nuovo kebab. Sei sicuro che non sia già presente?';
+
+  @override
+  String get city => 'Città';
+
+  @override
+  String get yes_create_new => 'Sì, crea nuovo';
+
+  @override
+  String get user_not_authenticated => 'Utente non autenticato';
+
+  @override
+  String get error_adding_review =>
+      'Errore durante l\'aggiunta della recensione: ';
+
+  @override
+  String get name_label => 'Nome';
+
+  @override
+  String get required_field => 'Campo obbligatorio';
+
+  @override
+  String get kebab_already_exists => 'Kebab già esistente';
+
+  @override
+  String get your_review_optional => 'La tua recensione (opzionale)';
+
+  @override
+  String get kebab_tag => 'Kebab';
+
+  @override
+  String get sandwich_tag => 'Sandwich';
+
+  @override
+  String get dimension => 'Dimensione';
+
+  @override
+  String get meat => 'Carne';
+
+  @override
+  String get onion => 'Cipolla';
+
+  @override
+  String get vegetables => 'Verdure';
+
+  @override
+  String get gluten_free => 'Senza Glutine';
+
+  @override
+  String get advanced_filters => 'Filtri avanzati';
+
+  @override
+  String get open_now => 'Aperti ora';
+
+  @override
+  String get sandwiches => 'Panini';
+
+  @override
+  String get order_by => 'Ordina per';
+
+  @override
+  String get filter_by_distance => 'Filtra per distanza';
+
+  @override
+  String get sort_stars => 'stelle';
+
+  @override
+  String get sort_quality => 'qualità';
+
+  @override
+  String get sort_price => 'prezzo';
+
+  @override
+  String get sort_dimension => 'dimensione';
+
+  @override
+  String get sort_menu => 'menu';
+
+  @override
+  String get sort_name => 'nome';
+
+  @override
+  String get sort_distance => 'distanza';
+
+  @override
+  String get fun_exclamation => 'fun!';
+
+  @override
+  String get kebabbo_review => 'Kebabbo Review';
+
+  @override
+  String get review_this_kebab => 'Recensisci questo Kebab';
+
+  @override
+  String get staff => 'Staff';
+
+  @override
+  String get users => 'Utenti';
+
+  @override
+  String get one_review => '1 recensione';
+
+  @override
+  String get five_reviews => '5 recensioni';
+
+  @override
+  String get ten_reviews => '10 recensioni';
+
+  @override
+  String get twenty_reviews => '20 recensioni';
+
+  @override
+  String get thirty_reviews => '30 recensioni';
+
+  @override
+  String get one_post => '1 post';
+
+  @override
+  String get five_posts => '5 post';
+
+  @override
+  String get ten_posts => '10 post';
+
+  @override
+  String get fifty_posts => '50 post';
+
+  @override
+  String get build_button => 'Costruisci!';
 }

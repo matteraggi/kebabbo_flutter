@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
@@ -78,9 +79,9 @@ class _FilterSearchState extends State<FilterSearch> {
           ),
         ),
 
-        const Text(
-          "Filtri avanzati",
-          style: TextStyle(
+        Text(
+          S.of(context).advanced_filters,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -119,7 +120,7 @@ class _FilterSearchState extends State<FilterSearch> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "Aperti ora",
+                    S.of(context).open_now,
                     style: TextStyle(
                       color: _localShowOnlyOpen ? Colors.white : Colors.black87,
                       fontWeight: FontWeight.bold,
@@ -171,7 +172,7 @@ class _FilterSearchState extends State<FilterSearch> {
                                     : Colors.black54),
                             const SizedBox(width: 6),
                             Text(
-                              "Kebab",
+                              S.of(context).kebab_tag,
                               style: TextStyle(
                                 color: _localShowOnlyKebab
                                     ? Colors.white
@@ -213,7 +214,7 @@ class _FilterSearchState extends State<FilterSearch> {
                                     : Colors.black54),
                             const SizedBox(width: 6),
                             Text(
-                              "Panini",
+                              S.of(context).sandwiches,
                               style: TextStyle(
                                 color: !_localShowOnlyKebab
                                     ? Colors.white
@@ -241,9 +242,9 @@ class _FilterSearchState extends State<FilterSearch> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Ordina per",
-                style: TextStyle(
+              Text(
+                S.of(context).order_by,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -276,7 +277,7 @@ class _FilterSearchState extends State<FilterSearch> {
                             color: red,
                             fontWeight: FontWeight.bold,
                           ),
-                          items: const [
+                          items: [
                             'stelle',
                             'qualità',
                             'prezzo',
@@ -284,10 +285,28 @@ class _FilterSearchState extends State<FilterSearch> {
                             'menu',
                             'nome',
                             'distanza'
-                          ].map((value) {
+                          ].map((String value) {
+                            // Mappatura valore interno -> testo localizzato
+                            String label = value;
+                            if (value == 'stelle') {
+                              label = S.of(context).sort_stars;
+                            } else if (value == 'qualità') {
+                              label = S.of(context).sort_quality;
+                            } else if (value == 'prezzo') {
+                              label = S.of(context).sort_price;
+                            } else if (value == 'dimensione') {
+                              label = S.of(context).sort_dimension;
+                            } else if (value == 'menu') {
+                              label = S.of(context).sort_menu;
+                            } else if (value == 'nome') {
+                              label = S.of(context).sort_name;
+                            } else if (value == 'distanza') {
+                              label = S.of(context).sort_distance;
+                            }
+
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value.toUpperCase()),
+                              child: Text(label.toUpperCase()),
                             );
                           }).toList(),
                         ),
@@ -332,9 +351,9 @@ class _FilterSearchState extends State<FilterSearch> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Filtra per distanza",
-                style: TextStyle(
+              Text(
+                S.of(context).filter_by_distance,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -351,9 +370,6 @@ class _FilterSearchState extends State<FilterSearch> {
                   // se lo riaccende, ripassa la distanza corrente
                   if (enabled) {
                     widget.onChangeMaxDistanceKm(_localMaxDistanceKm);
-                  } else {
-                    // se lo spegne, TopKebabPage lo porta a infinity
-                    // quindi qui non serve altro
                   }
                 },
               ),
@@ -437,8 +453,6 @@ class _FilterSearchState extends State<FilterSearch> {
                 ),
         ),
 
-        // const Spacer(),
-
         const SizedBox(height: 24),
 
         // --- Pulsante Chiudi ---
@@ -455,9 +469,9 @@ class _FilterSearchState extends State<FilterSearch> {
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                "Chiudi",
-                style: TextStyle(fontSize: 16, color: Colors.white),
+              child: Text(
+                S.of(context).close,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
           ),

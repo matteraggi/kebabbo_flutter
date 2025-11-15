@@ -66,16 +66,6 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  /*
-  String _formatDuration(Duration duration) {
-    // No longer needed
-    final hours = duration.inHours.remainder(12).toString().padLeft(2, '0');
-    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$hours:$minutes:$seconds';
-  }
-  */
-
   Future<void> _loadProfile() async {
     setState(() {
       _loading = true;
@@ -98,8 +88,7 @@ class _AccountPageState extends State<AccountPage> {
       _loading = true;
     });
 
-    await updateProfile(
-        context, _username, _avatarUrl, null); // Call the utility function
+    await updateProfile(context, _username, _avatarUrl, null);
 
     setState(() {
       _loading = false;
@@ -107,11 +96,9 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<void> _changeUsername() async {
-    // ... (this function remains unchanged)
     if (!mounted) return;
 
     _usernameController.text = _username;
-
     String? errorMessage;
 
     showDialog(
@@ -126,22 +113,18 @@ class _AccountPageState extends State<AccountPage> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 30,
-                        ),
+                        const SizedBox(height: 30),
                         Container(
                           decoration: BoxDecoration(
-                            color: main.red, // Sfondo rosso
-                            borderRadius:
-                                BorderRadius.circular(15), // Angoli arrotondati
+                            color: main.red,
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8), // Padding interno
+                              horizontal: 12, vertical: 8),
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(
-                                12), // Effetto di tocco arrotondato
+                            borderRadius: BorderRadius.circular(12),
                             onTap: () async {
-                              _changeAvatar(); // Cambia avatar
+                              _changeAvatar();
                             },
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -152,18 +135,17 @@ class _AccountPageState extends State<AccountPage> {
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors
-                                          .white, // Testo bianco per contrasto
+                                      color: Colors.white,
                                     ),
                                     softWrap: true,
                                     overflow: TextOverflow.visible,
                                   ),
                                 ),
                                 const SizedBox(width: 16),
-                                Icon(
+                                const Icon(
                                   Icons.camera_alt,
-                                  size: 25, // Dimensione dell'icona
-                                  color: Colors.white, // Icona bianca
+                                  size: 25,
+                                  color: Colors.white,
                                 ),
                               ],
                             ),
@@ -171,7 +153,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(S.of(context).cambia_username,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             )),
@@ -184,12 +166,11 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                           onChanged: (value) {
                             setState(() {
-                              errorMessage = validateUsername(
-                                  value, context); // Use the utility function
+                              errorMessage = validateUsername(value, context);
                             });
                           },
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           errorMessage ?? ' \n ',
                           style: const TextStyle(color: red),
@@ -234,7 +215,6 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<void> _changeAvatar() async {
-    // ... (this function remains unchanged)
     setState(() {
       _isAvatarLoading = true;
     });
@@ -276,7 +256,7 @@ class _AccountPageState extends State<AccountPage> {
         await _updateProfile();
 
         if (!mounted) return;
-        Navigator.of(context).pop(); // Chiudi il dialog
+        Navigator.of(context).pop(); // Close dialog
       } catch (error) {
         if (mounted) {
           debugPrint("Error uploading avatar: $error");
@@ -288,12 +268,11 @@ class _AccountPageState extends State<AccountPage> {
     }
 
     setState(() {
-      _isAvatarLoading = false; // Nascondi il loader
+      _isAvatarLoading = false;
     });
   }
 
   Future<void> _getPostCount() async {
-    // ... (this function remains unchanged)
     try {
       final userId = supabase.auth.currentSession!.user.id;
       final postCount = await supabase
@@ -331,13 +310,11 @@ class _AccountPageState extends State<AccountPage> {
                 height: 5,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black
-                      .withValues(alpha: 0.2), // Colore scuro per contrasto
+                  color: Colors.black.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
             ),
-            // 3. ListView ora è dentro un Expanded per riempire lo spazio
             Expanded(
               child: ListView.builder(
                 itemCount: kebabItems.length,
@@ -356,7 +333,7 @@ class _AccountPageState extends State<AccountPage> {
                       },
                       shouldSaveFavorite: true,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ]);
                 },
               ),
@@ -368,14 +345,11 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<List<Map<String, dynamic>>> fetchKebab() async {
-    // ... (this function remains unchanged)
     final response = await supabase.from('kebab').select();
-
     return List<Map<String, dynamic>>.from(response as List);
   }
 
   Future<Map<String, dynamic>> fetchSelectedKebab(String id) async {
-    // ... (this function remains unchanged)
     if (id.isEmpty || id == "0") {
       debugPrint("Error: No valid kebab id found.");
       return {};
@@ -394,21 +368,10 @@ class _AccountPageState extends State<AccountPage> {
     return response;
   }
 
-  /*
-  bool _calculateIsTimerActive(DateTime lastPackTime) {
-    // No longer needed
-    final now = DateTime.now().toUtc();
-    final difference = now.difference(lastPackTime);
-    return difference.inSeconds < 12 * 60 * 60;
-  }
-  */
-
   Future<void> _signOut() async {
-    // ... (this function remains unchanged)
     try {
       setState(() {});
       await supabase.auth.signOut();
-      // Navigate immediately after sign out
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -420,10 +383,7 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Ottieni l'altezza dello schermo
     final screenHeight = MediaQuery.of(context).size.height;
-
-    // Calcola l'altezza dinamica per la TabBarView
     final tabBarViewHeight = screenHeight - 410;
 
     return Scaffold(
@@ -437,10 +397,9 @@ class _AccountPageState extends State<AccountPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: 48, // Spazio per l'icona
+                        width: 48,
                         child: InkWell(
                           onTap: () async {
-                            // Posiziona il menu
                             final RenderBox renderBox =
                                 context.findRenderObject() as RenderBox;
                             final position =
@@ -460,11 +419,12 @@ class _AccountPageState extends State<AccountPage> {
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      Icon(Icons.settings, color: Colors.black),
-                                      SizedBox(width: 8),
+                                      const Icon(Icons.settings,
+                                          color: Colors.black),
+                                      const SizedBox(width: 8),
                                       Text(
                                         S.of(context).edit_profile,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black87,
@@ -478,12 +438,12 @@ class _AccountPageState extends State<AccountPage> {
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      Icon(Icons.info_outline,
+                                      const Icon(Icons.info_outline,
                                           color: Colors.black),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
-                                        "About",
-                                        style: TextStyle(
+                                        S.of(context).about,
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black87,
@@ -497,12 +457,12 @@ class _AccountPageState extends State<AccountPage> {
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      Icon(Icons.privacy_tip,
+                                      const Icon(Icons.privacy_tip,
                                           color: Colors.black),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
-                                        'Privacy Policy',
-                                        style: TextStyle(
+                                        S.of(context).privacy_policy,
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black87,
@@ -511,18 +471,17 @@ class _AccountPageState extends State<AccountPage> {
                                     ],
                                   ),
                                 ),
-                                // --- Aggiungi Kebab (value: 5) ---
                                 PopupMenuItem<int>(
-                                  value: 5, // Spostato qui
+                                  value: 5,
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      Icon(Icons.add_business,
+                                      const Icon(Icons.add_business,
                                           color: Colors.black),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
-                                        'Aggiungi un Kebab',
-                                        style: TextStyle(
+                                        S.of(context).add_kebab,
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black87,
@@ -531,17 +490,17 @@ class _AccountPageState extends State<AccountPage> {
                                     ],
                                   ),
                                 ),
-                                // --- Logout (value: 6) ---
                                 PopupMenuItem<int>(
-                                  value: 6, // Spostato qui
+                                  value: 6,
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      Icon(Icons.logout, color: Colors.black),
-                                      SizedBox(width: 8),
+                                      const Icon(Icons.logout,
+                                          color: Colors.black),
+                                      const SizedBox(width: 8),
                                       Text(
-                                        'Logout',
-                                        style: TextStyle(
+                                        S.of(context).logout,
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black87,
@@ -560,8 +519,8 @@ class _AccountPageState extends State<AccountPage> {
                               if (!context.mounted) return;
                               if (value != null) {
                                 if (value == 1) {
-                                  Future.delayed(Duration(milliseconds: 100),
-                                      () {
+                                  Future.delayed(
+                                      const Duration(milliseconds: 100), () {
                                     _changeUsername();
                                   });
                                 } else if (value == 2) {
@@ -579,29 +538,28 @@ class _AccountPageState extends State<AccountPage> {
                                       if (!context.mounted) return;
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Impossibile aprire il link.'),
-                                          duration: Duration(seconds: 2),
+                                        SnackBar(
+                                          content: Text(S
+                                              .of(context)
+                                              .could_not_open_link),
+                                          duration: const Duration(seconds: 2),
                                         ),
                                       );
                                     }
                                   }();
                                 } else if (value == 5) {
-                                  // Valore 5
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) => const AddKebab()),
                                   );
                                 } else if (value == 6) {
-                                  // Valore 6
                                   _signOut();
                                 }
                               }
                             });
                           },
-                          child:
-                              Icon(Icons.menu, color: Colors.black, size: 24),
+                          child: const Icon(Icons.menu,
+                              color: Colors.black, size: 24),
                         ),
                       ),
                       Expanded(
@@ -611,22 +569,20 @@ class _AccountPageState extends State<AccountPage> {
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                           ),
-                          textAlign: TextAlign.center, // Centra il testo
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(width: 48), // Spazio vuoto per bilanciare
+                      const SizedBox(width: 48), // Balancer
                     ],
                   ),
                   const SizedBox(height: 15),
-                  // Profilo + Statistiche nella stessa riga
+                  // Profile + Stats
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly, // Mantenuto spaceEvenly
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16.0), // Aggiunto padding
+                        padding: const EdgeInsets.only(left: 16.0),
                         child: GestureDetector(
                           onTap: () {
                             showDialog(
@@ -706,10 +662,9 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                       ),
 
-                      // Spazio orizzontale
-                      const SizedBox(width: 24), // Mantenuto
+                      const SizedBox(width: 24),
 
-                      // Statistiche a destra
+                      // Stats
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -734,9 +689,9 @@ class _AccountPageState extends State<AccountPage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const Text(
-                                    'Posts',
-                                    style: TextStyle(fontSize: 14),
+                                  Text(
+                                    S.of(context).posts,
+                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ],
                               ),
@@ -762,9 +717,9 @@ class _AccountPageState extends State<AccountPage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const Text(
-                                    'Followers',
-                                    style: TextStyle(fontSize: 14),
+                                  Text(
+                                    S.of(context).followers,
+                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ],
                               ),
@@ -790,9 +745,9 @@ class _AccountPageState extends State<AccountPage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const Text(
-                                    'Seguiti',
-                                    style: TextStyle(fontSize: 14),
+                                  Text(
+                                    S.of(context).following,
+                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ],
                               ),
@@ -804,12 +759,12 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                   const SizedBox(height: 25),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
-                    padding: EdgeInsets.all(12),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
                           blurRadius: 6,
@@ -836,7 +791,7 @@ class _AccountPageState extends State<AccountPage> {
                                   height: 24,
                                   width: 24,
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Text(
                                   "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
                                   style: const TextStyle(
@@ -846,7 +801,7 @@ class _AccountPageState extends State<AccountPage> {
                                 ),
                               ],
                             ),
-                          Icon(Icons.border_color,
+                          const Icon(Icons.border_color,
                               color: Colors.black, size: 22),
                         ],
                       ),
@@ -857,8 +812,8 @@ class _AccountPageState extends State<AccountPage> {
                     length: 3,
                     child: Column(
                       children: [
-                        TabBar(
-                          physics: const BouncingScrollPhysics(),
+                        const TabBar(
+                          physics: BouncingScrollPhysics(),
                           indicatorColor: Colors.black,
                           labelColor: Colors.black,
                           unselectedLabelColor: Colors.grey,
@@ -869,8 +824,7 @@ class _AccountPageState extends State<AccountPage> {
                           ],
                         ),
                         SizedBox(
-                          height:
-                              tabBarViewHeight, // Or any other height that suits your content
+                          height: tabBarViewHeight,
                           child: TabBarView(
                             children: [
                               MedalPage(userId: _id),

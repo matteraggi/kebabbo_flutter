@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
-// Importa la tua funzione di fuzzy search
 import 'package:kebabbo_flutter/utils/utils.dart';
 
 class AddKebab extends StatefulWidget {
@@ -81,8 +80,9 @@ class _AddKebabState extends State<AddKebab> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore nel caricare i kebab: $e'),
-            backgroundColor: red,
+            content:
+                Text('${S.of(context).error_loading_kebabs}${e.toString()}'),
+            backgroundColor: main.red,
           ),
         );
       }
@@ -119,18 +119,20 @@ class _AddKebabState extends State<AddKebab> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Kebab non trovato'),
+          title: Text(S.of(context).kebab_not_found),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                  'Stai per aggiungere "${_nameController.text}" come nuovo kebab. Sei sicuro che non sia già presente?'),
+              Text(S
+                  .of(context)
+                  .add_new_kebab_confirmation
+                  .replaceAll('\$name', _nameController.text)),
               const SizedBox(height: 20),
               TextFormField(
                 controller: cityController,
-                decoration: const InputDecoration(
-                  labelText: 'Città',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: S.of(context).city,
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.white,
                 ),
@@ -140,14 +142,14 @@ class _AddKebabState extends State<AddKebab> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, null),
-              child: const Text('Annulla'),
+              child: Text(S.of(context).cancel),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: main.red),
               onPressed: () {
                 Navigator.pop(context, cityController.text);
               },
-              child: const Text('Sì, crea nuovo'),
+              child: Text(S.of(context).yes_create_new),
             ),
           ],
         );
@@ -159,7 +161,9 @@ class _AddKebabState extends State<AddKebab> {
   Future<void> _createNewKebabAndAddReview(String cityName) async {
     try {
       final userId = supabase.auth.currentUser?.id;
-      if (userId == null) throw Exception('Utente non autenticato');
+      if (userId == null) {
+        throw Exception(S.of(context).user_not_authenticated);
+      }
       // Crea il nuovo kebab
       final response = await supabase
           .from('kebab')
@@ -182,7 +186,7 @@ class _AddKebabState extends State<AddKebab> {
             'spicy': _spicy,
             'onion': _onion,
             'vegetables': _vegetables,
-            'added_by': userId, // Questo soddisfa la tua RLS policy
+            'added_by': userId,
           })
           .select()
           .single();
@@ -195,8 +199,8 @@ class _AddKebabState extends State<AddKebab> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore: $e'),
-            backgroundColor: red,
+            content: Text('${S.of(context).generic_error}$e'),
+            backgroundColor: main.red,
           ),
         );
       }
@@ -207,7 +211,9 @@ class _AddKebabState extends State<AddKebab> {
   Future<void> _addReviewToDatabase(String kebabId) async {
     try {
       final userId = supabase.auth.currentUser?.id;
-      if (userId == null) throw Exception('Utente non autenticato');
+      if (userId == null) {
+        throw Exception(S.of(context).user_not_authenticated);
+      }
 
       await supabase.from('reviews').insert({
         'kebabber_id': kebabId,
@@ -236,13 +242,15 @@ class _AddKebabState extends State<AddKebab> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore durante l\'aggiunta della recensione: $e'),
-            backgroundColor: red,
+            content:
+                Text('${S.of(context).error_adding_review}${e.toString()}'),
+            backgroundColor: main.red,
           ),
         );
       }
     }
   }
+
   // --- Widget Builders ---
 
   // Autocomplete
@@ -295,14 +303,14 @@ class _AddKebabState extends State<AddKebab> {
           focusNode: focusNode,
           enabled: !isPreFilled, // <-- DISABILITA IL CAMPO
           decoration: InputDecoration(
-            labelText: 'Nome',
+            labelText: S.of(context).name_label,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             // Colora di grigio se disabilitato
             fillColor: isPreFilled ? Colors.grey[200] : Colors.white,
           ),
           validator: (value) => value == null || value.trim().isEmpty
-              ? 'Campo obbligatorio'
+              ? S.of(context).required_field
               : null,
           onChanged: (value) {
             _nameController.text = value;
@@ -327,7 +335,7 @@ class _AddKebabState extends State<AddKebab> {
                   final option = options.elementAt(index);
                   return ListTile(
                     title: Text(option['name']),
-                    subtitle: const Text("Kebab già esistente"),
+                    subtitle: Text(S.of(context).kebab_already_exists),
                     onTap: () {
                       onSelected(option);
                     },
@@ -358,7 +366,7 @@ class _AddKebabState extends State<AddKebab> {
           validator: (value) {
             if (isOptional) return null; // Non validare se opzionale
             return value == null || value.trim().isEmpty
-                ? 'Campo obbligatorio'
+                ? S.of(context).required_field
                 : null;
           }),
     );
@@ -420,7 +428,7 @@ class _AddKebabState extends State<AddKebab> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aggiungi Recensione'),
+        title: Text(S.of(context).add_review_appbar_title),
         backgroundColor: main.red,
       ),
       body: _loading
@@ -435,7 +443,7 @@ class _AddKebabState extends State<AddKebab> {
                     const SizedBox(height: 8),
 
                     _buildTextField(
-                      label: 'La tua recensione (opzionale)',
+                      label: S.of(context).your_review_optional,
                       controller: _reviewTextController,
                       isOptional: true, // Questo lo rende opzionale
                     ),
@@ -484,7 +492,7 @@ class _AddKebabState extends State<AddKebab> {
                                                         ? Colors.white
                                                         : Colors.black54),
                                                 const SizedBox(width: 8),
-                                                Text('Kebab',
+                                                Text(S.of(context).kebab_tag,
                                                     style: TextStyle(
                                                         color: _tag == 'kebab'
                                                             ? Colors.white
@@ -521,7 +529,7 @@ class _AddKebabState extends State<AddKebab> {
                                                         ? Colors.white
                                                         : Colors.black54),
                                                 const SizedBox(width: 8),
-                                                Text('Sandwich',
+                                                Text(S.of(context).sandwich_tag,
                                                     style: TextStyle(
                                                         color: _tag ==
                                                                 'sandwich'
@@ -544,29 +552,29 @@ class _AddKebabState extends State<AddKebab> {
                     const SizedBox(height: 24),
 
                     // Slider (Sempre visibili)
-                    _buildSlider('Qualità', _quality, 1, 5, 8,
+                    _buildSlider(S.of(context).quality, _quality, 1, 5, 8,
                         (val) => setState(() => _quality = val)),
-                    _buildSlider('Prezzo', _price, 1, 5, 8,
+                    _buildSlider(S.of(context).price, _price, 1, 5, 8,
                         (val) => setState(() => _price = val)),
-                    _buildSlider('Dimensione', _dimension, 1, 5, 8,
+                    _buildSlider(S.of(context).dimension, _dimension, 1, 5, 8,
                         (val) => setState(() => _dimension = val)),
-                    _buildSlider('Fun', _fun, 1, 5, 8,
+                    _buildSlider(S.of(context).fun, _fun, 1, 5, 8,
                         (val) => setState(() => _fun = val)),
-                    _buildSlider('Menu', _menu, 1, 5, 8,
+                    _buildSlider(S.of(context).menu, _menu, 1, 5, 8,
                         (val) => setState(() => _menu = val)),
                     const SizedBox(height: 16),
                     const Divider(),
                     const SizedBox(height: 16),
-                    _buildSlider('Carne', _meat, 1, 10, 9,
+                    _buildSlider(S.of(context).meat, _meat, 1, 10, 9,
                         (val) => setState(() => _meat = val)),
-                    _buildSlider('Yogurt', _yogurt, 1, 10, 9,
+                    _buildSlider(S.of(context).yogurt, _yogurt, 1, 10, 9,
                         (val) => setState(() => _yogurt = val)),
-                    _buildSlider('Piccante', _spicy, 1, 10, 9,
+                    _buildSlider(S.of(context).spicy, _spicy, 1, 10, 9,
                         (val) => setState(() => _spicy = val)),
-                    _buildSlider('Cipolla', _onion, 1, 10, 9,
+                    _buildSlider(S.of(context).onion, _onion, 1, 10, 9,
                         (val) => setState(() => _onion = val)),
-                    _buildSlider('Verdure', _vegetables, 1, 10, 9,
-                        (val) => setState(() => _vegetables = val)),
+                    _buildSlider(S.of(context).vegetables, _vegetables, 1, 10,
+                        9, (val) => setState(() => _vegetables = val)),
                     const SizedBox(height: 16),
                     const Divider(),
                     const SizedBox(height: 16),
@@ -579,7 +587,9 @@ class _AddKebabState extends State<AddKebab> {
                               sizeFactor: animation, child: child);
                         },
                         child: !isKebabSelected
-                            ? _buildSwitch('Senza Glutine', _glutenFree,
+                            ? _buildSwitch(
+                                S.of(context).gluten_free,
+                                _glutenFree,
                                 (value) => setState(() => _glutenFree = value))
                             : const SizedBox.shrink()),
                     const SizedBox(height: 20),
@@ -587,7 +597,7 @@ class _AddKebabState extends State<AddKebab> {
                     // --- Pulsante di Submit ---
                     ElevatedButton.icon(
                       icon: const Icon(Icons.add_comment),
-                      label: const Text('Invia Recensione'),
+                      label: Text(S.of(context).submit_review),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: main.red,
                         padding: const EdgeInsets.symmetric(

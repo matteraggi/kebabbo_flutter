@@ -217,7 +217,7 @@ class TopKebabPageState extends State<TopKebabPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).preferiti_solo_per_utenti_registrati),
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
       return;
@@ -358,7 +358,7 @@ class TopKebabPageState extends State<TopKebabPage> {
 
                                 // Nuovo bottone filtro (sostituisce il toggle "Aperti ora")
                                 Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.white,
                                     shape: BoxShape.circle,
                                   ),

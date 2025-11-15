@@ -212,7 +212,7 @@ class FeedPageState extends State<FeedPage> {
             child: userSuggestion.isEmpty
                 ? Center(
                     child: Text(S.of(context).no_suggestions_available,
-                        style: TextStyle(color: Colors.grey)),
+                        style: const TextStyle(color: Colors.grey)),
                   )
                 : ListView.separated(
                     itemCount: userSuggestion.length,
@@ -408,34 +408,29 @@ class FeedPageState extends State<FeedPage> {
     );
 
     if (result != null) {
-      // 1. Start Loading
       setState(() {
         _isImageLoading = true;
       });
 
-      // 2. FORCE UI REFRESH: This pause allows the loader to appear before the freeze starts
       await Future.delayed(const Duration(milliseconds: 100));
 
       try {
         Uint8List imageData = result.files.single.bytes!;
-
-        // This is the line blocking your browser
         Uint8List? compressedImage =
             await ImageUtils.compressImage(imageData, 400 * 1024, 1200, 1200);
 
-        // 3. Update State on Success
         if (mounted) {
           setState(() {
             imageBytes = compressedImage;
             imagePath = result.files.single.name;
-            _isImageLoading = false; // Stop loading
+            _isImageLoading = false;
           });
         }
       } catch (e) {
         if (mounted) {
           setState(() {
-            errorMessage = "Error processing image: $e";
-            _isImageLoading = false; // Stop loading on error
+            errorMessage = "${S.of(context).error_processing_image} $e";
+            _isImageLoading = false;
           });
         }
       }
@@ -522,7 +517,7 @@ class FeedPageState extends State<FeedPage> {
                             hintText: isLoggedIn
                                 ? S.of(context).cerca_utenti
                                 : S.of(context).accedi_per_cercare,
-                            prefixIcon: Icon(Icons.search),
+                            prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),
@@ -587,112 +582,111 @@ class FeedPageState extends State<FeedPage> {
                             itemBuilder: (context, index) {
                               final item = searchResultList[index];
 
-                              if (searchController.text.isEmpty) {
-                                return FeedListItem(
-                                  key: ValueKey(item['id']),
-                                  text: item['text'] ??
-                                      S.of(context).testo_non_disponibile,
-                                  createdAt: item['created_at'] ?? '',
-                                  userId: item['user_id'].toString(),
-                                  imageUrl: item['image_url'] ?? '',
-                                  postId: item['id'] ?? '',
-                                  likeList: item['like'] ?? [],
-                                  commentNumber: item['comments_number'] ?? 0,
-                                  kebabTagId: item['kebab_tag_id'] ?? 0,
-                                  kebabName: item['kebab_tag_name'] ?? '',
-                                );
-                              } else {
-                                return UserItem(
+                            if (searchController.text.isEmpty) {
+                              return FeedListItem(
+                                key: ValueKey(item['id']),
+                                text: item['text'] ??
+                                    S.of(context).testo_non_disponibile,
+                                createdAt: item['created_at'] ?? '',
+                                userId: item['user_id'].toString(),
+                                imageUrl: item['image_url'] ?? '',
+                                postId: item['id'] ?? '',
+                                likeList: item['like'] ?? [],
+                                commentNumber: item['comments_number'] ?? 0,
+                                kebabTagId: item['kebab_tag_id'] ?? 0,
+                                kebabName: item['kebab_tag_name'] ?? '',
+                              );
+                            } else {
+                              return UserItem(
                                   userId: item['id'] ?? "",
                                   username:
                                       item["username"] ?? S.of(context).anonimo,
-                                  avatarUrl: item["avatar_url"] ?? "",
-                                );
-                              }
-                            },
-                          ),
-                  ),
-                  if (isLoggedIn)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                                controller: postController,
-                                maxLines: 1,
-                                minLines: 1,
-                                decoration: InputDecoration(
-                                  hintText: S.of(context).scrivi_un_post,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  suffixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        onPressed: _tagKebab,
-                                        icon: Icon(
-                                          Icons.place_rounded,
-                                          // Assuming 'red' is your defined constant color
-                                          color: (selectedKebabId != null)
-                                              ? red
-                                              : Colors.grey,
-                                        ),
+                                  avatarUrl: item["avatar_url"] ?? "");
+                            }
+                          },
+                        ),
+                      ),
+                      if (isLoggedIn)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                    controller: postController,
+                                    maxLines: 1,
+                                    minLines: 1,
+                                    decoration: InputDecoration(
+                                      hintText: S.of(context).scrivi_un_post,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
-                                      if (_isImageLoading)
-                                        const Padding(
-                                          padding: EdgeInsets.all(12.0),
-                                          child: SizedBox(
-                                            width: 24,
-                                            height: 24,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2.5,
-                                              color: red,
+                                      filled: true,
+                                      fillColor: Colors.grey[200],
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                      suffixIcon: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            onPressed: _tagKebab,
+                                            icon: Icon(
+                                              Icons.place_rounded,
+                                              color: (selectedKebabId != null)
+                                                  ? red
+                                                  : Colors.grey,
                                             ),
                                           ),
-                                        )
-                                      else
-                                        IconButton(
-                                          onPressed: _pickImage,
-                                          icon: Icon(
-                                            Icons.photo,
-                                            // Check imageBytes (data) instead of just the path string
-                                            color: (imageBytes != null)
-                                                ? red
-                                                : Colors.grey,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                )),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: red,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: IconButton(
-                              onPressed: _postFeed,
-                              icon: const Icon(
-                                Icons.send,
-                                color: Colors.white,
+                                          if (_isImageLoading)
+                                            const Padding(
+                                              padding: EdgeInsets.all(12.0),
+                                              child: SizedBox(
+                                                width: 24,
+                                                height: 24,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2.5,
+                                                  color: red,
+                                                ),
+                                              ),
+                                            )
+                                          else
+                                            IconButton(
+                                              onPressed: _pickImage,
+                                              icon: Icon(
+                                                Icons.photo,
+                                                color: (imageBytes != null)
+                                                    ? red
+                                                    : Colors.grey,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    )),
                               ),
-                            ),
+                              const SizedBox(width: 8),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: red,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: IconButton(
+                                  onPressed: _postFeed,
+                                  icon: const Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
+                        ),
+                    ],
+                  ),
+                ),
     );
   }
 }
