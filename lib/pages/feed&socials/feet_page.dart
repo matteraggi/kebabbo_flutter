@@ -10,6 +10,7 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/pressable.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -36,6 +37,7 @@ class FeedPageState extends State<FeedPage> {
   String? selectedKebabId;
   String? selectedKebabName;
   List<Map<String, dynamic>> kebabbariList = [];
+  bool _canSend = false;
 
   bool _showFriendsOnly = false;
 
@@ -254,6 +256,11 @@ class FeedPageState extends State<FeedPage> {
 
   void _onTextChanged() {
     final text = postController.text;
+
+    setState(() {
+      _canSend = text.trim().isNotEmpty;
+    });
+
     if (text.contains('@')) {
       final match =
           RegExp(r'@(\S*)').firstMatch(text.substring(text.lastIndexOf('@')));
@@ -582,111 +589,111 @@ class FeedPageState extends State<FeedPage> {
                             itemBuilder: (context, index) {
                               final item = searchResultList[index];
 
-                            if (searchController.text.isEmpty) {
-                              return FeedListItem(
-                                key: ValueKey(item['id']),
-                                text: item['text'] ??
-                                    S.of(context).testo_non_disponibile,
-                                createdAt: item['created_at'] ?? '',
-                                userId: item['user_id'].toString(),
-                                imageUrl: item['image_url'] ?? '',
-                                postId: item['id'] ?? '',
-                                likeList: item['like'] ?? [],
-                                commentNumber: item['comments_number'] ?? 0,
-                                kebabTagId: item['kebab_tag_id'] ?? 0,
-                                kebabName: item['kebab_tag_name'] ?? '',
-                              );
-                            } else {
-                              return UserItem(
-                                  userId: item['id'] ?? "",
-                                  username:
-                                      item["username"] ?? S.of(context).anonimo,
-                                  avatarUrl: item["avatar_url"] ?? "");
-                            }
-                          },
-                        ),
-                      ),
-                      if (isLoggedIn)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                    controller: postController,
-                                    maxLines: 1,
-                                    minLines: 1,
-                                    decoration: InputDecoration(
-                                      hintText: S.of(context).scrivi_un_post,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                              if (searchController.text.isEmpty) {
+                                return FeedListItem(
+                                  key: ValueKey(item['id']),
+                                  text: item['text'] ??
+                                      S.of(context).testo_non_disponibile,
+                                  createdAt: item['created_at'] ?? '',
+                                  userId: item['user_id'].toString(),
+                                  imageUrl: item['image_url'] ?? '',
+                                  postId: item['id'] ?? '',
+                                  likeList: item['like'] ?? [],
+                                  commentNumber: item['comments_number'] ?? 0,
+                                  kebabTagId: item['kebab_tag_id'] ?? 0,
+                                  kebabName: item['kebab_tag_name'] ?? '',
+                                );
+                              } else {
+                                return UserItem(
+                                    userId: item['id'] ?? "",
+                                    username: item["username"] ??
+                                        S.of(context).anonimo,
+                                    avatarUrl: item["avatar_url"] ?? "");
+                              }
+                            },
+                          ),
+                  ),
+                  if (isLoggedIn)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                                controller: postController,
+                                maxLines: 1,
+                                minLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: S.of(context).scrivi_un_post,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        onPressed: _tagKebab,
+                                        icon: Icon(
+                                          Icons.place_rounded,
+                                          color: (selectedKebabId != null)
+                                              ? red
+                                              : Colors.grey,
+                                        ),
                                       ),
-                                      filled: true,
-                                      fillColor: Colors.grey[200],
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 12,
-                                      ),
-                                      suffixIcon: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            onPressed: _tagKebab,
-                                            icon: Icon(
-                                              Icons.place_rounded,
-                                              color: (selectedKebabId != null)
-                                                  ? red
-                                                  : Colors.grey,
+                                      if (_isImageLoading)
+                                        const Padding(
+                                          padding: EdgeInsets.all(12.0),
+                                          child: SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.5,
+                                              color: red,
                                             ),
                                           ),
-                                          if (_isImageLoading)
-                                            const Padding(
-                                              padding: EdgeInsets.all(12.0),
-                                              child: SizedBox(
-                                                width: 24,
-                                                height: 24,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2.5,
-                                                  color: red,
-                                                ),
-                                              ),
-                                            )
-                                          else
-                                            IconButton(
-                                              onPressed: _pickImage,
-                                              icon: Icon(
-                                                Icons.photo,
-                                                color: (imageBytes != null)
-                                                    ? red
-                                                    : Colors.grey,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    )),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: red,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: IconButton(
-                                  onPressed: _postFeed,
-                                  icon: const Icon(
-                                    Icons.send,
-                                    color: Colors.white,
+                                        )
+                                      else
+                                        IconButton(
+                                          onPressed: _pickImage,
+                                          icon: Icon(
+                                            Icons.photo,
+                                            color: (imageBytes != null)
+                                                ? red
+                                                : Colors.grey,
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
+                                )),
                           ),
-                        ),
-                    ],
-                  ),
-                ),
+                          const SizedBox(width: 8),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: _canSend ? red : Colors.grey,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            height: 40,
+                            width: 40,
+                            child: Pressable(
+                              onTap: _canSend ? _postFeed : null,
+                              child: Icon(
+                                Icons.send,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
     );
   }
 }
