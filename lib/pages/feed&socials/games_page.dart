@@ -91,7 +91,7 @@ class _GamesPageState extends State<GamesPage> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.25),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(
@@ -172,7 +172,7 @@ class _GamesPageState extends State<GamesPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.25),
+                  color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(icon, size: 32, color: Colors.white),
@@ -367,7 +367,7 @@ class _GamesPageState extends State<GamesPage> {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: enabled ? main.red : Colors.grey[400],
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -375,13 +375,13 @@ class _GamesPageState extends State<GamesPage> {
                 Icon(
                   Icons.card_giftcard,
                   size: 32,
-                  color: enabled ? main.red : Colors.grey,
+                  color: Colors.white,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   isTimerActive ? timerText : "Pacchetto",
                   style: TextStyle(
-                    color: enabled ? Colors.white : Colors.grey[600],
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
