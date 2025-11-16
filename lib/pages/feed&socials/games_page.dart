@@ -9,6 +9,7 @@ import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/components/buttons&selectors/pressable.dart';
 
 class GamesPage extends StatefulWidget {
   final Position? currentPosition;
@@ -68,7 +69,7 @@ class _GamesPageState extends State<GamesPage> {
     required VoidCallback? onTap,
     Widget? trailing,
   }) {
-    return GestureDetector(
+    return Pressable(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -215,7 +216,7 @@ class _GamesPageState extends State<GamesPage> {
 // BOTTONE 1 – Aggiungi Recensione
 // ────────────────────────────────────────────────
               Expanded(
-                child: GestureDetector(
+                child: Pressable(
                   onTap: onAddReview,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -247,7 +248,7 @@ class _GamesPageState extends State<GamesPage> {
 // BOTTONE 2 – Aggiungi Kebabbaro
 // ────────────────────────────────────────────────
               Expanded(
-                child: GestureDetector(
+                child: Pressable(
                   onTap: onAddKebabbaro,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -355,7 +356,7 @@ class _GamesPageState extends State<GamesPage> {
         final bool enabled =
             !isTimerActive && supabase.auth.currentUser != null;
 
-        return GestureDetector(
+        return Pressable(
           onTap: enabled
               ? () {
                   Navigator.push(
@@ -394,7 +395,7 @@ class _GamesPageState extends State<GamesPage> {
   }
 
   Widget _buildSmallButtonCollection() {
-    return GestureDetector(
+    return Pressable(
       onTap: () {
         Navigator.push(
           context,
