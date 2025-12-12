@@ -60,31 +60,42 @@ class TopKebabPageState extends State<TopKebabPage> {
 
         for (var kebab in kebabs) {
           if (userPosition != null) {
-            double distanceInMeters = Geolocator.distanceBetween(
-              userPosition.latitude,
-              userPosition.longitude,
-              kebab['lat'] ?? 0.0,
-              kebab['lng'] ?? 0.0,
-            );
-            kebab['distance'] = distanceInMeters / 1000;
-          }
-          kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
-          // 1. Controlla se lat e lng sono validi
-          final double lat = kebab['lat'] ?? 0.0;
-          final double lng = kebab['lng'] ?? 0.0;
+            final double lat =
+                (kebab['lat'] is num) ? (kebab['lat'] as num).toDouble() : 0.0;
+            final double lng =
+                (kebab['lng'] is num) ? (kebab['lng'] as num).toDouble() : 0.0;
 
-          if (userPosition != null && (lat != 0.0 || lng != 0.0)) {
-            // 2. Calcola la distanza SOLO se le coordinate sono valide
-            double distanceInMeters = Geolocator.distanceBetween(
-              userPosition.latitude,
-              userPosition.longitude,
-              lat,
-              lng,
-            );
-            kebab['distance'] = distanceInMeters / 1000;
+            if (lat != 0.0 || lng != 0.0) {
+              double distanceInMeters = Geolocator.distanceBetween(
+                userPosition.latitude,
+                userPosition.longitude,
+                lat,
+                lng,
+              );
+              kebab['distance'] = distanceInMeters / 1000;
+            } else {
+              kebab['distance'] = null;
+            }
           } else {
-            // 3. Altrimenti, imposta la distanza a null
             kebab['distance'] = null;
+          }
+
+          // 2. Controllo Orari
+          kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
+
+          kebab['rating'] = kebab['rating'] ?? 0.0;
+          kebab['quality'] = kebab['quality'] ?? 0.0;
+          kebab['price'] = kebab['price'] ?? 0.0;
+          kebab['vegetables'] = kebab['vegetables'] ?? 0.0;
+          kebab['onion'] = kebab['onion'] ?? 0.0;
+          kebab['spicy'] = kebab['spicy'] ?? 0.0;
+          kebab['meat'] = kebab['meat'] ?? 0.0;
+          kebab['name'] = kebab['name'] ?? '';
+
+          if (kebab['distance'] == null) {
+            kebab['distance_sortable'] = double.maxFinite;
+          } else {
+            kebab['distance_sortable'] = kebab['distance'];
           }
         }
 
@@ -96,6 +107,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                   (kebab['distance'] ?? double.infinity) <= maxDistance)
               .toList();
         }
+
         // Filtro staff / utenti
         if (useStaffRatings) {
           kebabs = kebabs.where((kebab) => kebab['is_staff'] == true).toList();
@@ -106,7 +118,6 @@ class TopKebabPageState extends State<TopKebabPage> {
               .toList();
         }
 
-        // Sort the kebabs using the utility function
         kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition,
             showOnlyOpen, showOnlyKebab);
 
