@@ -85,13 +85,19 @@ List<Map<String, dynamic>> sortKebabs(
     orderDirection = !orderDirection;
     for (var kebab in kebabs) {
       if (userPosition != null) {
-        double distanceInMeters = Geolocator.distanceBetween(
-          userPosition.latitude,
-          userPosition.longitude,
-          kebab['lat'],
-          kebab['lng'],
-        );
-        kebab[orderByField] = distanceInMeters / 1000;
+        final lat = kebab['lat'];
+        final lng = kebab['lng'];
+        if (lat != null && lng != null) {
+          double distanceInMeters = Geolocator.distanceBetween(
+            userPosition.latitude,
+            userPosition.longitude,
+            lat,
+            lng,
+          );
+          kebab[orderByField] = distanceInMeters / 1000;
+        } else {
+          kebab[orderByField] = double.infinity;
+        }
       }
     }
   }
@@ -101,9 +107,14 @@ List<Map<String, dynamic>> sortKebabs(
 
   // Sort kebabs based on orderByField and orderDirection
   kebabs.sort((a, b) {
+    var valA = a[orderByField];
+    var valB = b[orderByField];
+    if (valA == null && valB == null) return 0;
+    if (valA == null) return 1;
+    if (valB == null) return -1;
     return orderDirection
-        ? b[orderByField].compareTo(a[orderByField])
-        : a[orderByField].compareTo(b[orderByField]);
+        ? valB.compareTo(valA)
+        : valA.compareTo(valB);
   });
 
   return kebabs;
@@ -133,7 +144,8 @@ bool isKebabOpen(Map<String, dynamic>? orariApertura) {
     'sunday': 'domenica',
   };
 
-  String dayOfWeek = daysOfWeek[dayOfWeekEnglish]!;
+  String? dayOfWeek = daysOfWeek[dayOfWeekEnglish];
+  if (dayOfWeek == null) return false;
   // Controlla se il giorno corrente è presente negli orari di apertura
   if (orariApertura.containsKey(dayOfWeek)) {
     // Ottieni gli orari di apertura per il giorno corrente
