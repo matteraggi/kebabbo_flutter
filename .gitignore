@@ -56,3 +56,4 @@ ios/
 .env
 /android/app/upload-keystore.jks
 *.pem
+node_modules/*
