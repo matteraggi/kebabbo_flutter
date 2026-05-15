@@ -86,14 +86,21 @@ class SpecialPageState extends State<SpecialPage> {
     final kebabIndex = dashList.indexWhere((kebab) => kebab['id'] == kebabId);
     if (kebabIndex != -1) {
       final isCurrentlyFavorite = dashList[kebabIndex]['isFavorite'];
-      final updatedFavorites = List<String>.from(dashList
-          .where((kebab) => kebab['isFavorite'])
-          .map((k) => k['id'].toString()));
+      
+      final userResponse = await supabase
+          .from('profiles')
+          .select('favorites')
+          .eq('id', user.id)
+          .single();
+
+      final updatedFavorites = List<String>.from(userResponse['favorites'] ?? []);
 
       if (isCurrentlyFavorite) {
         updatedFavorites.remove(kebabId);
       } else {
-        updatedFavorites.add(kebabId);
+        if (!updatedFavorites.contains(kebabId)) {
+          updatedFavorites.add(kebabId);
+        }
       }
 
       await supabase

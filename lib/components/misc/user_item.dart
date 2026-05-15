@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
+import 'package:kebabbo_flutter/main.dart';
 
 class UserItem extends StatefulWidget {
   final String userId;
@@ -39,11 +40,17 @@ class UserItemState extends State<UserItem> {
       child: InkWell(
         onTap: _navigateToUserPage,
         child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: widget.avatarUrl.isNotEmpty
-                ? NetworkImage(widget.avatarUrl)
-                : const AssetImage('assets/default_avatar.png')
-                    as ImageProvider,
+          leading: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: red, width: 2),
+            ),
+            child: CircleAvatar(
+              backgroundImage: widget.avatarUrl.isNotEmpty
+                  ? NetworkImage(widget.avatarUrl)
+                  : const AssetImage('assets/default_avatar.png')
+                      as ImageProvider,
+            ),
           ),
           title: Text(widget.username),
         ),

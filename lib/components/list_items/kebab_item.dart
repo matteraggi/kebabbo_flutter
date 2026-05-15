@@ -277,10 +277,8 @@ class KebabListItemState extends State<KebabListItem> {
                           if (widget.approved != false)
                             IconButton(
                               onPressed: () {
-                                setState(() {
-                                  getUsersReviews();
-                                  _controller.toggleCard();
-                                });
+                                getUsersReviews();
+                                _controller.toggleCard();
                               },
                               icon: const Icon(
                                 Icons.cached,
@@ -462,9 +460,7 @@ class KebabListItemState extends State<KebabListItem> {
                           if (widget.approved ?? false)
                             IconButton(
                               onPressed: () {
-                                setState(() {
-                                  _controller.toggleCard();
-                                });
+                                _controller.toggleCard();
                               },
                               icon: const Icon(
                                 Icons.cached,
@@ -603,27 +599,18 @@ class KebabListItemState extends State<KebabListItem> {
             ),
             trailing: const SizedBox(width: 10),
             children: [
-              AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 600),
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                    final rotate =
-                        Tween(begin: 1.0, end: 0.0).animate(animation);
-                    return RotationTransition(turns: rotate, child: child);
-                  },
-                  child: FlipCard(
-                    fill: Fill.fillBack,
-                    side: isFront ? CardSide.FRONT : CardSide.BACK,
-                    controller: _controller,
-                    flipOnTouch: false,
-                    onFlipDone: (status) {
-                      setState(() {
-                        isFront = !isFront;
-                      });
-                    },
-                    front: _buildFront(),
-                    back: _buildBack(),
-                  ))
+              FlipCard(
+                fill: Fill.fillBack,
+                controller: _controller,
+                flipOnTouch: false,
+                onFlipDone: (status) {
+                  setState(() {
+                    isFront = !isFront;
+                  });
+                },
+                front: widget.flipped ? _buildBack() : _buildFront(),
+                back: widget.flipped ? _buildFront() : _buildBack(),
+              )
             ],
             onExpansionChanged: (bool expanding) {
               setState(() {
