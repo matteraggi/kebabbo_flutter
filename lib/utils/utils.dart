@@ -194,6 +194,9 @@ Future<Map<String, int>> calculateAvailableKebabsPerDistance(
     final PostgrestList response = await supabase
         .from('kebab')
         .select('*')
+        .eq('is_staff', true)
+        .not('lat', 'is', null)
+        .not('lng', 'is', null)
         .not('meat', 'is', null)
         .not('onion', 'is', null)
         .not('spicy', 'is', null)
@@ -214,11 +217,12 @@ Future<Map<String, int>> calculateAvailableKebabsPerDistance(
     // If user location is available, calculate the distance
     if (userPosition != null) {
       for (var kebab in kebabs) {
+        if (kebab['lat'] == null || kebab['lng'] == null) continue;
         double distanceInMeters = Geolocator.distanceBetween(
           userPosition.latitude,
           userPosition.longitude,
-          kebab['lat'],
-          kebab['lng'],
+          (kebab['lat'] as num).toDouble(),
+          (kebab['lng'] as num).toDouble(),
         );
         double distanceInKm = distanceInMeters / 1000;
 

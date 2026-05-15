@@ -10,6 +10,9 @@ Future<Map<String, dynamic>?> buildKebab(Map<String, int> ingredientAmounts,
     final PostgrestList response = await supabase
         .from('kebab')
         .select('*')
+        .eq('is_staff', true)
+        .not('lat', 'is', null)
+        .not('lng', 'is', null)
         .not('meat', 'is', null)
         .not('onion', 'is', null)
         .not('spicy', 'is', null)
@@ -22,11 +25,14 @@ Future<Map<String, dynamic>?> buildKebab(Map<String, int> ingredientAmounts,
     // Filter kebabs by maximum distance
     if (userPosition != null) {
       kebabs = kebabs.where((kebab) {
+        if (kebab['lat'] == null || kebab['lng'] == null) {
+          return false; // Skip kebabs without coordinates
+        }
         double distanceInMeters = Geolocator.distanceBetween(
           userPosition.latitude,
           userPosition.longitude,
-          kebab['lat'],
-          kebab['lng'],
+          (kebab['lat'] as num).toDouble(),
+          (kebab['lng'] as num).toDouble(),
         );
         double distanceInKm = distanceInMeters / 1000;
         return distanceInKm <= maxDistance;

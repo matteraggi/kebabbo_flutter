@@ -126,7 +126,7 @@ class MapPageState extends State<MapPage> {
               _popupController.hideAllPopups();
             },
             interactionOptions: const InteractionOptions(
-                flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag),
+                flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag | InteractiveFlag.scrollWheelZoom),
           ),
           children: [
             TileLayer(

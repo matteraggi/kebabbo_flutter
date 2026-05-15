@@ -91,43 +91,80 @@ class PackPageState extends State<PackPage> {
       // If lastPackTimestamp is null, or the time difference is sufficient, proceed.
 
       // Fetch a random kebab ID not already in the user's tcg array
-      // Supabase client should handle empty tcgArray for 'not in' (meaning fetch all)
-      // Use .cast<Object>() for type safety with the Supabase client if IDs are not dynamic.
+      // Exclude user-added kebabs (added_by IS NULL = official/staff kebabs only)
       final kebabResponse = await supabase
           .from('kebab')
           .select('id, name')
+          .isFilter('has_card', true) // Only official kebabs, not user-added
           .not('id', 'in',
-              tcgArray.cast<Object>()) // Cast to List<Object> if necessary
-          .limit(
-              1) // You might want .order('random()') if your DB supports it and you need true randomness
-          .maybeSingle(); // Use maybeSingle to get null if no matching kebab is found
+              tcgArray.cast<Object>()) // Exclude already collected cards
+          .limit(1)
+          .maybeSingle();
 
-      if (kebabResponse == null) {
-        // No new kebabs available for the user
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.of(context).found_all_cards)),
-          );
-          Navigator.pop(context); // Close page as there's nothing new to show
+      bool isDuplicate = false;
+      Map<String, dynamic>? selectedKebab = kebabResponse;
+
+      if (selectedKebab == null) {
+        // User has all official cards — pick a random duplicate from their collection
+        if (tcgArray.isEmpty) {
+          // Edge case: no official kebabs exist at all
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(S.of(context).found_all_cards)),
+            );
+            Navigator.pop(context);
+          }
+          if (mounted) {
+            setState(() => _isOpeningLogicRunning = false);
+          } else {
+            _isOpeningLogicRunning = false;
+          }
+          return;
         }
-        if (mounted) {
-          setState(() => _isOpeningLogicRunning = false);
-        } else {
-          _isOpeningLogicRunning = false;
+
+        // Fetch a random card from the user's existing collection for the duplicate
+        final duplicateResponse = await supabase
+            .from('kebab')
+            .select('id, name')
+            .isFilter('has_card', true) // Only kebabs with cards
+            .limit(1)
+            .maybeSingle();
+
+        if (duplicateResponse == null) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(S.of(context).found_all_cards)),
+            );
+            Navigator.pop(context);
+          }
+          if (mounted) {
+            setState(() => _isOpeningLogicRunning = false);
+          } else {
+            _isOpeningLogicRunning = false;
+          }
+          return;
         }
-        return;
+
+        selectedKebab = duplicateResponse;
+        isDuplicate = true;
       }
 
-      final foundKebabId = kebabResponse['id'];
-      final String kebabDisplayName =
-          kebabResponse['name']; // Original name for processing
+      final String kebabDisplayName = selectedKebab['name'];
 
-      // Update the user's profile with the new kebab ID and timestamp
-      final updatedTcgArray = [...tcgArray, foundKebabId];
-      await supabase.from('profiles').update({
-        'tcg': updatedTcgArray,
-        'last_pack': DateTime.now().toUtc().toIso8601String(),
-      }).eq('id', userId);
+      if (!isDuplicate) {
+        // New card: add it to the user's collection
+        final foundKebabId = selectedKebab['id'];
+        final updatedTcgArray = [...tcgArray, foundKebabId];
+        await supabase.from('profiles').update({
+          'tcg': updatedTcgArray,
+          'last_pack': DateTime.now().toUtc().toIso8601String(),
+        }).eq('id', userId);
+      } else {
+        // Duplicate: only update the last_pack timestamp (don't add to collection)
+        await supabase.from('profiles').update({
+          'last_pack': DateTime.now().toUtc().toIso8601String(),
+        }).eq('id', userId);
+      }
 
       String imageName = kebabDisplayName.toLowerCase().replaceAll(' ', '-');
 
