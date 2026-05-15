@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 // <── Aggiunto
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
@@ -161,6 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  late final StreamSubscription<AuthState> _authSubscription;
 
   @override
   void initState() {
@@ -175,6 +177,24 @@ class _MyHomePageState extends State<MyHomePage> {
       ); // Request notification permissions
       registerNotificationListeners(context);
     } // Register notification listeners
+
+    // Listener globale per intercettare errori di refresh del token e forzare il signOut
+    _authSubscription = supabase.auth.onAuthStateChange.listen(
+      (data) {},
+      onError: (error) async {
+        debugPrint('Auth stream error intercepted: $error');
+        // Valvola di sicurezza: se il refresh fallisce, facciamo un signOut pulito
+        await supabase.auth.signOut();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Sessione scaduta. Effettua nuovamente il login.'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
+    );
 
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -248,6 +268,12 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       debugPrint("Error getting location: $e");
     }
+  }
+
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> _checkIfAppInstalled() async {
