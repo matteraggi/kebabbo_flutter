@@ -31,6 +31,8 @@ const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 const firebaseKey = String.fromEnvironment('FIREBASE_KEY');
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
     debugPrint('⚠️ ATTENZIONE: variabili SUPABASE mancanti nel file .env');
   }
@@ -43,15 +45,21 @@ Future<void> main() async {
   String? otherPaths;
 
   // Handle deep links based on URL path
-  if (Uri.base.pathSegments.isNotEmpty) {
-    if (Uri.base.pathSegments[0] == 'privacy-policy') {
-      otherPaths = "privacy-policy";
-    } else if (Uri.base.pathSegments[0] == 'reset-password') {
-      otherPaths = "reset-password";
+  if (kIsWeb) {
+    try {
+      if (Uri.base.pathSegments.isNotEmpty) {
+        if (Uri.base.pathSegments[0] == 'privacy-policy') {
+          otherPaths = "privacy-policy";
+        } else if (Uri.base.pathSegments[0] == 'reset-password') {
+          otherPaths = "reset-password";
+        }
+      }
+    } catch (e) {
+      debugPrint("Error reading Uri.base: $e");
     }
   }
 
-  WidgetsFlutterBinding.ensureInitialized();
+
 
   // Web-specific initialization using FirebaseOptions
   if (kIsWeb) {
@@ -277,16 +285,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _checkIfAppInstalled() async {
+    if (!kIsWeb) return; // Only check on web!
+
     String appUrl =
         'intent://kebabbologna/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
 
-    if (!kIsWeb && Platform.isAndroid) {
-      // Check for Android *and* not web
-      if (await canLaunchUrl(Uri.parse(appUrl))) {
-        // App is likely installed, but let's try to launch it just in case:
-        await launchUrl(Uri.parse(appUrl));
-      } else {
-        //App is not installed
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        if (await canLaunchUrl(Uri.parse(appUrl))) {
+          await launchUrl(Uri.parse(appUrl));
+        } else {
+          if (!mounted) return;
+          showAppInstallDialog(context);
+        }
+      } catch (e) {
         if (!mounted) return;
         showAppInstallDialog(context);
       }
