@@ -27,6 +27,7 @@ design:
 - [ ] mettere il grafico a barre
 - [ ] Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
 - [ ] sezioni review e kebab salvati del profilo molto sus e strani soprattutto in prod
+- [ ] nella mappa per kebab con nomi lunghi le stelle escono dal pop up, bisognerebbe sistemare
 
 extra:
 - [ ] Notifiche
