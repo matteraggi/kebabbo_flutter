@@ -131,6 +131,7 @@ class MapPageState extends State<MapPage> {
           children: [
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.canny.kebabbologna',
               tileProvider: CancellableNetworkTileProvider(),
             ),
             RichAttributionWidget(
