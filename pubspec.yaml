@@ -23,7 +23,7 @@ dependencies:
   geolocator: ^13.0.1
   flutter_map_marker_popup: ^7.0.0
   webview_flutter: ^4.10.0
-  font_awesome_flutter: ^10.7.0
+  font_awesome_flutter: ^11.0.0
   flutter_launcher_icons: ^0.14.1
   fl_chart: ^0.69.0
   google_sign_in: ^6.2.2
@@ -72,5 +72,4 @@ flutter:
     - assets/icons/
     - assets/kebab-card/
     - assets/privacy-policy/
-    - packages/font_awesome_flutter/fonts/fa-brands-400.ttf
     - lib/l10n/
