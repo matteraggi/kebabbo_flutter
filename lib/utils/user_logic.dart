@@ -13,7 +13,7 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
 
     return {
       'username': data['username'] ?? '',
-      'avatarUrl': data['avatar_url'] ?? '',
+      'avatarUrl': (data['avatar_url']?.toString().trim()) ?? '',
       'favoritesCount': (data['favorites'] as List?)?.length ?? 0,
       'ingredients': data['ingredients'] ?? [],
       'seguitiCount': data['followed_users'] ?? [],
