@@ -1,26 +1,52 @@
 {
   "project_info": {
-    "project_number": "12309724529",
-    "project_id": "kebabbo-669ea",
-    "storage_bucket": "kebabbo-669ea.firebasestorage.app"
+    "project_number": "1072333391081",
+    "project_id": "kebabbo",
+    "storage_bucket": "kebabbo.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:12309724529:android:15d1ba0a48ab39ebee4ad0",
+        "mobilesdk_app_id": "1:1072333391081:android:f3fd344f4f874f52f2dc78",
         "android_client_info": {
           "package_name": "com.canny.kebabbologna"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1072333391081-7nqbpab7ollm7p149v7qieiuln1a8uph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.canny.kebabbologna",
+            "certificate_hash": "3789f2a07c6f1f5e24d66b82c6c3918f13cc5a7d"
+          }
+        },
+        {
+          "client_id": "1072333391081-bjkbqm9n1ukcfo8dfgsic9nqkkc9et9p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.canny.kebabbologna",
+            "certificate_hash": "3ad4ac57e921d6996ac58d921efbdea7a290842b"
+          }
+        },
+        {
+          "client_id": "1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBVeCoip7TeN7D2guJE4b2QfzITKdJqb1k"
+          "current_key": "AIzaSyCSppGBgoNec1Eu3MrAw4CkS4eFzOIhxq8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
