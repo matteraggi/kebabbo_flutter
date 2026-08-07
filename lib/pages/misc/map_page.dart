@@ -24,12 +24,17 @@ class MapPageState extends State<MapPage> {
   String? errorMessage;
 
   Position? _currentPosition;
+  bool _requestingPermission = false;
+  bool _permissionPermanentlyDenied = false;
 
   @override
   void initState() {
     super.initState();
     _currentPosition = widget.initialPosition;
     fetchKebab();
+    if (_currentPosition == null) {
+      _requestLocationPermission();
+    }
   }
 
   // RESTORED: This method allows main.dart to update the map's position
@@ -38,6 +43,47 @@ class MapPageState extends State<MapPage> {
       setState(() {
         _currentPosition = newPosition;
       });
+    }
+  }
+
+  Future<void> _requestLocationPermission() async {
+    setState(() {
+      _requestingPermission = true;
+      _permissionPermanentlyDenied = false;
+    });
+
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          setState(() => _permissionPermanentlyDenied = true);
+        }
+        return;
+      }
+
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition();
+      if (mounted) {
+        setState(() => _currentPosition = position);
+      }
+    } catch (_) {
+      // Leave _currentPosition null; the empty state offers a retry.
+    } finally {
+      if (mounted) {
+        setState(() => _requestingPermission = false);
+      }
     }
   }
 
@@ -70,16 +116,35 @@ class MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    // If the position is null (e.g., permission was denied in main.dart)
-    // show a helpful message instead of a loader.
+    // If the position is null (e.g., permission was denied), show a
+    // helpful message with a way to (re)try instead of a dead end.
     if (_currentPosition == null) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'Location not available. Please enable location permissions for Kebabbo.',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _permissionPermanentlyDenied
+                    ? 'Location access is disabled for Kebabbo. Enable it from app settings to see the map.'
+                    : 'Location not available. Please enable location permissions for Kebabbo.',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              if (_requestingPermission)
+                const CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  onPressed: _permissionPermanentlyDenied
+                      ? Geolocator.openAppSettings
+                      : _requestLocationPermission,
+                  child: Text(_permissionPermanentlyDenied
+                      ? 'Open settings'
+                      : 'Enable location'),
+                ),
+            ],
           ),
         ),
       );
