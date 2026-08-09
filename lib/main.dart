@@ -21,6 +21,7 @@ import 'package:kebabbo_flutter/utils/notifications.dart';
 import 'package:flutter/foundation.dart'; // Import for kIsWeb
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'firebase_options.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
 const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
@@ -52,22 +53,11 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Web-specific initialization using FirebaseOptions
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      options: FirebaseOptions(
-        apiKey: firebaseKey,
-        authDomain: "kebabbo-669ea.firebaseapp.com",
-        projectId: "kebabbo-669ea",
-        storageBucket: "kebabbo-669ea.firebasestorage.app",
-        messagingSenderId: "12309724529",
-        appId: "1:12309724529:web:c84bf69f2af9846fee4ad0",
-        measurementId: "G-Z2YEVGGKTF",
-      ),
-    );
-  } else {
-    // Mobile initialization (Android/iOS)
-    await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  if (!kIsWeb) {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
