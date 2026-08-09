@@ -412,6 +412,7 @@ class FeedPageState extends State<FeedPage> {
       type: FileType.image,
       allowCompression: true,
       allowMultiple: false,
+      withData: true,
     );
 
     if (result != null) {

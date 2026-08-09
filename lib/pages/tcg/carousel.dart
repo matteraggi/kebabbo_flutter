@@ -37,6 +37,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
           final kebabResponse = await supabase
               .from('kebab')
               .select('name')
+              .isFilter('has_card', true) // Only kebabs with cards
               .filter('id', 'in', tcgIds);
           List<String> kebabList = kebabResponse.map<String>((kebabs) {
             final String kebabberId =

@@ -141,23 +141,26 @@ class MyScenerState extends State<MyScener>
           ),
         );
       },
-      child: Container(
-        margin: const EdgeInsets.all(12),
-        width: 150,
-        height: 200,
-        alignment: Alignment.center,
-        foregroundDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Color.fromRGBO(0, 0, 0, alpha),
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            widget.imagePaths[vo.idx % widget.imagePaths.length],
-            fit: BoxFit.cover,
+      child: RepaintBoundary(
+        child: Container(
+          margin: const EdgeInsets.all(12),
+          width: 150,
+          height: 200,
+          alignment: Alignment.center,
+          foregroundDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Color.fromRGBO(0, 0, 0, alpha),
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              widget.imagePaths[vo.idx % widget.imagePaths.length],
+              fit: BoxFit.cover,
+              gaplessPlayback: true, // Prevents blank frames during rebuilds
+            ),
           ),
         ),
       ),

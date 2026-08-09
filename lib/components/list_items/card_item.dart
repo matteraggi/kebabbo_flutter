@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CardItem extends StatelessWidget {
   final String image;
   final String name;
   final String description;
-  final List<IconData> icons;
+  final List<FaIconData> icons;
   final List<Uri> url;
 
   const CardItem({
@@ -73,7 +74,7 @@ class CardItem extends StatelessWidget {
                       },
                       child: Row(
                         children: [
-                          Icon(icons[index], size: 40, color: Colors.black),
+                          FaIcon(icons[index], size: 40, color: Colors.black),
                           const SizedBox(width: 12),
                         ],
                       ),

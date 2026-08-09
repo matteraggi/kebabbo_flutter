@@ -164,6 +164,9 @@ class _AddKebabState extends State<AddKebab> {
       if (userId == null) {
         throw Exception(S.of(context).user_not_authenticated);
       }
+      final double calculatedRating =
+          (_quality + _price + _dimension + _menu) / 4;
+
       // Crea il nuovo kebab
       final response = await supabase
           .from('kebab')
@@ -176,6 +179,7 @@ class _AddKebabState extends State<AddKebab> {
             'user_reviewed': true,
             'is_staff': false,
             'mapLink': cityName,
+            'rating': calculatedRating,
             'quality': _quality,
             'price': _price,
             'dimension': _dimension,
@@ -302,12 +306,14 @@ class _AddKebabState extends State<AddKebab> {
           controller: textEditingController,
           focusNode: focusNode,
           enabled: !isPreFilled, // <-- DISABILITA IL CAMPO
+          maxLength: 100,
           decoration: InputDecoration(
             labelText: S.of(context).name_label,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             // Colora di grigio se disabilitato
             fillColor: isPreFilled ? Colors.grey[200] : Colors.white,
+            counterText: '',
           ),
           validator: (value) => value == null || value.trim().isEmpty
               ? S.of(context).required_field
@@ -352,11 +358,13 @@ class _AddKebabState extends State<AddKebab> {
   Widget _buildTextField(
       {required String label,
       required TextEditingController controller,
-      bool isOptional = false}) {
+      bool isOptional = false,
+      int? maxLength}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
           controller: controller,
+          maxLength: maxLength,
           decoration: InputDecoration(
             labelText: label,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -446,6 +454,7 @@ class _AddKebabState extends State<AddKebab> {
                       label: S.of(context).your_review_optional,
                       controller: _reviewTextController,
                       isOptional: true, // Questo lo rende opzionale
+                      maxLength: 1000,
                     ),
                     const SizedBox(height: 16),
 

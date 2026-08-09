@@ -158,7 +158,11 @@ class _SingleUserPageState extends State<SingleUserPage> {
 
       setState(() {
         _isFollowing = !_isFollowing; // Cambia lo stato
-        _seguitiCount = _followed.length; // Aggiorna il numero di seguiti
+        if (_isFollowing) {
+          _followerCount++;
+        } else {
+          _followerCount--;
+        }
       });
     } catch (error) {
       if (!mounted) return;

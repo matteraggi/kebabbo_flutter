@@ -20,6 +20,7 @@ class LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailController = TextEditingController();
   late final TextEditingController _passwordController =
       TextEditingController();
+  final _passwordFocusNode = FocusNode();
   final redirectUrl = Uri(
     scheme: Uri.base.scheme,
     host: Uri.base.host,
@@ -70,6 +71,7 @@ class LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -143,6 +145,8 @@ class LoginPageState extends State<LoginPage> {
                                 border: InputBorder.none, // No default border
                               ),
                               keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              onSubmitted: (_) => _passwordFocusNode.requestFocus(),
                             ),
                           ),
                           const Divider(), // Divider between email and password
@@ -151,11 +155,14 @@ class LoginPageState extends State<LoginPage> {
                                 const EdgeInsets.symmetric(horizontal: 16.0),
                             child: TextField(
                               controller: _passwordController,
+                              focusNode: _passwordFocusNode,
                               decoration: InputDecoration(
                                 labelText: S.of(context).password,
                                 border: InputBorder.none, // No default border
                               ),
                               obscureText: true,
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => _signInWithEmailAndPassword(),
                             ),
                           ),
                         ],

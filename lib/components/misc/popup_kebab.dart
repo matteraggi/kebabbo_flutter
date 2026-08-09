@@ -60,9 +60,15 @@ class PopupKebabItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(name,
+                    Flexible(
+                      child: Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     Row(
                       children: _buildRatingStars(rating),

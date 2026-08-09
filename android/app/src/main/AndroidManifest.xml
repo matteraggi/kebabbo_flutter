@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.
     ACCESS_COARSE_LOCATION" />
     <application
-        android:label="kebabbo_flutter"
+        android:label="Kebabbo"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
@@ -25,16 +25,21 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- Launcher Intent Filter: Determines what shows up in the App Drawer -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>    
+            </intent-filter>
+
+            <!-- Deep Link Intent Filter: Handles URL links -->
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                   <data
-                android:scheme="https"
-                android:host="kebabbo.com"
-                android:pathPrefix="/path" />
+                <data
+                    android:scheme="https"
+                    android:host="kebabbo.com"
+                    android:pathPrefix="/path" />
             </intent-filter>
             <intent-filter>
         <action android:name="android.intent.action.VIEW" />
@@ -64,6 +69,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            
+        <!-- Disable Impeller to fix GPU driver crashes (black screen) on some Android devices -->
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="false" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

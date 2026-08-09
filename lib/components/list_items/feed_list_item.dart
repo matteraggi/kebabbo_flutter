@@ -217,8 +217,12 @@ class FeedListItemState extends State<FeedListItem> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.7,
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: FractionallySizedBox(
+            heightFactor: 0.7,
           child: Column(
             children: [
               Padding(
@@ -319,6 +323,7 @@ class FeedListItemState extends State<FeedListItem> {
               ),
             ],
           ),
+        ),
         );
       },
     );

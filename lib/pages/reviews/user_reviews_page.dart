@@ -65,17 +65,23 @@ class UserReviewsState extends State<UserReviewsPage> {
       if (kebabberData != null) {
         review['name'] = kebabberData['name'] ?? 'Nome non disponibile';
         review['map'] = kebabberData['map'] ?? '';
-        review['lat'] = kebabberData['lat'] ?? 0.0;
-        review['lng'] = kebabberData['lng'] ?? 0.0;
+        review['lat'] = (kebabberData['lat'] ?? 0.0).toDouble();
+        review['lng'] = (kebabberData['lng'] ?? 0.0).toDouble();
         review['gluten_free'] = kebabberData['gluten_free'] ?? false;
         review['is_open'] = isKebabOpen(
           kebabberData['orari_apertura'],
         );
         review['tag'] = kebabberData['tag'] ?? 'kebab';
-        review['vegetables'] = kebabberData['vegetables'] ?? 0.0;
-        review['yogurt'] = kebabberData['yogurt'] ?? 0.0;
-        review['spicy'] = kebabberData['spicy'] ?? 0.0;
-        review['onion'] = kebabberData['onion'] ?? 0.0;
+        review['vegetables'] = (kebabberData['vegetables'] ?? 0.0).toDouble();
+        review['yogurt'] = (kebabberData['yogurt'] ?? 0.0).toDouble();
+        review['spicy'] = (kebabberData['spicy'] ?? 0.0).toDouble();
+        review['onion'] = (kebabberData['onion'] ?? 0.0).toDouble();
+
+        review['quality'] = (review['quality'] ?? 0.0).toDouble();
+        review['price'] = (review['price'] ?? 0.0).toDouble();
+        review['quantity'] = (review['quantity'] ?? 0.0).toDouble();
+        review['menu'] = (review['menu'] ?? 0.0).toDouble();
+        review['fun'] = (review['fun'] ?? 0.0).toDouble();
 
         review['rating'] = (review['quality'] +
                 review['price'] +

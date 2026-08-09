@@ -223,6 +223,7 @@ class _AccountPageState extends State<AccountPage> {
       type: FileType.image,
       allowCompression: true,
       allowMultiple: false,
+      withData: true,
     );
 
     if (result != null) {
@@ -247,7 +248,7 @@ class _AccountPageState extends State<AccountPage> {
             supabase.storage.from('avatars').getPublicUrl('$userId.png');
 
         final cacheBustedUrl =
-            '$imageUrlResponse?v=${DateTime.now().millisecondsSinceEpoch}';
+            '${imageUrlResponse.trim()}?v=${DateTime.now().millisecondsSinceEpoch}';
 
         setState(() {
           _avatarUrl = cacheBustedUrl;

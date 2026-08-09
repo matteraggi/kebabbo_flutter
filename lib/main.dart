@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:async';
 // <── Aggiunto
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
@@ -31,6 +31,8 @@ const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 const firebaseKey = String.fromEnvironment('FIREBASE_KEY');
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
     debugPrint('⚠️ ATTENZIONE: variabili SUPABASE mancanti nel file .env');
   }
@@ -43,15 +45,21 @@ Future<void> main() async {
   String? otherPaths;
 
   // Handle deep links based on URL path
-  if (Uri.base.pathSegments.isNotEmpty) {
-    if (Uri.base.pathSegments[0] == 'privacy-policy') {
-      otherPaths = "privacy-policy";
-    } else if (Uri.base.pathSegments[0] == 'reset-password') {
-      otherPaths = "reset-password";
+  if (kIsWeb) {
+    try {
+      if (Uri.base.pathSegments.isNotEmpty) {
+        if (Uri.base.pathSegments[0] == 'privacy-policy') {
+          otherPaths = "privacy-policy";
+        } else if (Uri.base.pathSegments[0] == 'reset-password') {
+          otherPaths = "reset-password";
+        }
+      }
+    } catch (e) {
+      debugPrint("Error reading Uri.base: $e");
     }
   }
 
-  WidgetsFlutterBinding.ensureInitialized();
+
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -151,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  late final StreamSubscription<AuthState> _authSubscription;
 
   @override
   void initState() {
@@ -165,6 +174,24 @@ class _MyHomePageState extends State<MyHomePage> {
       ); // Request notification permissions
       registerNotificationListeners(context);
     } // Register notification listeners
+
+    // Listener globale per intercettare errori di refresh del token e forzare il signOut
+    _authSubscription = supabase.auth.onAuthStateChange.listen(
+      (data) {},
+      onError: (error) async {
+        debugPrint('Auth stream error intercepted: $error');
+        // Valvola di sicurezza: se il refresh fallisce, facciamo un signOut pulito
+        await supabase.auth.signOut();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Sessione scaduta. Effettua nuovamente il login.'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
+    );
 
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -240,17 +267,27 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
+  }
+
   Future<void> _checkIfAppInstalled() async {
+    if (!kIsWeb) return; // Only check on web!
+
     String appUrl =
         'intent://kebabbologna/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
 
-    if (!kIsWeb && Platform.isAndroid) {
-      // Check for Android *and* not web
-      if (await canLaunchUrl(Uri.parse(appUrl))) {
-        // App is likely installed, but let's try to launch it just in case:
-        await launchUrl(Uri.parse(appUrl));
-      } else {
-        //App is not installed
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        if (await canLaunchUrl(Uri.parse(appUrl))) {
+          await launchUrl(Uri.parse(appUrl));
+        } else {
+          if (!mounted) return;
+          showAppInstallDialog(context);
+        }
+      } catch (e) {
         if (!mounted) return;
         showAppInstallDialog(context);
       }

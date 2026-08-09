@@ -1,7 +1,7 @@
 # TODO
 
 URGENTI PER RELEASE:
-- [ ] controllare bugfix
+- [x] controllare bugfix
 - [ ] controllare sicurezza app
 - [ ] design sezioni più importanti
 - [ ] nuovo kebab che almeno chiede la provincia
@@ -9,17 +9,17 @@ URGENTI PER RELEASE:
 
 funzionalità:
 - [ ] Click sulla mappa per prendere le coordinate
-- [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati). 
+- [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati).
 - [ ] Magari tasto per aggiungere i kebabbari nella mappa
 - [ ] fare pagina per singolo kebab con info approfondite (anche per smaltire il contenuto della card)
 - [ ] Foto dei post con tag del luogo -> tutte le foto degli utenti nella pagina del luogo
 
 bugfix:
-- [ ] se metti nei preferiti un posto con categoria panini, ti tolgono tutti i preferiti della categoria kebab e viceversa
-- [ ] quando segui una persona, cambia il numero dei suoi seguiti (invece che follower)
-- [ ] ogni tanto non va l'animazione delle carte
-- [ ] bordo non esiste in follower e followed
-- [ ] quando scrivi il commento l'input di testo rimane basso e non si vede
+- [x] se metti nei preferiti un posto con categoria panini, ti tolgono tutti i preferiti della categoria kebab e viceversa
+- [x] quando segui una persona, cambia il numero dei suoi seguiti (invece che follower)
+- [x] ogni tanto non va l'animazione delle carte
+- [x] bordo non esiste in follower e followed
+- [x] quando scrivi il commento l'input di testo rimane basso e non si vede
 
 design:
 - [ ] design card recensioni utenti (numero di recensioni e altro)
@@ -27,6 +27,7 @@ design:
 - [ ] mettere il grafico a barre
 - [ ] Box kebab da compresso molto vuoto, troppo bianco, bisognerebbe mettere le informazioni con un'organizzazione migliore.
 - [ ] sezioni review e kebab salvati del profilo molto sus e strani soprattutto in prod
+- [ ] nella mappa per kebab con nomi lunghi le stelle escono dal pop up, bisognerebbe sistemare
 
 extra:
 - [ ] Notifiche
