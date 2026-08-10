@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "1072333391081-fn4edngq8phuiar18alfpjmhrlqoe9ri.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.canny.kebabbologna",
+            "certificate_hash": "7a62ad2d5854abe398ae3df1f6e2409ae028403b"
+          }
+        },
+        {
           "client_id": "1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com",
           "client_type": 3
         }

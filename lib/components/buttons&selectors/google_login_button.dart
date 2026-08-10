@@ -22,7 +22,11 @@ class GoogleLoginButton extends StatelessWidget {
       serverClientId: webClientId,
     );
     final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
+    if (googleUser == null) {
+      // User cancelled the picker.
+      return;
+    }
+    final googleAuth = await googleUser.authentication;
     final accessToken = googleAuth.accessToken;
     final idToken = googleAuth.idToken;
 
@@ -50,13 +54,20 @@ class GoogleLoginButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       ),
       onPressed: () async {
-        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-          await _nativeGoogleSignIn();
-        } else {
-          await supabase.auth.signInWithOAuth(
-            OAuthProvider.google,
-            redirectTo: redirectUrl, // Use the provided redirect URL here
-          );
+        try {
+          if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+            await _nativeGoogleSignIn();
+          } else {
+            await supabase.auth.signInWithOAuth(
+              OAuthProvider.google,
+              redirectTo: redirectUrl, // Use the provided redirect URL here
+            );
+          }
+        } catch (e) {
+          debugPrint('Google sign-in error: $e');
+          if (context.mounted) {
+            context.showSnackBar(e.toString(), isError: true);
+          }
         }
       },
       child: Row(
