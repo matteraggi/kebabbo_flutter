@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.canny.kebabbologna",
+      "sha256_cert_fingerprints": [
+        "35:25:D0:0C:1C:E7:19:99:B0:4D:85:70:F5:40:31:12:34:93:76:6C:1A:56:8F:73:5F:20:DF:A8:FB:93:1B:BF"
+      ]
+    }
+  }
+]

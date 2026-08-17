@@ -101,54 +101,24 @@ class PackPageState extends State<PackPage> {
           .limit(1)
           .maybeSingle();
 
-      bool isDuplicate = false;
       Map<String, dynamic>? selectedKebab = kebabResponse;
 
       if (selectedKebab == null) {
-        // User has all official cards — pick a random duplicate from their collection
-        if (tcgArray.isEmpty) {
-          // Edge case: no official kebabs exist at all
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).found_all_cards)),
-            );
-            Navigator.pop(context);
-          }
-          if (mounted) {
-            setState(() => _isOpeningLogicRunning = false);
-          } else {
-            _isOpeningLogicRunning = false;
-          }
-          return;
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("No more cards available.")),
+          );
+          Navigator.pop(context);
         }
-
-        // Fetch a random card from the user's existing collection for the duplicate
-        final duplicateResponse = await supabase
-            .from('kebab')
-            .select('id, name')
-            .isFilter('has_card', true) // Only kebabs with cards
-            .limit(1)
-            .maybeSingle();
-
-        if (duplicateResponse == null) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).found_all_cards)),
-            );
-            Navigator.pop(context);
-          }
-          if (mounted) {
-            setState(() => _isOpeningLogicRunning = false);
-          } else {
-            _isOpeningLogicRunning = false;
-          }
-          return;
+        if (mounted) {
+          setState(() => _isOpeningLogicRunning = false);
+        } else {
+          _isOpeningLogicRunning = false;
         }
-
-        selectedKebab = duplicateResponse;
-        isDuplicate = true;
+        return;
       }
 
+      bool isDuplicate = false;
       final String kebabDisplayName = selectedKebab['name'];
 
       if (!isDuplicate) {

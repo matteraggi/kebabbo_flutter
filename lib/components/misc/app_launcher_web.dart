@@ -6,5 +6,5 @@ import 'dart:html' as html;
 void openApp() {
   // This is your original code
   html.window.location.href =
-      'intent://kebabbologna.com/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
+      'intent://kebabbo.top/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
 }

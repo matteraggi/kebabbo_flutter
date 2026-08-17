@@ -32,13 +32,13 @@
             </intent-filter>
 
             <!-- Deep Link Intent Filter: Handles URL links -->
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="https"
-                    android:host="kebabbo.com"
+                    android:host="kebabbo.top"
                     android:pathPrefix="/path" />
             </intent-filter>
             <intent-filter>

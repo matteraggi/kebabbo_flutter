@@ -277,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!kIsWeb) return; // Only check on web!
 
     String appUrl =
-        'intent://kebabbologna/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
+        'intent://kebabbo.top/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       try {
