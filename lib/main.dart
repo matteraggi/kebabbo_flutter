@@ -112,12 +112,14 @@ class MyApp extends StatelessWidget {
         Locale('de', ''), // German
         Locale('pt', ''), // Portuguese
       ],
-      // Locale resolution to prefer system language
+      // Locale resolution to prefer system language, falling back to
+      // English (not just the first entry in the list) for unsupported
+      // languages such as Greek.
       localeResolutionCallback: (locale, supportedLocales) {
         return supportedLocales.firstWhere(
           (supportedLocale) =>
               supportedLocale.languageCode == locale?.languageCode,
-          orElse: () => supportedLocales.first,
+          orElse: () => const Locale('en', ''),
         );
       },
       home: MyHomePage(
