@@ -7,6 +7,7 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
+import 'package:kebabbo_flutter/pages/kebab/kebab_single_page.dart';
 
 class KebabListItem extends StatefulWidget {
   final String id;
@@ -202,6 +203,11 @@ class KebabListItemState extends State<KebabListItem> {
   }
 
   Widget _buildFront() {
+    final bool hasChart = widget.vegetables > 0 ||
+        widget.yogurt > 0 ||
+        widget.spicy > 0 ||
+        widget.onion > 0;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[200],
@@ -210,44 +216,45 @@ class KebabListItemState extends State<KebabListItem> {
           bottomRight: Radius.circular(12),
         ),
       ),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 460),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.description,
-                    style: const TextStyle(
-                      color: Colors.black,
-                    ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize:
+              widget.flipped ? MainAxisSize.max : MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.description,
+                  style: const TextStyle(
+                    color: Colors.black,
                   ),
-                  const SizedBox(height: 16),
-                  SingleStat(
-                    label: S.of(context).quality,
-                    number: widget.quality,
-                    isFront: true,
-                  ),
-                  const SizedBox(height: 8),
-                  SingleStat(
-                      label: S.of(context).price,
-                      number: widget.price,
-                      isFront: true),
-                  const SizedBox(height: 8),
-                  SingleStat(
-                      label: S.of(context).quantity,
-                      number: widget.dimension,
-                      isFront: true),
-                  const SizedBox(height: 8),
-                  SingleStat(
-                      label: S.of(context).menu,
-                      number: widget.menu,
-                      isFront: true),
+                ),
+                const SizedBox(height: 16),
+                SingleStat(
+                  label: S.of(context).quality,
+                  number: widget.quality,
+                  isFront: true,
+                ),
+                const SizedBox(height: 8),
+                SingleStat(
+                    label: S.of(context).price,
+                    number: widget.price,
+                    isFront: true),
+                const SizedBox(height: 8),
+                SingleStat(
+                    label: S.of(context).quantity,
+                    number: widget.dimension,
+                    isFront: true),
+                const SizedBox(height: 8),
+                SingleStat(
+                    label: S.of(context).menu,
+                    number: widget.menu,
+                    isFront: true),
+                if (hasChart) ...[
                   const SizedBox(height: 16),
                   SingleChart(
                     vegetables: widget.vegetables,
@@ -257,95 +264,143 @@ class KebabListItemState extends State<KebabListItem> {
                     isFront: true,
                   ),
                 ],
-              ),
-              Column(
-                children: [
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          if (widget.map.isNotEmpty) ...[
-                            BottomButtonItem(
-                              linkMaps: widget.map,
-                              icon: Icons.map,
-                              isFront: true,
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                          if (widget.approved != false)
-                            IconButton(
-                              onPressed: () {
-                                getUsersReviews();
-                                _controller.toggleCard();
-                              },
-                              icon: const Icon(
-                                Icons.cached,
-                                color: Colors.black,
-                                size: 30,
-                              ),
-                            ),
-                        ],
+              ],
+            ),
+            Column(
+              children: [
+                const SizedBox(height: 12),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => KebabSinglePage(
+                          kebabId: int.tryParse(widget.id) ?? 0,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          if (widget.glutenFree)
-                            Image.asset(
-                              "assets/images/gluten_free.png",
-                              height: 40,
-                              width: 40,
-                            ),
-                          const SizedBox(width: 16),
-                          if (widget.fun >= 4)
-                            Transform.rotate(
-                              angle: -0.2,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.sentiment_very_satisfied,
-                                    color: yellow,
-                                    size: 30,
-                                  ),
-                                  Text(
-                                    S.of(context).fun_exclamation,
-                                    style: const TextStyle(
-                                      color: yellow,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Divider(
-                    color: Colors.grey[300],
-                    thickness: 1,
-                    indent: 0,
-                    endIndent: 0,
-                  ),
-                  Center(
-                    child: Text(
-                      S.of(context).kebabbo_review,
-                      style: const TextStyle(
-                          fontStyle: FontStyle.italic, fontSize: 12),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: red.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: red.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.storefront_outlined,
+                            size: 18, color: red),
+                        SizedBox(width: 8),
+                        Text(
+                          'Vedi orari, foto e recensioni',
+                          style: TextStyle(
+                            color: red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(Icons.chevron_right, size: 18, color: red),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        if (widget.map.isNotEmpty) ...[
+                          BottomButtonItem(
+                            linkMaps: widget.map,
+                            icon: Icons.map,
+                            isFront: true,
+                          ),
+                          const SizedBox(width: 16),
+                        ],
+                        if (widget.approved != false)
+                          IconButton(
+                            onPressed: () {
+                              getUsersReviews();
+                              _controller.toggleCard();
+                            },
+                            icon: const Icon(
+                              Icons.cached,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        if (widget.glutenFree)
+                          Image.asset(
+                            "assets/images/gluten_free.png",
+                            height: 40,
+                            width: 40,
+                          ),
+                        const SizedBox(width: 16),
+                        if (widget.fun >= 4)
+                          Transform.rotate(
+                            angle: -0.2,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.sentiment_very_satisfied,
+                                  color: yellow,
+                                  size: 30,
+                                ),
+                                Text(
+                                  S.of(context).fun_exclamation,
+                                  style: const TextStyle(
+                                    color: yellow,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    )
+                  ],
+                ),
+                Divider(
+                  color: Colors.grey[300],
+                  thickness: 1,
+                  indent: 0,
+                  endIndent: 0,
+                ),
+                Center(
+                  child: Text(
+                    S.of(context).kebabbo_review,
+                    style: const TextStyle(
+                        fontStyle: FontStyle.italic, fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildBack() {
+    final bool hasChart = avgVegetables > 0 ||
+        avgYogurt > 0 ||
+        avgSpicy > 0 ||
+        avgOnion > 0;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[800],
@@ -354,80 +409,81 @@ class KebabListItemState extends State<KebabListItem> {
           bottomRight: Radius.circular(12),
         ),
       ),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 460),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (avgMenu == 0 &&
-                      avgPrice == 0 &&
-                      avgQuality == 0 &&
-                      avgQuantity == 0)
-                    Center(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 24),
-                          Text(
-                            S.of(context).nessuna_recensione_disponibile,
-                            style: const TextStyle(
-                                color: Colors.white70, fontSize: 16),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
-                          ElevatedButton.icon(
-                            icon:
-                                const Icon(Icons.add_comment_rounded, size: 16),
-                            label: Text(S.of(context).review_this_kebab),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: red,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => AddKebab(
-                                    kebabId: widget.id,
-                                    kebabName: widget.name,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    Column(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize:
+              widget.flipped ? MainAxisSize.min : MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (avgMenu == 0 &&
+                    avgPrice == 0 &&
+                    avgQuality == 0 &&
+                    avgQuantity == 0)
+                  Center(
+                    child: Column(
                       children: [
-                        const SizedBox(height: 16),
-                        SingleStat(
-                            label: S.of(context).quality,
-                            number: avgQuality,
-                            isFront: false),
-                        const SizedBox(height: 8),
-                        SingleStat(
-                            label: S.of(context).price,
-                            number: avgPrice,
-                            isFront: false),
-                        const SizedBox(height: 8),
-                        SingleStat(
-                            label: S.of(context).quantity,
-                            number: avgQuantity,
-                            isFront: false),
-                        const SizedBox(height: 8),
-                        SingleStat(
-                            label: S.of(context).menu,
-                            number: avgMenu,
-                            isFront: false),
+                        const SizedBox(height: 24),
+                        Text(
+                          S.of(context).nessuna_recensione_disponibile,
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton.icon(
+                          icon:
+                              const Icon(Icons.add_comment_rounded, size: 16),
+                          label: Text(S.of(context).review_this_kebab),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: red,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => AddKebab(
+                                  kebabId: widget.id,
+                                  kebabName: widget.name,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      SingleStat(
+                          label: S.of(context).quality,
+                          number: avgQuality,
+                          isFront: false),
+                      const SizedBox(height: 8),
+                      SingleStat(
+                          label: S.of(context).price,
+                          number: avgPrice,
+                          isFront: false),
+                      const SizedBox(height: 8),
+                      SingleStat(
+                          label: S.of(context).quantity,
+                          number: avgQuantity,
+                          isFront: false),
+                      const SizedBox(height: 8),
+                      SingleStat(
+                          label: S.of(context).menu,
+                          number: avgMenu,
+                          isFront: false),
+                      if (hasChart) ...[
                         const SizedBox(height: 16),
                         SingleChart(
                           vegetables: avgVegetables,
@@ -437,88 +493,130 @@ class KebabListItemState extends State<KebabListItem> {
                           isFront: false,
                         ),
                       ],
-                    ),
-                ],
-              ),
-              Column(
-                children: [
-                  const Divider(color: Colors.white24),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          if (widget.map.isNotEmpty) ...[
-                            BottomButtonItem(
-                              linkMaps: widget.map,
-                              icon: Icons.map,
-                              isFront: false,
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                          if (widget.approved ?? false)
-                            IconButton(
-                              onPressed: () {
-                                _controller.toggleCard();
-                              },
-                              icon: const Icon(
-                                Icons.cached,
-                                color: Colors.white,
-                                size: 30,
-                              ),
-                            ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          if (widget.glutenFree)
-                            Image.asset(
-                              "assets/images/gluten_free.png",
-                              height: 40,
-                              width: 40,
-                            ),
-                          const SizedBox(width: 16),
-                          if (widget.fun >= 4)
-                            Transform.rotate(
-                              angle: -0.2,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.sentiment_very_satisfied,
-                                    color: yellow,
-                                    size: 30,
-                                  ),
-                                  Text(
-                                    S.of(context).fun_exclamation,
-                                    style: const TextStyle(
-                                      color: yellow,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      )
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Center(
-                    child: Text(
-                      S.of(context).users_review,
-                      style: const TextStyle(
-                          fontStyle: FontStyle.italic,
-                          fontSize: 12,
-                          color: Colors.white54),
+              ],
+            ),
+            Column(
+              children: [
+                const SizedBox(height: 12),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => KebabSinglePage(
+                          kebabId: int.tryParse(widget.id) ?? 0,
+                        ),
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.25),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.storefront_outlined,
+                            size: 18, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          'Vedi orari, foto e recensioni',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(Icons.chevron_right, size: 18, color: Colors.white),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        if (widget.map.isNotEmpty) ...[
+                          BottomButtonItem(
+                            linkMaps: widget.map,
+                            icon: Icons.map,
+                            isFront: false,
+                          ),
+                          const SizedBox(width: 16),
+                        ],
+                        if (widget.approved ?? false)
+                          IconButton(
+                            onPressed: () {
+                              _controller.toggleCard();
+                            },
+                            icon: const Icon(
+                              Icons.cached,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        if (widget.glutenFree)
+                          Image.asset(
+                            "assets/images/gluten_free.png",
+                            height: 40,
+                            width: 40,
+                          ),
+                        const SizedBox(width: 16),
+                        if (widget.fun >= 4)
+                          Transform.rotate(
+                            angle: -0.2,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.sentiment_very_satisfied,
+                                  color: yellow,
+                                  size: 30,
+                                ),
+                                Text(
+                                  S.of(context).fun_exclamation,
+                                  style: const TextStyle(
+                                    color: yellow,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    S.of(context).users_review,
+                    style: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12,
+                        color: Colors.white54),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -555,8 +653,10 @@ class KebabListItemState extends State<KebabListItem> {
                     Flexible(
                       child: Text(
                         widget.name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        overflow: isExpanded
+                            ? TextOverflow.visible
+                            : TextOverflow.ellipsis,
+                        maxLines: isExpanded ? null : 1,
                         style: TextStyle(
                           color: isFront ? Colors.black : Colors.white,
                           fontWeight: FontWeight.w800,

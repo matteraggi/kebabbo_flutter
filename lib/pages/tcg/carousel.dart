@@ -3,7 +3,7 @@ import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart'
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/pages/tcg/rotation_scene_v1.dart';
-import 'package:kebabbo_flutter/pages/tcg/single_card.dart';
+import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class KebabCarouselPage extends StatefulWidget {
@@ -31,35 +31,53 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
 
       if (response.isNotEmpty) {
         final List<int> tcgIds = List<int>.from(
-            response[0]['tcg']); // Get list of ids from "tcg" column
+            response[0]['tcg'] ?? []); // Get list of ids from "tcg" column
         if (tcgIds.isNotEmpty) {
-          // Fetch the names from "kebab" table where the "id" is in the list of tcgIds
-          final kebabResponse = await supabase
-              .from('kebab')
-              .select('name')
-              .isFilter('has_card', true) // Only kebabs with cards
-              .filter('id', 'in', tcgIds);
-          List<String> kebabList = kebabResponse.map<String>((kebabs) {
-            final String kebabberId =
-                kebabs['name'].toLowerCase().replaceAll(' ', '-');
-            return 'assets/kebab-card/$kebabberId.png';
-          }).toList();
-          if (!mounted) return;
-          for (var item in kebabList) {
-            await precacheImage(
-                AssetImage('assets/kebab-card/$item.png'), context);
+          final List<int> validUserCardIds =
+              tcgIds.where((id) => TcgCardsHelper.isValidCard(id)).toSet().toList();
+
+          if (validUserCardIds.isNotEmpty) {
+            final kebabResponse = await supabase
+                .from('kebab')
+                .select('id, name')
+                .inFilter('id', validUserCardIds);
+
+            List<String> kebabList = [];
+            for (final kebab in kebabResponse) {
+              final int id = kebab['id'] as int;
+              if (TcgCardsHelper.isValidCard(id)) {
+                final String kebabberId = kebab['name']
+                    .toString()
+                    .toLowerCase()
+                    .replaceAll(' ', '-');
+                kebabList.add('assets/kebab-card/$kebabberId.png');
+              }
+            }
+
+            if (!mounted) return;
+            for (var item in kebabList) {
+              try {
+                await precacheImage(AssetImage(item), context);
+              } catch (e) {
+                debugPrint('Failed to precache $item: $e');
+              }
+            }
+            if (mounted) {
+              setState(() {
+                imagePaths = kebabList;
+              });
+            }
           }
-          setState(() {
-            imagePaths = kebabList;
-          });
         }
       }
     } catch (e) {
       debugPrint('Unexpected error: $e');
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -67,34 +85,55 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).my_cards),
+        title: Text(
+          S.of(context).my_cards,
+        ),
         backgroundColor: red,
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.card_giftcard, color: Colors.white),
+            tooltip: "Apri Pacchetto",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PackPage()),
+              ).then((_) => fetchReviews());
+            },
+          ),
+        ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : imagePaths.isEmpty
               ? Center(
                   child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center, // Center vertically
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(S.of(context).no_cards_yet),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PackPage()),
-                        );
-                      },
-                      child: Text(S.of(context).go_back),
-                    ),
-                  ],
-                ))
-              : imagePaths.length == 1
-                  ? SingleCard(imagePath: imagePaths[0])
-                  : RotationSceneV1(imagePaths: imagePaths),
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center vertically
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(S.of(context).no_cards_yet),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PackPage()),
+                          );
+                        },
+                        child: Text(S.of(context).go_back),
+                      ),
+                    ],
+                  ),
+                )
+              : RotationSceneV1(imagePaths: imagePaths),
     );
   }
 }

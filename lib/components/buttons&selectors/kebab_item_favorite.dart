@@ -115,8 +115,10 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                     Flexible(
                       child: Text(
                         widget.name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        overflow: isExpanded
+                            ? TextOverflow.visible
+                            : TextOverflow.ellipsis,
+                        maxLines: isExpanded ? null : 1,
                         style: const TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
                           fontWeight: FontWeight.w800,
@@ -189,14 +191,19 @@ class KebabListItemFavoriteState extends State<KebabListItemFavorite> {
                           label: S.of(context).menu,
                           number: widget.menu,
                           isFront: true),
-                      const SizedBox(height: 16),
-                      SingleChart(
-                        vegetables: widget.vegetables,
-                        yogurt: widget.yogurt,
-                        spicy: widget.spicy,
-                        onion: widget.onion,
-                        isFront: true,
-                      ),
+                      if (widget.vegetables > 0 ||
+                          widget.yogurt > 0 ||
+                          widget.spicy > 0 ||
+                          widget.onion > 0) ...[
+                        const SizedBox(height: 16),
+                        SingleChart(
+                          vegetables: widget.vegetables,
+                          yogurt: widget.yogurt,
+                          spicy: widget.spicy,
+                          onion: widget.onion,
+                          isFront: true,
+                        ),
+                      ],
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Pressable extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final Duration duration;
   final double scale;
 
@@ -10,6 +11,7 @@ class Pressable extends StatefulWidget {
     super.key,
     required this.child,
     this.onTap,
+    this.onLongPress,
     this.duration = const Duration(milliseconds: 100),
     this.scale = 0.95,
   });
@@ -29,11 +31,13 @@ class _PressableState extends State<Pressable> {
 
   @override
   Widget build(BuildContext context) {
+    final hasAction = widget.onTap != null || widget.onLongPress != null;
     return GestureDetector(
-      onTapDown: widget.onTap != null ? _onTapDown : null,
-      onTapUp: widget.onTap != null ? _onTapUp : null,
-      onTapCancel: widget.onTap != null ? _onTapCancel : null,
+      onTapDown: hasAction ? _onTapDown : null,
+      onTapUp: hasAction ? _onTapUp : null,
+      onTapCancel: hasAction ? _onTapCancel : null,
       onTap: widget.onTap,
+      onLongPress: widget.onLongPress,
       behavior: HitTestBehavior.translucent,
       child: AnimatedScale(
         scale: _pressed ? widget.scale : 1.0,

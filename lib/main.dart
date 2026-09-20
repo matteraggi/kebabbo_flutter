@@ -8,7 +8,8 @@ import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
-import 'package:kebabbo_flutter/pages/feed&socials/games_page.dart';
+import 'package:kebabbo_flutter/pages/kebab/add_new_kebab_page.dart';
+import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -154,7 +155,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String? otherPaths; // Now a mutable state variable
 
-  var selectedIndex = 2; // Home page by default
+  var selectedIndex = 0; // Home page by default
   final ValueNotifier<Position?> _currentPositionNotifier =
       ValueNotifier<Position?>(null);
   late Stream<Position> _positionStream;
@@ -203,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     _positionStream.listen((Position position) {
       _currentPositionNotifier.value = position;
-      if (selectedIndex == 3 && _mapPageKey.currentState != null) {
+      if (selectedIndex == 1 && _mapPageKey.currentState != null) {
         _mapPageKey.currentState!.updatePosition(position);
       }
     });
@@ -253,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _currentPositionNotifier.value = position;
 
       // This part remains the same, to update pages that are already built
-      if (selectedIndex == 3 && _mapPageKey.currentState != null) {
+      if (selectedIndex == 1 && _mapPageKey.currentState != null) {
         _mapPageKey.currentState!.updatePosition(position);
       }
     } catch (e) {
@@ -296,6 +297,191 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _showContributeSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 44,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 18),
+              const Text(
+                "Contribuisci a Kebabbo",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "Aiutaci a mappare e recensire i migliori kebabbari!",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 22),
+              // Bottone 1: Aggiungi Nuovo Kebabbaro
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AddNewKebabPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: red,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: red.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          Icons.add_location_alt_outlined,
+                          color: Colors.white,
+                          size: 26,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Aggiungi un Kebabbaro",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "Inserisci un nuovo locale sulla mappa",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios,
+                          color: Colors.white70, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Bottone 2: Scrivi una Recensione
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const WriteReviewPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF232526),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          Icons.rate_review_outlined,
+                          color: Color(0xFFFFBA1C),
+                          size: 26,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Scrivi una Recensione",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "Vota la qualità, la carne e le salse",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios,
+                          color: Colors.white70, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget page;
@@ -324,6 +510,10 @@ class _MyHomePageState extends State<MyHomePage> {
         showUnselectedLabels: false,
         currentIndex: selectedIndex == -1 ? 0 : selectedIndex,
         onTap: (index) {
+          if (index == 2) {
+            _showContributeSheet(context);
+            return;
+          }
           setState(() {
             selectedIndex = index;
             otherPaths = null; // Reset policy
@@ -331,22 +521,39 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.comment),
-            label: S.of(context).seguiti,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.sports_esports),
-            label: "Games",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.kebab_dining),
+            icon: const Icon(Icons.kebab_dining),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
+            icon: const Icon(Icons.map),
             label: S.of(context).mappa,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: yellow,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.25),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(Icons.add, color: red, size: 22),
+            ),
+            label: 'Aggiungi',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.comment),
+            label: 'Feed',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person),
+            label: 'Account',
+          ),
         ],
         backgroundColor: red,
         selectedItemColor: yellow,
@@ -359,9 +566,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildStandardNavigationPage() {
     switch (selectedIndex) {
       case 0:
-        return const FeedPage();
+        return ValueListenableBuilder<Position?>(
+          valueListenable: _currentPositionNotifier,
+          builder: (context, currentPosition, child) {
+            return TopKebabPage(currentPosition: currentPosition);
+          },
+        );
       case 1:
-        return GamesPage(currentPosition: _currentPositionNotifier.value);
+        return MapPage(
+          initialPosition: _currentPositionNotifier.value,
+          key: _mapPageKey,
+        );
       case 2:
         return ValueListenableBuilder<Position?>(
           valueListenable: _currentPositionNotifier,
@@ -370,10 +585,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         );
       case 3:
-        return MapPage(
-          initialPosition: _currentPositionNotifier.value,
-          key: _mapPageKey,
-        );
+        return const FeedPage();
       case 4:
         return StreamBuilder<AuthState>(
           stream: supabase.auth.onAuthStateChange,

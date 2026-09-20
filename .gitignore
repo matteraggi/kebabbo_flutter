@@ -30,6 +30,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+build/
+**/build/
 
 # Symbolication related
 app.*.symbols
@@ -37,18 +39,26 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# Android Studio and Gradle build artifacts
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/build/
+android/app/build/
+.gradle/
+**/.gradle/
+*.apk
+*.aab
 /android/app/google-services.json
 
 /web/firebase-messaging-sw.js
 */launch.json
 
-build/
-
 .env
+.env.*
+!.env.example
 /android/app/upload-keystore.jks
 *.pem
+node_modules/
 node_modules/*
+flutter_application_1/

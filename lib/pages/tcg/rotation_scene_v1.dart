@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/tcg/single_card.dart';
@@ -12,178 +11,380 @@ class RotationSceneV1 extends StatefulWidget {
 }
 
 class RotationSceneV1State extends State<RotationSceneV1> {
-  double rotationOffset = 0.0; // Tracks rotation due to drag
+  late final PageController _pageController;
+  int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
-
-    // Calculate initial offset to center the first card
-    _setInitialRotationOffset();
+    _pageController = PageController(
+      viewportFraction: 0.68,
+      initialPage: 0,
+    );
   }
 
-  void _setInitialRotationOffset() {
-    // Set the initial rotation offset
-    setState(() {
-      rotationOffset = pi / widget.imagePaths.length;
-    });
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  String _formatKebabName(String path) {
+    if (path.isEmpty) return '';
+    final fileName = path.split('/').last.replaceAll('.png', '');
+    return fileName
+        .split('-')
+        .where((word) => word.isNotEmpty)
+        .map((word) => '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
+  void _openCard(String imagePath) {
+    if (imagePath.isEmpty) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SingleCard(imagePath: imagePath),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        setState(() {
-          // Reverse drag direction
-          rotationOffset -= details.delta.dx * 0.005;
-        });
-      },
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.white, red],
-              stops: [0, 1],
-            ),
-          ),
-          child: Center(
-            child: MyScener(
-                imagePaths: widget.imagePaths, rotationOffset: rotationOffset),
-          ),
+    final int totalCards = widget.imagePaths.length;
+    final String currentCardPath = totalCards > 0
+        ? widget.imagePaths[_currentPage.clamp(0, totalCards - 1)]
+        : '';
+
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFFFF8F6),
+            Color(0xFFFFECE8),
+            Color(0xFFFFDED8),
+          ],
+        ),
+      ),
+      child: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final double h = constraints.maxHeight;
+            final double w = constraints.maxWidth;
+
+            // Responsive sizing based on available viewport
+            final double carouselHeight = (h * 0.58).clamp(280.0, 480.0);
+            final double cardWidth = (carouselHeight * (9.0 / 16.0)).clamp(160.0, 270.0);
+            final double cardHeight = cardWidth * (16.0 / 9.0);
+
+            return Column(
+              children: [
+                // Top hint bar
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.swipe_outlined, size: 16, color: Colors.grey[700]),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Scorri per sfogliare la collezione',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Spacer(flex: 1),
+
+                // 3D CoverFlow Carousel
+                SizedBox(
+                  height: carouselHeight,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: totalCards,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      final String cardPath = widget.imagePaths[index];
+
+                      return AnimatedBuilder(
+                        key: ValueKey(cardPath),
+                        animation: _pageController,
+                        builder: (context, child) {
+                          double page = 0.0;
+                          if (_pageController.position.haveDimensions) {
+                            page = _pageController.page ?? _pageController.initialPage.toDouble();
+                          } else {
+                            page = _pageController.initialPage.toDouble();
+                          }
+
+                          final double diff = page - index;
+                          final double absDiff = diff.abs();
+
+                          // 3D Perspective calculations
+                          final double rotationY = (-diff * 0.42).clamp(-0.62, 0.62);
+                          final double scale = (1.0 - (absDiff * 0.16)).clamp(0.82, 1.0);
+                          final double translateZ = -absDiff * 35.0;
+                          final double translateX = diff * 12.0;
+
+                          final matrix = Matrix4.identity()
+                            ..setEntry(3, 2, 0.0012)
+                            ..translateByDouble(translateX, 0.0, translateZ, 1.0)
+                            ..rotateY(rotationY)
+                            ..scaleByDouble(scale, scale, 1.0, 1.0);
+
+                          final bool isCenter = absDiff < 0.45;
+
+                          return Center(
+                            child: Transform(
+                              alignment: Alignment.center,
+                              transform: matrix,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  if (isCenter) {
+                                    _openCard(cardPath);
+                                  } else {
+                                    _pageController.animateToPage(
+                                      index,
+                                      duration: const Duration(milliseconds: 320),
+                                      curve: Curves.easeOutCubic,
+                                    );
+                                  }
+                                },
+                                child: _buildCardItem(
+                                  cardPath,
+                                  cardWidth,
+                                  cardHeight,
+                                  isCenter,
+                                  absDiff,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                const Spacer(flex: 2),
+
+                // Card Details Panel
+                Container(
+                  width: (w * 0.88).clamp(280.0, 420.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  margin: const EdgeInsets.only(bottom: 14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Badge index (#1 di 18)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFECEB),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '#${_currentPage + 1} di $totalCards',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: red,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+
+                      // Kebab Name
+                      Text(
+                        _formatKebabName(currentCardPath),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Indicator dots or progress bar
+                      if (totalCards > 1 && totalCards <= 10)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(totalCards, (i) {
+                            final bool active = i == _currentPage;
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              width: active ? 16 : 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: active ? red : Colors.grey[300],
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            );
+                          }),
+                        )
+                      else if (totalCards > 10)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: SizedBox(
+                            width: 140,
+                            height: 4,
+                            child: LinearProgressIndicator(
+                              value: (_currentPage + 1) / totalCards,
+                              backgroundColor: Colors.grey[200],
+                              valueColor: const AlwaysStoppedAnimation<Color>(red),
+                            ),
+                          ),
+                        ),
+
+                      const SizedBox(height: 12),
+
+                      // Action button: inspect in 3D
+                      SizedBox(
+                        width: double.infinity,
+                        height: 44,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: red,
+                            foregroundColor: Colors.white,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                          onPressed: () => _openCard(currentCardPath),
+                          icon: const Icon(Icons.view_in_ar, size: 20),
+                          label: const Text(
+                            'Esamina in 3D',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
-}
 
-// MyScener widget (carousel scene) modification
-class MyScener extends StatefulWidget {
-  final List<String> imagePaths;
-  final double rotationOffset;
+  Widget _buildCardItem(
+    String path,
+    double width,
+    double height,
+    bool isCenter,
+    double absDiff,
+  ) {
+    const double borderRadius = 18.0;
 
-  const MyScener(
-      {super.key, required this.imagePaths, required this.rotationOffset});
+    return RepaintBoundary(
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: isCenter
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.26),
+                    blurRadius: 20,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 10),
+                  ),
+                  BoxShadow(
+                    color: const Color(0xFFFFBA1C).withValues(alpha: 0.28),
+                    blurRadius: 16,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 0),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 10,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Card image
+              Image.asset(
+                path,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
+                    ),
+                  );
+                },
+              ),
 
-  @override
-  MyScenerState createState() => MyScenerState();
-}
+              // Side card dimming overlay
+              if (!isCenter)
+                Container(
+                  color: Colors.black.withValues(
+                    alpha: (absDiff * 0.35).clamp(0.0, 0.45),
+                  ),
+                ),
 
-class MyScenerState extends State<MyScener>
-    with SingleTickerProviderStateMixin {
-  List<CardData> cardData = [];
-  late int numItems;
-  double radio = 200.0;
-  late double radioStep;
-
-  @override
-  void initState() {
-    super.initState();
-    numItems = widget.imagePaths.length;
-    radioStep = (pi * 2) / numItems;
-    cardData = List.generate(numItems, (index) => CardData(index));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Update positions with the current rotation offset
-    for (var i = 0; i < cardData.length; ++i) {
-      var c = cardData[i];
-      double ang = c.idx * radioStep + widget.rotationOffset;
-      c.angle = ang + pi / 2;
-      c.x = cos(ang) * radio;
-      c.y = sin(ang) * 100;
-      c.z = sin(ang) * radio;
-    }
-
-    // Sort by z-index for proper stacking
-    cardData.sort((a, b) => a.z.compareTo(b.z));
-
-    var list = cardData.map((vo) {
-      var c = addCard(vo); // The method below handles tap for each card
-      var mt2 = Matrix4.identity();
-      mt2.setEntry(3, 2, 0.001); // Perspective effect
-      mt2.translateByDouble(vo.x, vo.y, -vo.z, 1.0);
-
-      double scale = 1 + (vo.z / radio) * 0.5;
-      mt2.scaleByDouble(scale, scale, 1.0, 1.0); // Scaling for perspective
-
-      c = Transform(
-        alignment: Alignment.center,
-        transform: mt2,
-        child: c,
-      );
-      return c;
-    }).toList();
-
-    return Transform.translate(
-      offset: const Offset(0, -80), // Adjust this value as needed
-      child: Stack(
-        alignment: Alignment.center,
-        children: list,
-      ),
-    );
-  }
-
-  // Modify addCard to handle tap and navigation
-  Widget addCard(CardData vo) {
-    var alpha = ((1 - vo.z / radio) / 2) * .6;
-    return GestureDetector(
-      onTap: () {
-        // Navigate to SpinningCard page when the card is tapped
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SingleCard(
-                imagePath:
-                    widget.imagePaths[vo.idx % widget.imagePaths.length]),
-          ),
-        );
-      },
-      child: RepaintBoundary(
-        child: Container(
-          margin: const EdgeInsets.all(12),
-          width: 150,
-          height: 200,
-          alignment: Alignment.center,
-          foregroundDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: Color.fromRGBO(0, 0, 0, alpha),
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              widget.imagePaths[vo.idx % widget.imagePaths.length],
-              fit: BoxFit.cover,
-              gaplessPlayback: true, // Prevents blank frames during rebuilds
-            ),
+              // Glowing border when centered
+              if (isCenter)
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    border: Border.all(
+                      color: const Color(0xFFFFBA1C).withValues(alpha: 0.7),
+                      width: 2.5,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
     );
-  }
-}
-
-class CardData {
-  late Color color;
-  late double x, y, z, angle;
-  final int idx;
-  double alpha = 0;
-
-  Color get lightColor {
-    var val = HSVColor.fromColor(color);
-    return val.withSaturation(.5).withValue(.8).toColor();
-  }
-
-  CardData(this.idx) {
-    color = Colors.primaries[idx % Colors.primaries.length];
-    x = 0;
-    y = 0;
-    z = 0;
-    angle = 0;
   }
 }

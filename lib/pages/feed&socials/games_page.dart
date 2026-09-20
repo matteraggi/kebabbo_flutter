@@ -8,6 +8,7 @@ import 'package:kebabbo_flutter/pages/tcg/carousel.dart';
 import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
 import 'package:kebabbo_flutter/utils/user_logic.dart';
+import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/pressable.dart';
 
@@ -22,7 +23,7 @@ class GamesPage extends StatefulWidget {
 class _GamesPageState extends State<GamesPage> {
   bool _loading = true;
   List<int> _ingredients = [5, 5, 5, 5, 5];
-  DateTime _lastPack = DateTime.now().toUtc();
+  DateTime? _lastPack;
   final supabase = Supabase.instance.client;
 
   @override
@@ -40,9 +41,18 @@ class _GamesPageState extends State<GamesPage> {
     try {
       final profileData = await getProfile(context);
       if (profileData != null && mounted) {
+        final rawLastPack = profileData['last_pack'];
+        DateTime? parsedLastPack;
+        if (rawLastPack != null && rawLastPack.toString().trim().isNotEmpty) {
+          try {
+            parsedLastPack = DateTime.parse(rawLastPack.toString()).toUtc();
+          } catch (_) {}
+        }
+
         setState(() {
-          _lastPack = DateTime.parse(profileData['last_pack']).toUtc();
-          _ingredients = List<int>.from(profileData['ingredients']);
+          _lastPack = parsedLastPack;
+          _ingredients =
+              List<int>.from(profileData['ingredients'] ?? [5, 5, 5, 5, 5]);
           _loading = false;
         });
       }
@@ -54,12 +64,7 @@ class _GamesPageState extends State<GamesPage> {
     }
   }
 
-  String _formatDuration(Duration duration) {
-    final hours = duration.inHours.remainder(12).toString().padLeft(2, '0');
-    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$hours:$minutes:$seconds';
-  }
+
 
   Widget _buildCreateKebabButton({
     required String title,
@@ -322,12 +327,15 @@ class _GamesPageState extends State<GamesPage> {
           ),
 
           // DUE BOTTONI IN RIGA (PACK + COLLEZIONE)
-          Row(
-            children: [
-              Expanded(child: _buildSmallButtonPack()),
-              const SizedBox(width: 16),
-              Expanded(child: _buildSmallButtonCollection()),
-            ],
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _buildSmallButtonPack()),
+                const SizedBox(width: 16),
+                Expanded(child: _buildSmallButtonCollection()),
+              ],
+            ),
           ),
         ],
       ),
@@ -339,51 +347,136 @@ class _GamesPageState extends State<GamesPage> {
       stream:
           Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now()),
       builder: (context, snapshot) {
-        bool isTimerActive = false;
-        String timerText = "";
+        final stamina = PackStamina.calculate(_lastPack);
+        final int availablePacks = stamina.availablePacks;
+        final Duration timeToNext = stamina.timeToNextPack;
+        final String timerText = PackStamina.formatDuration(timeToNext);
 
-        if (supabase.auth.currentUser != null) {
-          final now = snapshot.data ?? DateTime.now();
-          final difference = now.difference(_lastPack);
-          final remainingTime = const Duration(hours: 12) - difference;
-
-          if (difference.inSeconds < 43200 && !remainingTime.isNegative) {
-            isTimerActive = true;
-            timerText = _formatDuration(remainingTime);
-          }
-        }
-
-        final bool enabled =
-            !isTimerActive && supabase.auth.currentUser != null;
+        final bool hasPacks = availablePacks > 0;
+        final bool isMax = availablePacks >= PackStamina.maxPacks;
 
         return Pressable(
-          onTap: enabled
+          onTap: hasPacks
               ? () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const PackPage()),
                   ).then((_) => _loadPageData());
                 }
-              : null,
+              : () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Nessun pacchetto pronto. Il prossimo sarà disponibile tra $timerText.",
+                      ),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+          onLongPress: () async {
+            final userId = supabase.auth.currentUser?.id;
+            if (userId == null) return;
+            final fullStaminaTime =
+                DateTime.now().toUtc().subtract(const Duration(hours: 24));
+            await supabase.from('profiles').update({
+              'last_pack': fullStaminaTime.toIso8601String(),
+            }).eq('id', userId);
+            await _loadPageData();
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Pacchetti ricaricati al massimo: 2 / 2 pronti! 📦✨"),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+          },
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
             decoration: BoxDecoration(
-              color: enabled ? main.red : Colors.grey[400],
+              color: hasPacks ? main.red : const Color(0xFF2E1212),
               borderRadius: BorderRadius.circular(20),
+              border: !hasPacks
+                  ? Border.all(color: Colors.white24, width: 1.0)
+                  : (isMax
+                      ? Border.all(color: const Color(0xFFFFD700), width: 1.5)
+                      : null),
+              boxShadow: [
+                BoxShadow(
+                  color: hasPacks
+                      ? main.red.withValues(alpha: 0.3)
+                      : Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.card_giftcard,
-                  size: 32,
-                  color: Colors.white,
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(
+                      hasPacks ? Icons.card_giftcard : Icons.hourglass_top,
+                      size: 28,
+                      color: hasPacks ? Colors.white : Colors.white70,
+                    ),
+                    if (hasPacks)
+                      Positioned(
+                        right: -10,
+                        top: -4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFBA1C),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: Text(
+                            "$availablePacks",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
-                  isTimerActive ? timerText : "Pacchetto",
-                  style: TextStyle(
+                  hasPacks
+                      ? (availablePacks == 1 ? "1 Pacchetto" : "2 Pacchetti")
+                      : timerText,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
+                  decoration: BoxDecoration(
+                    color: hasPacks
+                        ? Colors.black.withValues(alpha: 0.25)
+                        : Colors.white.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    hasPacks
+                        ? (isMax ? "MAX (2/2)" : "+1 in $timerText")
+                        : "In Ricarica (0/2)",
+                    style: TextStyle(
+                      color: hasPacks ? const Color(0xFFFFD700) : Colors.white70,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -403,20 +496,29 @@ class _GamesPageState extends State<GamesPage> {
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
           color: main.red,
           borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: main.red.withValues(alpha: 0.25),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.collections_bookmark, size: 32, color: Colors.white),
-            SizedBox(height: 8),
+            Icon(Icons.collections_bookmark, size: 28, color: Colors.white),
+            SizedBox(height: 6),
             Text(
               "Collezione",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
             ),
           ],

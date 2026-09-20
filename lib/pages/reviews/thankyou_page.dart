@@ -2,8 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 
-class ThankYouPage extends StatelessWidget {
-  const ThankYouPage({super.key});
+import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
+
+class ThankYouPage extends StatefulWidget {
+  final bool newMedalEarned;
+  const ThankYouPage({super.key, this.newMedalEarned = false});
+
+  @override
+  State<ThankYouPage> createState() => _ThankYouPageState();
+}
+
+class _ThankYouPageState extends State<ThankYouPage> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.newMedalEarned) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          showMedalDialog(context);
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +32,13 @@ class ThankYouPage extends StatelessWidget {
         title: Text(S.of(context).thank_you),
         centerTitle: true,
         backgroundColor: red, // Adjust the app bar color
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: Center(
         child: Padding(

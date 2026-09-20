@@ -228,18 +228,72 @@ class _AddKebabState extends State<AddKebab> {
         'quantity': _dimension,
         'fun': _fun,
         'menu': _menu,
-        'meat': _meat,
-        'yogurt': _yogurt,
-        'spicy': _spicy,
-        'onion': _onion,
-        'vegetables': _vegetables,
+        'meat': _meat.round(),
+        'yogurt': _yogurt.round(),
+        'spicy': _spicy.round(),
+        'onion': _onion.round(),
+        'vegetables': _vegetables.round(),
         'created_at': DateTime.now().toIso8601String(),
       });
+
+      // Calcola ed assegna eventuali medaglie recensioni
+      bool newMedal = false;
+      try {
+        final reviewCountRes = await supabase
+            .from('reviews')
+            .select('id')
+            .eq('user_id', userId)
+            .count(CountOption.exact);
+        final int reviewCount = reviewCountRes.count;
+
+        if (reviewCount > 0) {
+          final profileRes = await supabase
+              .from('profiles')
+              .select('medals')
+              .eq('id', userId)
+              .maybeSingle();
+
+          final List<int> medals = profileRes?['medals'] != null
+              ? List<int>.from(profileRes!['medals'])
+              : [];
+
+          if (reviewCount >= 1 && !medals.contains(0)) {
+            medals.add(0);
+            newMedal = true;
+          }
+          if (reviewCount >= 5 && !medals.contains(1)) {
+            medals.add(1);
+            newMedal = true;
+          }
+          if (reviewCount >= 10 && !medals.contains(2)) {
+            medals.add(2);
+            newMedal = true;
+          }
+          if (reviewCount >= 20 && !medals.contains(3)) {
+            medals.add(3);
+            newMedal = true;
+          }
+          if (reviewCount >= 30 && !medals.contains(4)) {
+            medals.add(4);
+            newMedal = true;
+          }
+
+          if (newMedal) {
+            await supabase
+                .from('profiles')
+                .update({'medals': medals}).eq('id', userId);
+          }
+        }
+      } catch (err) {
+        debugPrint('Errore aggiornamento medaglie: $err');
+      }
 
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ThankYouPage()),
+          MaterialPageRoute(
+            builder: (context) => ThankYouPage(newMedalEarned: newMedal),
+          ),
         );
       }
     } catch (e) {
@@ -438,6 +492,13 @@ class _AddKebabState extends State<AddKebab> {
       appBar: AppBar(
         title: Text(S.of(context).add_review_appbar_title),
         backgroundColor: main.red,
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())

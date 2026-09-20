@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kebabbo_flutter/components/animations/kebab_cooking_overlay.dart';
 import 'package:kebabbo_flutter/components/list_items/kebab_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
@@ -27,15 +28,12 @@ class KebabRecommendationPage extends StatefulWidget {
   KebabRecommendationPageState createState() => KebabRecommendationPageState();
 }
 
-class KebabRecommendationPageState extends State<KebabRecommendationPage>
-    with TickerProviderStateMixin {
+class KebabRecommendationPageState extends State<KebabRecommendationPage> {
   late Map<String, dynamic>
       _currentKebab; // State variable for the current kebab
   double? _distanceInKm;
   int rerollCounter = 0;
-  late AnimationController _cloudController;
-  late Animation<Offset> _cloudAnimation;
-  bool showCloud = false; // Controls when to show the cloud
+  bool _isRerolling = false;
 
   @override
   void initState() {
@@ -44,23 +42,10 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
     _currentKebab['isFavorite'] = false;
 
     _calculateDistance();
-
-    // Initialize the cloud animation controller
-    _cloudController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1), // Cloud movement duration
-    );
-
-    // Slide animation for the cloud, starting from off-screen (below)
-    _cloudAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.5), // Start below the screen
-      end: Offset.zero, // Cover the screen
-    ).animate(_cloudController);
   }
 
   @override
   void dispose() {
-    _cloudController.dispose();
     super.dispose();
   }
 
@@ -87,45 +72,41 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
   Future<void> _rerollRecommendation() async {
     setState(() {
       rerollCounter++;
-      showCloud = true; // Start showing the cloud
+      _isRerolling = true;
     });
 
-    // Trigger the cloud to move up
-    await _cloudController.forward();
+    // Concurrently fetch new kebab with cooking overlay delay
+    final results = await Future.wait([
+      buildKebab(widget.ingredients, rerollCounter, widget.maxDistance,
+          widget.currentPosition),
+      Future.delayed(const Duration(milliseconds: 1600)),
+    ]);
 
-    // Get the new kebab recommendation during the cloud animation
-    Map<String, dynamic>? result = await buildKebab(widget.ingredients,
-        rerollCounter, widget.maxDistance, widget.currentPosition);
+    final result = results[0] as Map<String, dynamic>?;
+
     if (result == null) {
-      // No more kebabs available
-      setState(() {
-        showCloud = false;
-      });
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Non ci sono altri kebab disponibili da consigliare."),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      if (mounted) {
+        setState(() {
+          _isRerolling = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Non ci sono altri kebab disponibili da consigliare."),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
       return;
     }
-    setState(() {
-      _currentKebab = result['kebab'];
-      _currentKebab['isFavorite'] = false;
-      _calculateDistance(); // Recalculate the distance for the new kebab
-    });
 
-    // Pause for a short time before moving the cloud back down
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    // Trigger the cloud to move back down
-    await _cloudController.reverse();
-
-    // Hide the cloud after animation
-    setState(() {
-      showCloud = false;
-    });
+    if (mounted) {
+      setState(() {
+        _currentKebab = result['kebab'];
+        _currentKebab['isFavorite'] = false;
+        _calculateDistance();
+        _isRerolling = false;
+      });
+    }
   }
 
   @override
@@ -197,9 +178,10 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-                      onPressed: rerollCounter < widget.availableKebabs - 1
+                      onPressed: (rerollCounter < widget.availableKebabs - 1 &&
+                              !_isRerolling)
                           ? _rerollRecommendation
-                          : null, // Disable if rerollCounter exceeds available kebabs
+                          : null, // Disable if rerollCounter exceeds available kebabs or while rerolling
                       child: const Text("Reroll"),
                     ),
                     ElevatedButton(
@@ -214,22 +196,12 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage>
             ],
           ),
 
-          // Cloud animation transition
-          if (showCloud)
-            SlideTransition(
-              position: _cloudAnimation,
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/loading_cloud.png', // Cloud image asset
-                    fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-              ),
-            ),
+          // Sizzling cooking overlay during reroll
+          KebabCookingOverlay(
+            isVisible: _isRerolling,
+            isReroll: true,
+            ingredients: widget.ingredients,
+          ),
         ],
       ),
     );

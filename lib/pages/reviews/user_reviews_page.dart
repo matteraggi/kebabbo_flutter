@@ -89,8 +89,28 @@ class UserReviewsState extends State<UserReviewsPage> {
                 review['menu']) /
             4;
       } else {
-        // Gestisci il caso in cui il kebab è stato cancellato
+        // Gestisci il caso in cui il kebab è stato cancellato fornendo fallback sicuri
         review['name'] = 'Kebab non più disponibile';
+        review['map'] = '';
+        review['lat'] = 0.0;
+        review['lng'] = 0.0;
+        review['gluten_free'] = false;
+        review['is_open'] = false;
+        review['tag'] = 'kebab';
+        review['vegetables'] = 0.0;
+        review['yogurt'] = 0.0;
+        review['spicy'] = 0.0;
+        review['onion'] = 0.0;
+        review['quality'] = (review['quality'] ?? 0.0).toDouble();
+        review['price'] = (review['price'] ?? 0.0).toDouble();
+        review['quantity'] = (review['quantity'] ?? 0.0).toDouble();
+        review['menu'] = (review['menu'] ?? 0.0).toDouble();
+        review['fun'] = (review['fun'] ?? 0.0).toDouble();
+        review['rating'] = (review['quality'] +
+                review['price'] +
+                review['quantity'] +
+                review['menu']) /
+            4;
       }
     }
     setState(() {

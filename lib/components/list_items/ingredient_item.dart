@@ -7,6 +7,7 @@ class IngredientControl extends StatefulWidget {
   final Offset targetPosition;
   final bool isConverging;
   final bool isNavigatingAway;
+  final double itemHeight;
 
   const IngredientControl({
     super.key,
@@ -16,6 +17,7 @@ class IngredientControl extends StatefulWidget {
     required this.targetPosition,
     required this.isConverging,
     required this.isNavigatingAway,
+    this.itemHeight = 60.0,
   });
 
   @override
@@ -104,11 +106,16 @@ class IngredientControlState extends State<IngredientControl>
         ? ''
         : 'assets/images/${widget.ingredientName}_$spriteSize.png';
 
+    final double itemWidth = widget.itemHeight * 2.2;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
           icon: const Icon(Icons.remove),
+          iconSize: (widget.itemHeight * 0.38).clamp(18.0, 24.0),
+          padding: const EdgeInsets.all(4),
+          constraints: const BoxConstraints(),
           onPressed: _amount > 0
               ? () {
                   setState(() {
@@ -126,17 +133,20 @@ class IngredientControlState extends State<IngredientControl>
               child: spritePath.isNotEmpty
                   ? Image.asset(
                       spritePath,
-                      width: 220,
-                      height: 100,
+                      width: itemWidth,
+                      height: widget.itemHeight,
                       gaplessPlayback: true, // Ensures smooth transition
                       excludeFromSemantics: true, // Optional, for performance
                     )
-                  : const SizedBox(width: 220, height: 100),
+                  : SizedBox(width: itemWidth, height: widget.itemHeight),
             );
           },
         ),
         IconButton(
           icon: const Icon(Icons.add),
+          iconSize: (widget.itemHeight * 0.38).clamp(18.0, 24.0),
+          padding: const EdgeInsets.all(4),
+          constraints: const BoxConstraints(),
           onPressed: _amount < 10
               ? () {
                   setState(() {

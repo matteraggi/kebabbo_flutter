@@ -113,8 +113,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get nessun_utente_ti_segue => 'Nessun utente ti segue';
 
   @override
-  String get il_kebab_che_ti_raccomandiamo_e =>
-      'Il kebab che ti raccomandiamo è:';
+  String get il_kebab_che_ti_raccomandiamo_e => 'Il tuo match è:';
 
   @override
   String get kebab_consigliato => 'Kebab consigliato';

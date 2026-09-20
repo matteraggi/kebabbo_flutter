@@ -274,7 +274,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Il commento è stato aggiunto con successo!",
         ),
         "il_kebab_che_ti_raccomandiamo_e": MessageLookupByLibrary.simpleMessage(
-          "Il kebab che ti raccomandiamo è:",
+          "Il tuo match è:",
         ),
         "il_testo_non_puo_essere_vuoto": MessageLookupByLibrary.simpleMessage(
           "Il testo non può essere vuoto",

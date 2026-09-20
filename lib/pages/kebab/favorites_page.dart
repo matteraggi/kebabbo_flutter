@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 
 class FavoritesPage extends StatefulWidget {
   final String userId;
@@ -110,7 +111,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                     spicy: (kebab['spicy'] ?? 0.0).toDouble(),
                                     onion: (kebab['onion'] ?? 0.0).toDouble(),
                                     tag: kebab['tag'] ?? '',
-                                    isOpen: kebab['isOpen'] ?? false,
+                                    isOpen:
+                                        isKebabOpen(kebab['orari_apertura']),
                                     glutenFree: kebab['gluten_free'] ?? false,
                                     expanded: false,
                                   );

@@ -298,7 +298,7 @@ abstract class AppLocalizations {
   /// No description provided for @il_kebab_che_ti_raccomandiamo_e.
   ///
   /// In it, this message translates to:
-  /// **'Il kebab che ti raccomandiamo è:'**
+  /// **'Il tuo match è:'**
   String get il_kebab_che_ti_raccomandiamo_e;
 
   /// No description provided for @kebab_consigliato.

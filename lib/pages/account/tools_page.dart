@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kebabbo_flutter/components/animations/kebab_cooking_overlay.dart';
 import 'package:kebabbo_flutter/components/list_items/ingredient_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab/kebab_recommandation_page.dart';
@@ -56,9 +57,7 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
 
   // State variables for animations
   late AnimationController _ingredientController;
-  late AnimationController _cloudController;
-  late Animation<Offset> _cloudAnimation;
-  bool showCloud = false;
+  bool _isBuilding = false;
 
   @override
   void initState() {
@@ -79,18 +78,6 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(seconds: 1),
     );
-
-    // Cloud controller (for full-screen cloud appearance and movement from bottom)
-    _cloudController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    );
-
-    // Slide animation for the cloud, starting from off-screen (below) to cover the full screen
-    _cloudAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.5), // Start off-screen (below)
-      end: Offset.zero, // End at the center (covering the whole screen)
-    ).animate(_cloudController);
 
     // Fetch kebabs and calculate how many are in each distance range
     _fetchKebabAvailability();
@@ -140,7 +127,6 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _ingredientController.dispose();
-    _cloudController.dispose();
     super.dispose();
   }
 
@@ -154,213 +140,234 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
-              bool isDesktop = constraints.maxWidth > 650;
+              final bool isDesktop = constraints.maxWidth > 650;
+              final double availableHeight = constraints.maxHeight.isFinite
+                  ? constraints.maxHeight
+                  : 650.0;
+              final double itemHeight =
+                  (availableHeight * 0.096).clamp(56.0, 80.0);
 
-              return SingleChildScrollView(
-                child: Center(
-                  child: isDesktop
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
+              if (isDesktop) {
+                return SingleChildScrollView(
+                  physics: availableHeight > 600
+                      ? const NeverScrollableScrollPhysics()
+                      : const BouncingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: availableHeight),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: ingredientAmounts.keys
+                                      .map((ingredient) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5.0),
+                                      child: TweenAnimationBuilder<Offset>(
+                                        tween: Tween<Offset>(
+                                          begin: const Offset(0, 0),
+                                          end: const Offset(0, 0),
+                                        ),
+                                        duration: const Duration(seconds: 1),
+                                        builder: (context, value, child) {
+                                          return Transform.translate(
+                                            offset: value,
+                                            child: IngredientControl(
+                                              ingredientName: ingredient,
+                                              itemHeight: itemHeight,
+                                              amount: ingredientAmounts[
+                                                  ingredient]!,
+                                              onAmountChanged: (amount) {
+                                                setState(() {
+                                                  ingredientAmounts[
+                                                      ingredient] = amount;
+                                                  widget.onIngredientsUpdated(
+                                                      ingredientAmounts.values
+                                                          .toList());
+                                                });
+                                              },
+                                              targetPosition:
+                                                  ingredientTargets[
+                                                      ingredient]!,
+                                              isConverging: isConverging,
+                                              isNavigatingAway:
+                                                  isNavigatingAway,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              const SizedBox(width: 30),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 30),
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: ingredientAmounts.keys
-                                        .map((ingredient) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5.0),
-                                        child: TweenAnimationBuilder<Offset>(
-                                          tween: Tween<Offset>(
-                                            begin: const Offset(0, 0),
-                                            end: const Offset(0, 0),
-                                          ),
-                                          duration: const Duration(seconds: 1),
-                                          builder: (context, value, child) {
-                                            return Transform.translate(
-                                              offset: value,
-                                              child: IngredientControl(
-                                                ingredientName: ingredient,
-                                                amount: ingredientAmounts[
-                                                    ingredient]!,
-                                                onAmountChanged: (amount) {
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      for (String ingredient
+                                          in ingredientAmounts.keys)
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                _getLocalizedIngredientName(
+                                                    ingredient),
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              Slider(
+                                                value: ingredientAmounts[
+                                                        ingredient]!
+                                                    .toDouble(),
+                                                min: 0,
+                                                max: 10,
+                                                divisions: 10,
+                                                activeColor: red,
+                                                onChanged: (value) {
                                                   setState(() {
                                                     ingredientAmounts[
-                                                        ingredient] = amount;
+                                                            ingredient] =
+                                                        value.toInt();
                                                     widget.onIngredientsUpdated(
                                                         ingredientAmounts.values
                                                             .toList());
                                                   });
                                                 },
-                                                targetPosition:
-                                                    ingredientTargets[
-                                                        ingredient]!,
-                                                isConverging: isConverging,
-                                                isNavigatingAway:
-                                                    isNavigatingAway,
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                                const SizedBox(width: 30),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 30),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        for (String ingredient
-                                            in ingredientAmounts.keys)
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 4.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                // UPDATED: Use localized name here
-                                                Text(
-                                                  _getLocalizedIngredientName(
-                                                      ingredient),
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                Slider(
-                                                  value: ingredientAmounts[
-                                                          ingredient]!
-                                                      .toDouble(),
-                                                  min: 0,
-                                                  max: 10,
-                                                  divisions: 10,
-                                                  activeColor: red,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      ingredientAmounts[
-                                                              ingredient] =
-                                                          value.toInt();
-                                                      widget
-                                                          .onIngredientsUpdated(
-                                                              ingredientAmounts
-                                                                  .values
-                                                                  .toList());
-                                                    });
-                                                  },
-                                                ),
-                                              ],
-                                            ),
+                                            ],
                                           ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          S.of(context).distanza_massima,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
                                         ),
-                                        _buildDistanceSlider(),
-                                        const SizedBox(
-                                            height:
-                                                20), // Reduced space above button
-                                        buildButton(),
-                                        const SizedBox(
-                                            height:
-                                                40), // Added margin below the button
-                                      ],
-                                    ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        S.of(context).distanza_massima,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      _buildDistanceSlider(),
+                                      const SizedBox(height: 20),
+                                      buildButton(),
+                                      const SizedBox(height: 40),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ...ingredientAmounts.keys.map((ingredient) {
-                              return Column(children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                  child: IngredientControl(
-                                    ingredientName: ingredient,
-                                    amount: ingredientAmounts[ingredient]!,
-                                    onAmountChanged: (amount) {
-                                      setState(() {
-                                        ingredientAmounts[ingredient] = amount;
-                                        widget.onIngredientsUpdated(
-                                            ingredientAmounts.values.toList());
-                                      });
-                                    },
-                                    targetPosition:
-                                        ingredientTargets[ingredient]!,
-                                    isConverging: isConverging,
-                                    isNavigatingAway: isNavigatingAway,
-                                  ),
-                                ),
-                                // UPDATED: Use localized name here instead of raw 'ingredient' key
-                                Text(
-                                  _getLocalizedIngredientName(ingredient),
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                )
-                              ]);
-                            }),
-
-                            // Add the sliders and the "Build!" button back to mobile view
-                            const SizedBox(height: 20),
-                            Text(
-                              S.of(context).distanza_massima,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                            _buildDistanceSlider(),
-                            const SizedBox(
-                                height: 20), // Reduced space above button
-                            buildButton(),
-                            const SizedBox(
-                                height: 40), // Added margin below the button
-                          ],
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              // Mobile Layout: fills screen height gracefully without empty spaces or scrolling
+              final Widget mobileContent = Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  children: [
+                    for (final ingredient in ingredientAmounts.keys)
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IngredientControl(
+                                ingredientName: ingredient,
+                                itemHeight: itemHeight,
+                                amount: ingredientAmounts[ingredient]!,
+                                onAmountChanged: (amount) {
+                                  setState(() {
+                                    ingredientAmounts[ingredient] = amount;
+                                    widget.onIngredientsUpdated(
+                                        ingredientAmounts.values.toList());
+                                  });
+                                },
+                                targetPosition:
+                                    ingredientTargets[ingredient]!,
+                                isConverging: isConverging,
+                                isNavigatingAway: isNavigatingAway,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _getLocalizedIngredientName(ingredient),
+                                style: TextStyle(
+                                  fontSize: (itemHeight * 0.22)
+                                      .clamp(12.0, 15.0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
+                      ),
+
+                    // Distance section and Build button
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0, bottom: 4.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            S.of(context).distanza_massima,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          _buildDistanceSlider(),
+                          const SizedBox(height: 4),
+                          buildButton(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               );
+
+              return availableHeight > 540
+                  ? SizedBox(
+                      height: availableHeight,
+                      child: mobileContent,
+                    )
+                  : SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: SizedBox(
+                        height: 560,
+                        child: mobileContent,
+                      ),
+                    );
             },
           ),
 
-          // Full screen cloud animation
-          if (showCloud)
-            SlideTransition(
-              position: _cloudAnimation,
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/loading_cloud.png',
-                    fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-              ),
-            ),
+          // Modern, sizzling Kebab Cooking Overlay
+          KebabCookingOverlay(
+            isVisible: _isBuilding,
+            ingredients: ingredientAmounts,
+          ),
         ],
       ),
     );
@@ -415,86 +422,91 @@ class _ToolsPageState extends State<ToolsPage> with TickerProviderStateMixin {
 
   Widget buildButton() {
     return ElevatedButton(
-      onPressed: () async {
-        // Check if there are any available kebabs for the selected distance
-        int availableKebabsForDistance =
-            _getAvailableKebabsForCurrentDistance();
+      onPressed: _isBuilding
+          ? null
+          : () async {
+              // Check if there are any available kebabs for the selected distance
+              int availableKebabsForDistance =
+                  _getAvailableKebabsForCurrentDistance();
 
-        // If no kebabs are available, show a SnackBar and don't trigger the cloud animation
-        if (availableKebabsForDistance == 0) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(S
-                    .of(context)
-                    .nessun_kebab_corrispondente_trovato_nel_raggio_selezionato),
-              ),
-            );
-          }
-          return; // Don't proceed further, no cloud animation
-        }
+              // If no kebabs are available, show a SnackBar
+              if (availableKebabsForDistance == 0) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(S
+                          .of(context)
+                          .nessun_kebab_corrispondente_trovato_nel_raggio_selezionato),
+                    ),
+                  );
+                }
+                return;
+              }
 
-        // Proceed with the cloud animation and convergence
-        setState(() {
-          isConverging = true;
-        });
-        _ingredientController.forward();
-        await updateProfileIngredients();
-        setState(() {
-          showCloud = true; // Make the cloud appear
-        });
-        await _cloudController.forward(); // Slide cloud up
+              // Proceed with the cooking overlay & ingredient convergence
+              setState(() {
+                _isBuilding = true;
+                isConverging = true;
+              });
+              _ingredientController.forward();
+              await updateProfileIngredients();
 
-        // After cloud fully appears, process the build
-        Future.delayed(const Duration(seconds: 1), () async {
-          setState(() {
-            isConverging = false;
-            isNavigatingAway = true;
-          });
+              // Run buildKebab concurrently with minimum cooking animation time
+              final results = await Future.wait([
+                buildKebab(ingredientAmounts, 0, maxDistance, widget.currentPosition),
+                Future.delayed(const Duration(milliseconds: 2000)),
+              ]);
 
-          Map<String, dynamic>? result = await buildKebab(
-              ingredientAmounts, 0, maxDistance, widget.currentPosition);
-          Map<String, dynamic>? bestKebab;
-          int availableKebabs = 0;
+              final result = results[0] as Map<String, dynamic>?;
+              Map<String, dynamic>? bestKebab;
+              int availableKebabs = 0;
 
-          if (result != null) {
-            bestKebab = result['kebab'];
-            availableKebabs = result['availableKebabs'];
-          }
+              if (result != null) {
+                bestKebab = result['kebab'];
+                availableKebabs = result['availableKebabs'];
+              }
 
-          if (bestKebab != null) {
-            if (mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => KebabRecommendationPage(
-                    kebab: bestKebab!,
-                    availableKebabs: availableKebabs,
-                    ingredients: ingredientAmounts,
-                    maxDistance: maxDistance,
-                    currentPosition: widget.currentPosition,
+              if (bestKebab != null && mounted) {
+                setState(() {
+                  isConverging = false;
+                  isNavigatingAway = true;
+                });
+
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => KebabRecommendationPage(
+                      kebab: bestKebab!,
+                      availableKebabs: availableKebabs,
+                      ingredients: ingredientAmounts,
+                      maxDistance: maxDistance,
+                      currentPosition: widget.currentPosition,
+                    ),
                   ),
-                ),
-              );
-            }
-          } else {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                );
+
+                if (mounted) {
+                  setState(() {
+                    _isBuilding = false;
+                    isNavigatingAway = false;
+                  });
+                  _ingredientController.reset();
+                }
+              } else if (mounted) {
+                setState(() {
+                  _isBuilding = false;
+                  isConverging = false;
+                });
+                _ingredientController.reverse();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
                     content: Text(S
                         .of(context)
-                        .nessun_kebab_corrispondente_trovato_nel_raggio_selezionato)),
-              );
-            }
-          }
-
-          // Hide cloud after navigation
-          setState(() {
-            showCloud = false; // Cloud slides back down
-          });
-          _cloudController.reverse(); // Slide cloud down
-        });
-      },
+                        .nessun_kebab_corrispondente_trovato_nel_raggio_selezionato),
+                  ),
+                );
+              }
+            },
       style: ElevatedButton.styleFrom(
         foregroundColor: red, // Red color for the button
         shape: RoundedRectangleBorder(

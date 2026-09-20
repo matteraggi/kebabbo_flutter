@@ -77,8 +77,8 @@ class FeedListItemState extends State<FeedListItem> {
 
   Future<void> _fetchUserProfile(String userId) async {
     try {
-      // If userId is null or empty, set default values
-      if (supabase.auth.currentUser == null) {
+      // If userId is empty, set default values
+      if (userId.isEmpty) {
         if (mounted) {
           setState(() {
             userName = anonymous;
@@ -195,7 +195,7 @@ class FeedListItemState extends State<FeedListItem> {
 
       await supabase
           .from('posts')
-          .update({'comments_number': widget.commentNumber + 1}).eq(
+          .update({'comments_number': _currentCommentNumber + 1}).eq(
               'id', widget.postId);
 
       setState(() {

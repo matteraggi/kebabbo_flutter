@@ -49,10 +49,9 @@ class SingleCardState extends State<SingleCard> {
                   ..setEntry(3, 2, 0.001) // Perspective
                   ..rotateY(tiltAngle), // Apply the tilt rotation along y-axis
                 child: Container(
-                  width: 275, // Increased size for the card
-                  height: 700, // Adjusted height to avoid cutting
+                  width: 300,
+                  height: 533.33,
                   decoration: BoxDecoration(
-                    color: Colors.blueAccent,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -66,7 +65,7 @@ class SingleCardState extends State<SingleCard> {
                     borderRadius: BorderRadius.circular(20),
                     child: Image.asset(
                       widget.imagePath, // Display the passed image
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),

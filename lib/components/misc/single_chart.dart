@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
@@ -24,160 +23,219 @@ class SingleChart extends StatefulWidget {
 }
 
 class _SingleChartState extends State<SingleChart> {
-  List<Color> gradientColors = [
-    red,
-    yellow,
-  ];
-
   @override
   Widget build(BuildContext context) {
-    if (widget.vegetables == 0 ||
-        widget.yogurt == 0 ||
-        widget.spicy == 0 ||
-        widget.onion == 0) {
-      return Container();
+    if (widget.vegetables <= 0 &&
+        widget.yogurt <= 0 &&
+        widget.spicy <= 0 &&
+        widget.onion <= 0) {
+      return const SizedBox.shrink();
     }
 
-    return AspectRatio(
-      aspectRatio: 1.70,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          right: 18,
-          left: 12,
-          top: 24,
-          bottom: 12,
-        ),
-        child: LineChart(
-          mainData(),
-        ),
-      ),
-    );
-  }
+    final textColor = widget.isFront ? Colors.black87 : Colors.white;
+    final trackColor = widget.isFront
+        ? Colors.grey.withValues(alpha: 0.15)
+        : Colors.white.withValues(alpha: 0.15);
 
-  LineChartData mainData() {
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 2, // Cambia l'intervallo delle linee orizzontali
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: Colors.grey,
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: Colors.grey,
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 42,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 2, // Cambia l'intervallo dei titoli dell'asse sinistro
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-          ),
+    return Container(
+      margin: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+      padding: const EdgeInsets.fromLTRB(6.0, 12.0, 6.0, 12.0),
+      decoration: BoxDecoration(
+        color: widget.isFront
+            ? Colors.grey.withValues(alpha: 0.05)
+            : Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14.0),
+        border: Border.all(
+          color: widget.isFront
+              ? Colors.grey.withValues(alpha: 0.18)
+              : Colors.white.withValues(alpha: 0.15),
         ),
       ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: 0,
-      maxX: 3,
-      minY: 0,
-      maxY: 10,
-      lineBarsData: [
-        LineChartBarData(
-          spots: [
-            FlSpot(0, widget.vegetables),
-            FlSpot(1, widget.yogurt),
-            FlSpot(2, widget.spicy),
-            FlSpot(3, widget.onion),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withValues(alpha: 0.3))
-                  .toList(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0, left: 6.0),
+            child: Text(
+              "QUANTITÀ INGREDIENTI",
+              style: TextStyle(
+                color: textColor.withValues(alpha: 0.55),
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.8,
+              ),
             ),
           ),
-        ),
-      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _buildVerticalColumn(
+                emoji: "🥗",
+                label: S.of(context).verdura,
+                value: widget.vegetables,
+                textColor: textColor,
+                trackColor: trackColor,
+              ),
+              _buildVerticalColumn(
+                emoji: "🥛",
+                label: S.of(context).yogurt,
+                value: widget.yogurt,
+                textColor: textColor,
+                trackColor: trackColor,
+              ),
+              _buildVerticalColumn(
+                emoji: "🌶️",
+                label: S.of(context).spicy,
+                value: widget.spicy,
+                textColor: textColor,
+                trackColor: trackColor,
+              ),
+              _buildVerticalColumn(
+                emoji: "🧅",
+                label: S.of(context).cipolla,
+                value: widget.onion,
+                textColor: textColor,
+                trackColor: trackColor,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    var style = TextStyle(
-      color: widget.isFront ? Colors.black : Colors.white,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = Text(S.of(context).verdura, style: style);
-        break;
-      case 1:
-        text = Text(S.of(context).yogurt, style: style);
-        break;
-      case 2:
-        text = Text(S.of(context).spicy, style: style);
-        break;
-      case 3:
-        text = Text(S.of(context).cipolla, style: style);
-        break;
-      default:
-        text = Text('', style: style);
-        break;
-    }
+  Widget _buildVerticalColumn({
+    required String emoji,
+    required String label,
+    required double value,
+    required Color textColor,
+    required Color trackColor,
+  }) {
+    final double targetProgress = (value / 10.0).clamp(0.0, 1.0);
+    const double barHeight = 84.0;
+    const double barWidth = 18.0;
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
-  }
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Punteggio numerico in cima
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: (value % 1 == 0)
+                      ? value.toInt().toString()
+                      : value.toStringAsFixed(1),
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                TextSpan(
+                  text: "/10",
+                  style: TextStyle(
+                    color: textColor.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    var style = TextStyle(
-      color: widget.isFront ? Colors.black : Colors.white,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    return Text(
-      value.toInt().toString(),
-      style: style,
-      textAlign: TextAlign.left,
+          // Barra verticale animata in tema Kebabbo (rosso e giallo)
+          TweenAnimationBuilder<double>(
+            tween: Tween<double>(begin: 0, end: targetProgress),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, animatedProgress, child) {
+              return Container(
+                width: barWidth,
+                height: barHeight,
+                decoration: BoxDecoration(
+                  color: trackColor,
+                  borderRadius: BorderRadius.circular(barWidth / 2),
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: barWidth,
+                    height: barHeight * animatedProgress,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [red, yellow],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(barWidth / 2),
+                      boxShadow: animatedProgress > 0
+                          ? [
+                              BoxShadow(
+                                color: red.withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              ),
+                            ]
+                          : null,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 10),
+
+          // Icona grande e ben visibile
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: widget.isFront
+                  ? Colors.white
+                  : Colors.white.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: widget.isFront
+                    ? Colors.grey.shade300
+                    : Colors.white.withValues(alpha: 0.25),
+                width: 1.2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 4,
+                  offset: const Offset(0, 1.5),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              emoji,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+          const SizedBox(height: 6),
+
+          // Nome ingrediente
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: textColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 }

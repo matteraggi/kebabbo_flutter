@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image/image.dart' as img;
-import 'package:intl/intl.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -126,63 +125,100 @@ String generateHash(String kebabberName) {
   return digest.toString();
 }
 
-bool isKebabOpen(Map<String, dynamic>? orariApertura) {
-  if (orariApertura == null) {
+bool isKebabOpen(dynamic orariApertura) {
+  if (orariApertura == null || orariApertura is! Map) {
     return false;
   }
-  // Ottieni l'ora e il giorno corrente
-  DateTime now = DateTime.now();
-  String dayOfWeekEnglish =
-      DateFormat('EEEE', 'en_US').format(now).toLowerCase();
-  const Map<String, String> daysOfWeek = {
-    'monday': 'lunedì',
-    'tuesday': 'martedì',
-    'wednesday': 'mercoledì',
-    'thursday': 'giovedì',
-    'friday': 'venerdì',
-    'saturday': 'sabato',
-    'sunday': 'domenica',
-  };
 
-  String? dayOfWeek = daysOfWeek[dayOfWeekEnglish];
-  if (dayOfWeek == null) return false;
-  // Controlla se il giorno corrente è presente negli orari di apertura
-  if (orariApertura.containsKey(dayOfWeek)) {
-    // Ottieni gli orari di apertura per il giorno corrente
-    String orari = orariApertura[dayOfWeek];
-    if (orari == "chiuso") {
-      return false;
-    }
+  final now = DateTime.now();
+  final int nowMinutes = now.hour * 60 + now.minute;
 
-    // Dividi gli orari di apertura per virgola (se ci sono più fasce orarie)
-    List<String> orariList = orari.split(',');
-    for (String orario in orariList) {
-      // Dividi l'orario per trattino per ottenere l'ora di inizio e fine
-      List<String> startEnd = orario.split('-');
-      DateTime startTime = DateFormat('HH:mm').parse(startEnd[0]);
-      DateTime endTime = DateFormat('HH:mm').parse(startEnd[1]);
+  const daysItalian = [
+    'lunedì',
+    'martedì',
+    'mercoledì',
+    'giovedì',
+    'venerdì',
+    'sabato',
+    'domenica',
+  ];
 
-      // Gestisci il caso in cui l'orario di chiusura sia dopo mezzanotte
-      if (endTime.isBefore(startTime)) {
-        endTime = endTime.add(const Duration(days: 1));
-      }
+  final int todayIndex = now.weekday - 1; // 0 for lunedì, 6 for domenica
+  final String todayName = daysItalian[todayIndex];
+  final int yesterdayIndex = (todayIndex - 1 + 7) % 7;
+  final String yesterdayName = daysItalian[yesterdayIndex];
 
-      // Crea un DateTime per l'ora corrente con la stessa data di startTime
-      DateTime nowWithStartTime = DateTime(
-        startTime.year,
-        startTime.month,
-        startTime.day,
-        now.hour,
-        now.minute,
-      );
-      // Controlla se l'ora corrente è compresa tra l'ora di inizio e fine
-      if (nowWithStartTime.isAfter(startTime) &&
-          nowWithStartTime.isBefore(endTime)) {
-        return true; // Il kebabbaro è aperto!
-      }
-    }
+  int? parseTimeToMinutes(String s) {
+    final clean = s.trim().replaceAll(' ', '');
+    final parts = clean.split(':');
+    if (parts.isEmpty) return null;
+    final h = int.tryParse(parts[0]);
+    if (h == null) return null;
+    final m = parts.length > 1 ? (int.tryParse(parts[1]) ?? 0) : 0;
+    if (h == 24) return 24 * 60;
+    return h * 60 + m;
   }
-  return false; // Il kebabbaro è chiuso
+
+  bool checkDaySlots(String? daySchedule, {required bool isYesterday}) {
+    if (daySchedule == null) return false;
+    final lower = daySchedule.trim().toLowerCase();
+    if (lower == 'chiuso' || lower.isEmpty) return false;
+    if (lower.contains('24h') ||
+        lower.contains('aperto 24') ||
+        lower == '00:00-24:00' ||
+        lower == '00:00-00:00') {
+      return true;
+    }
+
+    final intervals = lower.split(',');
+    for (final interval in intervals) {
+      final parts = interval.split('-');
+      if (parts.length != 2) continue;
+
+      final startMin = parseTimeToMinutes(parts[0]);
+      final endMin = parseTimeToMinutes(parts[1]);
+      if (startMin == null || endMin == null) continue;
+
+      if (endMin <= startMin) {
+        // Fascia oraria che si estende oltre la mezzanotte
+        if (endMin == 0 && parts[1].trim() == '00:00' && startMin > 0) {
+          // Chiusura esattamente alla mezzanotte
+          if (!isYesterday && nowMinutes >= startMin && nowMinutes < 1440) {
+            return true;
+          }
+        } else {
+          // Turno notturno oltre la mezzanotte
+          if (!isYesterday) {
+            if (nowMinutes >= startMin) return true;
+          } else {
+            if (nowMinutes < endMin) return true;
+          }
+        }
+      } else {
+        // Fascia normale diurna
+        if (!isYesterday) {
+          if (nowMinutes >= startMin && nowMinutes < endMin) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  // 1. Controlla il giorno corrente
+  final todaySchedule = orariApertura[todayName]?.toString();
+  if (checkDaySlots(todaySchedule, isYesterday: false)) {
+    return true;
+  }
+
+  // 2. Controlla eventuale turno notturno iniziato ieri
+  final yesterdaySchedule = orariApertura[yesterdayName]?.toString();
+  if (checkDaySlots(yesterdaySchedule, isYesterday: true)) {
+    return true;
+  }
+
+  return false;
 }
 
 Future<Map<String, int>> calculateAvailableKebabsPerDistance(

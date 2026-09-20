@@ -18,6 +18,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
+import 'package:kebabbo_flutter/pages/tcg/tcg_profile_preview.dart';
+import 'package:kebabbo_flutter/pages/account/tools_page.dart';
 
 class AccountPage extends StatefulWidget {
   final Position? currentPosition;
@@ -36,6 +38,8 @@ class _AccountPageState extends State<AccountPage> {
   final TextEditingController _usernameController = TextEditingController();
   int _followersCount = 0;
   int _seguitiCount = 0;
+  List<int> _ingredients = [5, 5, 5, 5, 5];
+  List<int> _medals = [];
   Map<String, dynamic>? _favoriteKebab;
   final String privacyPolicyUrl = "https://kebabbo.top/privacy-policy";
   bool _isAvatarLoading = false;
@@ -72,15 +76,28 @@ class _AccountPageState extends State<AccountPage> {
     });
 
     final profileData = await getProfile(context);
-    fetchSelectedKebab(profileData!['favoriteKebab'].toString());
-    setState(() {
-      _username = profileData['username'];
-      _avatarUrl = profileData['avatarUrl'];
-      _seguitiCount = (profileData['seguitiCount'] != null)
-          ? profileData['seguitiCount'].length
-          : 0;
-      _loading = false;
-    });
+    if (profileData != null) {
+      fetchSelectedKebab(profileData['favoriteKebab'].toString());
+      if (mounted) {
+        setState(() {
+          _username = profileData['username'] ?? '';
+          _avatarUrl = profileData['avatarUrl'];
+          _seguitiCount = (profileData['seguitiCount'] != null)
+              ? profileData['seguitiCount'].length
+              : 0;
+          _ingredients = List<int>.from(
+              profileData['ingredients'] ?? [5, 5, 5, 5, 5]);
+          _medals = List<int>.from(profileData['medals'] ?? []);
+          _loading = false;
+        });
+      }
+    } else {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
   }
 
   Future<void> _updateProfile() async {
@@ -384,9 +401,6 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final tabBarViewHeight = screenHeight - 410;
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
@@ -473,6 +487,25 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                 ),
                                 PopupMenuItem<int>(
+                                  value: 4,
+                                  height: 40,
+                                  child: Row(
+                                    children: const [
+                                      Icon(Icons.emoji_events,
+                                          color: Colors.black),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "Obiettivi & Medaglie",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<int>(
                                   value: 5,
                                   height: 40,
                                   child: Row(
@@ -548,6 +581,13 @@ class _AccountPageState extends State<AccountPage> {
                                       );
                                     }
                                   }();
+                                } else if (value == 4) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          MedalPage(userId: _id),
+                                    ),
+                                  ).then((_) => _loadProfile());
                                 } else if (value == 5) {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -665,179 +705,308 @@ class _AccountPageState extends State<AccountPage> {
 
                       const SizedBox(width: 24),
 
-                      // Stats
+                      // Stats & Medals
                       Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // POSTS
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        UserPostsPage(userId: _id),
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    "$_postCount",
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
+                                  // POSTS
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              UserPostsPage(userId: _id),
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "$_postCount",
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          S.of(context).posts,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    S.of(context).posts,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
-                            ),
 
-                            // FOLLOWERS
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        FollowersPage(userId: _id),
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '$_followersCount',
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
+                                  // FOLLOWERS
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              FollowersPage(userId: _id),
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          '$_followersCount',
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          S.of(context).followers,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    S.of(context).followers,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
-                            ),
 
-                            // SEGUITI
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SeguitiPage(userId: _id),
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '$_seguitiCount',
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
+                                  // SEGUITI
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SeguitiPage(userId: _id),
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          '$_seguitiCount',
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          S.of(context).following,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Text(
-                                    S.of(context).following,
-                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 10),
+                              // OBIETTIVI & MEDAGLIE (STILE PULITO, NO BOX)
+                              InkWell(
+                                borderRadius: BorderRadius.circular(10),
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          MedalPage(userId: _id),
+                                    ),
+                                  ).then((_) => _loadProfile());
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 6),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.emoji_events_outlined,
+                                          size: 17, color: Color(0xFFD49B00)),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        "Obiettivi: ${_medals.length}/${allMedalsList.length}",
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 2),
+                                      const Icon(Icons.chevron_right,
+                                          size: 16, color: Colors.black45),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 25),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        _openFavoriteKebabSelection();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (_favoriteKebab == null || _favoriteKebab!.isEmpty)
-                            Text(S.of(context).seleziona_il_tuo_kebab_preferito)
-                          else
-                            Row(
-                              children: [
-                                Image.asset(
-                                  _favoriteKebab?["tag"] == "kebab"
-                                      ? "assets/images/kebabcolored.png"
-                                      : "assets/images/sandwitch.png",
-                                  height: 24,
-                                  width: 24,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                  const SizedBox(height: 18),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        // KEBAB PREFERITO (Expanded)
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
                                 ),
                               ],
                             ),
-                          const Icon(Icons.border_color,
-                              color: Colors.black, size: 22),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  DefaultTabController(
-                    length: 3,
-                    child: Column(
-                      children: [
-                        const TabBar(
-                          physics: BouncingScrollPhysics(),
-                          indicatorColor: Colors.black,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.grey,
-                          tabs: [
-                            Tab(icon: Icon(Icons.emoji_events)),
-                            Tab(icon: Icon(Icons.reviews)),
-                            Tab(icon: Icon(Icons.bookmark)),
-                          ],
-                        ),
-                        SizedBox(
-                          height: tabBarViewHeight,
-                          child: TabBarView(
-                            children: [
-                              MedalPage(userId: _id),
-                              UserReviewsPage(
-                                userId: _id,
-                                initialPosition: widget.currentPosition,
+                            child: InkWell(
+                              onTap: () {
+                                _openFavoriteKebabSelection();
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  if (_favoriteKebab == null ||
+                                      _favoriteKebab!.isEmpty)
+                                    Flexible(
+                                      child: Text(
+                                        S.of(context).seleziona_il_tuo_kebab_preferito,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                    )
+                                  else
+                                    Expanded(
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            _favoriteKebab?["tag"] == "kebab"
+                                                ? "assets/images/kebabcolored.png"
+                                                : "assets/images/sandwitch.png",
+                                            height: 22,
+                                            width: 22,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  const SizedBox(width: 6),
+                                  const Icon(Icons.border_color,
+                                      color: Colors.black54, size: 18),
+                                ],
                               ),
-                              FavoritesPage(userId: _id),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        // PERSONALIZZA / CREA IL TUO KEBAB
+                        Container(
+                          decoration: BoxDecoration(
+                            color: main.red,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: main.red.withValues(alpha: 0.35),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
                             ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(16),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ToolsPage(
+                                      currentPosition: widget.currentPosition,
+                                      ingredients: _ingredients,
+                                      onIngredientsUpdated:
+                                          (updatedIngredients) {
+                                        setState(() {
+                                          _ingredients = updatedIngredients;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 10),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    Icon(Icons.tune_rounded,
+                                        color: Colors.white, size: 19),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      "Il tuo kebab",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Expanded(
+                    child: DefaultTabController(
+                      length: 3,
+                      child: Column(
+                        children: [
+                          const TabBar(
+                            physics: BouncingScrollPhysics(),
+                            indicatorColor: Colors.black,
+                            labelColor: Colors.black,
+                            unselectedLabelColor: Colors.grey,
+                            tabs: [
+                              Tab(icon: Icon(Icons.style)),
+                              Tab(icon: Icon(Icons.reviews)),
+                              Tab(icon: Icon(Icons.bookmark)),
+                            ],
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                TcgProfilePreview(userId: _id),
+                                UserReviewsPage(
+                                  userId: _id,
+                                  initialPosition: widget.currentPosition,
+                                ),
+                                FavoritesPage(userId: _id),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
