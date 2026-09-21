@@ -6,9 +6,13 @@
     - [x] Foto dei post con tag del luogo -> tutte le foto degli utenti nella pagina del luogo, e recensioni
 - [x] design medagliere
 - [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati).
+- [ ] opzione per confrontare due kebab
+- [ ] carosello carte farlo circolare
+- [ ] traduzioni per tutto che non penso sia più così
+- [ ] Bug check app installata
 
 design:
-- [ ] design card recensioni utenti (numero di recensioni e altro)
+- [ ] design box espandibile recensioni utenti (aggiungere numero di recensioni per esempio)
 - [ ] rifare style di: carte, pagina profilo utenti
 - [ ] sezioni review e kebab salvati del profilo molto sus e strani soprattutto in prod
 - [x] mettere il grafico a barre per quantità elementi
