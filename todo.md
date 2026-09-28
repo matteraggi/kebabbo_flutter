@@ -1,34 +1,29 @@
 # TODO
 
-- [x] inserimento nuovo kebab completo
-    - [x] Click sulla mappa per prendere le coordinate
-- [x] fare pagina per singolo kebab con info approfondite
-    - [x] Foto dei post con tag del luogo -> tutte le foto degli utenti nella pagina del luogo, e recensioni
-- [x] design medagliere
-- [ ] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati).
+- [x] nuovo logo
+- [x] Indicare quale utente ha caricato un posto sulla piattaforma (aggiungendo gamification se metti posti molto frequentati).
+- [x] carosello carte farlo circolare
+- [x] traduzioni per tutto che non penso sia più così
 - [ ] opzione per confrontare due kebab
-- [ ] carosello carte farlo circolare
-- [ ] traduzioni per tutto che non penso sia più così
 - [ ] Bug check app installata
+- [ ] AGGIUNGI KEBAB TURCHIA, VAL PUSTERIA
+- [ ] controllare bug commenti e like
+- [ ] massimo una recensione per utente di un kebab, non multiple. quindi se ne posta un altra, viene sostituita la precedente chiedendo con un box: "è già presente un altra recensione per questo locale, sovrascrivere?"
+- l'icona delle carte da spacchettare in alcuni telefoni è troppo piccola essendo responsive, quindi vedi di sistmare magari togliendola direttamente se troppo piccola oppure in modo alternativo
+- più piccole le scritte post followed e followers perché stanno troppo appiccicate
 
 design:
 - [ ] design box espandibile recensioni utenti (aggiungere numero di recensioni per esempio)
-- [ ] rifare style di: carte, pagina profilo utenti
+- [ ] rifare style di: carte, pacchetto carte
 - [ ] sezioni review e kebab salvati del profilo molto sus e strani soprattutto in prod
-- [x] mettere il grafico a barre per quantità elementi
-- [x] anche obiettivi da spostare nel toggle per me oppure da cambiare
-- [x] nella mappa per kebab con nomi lunghi le stelle escono dal pop up, bisognerebbe sistemare
-- [x] nella home il nome lungo viene tagliato e basta, allungarlo quando si apre la scheda
 
 extra:
 - [ ] Orario hardcodato pericoloso perché cambia in continuazione, guardare se esistono api maps
 - [ ] Notifiche
 - [ ] Sezione Offerte e Promozioni Esclusive
-- [ ] compressioni immagini soprattutto avatar
+- [ ] compressioni immagini soprattutto avatar e carte
 - [ ] delete cascade da followed_user quando un utente viene eliminato
 - [ ] refactor: servono file di logica con le funzioni e anche più componenti
-- [x] Togliere compilato da github
-- [x] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)
 
 
 # DONE
@@ -111,10 +106,19 @@ extra:
 - [x] aggiungere murgulet card
 - [x] Design loghi vari da mettere in giro
 - [x] pack opening pokemon pocket style con carte kebabbari da collezionare
-
-bugfix:
 - [x] se metti nei preferiti un posto con categoria panini, ti tolgono tutti i preferiti della categoria kebab e viceversa
 - [x] quando segui una persona, cambia il numero dei suoi seguiti (invece che follower)
 - [x] ogni tanto non va l'animazione delle carte
 - [x] bordo non esiste in follower e followed
 - [x] quando scrivi il commento l'input di testo rimane basso e non si vede
+- [x] inserimento nuovo kebab completo
+    - [x] Click sulla mappa per prendere le coordinate
+- [x] fare pagina per singolo kebab con info approfondite
+    - [x] Foto dei post con tag del luogo -> tutte le foto degli utenti nella pagina del luogo, e recensioni
+- [x] design medagliere
+- [x] mettere il grafico a barre per quantità elementi
+- [x] anche obiettivi da spostare nel toggle per me oppure da cambiare
+- [x] nella mappa per kebab con nomi lunghi le stelle escono dal pop up, bisognerebbe sistemare
+- [x] nella home il nome lungo viene tagliato e basta, allungarlo quando si apre la scheda
+- [x] Togliere compilato da github
+- [x] se viene eliminato uno user, e quindi tutti i suoi commenti, il comments number è sbagliato (andrebbe calcolato live :/)

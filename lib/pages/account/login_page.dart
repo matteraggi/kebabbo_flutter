@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
@@ -6,6 +7,18 @@ import 'package:kebabbo_flutter/pages/account/forgot_password.dart';
 import 'package:kebabbo_flutter/pages/account/signup.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+
+const List<String> kAuthLogos = [
+  'assets/new-logos/logo scritta ad arco sfondo giallo-1.png',
+  'assets/new-logos/logo senza arti sfondo giallo scritta bomboletta-1.png',
+  'assets/new-logos/logo sfondo giallo mario bros-1.png',
+  'assets/new-logos/logo sfondo giallo senza arti scritta arco-1.png',
+];
+
+String? _sessionAuthLogo;
+
+String get sessionAuthLogo =>
+    _sessionAuthLogo ??= kAuthLogos[Random().nextInt(kAuthLogos.length)];
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, this.authCallback});
@@ -17,6 +30,7 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
+  bool _obscurePassword = true;
   late final TextEditingController _emailController = TextEditingController();
   late final TextEditingController _passwordController =
       TextEditingController();
@@ -78,186 +92,290 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: yellow,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text(
-          'Sign In',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
-        centerTitle: true,
+        foregroundColor: Colors.black87,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Logo or Icon
-              AnimatedOpacity(
-                opacity: 1.0,
-                duration: const Duration(seconds: 1),
-                child: Image.asset(
-                  'assets/logos/big_logo_name_blackred.png', // Use your logo here
-                  height: 300,
-                ),
-              ),
-              SizedBox(height: 20),
-              // Google Login Button with Custom Icon
-              GoogleLoginButton(redirectUrl: redirectUrl),
-              const SizedBox(height: 8),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Logo
+                  Image.asset(
+                    sessionAuthLogo,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 12),
 
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // White background container with email and password fields
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white, // White background
-                        borderRadius:
-                            BorderRadius.circular(12), // Rounded corners
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withAlpha(77), // Subtle shadow
-                            blurRadius: 10,
-                            offset: Offset(0, 5),
+                  // Heading
+                  const Text(
+                    'Kebabbo',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF1E1E24),
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Entra nella community per scoprire e recensire i migliori kebab',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black.withValues(alpha: 0.7),
+                      height: 1.3,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // 1. Standout Google Sign-In Button
+                  GoogleLoginButton(redirectUrl: redirectUrl),
+                  const SizedBox(height: 24),
+
+                  // Or divider
+                  Row(
+                    children: [
+                      const Expanded(
+                          child: Divider(color: Colors.black26, thickness: 1)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        child: Text(
+                          S.of(context).or_continue_with_email,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.black.withValues(alpha: 0.65),
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
+                        ),
                       ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: TextField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                labelText: S.of(context).email,
-                                border: InputBorder.none, // No default border
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              onSubmitted: (_) => _passwordFocusNode.requestFocus(),
-                            ),
-                          ),
-                          const Divider(), // Divider between email and password
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: TextField(
-                              controller: _passwordController,
-                              focusNode: _passwordFocusNode,
-                              decoration: InputDecoration(
-                                labelText: S.of(context).password,
-                                border: InputBorder.none, // No default border
-                              ),
-                              obscureText: true,
-                              textInputAction: TextInputAction.done,
-                              onSubmitted: (_) => _signInWithEmailAndPassword(),
-                            ),
-                          ),
-                        ],
+                      const Expanded(
+                          child: Divider(color: Colors.black26, thickness: 1)),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // 2. Email & Password Form Fields
+                  TextField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (_) => _passwordFocusNode.requestFocus(),
+                    decoration: InputDecoration(
+                      labelText: S.of(context).email,
+                      hintText: 'nome@email.com',
+                      prefixIcon: const Icon(Icons.email_outlined, size: 20),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: red, width: 1.8),
                       ),
                     ),
-                    const SizedBox(
-                        height: 4), // Spacing between the form and the button
-                    TextButton(
+                  ),
+                  const SizedBox(height: 14),
+
+                  TextField(
+                    controller: _passwordController,
+                    focusNode: _passwordFocusNode,
+                    obscureText: _obscurePassword,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _signInWithEmailAndPassword(),
+                    decoration: InputDecoration(
+                      labelText: S.of(context).password,
+                      prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          size: 20,
+                          color: Colors.grey[600],
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: red, width: 1.8),
+                      ),
+                    ),
+                  ),
+
+                  // Forgot password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 0),
+                      ),
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  ForgotPasswordPage(redirectUrl: redirectUrl)),
+                            builder: (context) =>
+                                ForgotPasswordPage(redirectUrl: redirectUrl),
+                          ),
                         );
                       },
-                      child: Text(S.of(context).forgot_password),
+                      child: Text(
+                        S.of(context).forgot_password,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 4),
+                  ),
+                  const SizedBox(height: 8),
 
-                    // Login Button
-                    ElevatedButton(
+                  // Login submit button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
                       onPressed:
                           _isLoading ? null : _signInWithEmailAndPassword,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 80, vertical: 15), // Button padding
+                        backgroundColor: red,
+                        foregroundColor: Colors.white,
+                        elevation: 2,
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(30), // Rounded button
+                          borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: Text(S.of(context).login),
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 22,
+                              width: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              S.of(context).login,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SignUpPage(redirectUrl: redirectUrl)),
-                  );
-                },
-                child: Text(S.of(context).dont_have_an_account_sign_up),
-              ),
-
-              // Optional Terms and Privacy Text
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Text(
-                  S
-                      .of(context)
-                      .by_signing_in_you_agree_to_our_terms_and_privacy_policy,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
                   ),
-                ),
-              ),
-              const SizedBox(height: 40),
+                  const SizedBox(height: 20),
 
-              // Decorative Element (Divider or Animated Element)
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-                indent: 40,
-                endIndent: 40,
-              ),
-              const SizedBox(height: 20),
+                  // Sign up navigation link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Non hai un account?',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SignUpPage(redirectUrl: redirectUrl),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          S.of(context).sign_up,
+                          style: const TextStyle(
+                            color: red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
 
-              // Aesthetic Section: Inspirational Quote or Design
-              Text(
-                S
-                    .of(context)
-                    .prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 16,
-                  color: Colors.blueGrey,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
+                  // Terms & privacy
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      S
+                          .of(context)
+                          .by_signing_in_you_agree_to_our_terms_and_privacy_policy,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black.withValues(alpha: 0.6),
+                        fontSize: 12,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 28),
 
-              // Simple Footer Text (Optional)
-              const Text(
-                'Kebabbo App - All Rights Reserved',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                  // Aesthetic Quote
+                  Text(
+                    S
+                        .of(context)
+                        .prendete_e_mangiatene_tutti_questo_e_il_kebab_offerto_in_sacrificio_per_voi,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 14,
+                      color: Colors.black.withValues(alpha: 0.7),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Kebabbo App',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.black.withValues(alpha: 0.35),
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

@@ -947,11 +947,11 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                   const SizedBox(width: 10),
                   Expanded(
                     child: OutlinedButton.icon(
-                      icon: const Icon(Icons.reviews_outlined, size: 18),
-                      label: const Text(
-                        "Dettagli & Recensioni",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12.5),
+                      icon: const Icon(Icons.info_outline, size: 18),
+                      label: Text(
+                        S.of(context).details,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

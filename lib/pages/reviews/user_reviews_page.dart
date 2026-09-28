@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite.dart';
 import 'package:kebabbo_flutter/components/misc/info_dialog.dart';
 import 'package:kebabbo_flutter/main.dart';
-import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
+import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
@@ -90,7 +90,7 @@ class UserReviewsState extends State<UserReviewsPage> {
             4;
       } else {
         // Gestisci il caso in cui il kebab è stato cancellato fornendo fallback sicuri
-        review['name'] = 'Kebab non più disponibile';
+        review['name'] = S.current.kebab_no_longer_available;
         review['map'] = '';
         review['lat'] = 0.0;
         review['lng'] = 0.0;
@@ -121,33 +121,34 @@ class UserReviewsState extends State<UserReviewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 25),
-          // Pill-shaped button at the top
-          Padding(
-            padding: const EdgeInsets.all(
-                12.0), // Add some padding for better spacing
-            child: SizedBox(
-              width: double.infinity, // Full width button
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15), // Button height
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // Pill shape
-                  ),
-                  backgroundColor: red, // Customize color if needed
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        // Pill-shaped button at the top
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          child: SizedBox(
+            width: double.infinity, // Full width button
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15), // Button height
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30), // Pill shape
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddKebab(),
-                    ),
-                  );
-                },
+                backgroundColor: red, // Customize color if needed
+              ),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WriteReviewPage(),
+                  ),
+                );
+                if (mounted) {
+                  _fetchReviews(widget.userId);
+                }
+              },
                 child: Stack(
                   alignment: Alignment.center, // Center everything
                   children: [
@@ -208,7 +209,6 @@ class UserReviewsState extends State<UserReviewsPage> {
                       ),
                     ),
         ],
-      ),
-    );
+      );
   }
 }

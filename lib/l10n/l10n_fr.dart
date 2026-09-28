@@ -794,4 +794,45 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get build_button => 'Composer !';
+
+  @override
+  String get objectives => 'Objectifs';
+
+  @override
+  String get your_kebab => 'Ton kebab';
+
+  @override
+  String get kebab_no_longer_available => 'Kebab n\'est plus disponible';
+
+  @override
+  String get inserted_by => 'Ajouté par';
+
+  @override
+  String get community_upload => 'Communauté';
+
+  @override
+  String get staff_certified => 'Certifié Staff Kebabbo';
+
+  @override
+  String get swipe_collection_hint =>
+      'Faites glisser pour parcourir la collection';
+
+  @override
+  String get examine_3d => 'Examiner en 3D';
+
+  @override
+  String get details => 'Détails';
+
+  @override
+  String get verified_by_staff_tooltip => 'Vérifié par l\'équipe Kebabbo';
+
+  @override
+  String get sign_up_with_google => 'S\'inscrire avec Google';
+
+  @override
+  String get or_continue_with_email => 'ou avec e-mail';
+
+  @override
+  String get already_have_an_account =>
+      'Vous avez déjà un compte ? Se connecter';
 }

@@ -48,7 +48,7 @@ class UserItemState extends State<UserItem> {
             child: CircleAvatar(
               backgroundImage: widget.avatarUrl.isNotEmpty
                   ? NetworkImage(widget.avatarUrl)
-                  : const AssetImage('assets/default_avatar.png')
+                  : const AssetImage('assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
                       as ImageProvider,
             ),
           ),

@@ -1551,6 +1551,84 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Costruisci!'**
   String get build_button;
+
+  /// No description provided for @objectives.
+  ///
+  /// In it, this message translates to:
+  /// **'Obiettivi'**
+  String get objectives;
+
+  /// No description provided for @your_kebab.
+  ///
+  /// In it, this message translates to:
+  /// **'Il tuo kebab'**
+  String get your_kebab;
+
+  /// No description provided for @kebab_no_longer_available.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebab non più disponibile'**
+  String get kebab_no_longer_available;
+
+  /// No description provided for @inserted_by.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserito da'**
+  String get inserted_by;
+
+  /// No description provided for @community_upload.
+  ///
+  /// In it, this message translates to:
+  /// **'Community'**
+  String get community_upload;
+
+  /// No description provided for @staff_certified.
+  ///
+  /// In it, this message translates to:
+  /// **'Certificato Staff Kebabbo'**
+  String get staff_certified;
+
+  /// No description provided for @swipe_collection_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Scorri per sfogliare la collezione'**
+  String get swipe_collection_hint;
+
+  /// No description provided for @examine_3d.
+  ///
+  /// In it, this message translates to:
+  /// **'Esamina in 3D'**
+  String get examine_3d;
+
+  /// No description provided for @details.
+  ///
+  /// In it, this message translates to:
+  /// **'Dettagli'**
+  String get details;
+
+  /// No description provided for @verified_by_staff_tooltip.
+  ///
+  /// In it, this message translates to:
+  /// **'Verificato dallo staff Kebabbo'**
+  String get verified_by_staff_tooltip;
+
+  /// No description provided for @sign_up_with_google.
+  ///
+  /// In it, this message translates to:
+  /// **'Registrati con Google'**
+  String get sign_up_with_google;
+
+  /// No description provided for @or_continue_with_email.
+  ///
+  /// In it, this message translates to:
+  /// **'oppure con email'**
+  String get or_continue_with_email;
+
+  /// No description provided for @already_have_an_account.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai già un account? Accedi'**
+  String get already_have_an_account;
 }
 
 class _AppLocalizationsDelegate

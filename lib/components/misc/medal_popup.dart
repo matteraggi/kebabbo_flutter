@@ -47,7 +47,7 @@ void showFirstTimeDialog(BuildContext context) {
     btnOkColor: red,
     btnOkOnPress: () {},
     customHeader: Image.asset(
-      'assets/logos/small_logo.png', // Your custom PNG image path
+      'assets/new-logos/logo scritta ad arco-1.png', // Your custom PNG image path
       width: 100,
       height: 100,
     ), // No animation for the image
@@ -69,7 +69,7 @@ void showAppInstallDialog(BuildContext context) {
       openApp();
     },
     customHeader: Image.asset(
-      'assets/logos/small_logo.png', // Your custom PNG image path
+      'assets/new-logos/logo scritta ad arco-1.png', // Your custom PNG image path
       width: 100,
       height: 100,
     ), // No animation for the image

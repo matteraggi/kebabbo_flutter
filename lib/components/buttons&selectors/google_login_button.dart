@@ -9,8 +9,13 @@ import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class GoogleLoginButton extends StatelessWidget {
   final String redirectUrl;
+  final String? label;
 
-  const GoogleLoginButton({super.key, required this.redirectUrl});
+  const GoogleLoginButton({
+    super.key,
+    required this.redirectUrl,
+    this.label,
+  });
 
   Future<void> _nativeGoogleSignIn() async {
     const webClientId =
@@ -43,50 +48,71 @@ class GoogleLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-          side: BorderSide(color: Colors.grey.shade300),
+    final buttonText = label ?? S.of(context).log_in_con_google;
+
+    return Container(
+      width: double.infinity,
+      height: 52,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 1.2,
         ),
-        elevation: 2,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      ),
-      onPressed: () async {
-        try {
-          if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-            await _nativeGoogleSignIn();
-          } else {
-            await supabase.auth.signInWithOAuth(
-              OAuthProvider.google,
-              redirectTo: redirectUrl, // Use the provided redirect URL here
-            );
-          }
-        } catch (e) {
-          debugPrint('Google sign-in error: $e');
-          if (context.mounted) {
-            context.showSnackBar(e.toString(), isError: true);
-          }
-        }
-      },
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            "assets/images/google.png",
-            height: 24,
-            width: 24,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            S.of(context).log_in_con_google,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () async {
+            try {
+              if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+                await _nativeGoogleSignIn();
+              } else {
+                await supabase.auth.signInWithOAuth(
+                  OAuthProvider.google,
+                  redirectTo: redirectUrl,
+                );
+              }
+            } catch (e) {
+              debugPrint('Google sign-in error: $e');
+              if (context.mounted) {
+                context.showSnackBar(e.toString(), isError: true);
+              }
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/images/google.png",
+                  height: 22,
+                  width: 22,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  buttonText,
+                  style: const TextStyle(
+                    color: Color(0xFF1F1F1F),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

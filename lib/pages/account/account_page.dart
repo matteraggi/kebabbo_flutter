@@ -650,7 +650,7 @@ class _AccountPageState extends State<AccountPage> {
                                                     _avatarUrl!.isNotEmpty)
                                                 ? NetworkImage(_avatarUrl!)
                                                 : const AssetImage(
-                                                        'assets/logos/small_logo.png')
+                                                        'assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
                                                     as ImageProvider,
                                             fit: BoxFit.cover,
                                           ),
@@ -696,7 +696,7 @@ class _AccountPageState extends State<AccountPage> {
                                   (_avatarUrl != null && _avatarUrl!.isNotEmpty)
                                       ? NetworkImage(_avatarUrl!)
                                       : const AssetImage(
-                                              'assets/logos/small_logo.png')
+                                              'assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
                                           as ImageProvider,
                             ),
                           ),
@@ -823,7 +823,7 @@ class _AccountPageState extends State<AccountPage> {
                                           size: 17, color: Color(0xFFD49B00)),
                                       const SizedBox(width: 6),
                                       Text(
-                                        "Obiettivi: ${_medals.length}/${allMedalsList.length}",
+                                        "${S.of(context).objectives}: ${_medals.length}/${allMedalsList.length}",
                                         style: const TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
@@ -955,13 +955,13 @@ class _AccountPageState extends State<AccountPage> {
                                     horizontal: 12, vertical: 10),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    Icon(Icons.tune_rounded,
+                                  children: [
+                                    const Icon(Icons.tune_rounded,
                                         color: Colors.white, size: 19),
-                                    SizedBox(width: 6),
+                                    const SizedBox(width: 6),
                                     Text(
-                                      "Il tuo kebab",
-                                      style: TextStyle(
+                                      S.of(context).your_kebab,
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,

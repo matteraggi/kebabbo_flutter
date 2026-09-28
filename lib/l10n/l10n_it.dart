@@ -791,4 +791,43 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get build_button => 'Costruisci!';
+
+  @override
+  String get objectives => 'Obiettivi';
+
+  @override
+  String get your_kebab => 'Il tuo kebab';
+
+  @override
+  String get kebab_no_longer_available => 'Kebab non più disponibile';
+
+  @override
+  String get inserted_by => 'Inserito da';
+
+  @override
+  String get community_upload => 'Community';
+
+  @override
+  String get staff_certified => 'Certificato Staff Kebabbo';
+
+  @override
+  String get swipe_collection_hint => 'Scorri per sfogliare la collezione';
+
+  @override
+  String get examine_3d => 'Esamina in 3D';
+
+  @override
+  String get details => 'Dettagli';
+
+  @override
+  String get verified_by_staff_tooltip => 'Verificato dallo staff Kebabbo';
+
+  @override
+  String get sign_up_with_google => 'Registrati con Google';
+
+  @override
+  String get or_continue_with_email => 'oppure con email';
+
+  @override
+  String get already_have_an_account => 'Hai già un account? Accedi';
 }

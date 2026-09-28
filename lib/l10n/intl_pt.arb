@@ -316,5 +316,18 @@
   "five_posts": "5 posts",
   "ten_posts": "10 posts",
   "fifty_posts": "50 posts",
-  "build_button": "Montar!"
+  "build_button": "Montar!",
+  "objectives": "Objetivos",
+  "your_kebab": "O teu kebab",
+  "kebab_no_longer_available": "Kebab não está mais disponível",
+  "inserted_by": "Adicionado por",
+  "community_upload": "Comunidade",
+  "staff_certified": "Certificado Staff Kebabbo",
+  "swipe_collection_hint": "Deslize para navegar na coleção",
+  "examine_3d": "Examinar em 3D",
+  "details": "Detalhes",
+  "verified_by_staff_tooltip": "Verificado pela equipe Kebabbo",
+  "sign_up_with_google": "Cadastrar com o Google",
+  "or_continue_with_email": "ou com e-mail",
+  "already_have_an_account": "Já tem uma conta? Entrar"
 }

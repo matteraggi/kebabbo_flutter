@@ -527,5 +527,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "your_review_optional": MessageLookupByLibrary.simpleMessage(
       "Your review (optional)",
     ),
+    "objectives": MessageLookupByLibrary.simpleMessage("Objectives"),
+    "your_kebab": MessageLookupByLibrary.simpleMessage("Your kebab"),
+    "kebab_no_longer_available": MessageLookupByLibrary.simpleMessage(
+      "Kebab no longer available",
+    ),
+    "inserted_by": MessageLookupByLibrary.simpleMessage("Added by"),
+    "community_upload": MessageLookupByLibrary.simpleMessage("Community"),
+    "staff_certified": MessageLookupByLibrary.simpleMessage(
+      "Kebabbo Staff Certified",
+    ),
+    "swipe_collection_hint": MessageLookupByLibrary.simpleMessage(
+      "Swipe to browse collection",
+    ),
+    "examine_3d": MessageLookupByLibrary.simpleMessage("Examine in 3D"),
+    "details": MessageLookupByLibrary.simpleMessage("Details"),
+    "verified_by_staff_tooltip": MessageLookupByLibrary.simpleMessage(
+      "Verified by Kebabbo staff",
+    ),
+    "sign_up_with_google": MessageLookupByLibrary.simpleMessage(
+      "Sign up with Google",
+    ),
+    "or_continue_with_email": MessageLookupByLibrary.simpleMessage(
+      "or with email",
+    ),
+    "already_have_an_account": MessageLookupByLibrary.simpleMessage(
+      "Already have an account? Sign in",
+    ),
   };
 }

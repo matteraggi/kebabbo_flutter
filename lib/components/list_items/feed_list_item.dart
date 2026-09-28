@@ -505,7 +505,7 @@ class FeedListItemState extends State<FeedListItem> {
                                             avatarUrl!.isNotEmpty
                                         ? NetworkImage(avatarUrl!)
                                         : const AssetImage(
-                                                'assets/logos/small_logo.png')
+                                                'assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
                                             as ImageProvider,
                                   ),
                                   const SizedBox(width: 8),

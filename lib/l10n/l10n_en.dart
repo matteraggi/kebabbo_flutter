@@ -777,4 +777,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get build_button => 'Build!';
+
+  @override
+  String get objectives => 'Objectives';
+
+  @override
+  String get your_kebab => 'Your kebab';
+
+  @override
+  String get kebab_no_longer_available => 'Kebab no longer available';
+
+  @override
+  String get inserted_by => 'Added by';
+
+  @override
+  String get community_upload => 'Community';
+
+  @override
+  String get staff_certified => 'Kebabbo Staff Certified';
+
+  @override
+  String get swipe_collection_hint => 'Swipe to browse collection';
+
+  @override
+  String get examine_3d => 'Examine in 3D';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get verified_by_staff_tooltip => 'Verified by Kebabbo staff';
+
+  @override
+  String get sign_up_with_google => 'Sign up with Google';
+
+  @override
+  String get or_continue_with_email => 'or with email';
+
+  @override
+  String get already_have_an_account => 'Already have an account? Sign in';
 }

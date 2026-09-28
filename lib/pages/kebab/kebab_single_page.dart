@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/single_chart.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
@@ -92,8 +93,12 @@ class KebabSinglePageState extends State<KebabSinglePage>
         }
       }
 
-      // 5. Collect User Profiles for Reviewers & Posters
+      // 5. Collect User Profiles for Creator, Reviewers & Posters
       final Set<String> userIdsToFetch = {};
+      final creatorId = kebabResponse['added_by']?.toString();
+      if (creatorId != null && creatorId.isNotEmpty) {
+        userIdsToFetch.add(creatorId);
+      }
       for (var r in fetchedReviews) {
         final uid = r['user_id']?.toString();
         if (uid != null && uid.isNotEmpty) userIdsToFetch.add(uid);
@@ -740,6 +745,10 @@ class KebabSinglePageState extends State<KebabSinglePage>
     final bool isGlutenFree = kebabData!['gluten_free'] ?? false;
     final double officialRating =
         (kebabData!['rating'] ?? 0.0).toDouble();
+    final bool isStaff = kebabData!['is_staff'] == true;
+    final String? addedBy = kebabData!['added_by']?.toString();
+    final Map<String, dynamic>? creatorProfile =
+        addedBy != null ? userProfiles[addedBy] : null;
 
     final communityAverages = _calculateCommunityAverages();
     final String? coverPhotoUrl = _findCoverPhotoUrl();
@@ -760,6 +769,33 @@ class KebabSinglePageState extends State<KebabSinglePage>
               foregroundColor: Colors.white,
               iconTheme: const IconThemeData(color: Colors.white),
               actions: [
+                if (isStaff || addedBy == null)
+                  IconButton(
+                    icon: const Icon(
+                      Icons.verified,
+                      color: Color(0xFF1D9BF0),
+                    ),
+                    tooltip: S.of(context).verified_by_staff_tooltip,
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              const Icon(Icons.verified,
+                                  color: Color(0xFF1D9BF0), size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  S.of(context).verified_by_staff_tooltip,
+                                ),
+                              ),
+                            ],
+                          ),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                  ),
                 IconButton(
                   icon: Icon(
                     isFavorite ? Icons.bookmark : Icons.bookmark_border,
@@ -767,11 +803,6 @@ class KebabSinglePageState extends State<KebabSinglePage>
                   ),
                   tooltip: isFavorite ? 'Rimuovi dai preferiti' : 'Salva nei preferiti',
                   onPressed: _toggleFavorite,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.map_outlined),
-                  tooltip: 'Apri Mappa',
-                  onPressed: _openMap,
                 ),
               ],
               flexibleSpace: LayoutBuilder(
@@ -989,6 +1020,65 @@ class KebabSinglePageState extends State<KebabSinglePage>
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+
+                        // Community Creator Badge (shown only for community-added kebabs)
+                        if (!isStaff && addedBy != null)
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      SingleUserPage(userId: addedBy),
+                                ),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.purple.shade50,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.purple.shade200,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (creatorProfile?['avatar_url'] != null &&
+                                      (creatorProfile!['avatar_url'] as String)
+                                          .isNotEmpty) ...[
+                                    ClipOval(
+                                      child: Image.network(
+                                        creatorProfile['avatar_url'],
+                                        width: 16,
+                                        height: 16,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) =>
+                                            const Icon(Icons.person,
+                                                size: 14, color: Colors.purple),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                  ] else ...[
+                                    const Icon(Icons.person,
+                                        size: 14, color: Colors.purple),
+                                    const SizedBox(width: 4),
+                                  ],
+                                  Text(
+                                    '${S.of(context).inserted_by} ${creatorProfile?['username'] != null ? '@${creatorProfile!['username']}' : S.of(context).community_upload}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.purple.shade700,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                       ],

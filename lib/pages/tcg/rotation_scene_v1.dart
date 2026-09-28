@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/tcg/single_card.dart';
 
@@ -11,16 +12,46 @@ class RotationSceneV1 extends StatefulWidget {
 }
 
 class RotationSceneV1State extends State<RotationSceneV1> {
-  late final PageController _pageController;
+  late PageController _pageController;
+  late int _initialPage;
   int _currentPage = 0;
+
+  static const int _virtualMultiplier = 10000;
 
   @override
   void initState() {
     super.initState();
+    final total = widget.imagePaths.length;
+    if (total > 1) {
+      final virtualCount = total * _virtualMultiplier;
+      _initialPage = (virtualCount ~/ 2) - ((virtualCount ~/ 2) % total);
+    } else {
+      _initialPage = 0;
+    }
     _pageController = PageController(
       viewportFraction: 0.68,
-      initialPage: 0,
+      initialPage: _initialPage,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant RotationSceneV1 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imagePaths.length != widget.imagePaths.length) {
+      _pageController.dispose();
+      final total = widget.imagePaths.length;
+      if (total > 1) {
+        final virtualCount = total * _virtualMultiplier;
+        _initialPage = (virtualCount ~/ 2) - ((virtualCount ~/ 2) % total);
+      } else {
+        _initialPage = 0;
+      }
+      _currentPage = 0;
+      _pageController = PageController(
+        viewportFraction: 0.68,
+        initialPage: _initialPage,
+      );
+    }
   }
 
   @override
@@ -52,8 +83,10 @@ class RotationSceneV1State extends State<RotationSceneV1> {
   @override
   Widget build(BuildContext context) {
     final int totalCards = widget.imagePaths.length;
+    final int virtualCount =
+        totalCards > 1 ? totalCards * _virtualMultiplier : totalCards;
     final String currentCardPath = totalCards > 0
-        ? widget.imagePaths[_currentPage.clamp(0, totalCards - 1)]
+        ? widget.imagePaths[_currentPage % totalCards]
         : '';
 
     return Container(
@@ -62,9 +95,9 @@ class RotationSceneV1State extends State<RotationSceneV1> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFFFFF8F6),
-            Color(0xFFFFECE8),
-            Color(0xFFFFDED8),
+            Color(0xFF141519),
+            Color(0xFF1D1B26),
+            Color(0xFF0F1013),
           ],
         ),
       ),
@@ -76,7 +109,8 @@ class RotationSceneV1State extends State<RotationSceneV1> {
 
             // Responsive sizing based on available viewport
             final double carouselHeight = (h * 0.58).clamp(280.0, 480.0);
-            final double cardWidth = (carouselHeight * (9.0 / 16.0)).clamp(160.0, 270.0);
+            final double cardWidth =
+                (carouselHeight * (9.0 / 16.0)).clamp(160.0, 270.0);
             final double cardHeight = cardWidth * (16.0 / 9.0);
 
             return Column(
@@ -87,14 +121,16 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.swipe_outlined, size: 16, color: Colors.grey[700]),
+                      const Icon(Icons.swipe_outlined,
+                          size: 16, color: Colors.white70),
                       const SizedBox(width: 6),
                       Text(
-                        'Scorri per sfogliare la collezione',
-                        style: TextStyle(
+                        S.maybeOf(context)?.swipe_collection_hint ??
+                            'Scorri per sfogliare la collezione',
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey[800],
+                          color: Colors.white70,
                           letterSpacing: 0.2,
                         ),
                       ),
@@ -110,32 +146,39 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                   child: PageView.builder(
                     controller: _pageController,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: totalCards,
+                    itemCount: virtualCount,
                     onPageChanged: (index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
+                      if (totalCards > 0) {
+                        setState(() {
+                          _currentPage = index % totalCards;
+                        });
+                      }
                     },
                     itemBuilder: (context, index) {
-                      final String cardPath = widget.imagePaths[index];
+                      final int realIndex =
+                          totalCards > 0 ? index % totalCards : 0;
+                      final String cardPath = widget.imagePaths[realIndex];
 
                       return AnimatedBuilder(
-                        key: ValueKey(cardPath),
+                        key: ValueKey('card_${index}_$cardPath'),
                         animation: _pageController,
                         builder: (context, child) {
                           double page = 0.0;
                           if (_pageController.position.haveDimensions) {
-                            page = _pageController.page ?? _pageController.initialPage.toDouble();
+                            page = _pageController.page ??
+                                _initialPage.toDouble();
                           } else {
-                            page = _pageController.initialPage.toDouble();
+                            page = _initialPage.toDouble();
                           }
 
                           final double diff = page - index;
                           final double absDiff = diff.abs();
 
                           // 3D Perspective calculations
-                          final double rotationY = (-diff * 0.42).clamp(-0.62, 0.62);
-                          final double scale = (1.0 - (absDiff * 0.16)).clamp(0.82, 1.0);
+                          final double rotationY =
+                              (-diff * 0.42).clamp(-0.62, 0.62);
+                          final double scale =
+                              (1.0 - (absDiff * 0.16)).clamp(0.82, 1.0);
                           final double translateZ = -absDiff * 35.0;
                           final double translateX = diff * 12.0;
 
@@ -159,7 +202,8 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                                   } else {
                                     _pageController.animateToPage(
                                       index,
-                                      duration: const Duration(milliseconds: 320),
+                                      duration:
+                                          const Duration(milliseconds: 320),
                                       curve: Curves.easeOutCubic,
                                     );
                                   }
@@ -185,16 +229,20 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                 // Card Details Panel
                 Container(
                   width: (w * 0.88).clamp(280.0, 420.0),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   margin: const EdgeInsets.only(bottom: 14),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color(0xFF1F2128),
                     borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.08),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
+                        color: Colors.black.withValues(alpha: 0.4),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
@@ -203,17 +251,20 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                     children: [
                       // Badge index (#1 di 18)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFECEB),
+                          color: red.withValues(alpha: 0.18),
                           borderRadius: BorderRadius.circular(12),
+                          border:
+                              Border.all(color: red.withValues(alpha: 0.35)),
                         ),
                         child: Text(
                           '#${_currentPage + 1} di $totalCards',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: red,
+                            color: Color(0xFFFF5252),
                           ),
                         ),
                       ),
@@ -228,7 +279,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                         style: const TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Colors.white,
                           letterSpacing: 0.2,
                         ),
                       ),
@@ -242,11 +293,12 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                             final bool active = i == _currentPage;
                             return AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 3),
                               width: active ? 16 : 6,
                               height: 6,
                               decoration: BoxDecoration(
-                                color: active ? red : Colors.grey[300],
+                                color: active ? red : Colors.white24,
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             );
@@ -260,8 +312,9 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                             height: 4,
                             child: LinearProgressIndicator(
                               value: (_currentPage + 1) / totalCards,
-                              backgroundColor: Colors.grey[200],
-                              valueColor: const AlwaysStoppedAnimation<Color>(red),
+                              backgroundColor: Colors.white12,
+                              valueColor:
+                                  const AlwaysStoppedAnimation<Color>(red),
                             ),
                           ),
                         ),
@@ -276,7 +329,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: red,
                             foregroundColor: Colors.white,
-                            elevation: 2,
+                            elevation: 4,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -284,9 +337,9 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                           ),
                           onPressed: () => _openCard(currentCardPath),
                           icon: const Icon(Icons.view_in_ar, size: 20),
-                          label: const Text(
-                            'Esamina in 3D',
-                            style: TextStyle(
+                          label: Text(
+                            S.maybeOf(context)?.examine_3d ?? 'Esamina in 3D',
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),

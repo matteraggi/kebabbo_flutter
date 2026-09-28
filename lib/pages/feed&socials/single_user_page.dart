@@ -228,7 +228,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                         backgroundImage: (_avatarUrl != null &&
                                 _avatarUrl!.isNotEmpty)
                             ? NetworkImage(_avatarUrl!)
-                            : const AssetImage('assets/logos/small_logo.png')
+                            : const AssetImage('assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
                                 as ImageProvider,
                       ),
                     ),

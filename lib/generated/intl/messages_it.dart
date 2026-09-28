@@ -578,5 +578,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "your_review_optional": MessageLookupByLibrary.simpleMessage(
       "La tua recensione (opzionale)",
     ),
-      };
+    "objectives": MessageLookupByLibrary.simpleMessage("Obiettivi"),
+    "your_kebab": MessageLookupByLibrary.simpleMessage("Il tuo kebab"),
+    "kebab_no_longer_available": MessageLookupByLibrary.simpleMessage(
+      "Kebab non più disponibile",
+    ),
+    "inserted_by": MessageLookupByLibrary.simpleMessage("Inserito da"),
+    "community_upload": MessageLookupByLibrary.simpleMessage("Community"),
+    "staff_certified": MessageLookupByLibrary.simpleMessage(
+      "Certificato Staff Kebabbo",
+    ),
+    "swipe_collection_hint": MessageLookupByLibrary.simpleMessage(
+      "Scorri per sfogliare la collezione",
+    ),
+    "examine_3d": MessageLookupByLibrary.simpleMessage("Esamina in 3D"),
+    "details": MessageLookupByLibrary.simpleMessage("Dettagli"),
+    "verified_by_staff_tooltip": MessageLookupByLibrary.simpleMessage(
+      "Verificato dallo staff Kebabbo",
+    ),
+    "sign_up_with_google": MessageLookupByLibrary.simpleMessage(
+      "Registrati con Google",
+    ),
+    "or_continue_with_email": MessageLookupByLibrary.simpleMessage(
+      "oppure con email",
+    ),
+    "already_have_an_account": MessageLookupByLibrary.simpleMessage(
+      "Hai già un account? Accedi",
+    ),
+  };
 }

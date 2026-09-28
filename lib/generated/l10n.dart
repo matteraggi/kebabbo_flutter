@@ -2065,6 +2065,71 @@ class S {
   String get fifty_posts {
     return Intl.message('50 posts', name: 'fifty_posts', desc: '', args: []);
   }
+
+  /// `Obiettivi`
+  String get objectives {
+    return Intl.message('Obiettivi', name: 'objectives', desc: '', args: []);
+  }
+
+  /// `Il tuo kebab`
+  String get your_kebab {
+    return Intl.message('Il tuo kebab', name: 'your_kebab', desc: '', args: []);
+  }
+
+  /// `Kebab non più disponibile`
+  String get kebab_no_longer_available {
+    return Intl.message('Kebab non più disponibile', name: 'kebab_no_longer_available', desc: '', args: []);
+  }
+
+  /// `Inserito da`
+  String get inserted_by {
+    return Intl.message('Inserito da', name: 'inserted_by', desc: '', args: []);
+  }
+
+  /// `Community`
+  String get community_upload {
+    return Intl.message('Community', name: 'community_upload', desc: '', args: []);
+  }
+
+  /// `Certificato Staff Kebabbo`
+  String get staff_certified {
+    return Intl.message('Certificato Staff Kebabbo', name: 'staff_certified', desc: '', args: []);
+  }
+
+  /// `Scorri per sfogliare la collezione`
+  String get swipe_collection_hint {
+    return Intl.message('Scorri per sfogliare la collezione', name: 'swipe_collection_hint', desc: '', args: []);
+  }
+
+  /// `Esamina in 3D`
+  String get examine_3d {
+    return Intl.message('Esamina in 3D', name: 'examine_3d', desc: '', args: []);
+  }
+
+  /// `Dettagli`
+  String get details {
+    return Intl.message('Dettagli', name: 'details', desc: '', args: []);
+  }
+
+  /// `Verificato dallo staff Kebabbo`
+  String get verified_by_staff_tooltip {
+    return Intl.message('Verificato dallo staff Kebabbo', name: 'verified_by_staff_tooltip', desc: '', args: []);
+  }
+
+  /// `Registrati con Google`
+  String get sign_up_with_google {
+    return Intl.message('Registrati con Google', name: 'sign_up_with_google', desc: '', args: []);
+  }
+
+  /// `oppure con email`
+  String get or_continue_with_email {
+    return Intl.message('oppure con email', name: 'or_continue_with_email', desc: '', args: []);
+  }
+
+  /// `Hai già un account? Accedi`
+  String get already_have_an_account {
+    return Intl.message('Hai già un account? Accedi', name: 'already_have_an_account', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

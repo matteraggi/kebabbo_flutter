@@ -66,65 +66,45 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: _loading
-              ? const Center(child: CircularProgressIndicator())
-              : _favoriteKebabs.isEmpty
-                  ? Center(
-                      child: Text(S.of(context).nessun_kebab_tra_i_preferiti),
-                    )
-                  : LayoutBuilder(
-                      builder: (context, constraints) {
-                        return SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight: constraints.maxHeight,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                const SizedBox(height: 32),
-                                // 👇 Usa direttamente Column + map invece di ListView.builder
-                                ..._favoriteKebabs.map((kebab) {
-                                  return KebabListItemFavorite(
-                                    id: kebab['id'].toString(),
-                                    name: kebab['name'] ?? '',
-                                    description: kebab['description'] ?? '',
-                                    rating: (kebab['rating'] ?? 0.0).toDouble(),
-                                    quality:
-                                        (kebab['quality'] ?? 0.0).toDouble(),
-                                    price: (kebab['price'] ?? 0.0).toDouble(),
-                                    dimension:
-                                        (kebab['dimension'] ?? 0.0).toDouble(),
-                                    menu: (kebab['menu'] ?? 0.0).toDouble(),
-                                    fun: (kebab['fun'] ?? 0.0).toDouble(),
-                                    map: kebab['map'] ?? '',
-                                    lat: (kebab['lat'] ?? 0.0).toDouble(),
-                                    lng: (kebab['lng'] ?? 0.0).toDouble(),
-                                    vegetables:
-                                        (kebab['vegetables'] ?? 0.0).toDouble(),
-                                    yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
-                                    spicy: (kebab['spicy'] ?? 0.0).toDouble(),
-                                    onion: (kebab['onion'] ?? 0.0).toDouble(),
-                                    tag: kebab['tag'] ?? '',
-                                    isOpen:
-                                        isKebabOpen(kebab['orari_apertura']),
-                                    glutenFree: kebab['gluten_free'] ?? false,
-                                    expanded: false,
-                                  );
-                                }),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-        ),
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_favoriteKebabs.isEmpty) {
+      return Center(
+        child: Text(S.of(context).nessun_kebab_tra_i_preferiti),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(top: 16, bottom: 24),
+        itemCount: _favoriteKebabs.length,
+        itemBuilder: (context, index) {
+          final kebab = _favoriteKebabs[index];
+          return KebabListItemFavorite(
+            id: kebab['id'].toString(),
+            name: kebab['name'] ?? '',
+            description: kebab['description'] ?? '',
+            rating: (kebab['rating'] ?? 0.0).toDouble(),
+            quality: (kebab['quality'] ?? 0.0).toDouble(),
+            price: (kebab['price'] ?? 0.0).toDouble(),
+            dimension: (kebab['dimension'] ?? 0.0).toDouble(),
+            menu: (kebab['menu'] ?? 0.0).toDouble(),
+            fun: (kebab['fun'] ?? 0.0).toDouble(),
+            map: kebab['map'] ?? '',
+            lat: (kebab['lat'] ?? 0.0).toDouble(),
+            lng: (kebab['lng'] ?? 0.0).toDouble(),
+            vegetables: (kebab['vegetables'] ?? 0.0).toDouble(),
+            yogurt: (kebab['yogurt'] ?? 0.0).toDouble(),
+            spicy: (kebab['spicy'] ?? 0.0).toDouble(),
+            onion: (kebab['onion'] ?? 0.0).toDouble(),
+            tag: kebab['tag'] ?? '',
+            isOpen: isKebabOpen(kebab['orari_apertura']),
+            glutenFree: kebab['gluten_free'] ?? false,
+            expanded: false,
+          );
+        },
       ),
     );
   }
