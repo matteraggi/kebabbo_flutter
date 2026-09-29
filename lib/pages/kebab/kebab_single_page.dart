@@ -9,7 +9,6 @@ import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
 class KebabSinglePage extends StatefulWidget {
@@ -39,7 +38,6 @@ class KebabSinglePageState extends State<KebabSinglePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    timeago.setLocaleMessages('it', timeago.ItMessages());
     _fetchAllData();
   }
 
@@ -141,7 +139,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
     final user = supabase.auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Effettua il login per salvare i preferiti')),
+        SnackBar(content: Text(S.of(context).preferiti_solo_per_utenti_registrati)),
       );
       return;
     }
@@ -177,8 +175,8 @@ class KebabSinglePageState extends State<KebabSinglePage>
           SnackBar(
             content: Text(
               newFavoriteState
-                  ? 'Aggiunto ai preferiti ❤️'
-                  : 'Rimosso dai preferiti',
+                  ? S.of(context).added_to_favorites
+                  : S.of(context).removed_from_favorites,
             ),
             duration: const Duration(seconds: 2),
           ),
@@ -218,7 +216,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mappa non disponibile per questo kebabbaro')),
+        SnackBar(content: Text(S.of(context).map_not_available)),
       );
     }
   }
@@ -239,7 +237,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
     final user = supabase.auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Effettua il login per pubblicare foto')),
+        SnackBar(content: Text(S.of(context).login_to_post_photos)),
       );
       return;
     }
@@ -285,7 +283,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
             Future<void> submitPost() async {
               if (selectedImageBytes == null) {
                 ScaffoldMessenger.of(sheetContext).showSnackBar(
-                  const SnackBar(content: Text('Seleziona una foto prima di pubblicare')),
+                  SnackBar(content: Text(S.of(sheetContext).select_photo_first)),
                 );
                 return;
               }
@@ -320,7 +318,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
 
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Foto aggiunta con successo! 📸')),
+                  SnackBar(content: Text(S.of(context).photo_added)),
                 );
                 _fetchAllData();
               } catch (e) {
@@ -328,7 +326,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                 debugPrint('Errore nel caricamento foto: $e');
                 if (sheetContext.mounted) {
                   ScaffoldMessenger.of(sheetContext).showSnackBar(
-                    SnackBar(content: Text('Errore durante il caricamento: $e')),
+                    SnackBar(content: Text(S.of(sheetContext).upload_error(e.toString()))),
                   );
                 }
               }
@@ -351,7 +349,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Aggiungi Foto a ${kebabData?['name'] ?? 'Kebab'}',
+                        S.of(context).add_photo_to(kebabData?['name'] ?? 'Kebab'),
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -415,7 +413,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                                     size: 40, color: Colors.grey[600]),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Tocca per selezionare una foto',
+                                  S.of(context).tap_to_select_photo,
                                   style: TextStyle(
                                     color: Colors.grey[700],
                                     fontWeight: FontWeight.w600,
@@ -432,7 +430,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                     controller: captionController,
                     maxLines: 2,
                     decoration: InputDecoration(
-                      hintText: 'Scrivi un commento o descrivi il tuo kebab...',
+                      hintText: S.of(context).photo_caption_hint,
                       filled: true,
                       fillColor: Colors.grey[100],
                       border: OutlineInputBorder(
@@ -467,8 +465,8 @@ class KebabSinglePageState extends State<KebabSinglePage>
                                 color: Colors.white,
                               ),
                             )
-                          : const Text(
-                              'Pubblica Foto',
+                          : Text(
+                              S.of(context).publish_photo,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -490,11 +488,11 @@ class KebabSinglePageState extends State<KebabSinglePage>
     final String caption = post['text'] ?? '';
     final String userId = post['user_id']?.toString() ?? '';
     final profile = userProfiles[userId];
-    final String authorName = profile?['username'] ?? 'Utente Kebabbo';
+    final String authorName = profile?['username'] ?? S.of(context).kebabbo_user;
     final String? avatarUrl = profile?['avatar_url'];
     final String createdAt = post['created_at'] ?? '';
     final String timeAgo = createdAt.isNotEmpty
-        ? timeago.format(DateTime.parse(createdAt), locale: 'it')
+        ? formatTimeAgo(context, DateTime.parse(createdAt))
         : '';
 
     showDialog(
@@ -734,13 +732,13 @@ class KebabSinglePageState extends State<KebabSinglePage>
           foregroundColor: Colors.white,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        body: const Center(
-          child: Text('Kebabbaro non trovato o rimosso.'),
+        body: Center(
+          child: Text(S.of(context).kebab_place_not_found),
         ),
       );
     }
 
-    final String name = kebabData!['name'] ?? 'Kebab Sconosciuto';
+    final String name = kebabData!['name'] ?? S.of(context).kebab_sconosciuto;
     final bool isOpen = isKebabOpen(kebabData?['orari_apertura']);
     final bool isGlutenFree = kebabData!['gluten_free'] ?? false;
     final double officialRating =
@@ -801,7 +799,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                     isFavorite ? Icons.bookmark : Icons.bookmark_border,
                     color: isFavorite ? const Color(0xFFFFBA1C) : Colors.white,
                   ),
-                  tooltip: isFavorite ? 'Rimuovi dai preferiti' : 'Salva nei preferiti',
+                  tooltip: isFavorite ? S.of(context).remove_from_favorites : S.of(context).save_to_favorites,
                   onPressed: _toggleFavorite,
                 ),
               ],
@@ -927,7 +925,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                isOpen ? 'Aperto' : 'Chiuso',
+                                isOpen ? S.of(context).aperto : S.of(context).chiuso,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -952,15 +950,15 @@ class KebabSinglePageState extends State<KebabSinglePage>
                                 color: const Color(0xFFF9AB00),
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.grain,
+                                const Icon(Icons.grain,
                                     size: 14, color: Color(0xFFB06000)),
-                                SizedBox(width: 4),
+                                const SizedBox(width: 4),
                                 Text(
-                                  'Senza Glutine',
-                                  style: TextStyle(
+                                  S.of(context).gluten_free,
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFFB06000),
@@ -1091,7 +1089,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                         Expanded(
                           child: _buildActionButton(
                             icon: Icons.directions_outlined,
-                            label: 'Mappa',
+                            label: S.of(context).mappa,
                             color: const Color(0xFF1A73E8),
                             onTap: _openMap,
                           ),
@@ -1100,7 +1098,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                         Expanded(
                           child: _buildActionButton(
                             icon: Icons.rate_review_outlined,
-                            label: 'Recensisci',
+                            label: S.of(context).review_action,
                             color: red,
                             onTap: _openWriteReview,
                           ),
@@ -1109,7 +1107,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                         Expanded(
                           child: _buildActionButton(
                             icon: Icons.add_a_photo_outlined,
-                            label: 'Foto',
+                            label: S.of(context).photo,
                             color: const Color(0xFFE37400),
                             onTap: _showAddPhotoSheet,
                           ),
@@ -1136,9 +1134,9 @@ class KebabSinglePageState extends State<KebabSinglePage>
                     fontSize: 14,
                   ),
                   tabs: [
-                    const Tab(text: 'Panoramica'),
-                    Tab(text: 'Foto (${photosList.length})'),
-                    Tab(text: 'Recensioni (${reviews.length})'),
+                    Tab(text: S.of(context).tab_overview),
+                    Tab(text: S.of(context).tab_photos(photosList.length.toString())),
+                    Tab(text: S.of(context).tab_reviews(reviews.length.toString())),
                   ],
                 ),
               ),
@@ -1216,7 +1214,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
   // ---------------------------------------------------------------------------
   Widget _buildOverviewTab(communityAverages) {
     final String description =
-        kebabData?['description'] ?? 'Nessuna descrizione disponibile.';
+        kebabData?['description'] ?? S.of(context).descrizione_non_disponibile;
     final orariMap = kebabData?['orari_apertura'];
 
     // Official stats
@@ -1268,13 +1266,13 @@ class KebabSinglePageState extends State<KebabSinglePage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.format_quote, color: red, size: 20),
-                    SizedBox(width: 6),
+                    const Icon(Icons.format_quote, color: red, size: 20),
+                    const SizedBox(width: 6),
                     Text(
-                      'La recensione di Kebabbo',
-                      style: TextStyle(
+                      S.of(context).kebabbo_staff_review,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
@@ -1318,9 +1316,9 @@ class KebabSinglePageState extends State<KebabSinglePage>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Valutazione',
-                      style: TextStyle(
+                    Text(
+                      S.of(context).rating_title,
+                      style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
@@ -1341,7 +1339,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                             onTap: () => setState(() => _ratingsViewIndex = 0),
                           ),
                           _buildToggleItem(
-                            label: 'Community (${communityAverages.count})',
+                            label: S.of(context).community_count(communityAverages.count.toString()),
                             isSelected: _ratingsViewIndex == 1,
                             onTap: () => setState(() => _ratingsViewIndex = 1),
                           ),
@@ -1385,9 +1383,9 @@ class KebabSinglePageState extends State<KebabSinglePage>
                   const SizedBox(height: 12),
 
                   // Ingredients Balance
-                  const Text(
-                    'Bilanciamento Ingredienti',
-                    style: TextStyle(
+                  Text(
+                    S.of(context).ingredient_balance,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
@@ -1495,20 +1493,13 @@ class KebabSinglePageState extends State<KebabSinglePage>
     );
   }
 
-  Widget _buildOpeningHoursCard(dynamic orariMap) {
-    if (orariMap == null || orariMap is! Map) {
+  Widget _buildOpeningHoursCard(dynamic rawOrari) {
+    final orariMap = parseOrari(rawOrari);
+    if (orariMap == null) {
       return const SizedBox.shrink();
     }
 
-    final daysOrder = [
-      'lunedì',
-      'martedì',
-      'mercoledì',
-      'giovedì',
-      'venerdì',
-      'sabato',
-      'domenica'
-    ];
+    const daysOrder = orariDayKeys;
 
     final currentWeekdayIndex = DateTime.now().weekday; // 1 = lunedì, 7 = domenica
     final String currentDayName = daysOrder[currentWeekdayIndex - 1];
@@ -1530,13 +1521,13 @@ class KebabSinglePageState extends State<KebabSinglePage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.schedule, color: red, size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.schedule, color: red, size: 20),
+              const SizedBox(width: 8),
               Text(
-                'Orari di Apertura',
-                style: TextStyle(
+                S.of(context).opening_hours,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -1565,7 +1556,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                           const SizedBox(width: 6),
                         ],
                         Text(
-                          '${day[0].toUpperCase()}${day.substring(1)}',
+                          localizedWeekdayName(context, daysOrder.indexOf(day)),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: day == currentDayName
@@ -1615,9 +1606,9 @@ class KebabSinglePageState extends State<KebabSinglePage>
             children: [
               Icon(Icons.photo_camera_outlined, size: 64, color: Colors.grey[400]),
               const SizedBox(height: 16),
-              const Text(
-                'Nessuna foto ancora',
-                style: TextStyle(
+              Text(
+                S.of(context).no_photos_yet,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
@@ -1625,7 +1616,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
               ),
               const SizedBox(height: 8),
               Text(
-                'Sii il primo a condividere una foto della tua piadina o del tuo piatto in questo locale!',
+                S.of(context).no_photos_yet_desc,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -1643,7 +1634,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                 ),
                 onPressed: _showAddPhotoSheet,
                 icon: const Icon(Icons.add_a_photo, size: 18),
-                label: const Text('Carica la prima foto'),
+                label: Text(S.of(context).upload_first_photo),
               ),
             ],
           ),
@@ -1666,7 +1657,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
           final String imgUrl = post['image_url'] ?? '';
           final String userId = post['user_id']?.toString() ?? '';
           final profile = userProfiles[userId];
-          final String author = profile?['username'] ?? 'Utente';
+          final String author = profile?['username'] ?? S.of(context).user_generic;
 
           return GestureDetector(
             onTap: () => _openFullScreenPhoto(post),
@@ -1769,9 +1760,9 @@ class KebabSinglePageState extends State<KebabSinglePage>
             children: [
               Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
               const SizedBox(height: 16),
-              const Text(
-                'Nessuna recensione ancora',
-                style: TextStyle(
+              Text(
+                S.of(context).nessuna_recensione_ancora,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
@@ -1779,7 +1770,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
               ),
               const SizedBox(height: 8),
               Text(
-                'Condividi la tua esperienza in questo kebabbaro con tutta la community!',
+                S.of(context).no_reviews_yet_desc,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -1797,7 +1788,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                 ),
                 onPressed: _openWriteReview,
                 icon: const Icon(Icons.edit, size: 18),
-                label: const Text('Scrivi la prima recensione'),
+                label: Text(S.of(context).write_first_review),
               ),
             ],
           ),
@@ -1856,7 +1847,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Basato su ${reviews.length} recensioni',
+                      S.of(context).based_on_reviews(reviews.length.toString()),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -1875,7 +1866,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                   ),
                   onPressed: _openWriteReview,
                   icon: const Icon(Icons.edit, size: 16),
-                  label: const Text('Recensisci'),
+                  label: Text(S.of(context).review_action),
                 ),
               ],
             ),
@@ -1886,13 +1877,13 @@ class KebabSinglePageState extends State<KebabSinglePage>
         final review = reviews[index - 1];
         final String userId = review['user_id']?.toString() ?? '';
         final profile = userProfiles[userId];
-        final String author = profile?['username'] ?? 'Utente Anonimo';
+        final String author = profile?['username'] ?? S.of(context).anonimo;
         final String? avatarUrl = profile?['avatar_url'];
         final String description = review['description']?.toString() ?? '';
         final String createdAt = review['created_at']?.toString() ?? '';
 
         final String timeAgo = createdAt.isNotEmpty
-            ? timeago.format(DateTime.parse(createdAt), locale: 'it')
+            ? formatTimeAgo(context, DateTime.parse(createdAt))
             : '';
 
         // Calculate single review score
@@ -2011,11 +2002,11 @@ class KebabSinglePageState extends State<KebabSinglePage>
                 spacing: 6,
                 runSpacing: 4,
                 children: [
-                  _buildMiniStatChip('Qualità', q),
-                  _buildMiniStatChip('Prezzo', p),
-                  _buildMiniStatChip('Quantità', dim),
-                  if (m > 0) _buildMiniStatChip('Menu', m),
-                  if (f > 0) _buildMiniStatChip('Fun', f),
+                  _buildMiniStatChip(S.of(context).quality, q),
+                  _buildMiniStatChip(S.of(context).price, p),
+                  _buildMiniStatChip(S.of(context).quantity, dim),
+                  if (m > 0) _buildMiniStatChip(S.of(context).menu, m),
+                  if (f > 0) _buildMiniStatChip(S.of(context).fun, f),
                 ],
               ),
             ],
@@ -2066,6 +2057,6 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
+    return tabBar != oldDelegate.tabBar;
   }
 }

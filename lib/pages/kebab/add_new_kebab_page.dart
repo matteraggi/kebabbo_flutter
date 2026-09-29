@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/maps_resolver.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -39,6 +39,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
   String? _mapUrl;
   String? _mapLinkUrl;
   bool _isResolvingUrl = false;
+  bool _nameAutoFilled = false;
 
   // --- Orari di Apertura ---
   OpeningPreset _selectedPreset = OpeningPreset.none;
@@ -100,6 +101,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
           _mapLinkUrl = MapsResolver.buildGoogleMapsUrl(details.lat, details.lng);
           if (details.placeName != null && details.placeName!.trim().isNotEmpty) {
             _nameController.text = details.placeName!.trim();
+            _nameAutoFilled = true;
           }
         });
 
@@ -107,17 +109,17 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
           SnackBar(
             content: Text(
               details.placeName != null && details.placeName!.trim().isNotEmpty
-                  ? 'Coordinate e nome rilevati dal link Maps! 📍'
-                  : 'Coordinate rilevate con successo dal link Maps! 📍',
+                  ? S.of(context).maps_link_name_and_coords_found
+                  : S.of(context).maps_link_coords_found,
             ),
             backgroundColor: Colors.green,
           ),
         );
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Impossibile estrarre le coordinate dal link. Usa "Scegli sulla Mappa".',
+              S.of(context).maps_link_failed,
             ),
             backgroundColor: red,
           ),
@@ -154,6 +156,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
             : result.googleMapsUrl;
         if (result.placeName != null && result.placeName!.trim().isNotEmpty) {
           _nameController.text = result.placeName!.trim();
+          _nameAutoFilled = true;
         }
       });
     }
@@ -171,12 +174,17 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
       final rawBytes = result.files.single.bytes;
       if (rawBytes != null) {
         setState(() => _isCompressingImage = true);
-        final compressed = await ImageUtils.compressImage(
-          rawBytes,
-          450 * 1024,
-          1280,
-          1280,
-        );
+        Uint8List? compressed;
+        try {
+          compressed = await ImageUtils.compressImage(
+            rawBytes,
+            450 * 1024,
+            1280,
+            1280,
+          );
+        } catch (e) {
+          debugPrint('Compressione immagine fallita: $e');
+        }
         if (mounted) {
           setState(() {
             _selectedImageBytes = compressed ?? rawBytes;
@@ -233,8 +241,8 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
 
     if (_selectedLat == null || _selectedLng == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Seleziona la posizione sulla mappa prima di continuare! 📍'),
+        SnackBar(
+          content: Text(S.of(context).select_location_first),
           backgroundColor: red,
         ),
       );
@@ -258,7 +266,6 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
       final double calculatedRating =
           (_quality + _price + _dimension + _menu + _fun) / 5.0;
       final orariMap = _buildOrariMap();
-      final orariJson = orariMap != null ? jsonEncode(orariMap) : null;
       final finalMapUrl = _mapUrl ?? MapsResolver.buildGoogleMapsUrl(_selectedLat!, _selectedLng!);
       final finalMapLink = _mapLinkUrl ?? finalMapUrl;
 
@@ -285,7 +292,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
             'lng': _selectedLng,
             'map': finalMapUrl,
             'mapLink': finalMapLink,
-            'orari_apertura': orariJson,
+            'orari_apertura': orariMap,
             'approved': true,
             'is_staff': false,
             'user_reviewed': true,
@@ -404,7 +411,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore durante il salvataggio: $e'),
+            content: Text(S.of(context).error_saving(e.toString())),
             backgroundColor: red,
           ),
         );
@@ -426,8 +433,8 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Aggiungi un Kebabbaro',
+        title: Text(
+          S.of(context).add_kebab_place,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -442,13 +449,13 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
           children: [
             // 1. SEZIONE: Posizione sulla Mappa (Principale)
             _buildSectionCard(
-              title: '1. Posizione sulla Mappa 📍',
+              title: S.of(context).section_location,
               icon: Icons.place_rounded,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Tocca per posizionare il pin o cercare il locale. Coordinate, indirizzo e nome verranno estratti automaticamente!',
+                  Text(
+                    S.of(context).section_location_hint,
                     style: TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                   const SizedBox(height: 14),
@@ -469,8 +476,8 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                       icon: const Icon(Icons.map_rounded),
                       label: Text(
                         _selectedLat != null
-                            ? 'Modifica Posizione sulla Mappa'
-                            : 'Scegli sulla Mappa (Consigliato)',
+                            ? S.of(context).edit_location_on_map
+                            : S.of(context).choose_on_map_recommended,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                       onPressed: _openLocationPicker,
@@ -496,7 +503,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _addressText ?? (_cityName != null ? 'Città: $_cityName' : 'Posizione selezionata'),
+                                  _addressText ?? (_cityName != null ? S.of(context).city_label(_cityName!) : S.of(context).location_selected),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13,
@@ -528,8 +535,8 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     child: ExpansionTile(
                       tilePadding: EdgeInsets.zero,
                       childrenPadding: const EdgeInsets.only(top: 8, bottom: 4),
-                      title: const Text(
-                        'Hai già un link di Google Maps? Incollalo qui',
+                      title: Text(
+                        S.of(context).paste_maps_link_prompt,
                         style: TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.w600),
                       ),
                       children: [
@@ -539,7 +546,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                               child: TextFormField(
                                 controller: _mapsUrlController,
                                 decoration: InputDecoration(
-                                  labelText: 'Link Google Maps',
+                                  labelText: S.of(context).google_maps_link,
                                   hintText: 'https://maps.app.goo.gl/...',
                                   prefixIcon: const Icon(Icons.link, color: red),
                                   filled: true,
@@ -571,7 +578,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                                           color: Colors.white,
                                         ),
                                       )
-                                    : const Text('Estrai'),
+                                    : Text(S.of(context).extract),
                               ),
                             ),
                           ],
@@ -587,19 +594,24 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
 
             // 2. SEZIONE: Dati Principali (Nome e Categoria)
             _buildSectionCard(
-              title: '2. Nome e Categoria 🌯',
+              title: S.of(context).section_name_category,
               icon: Icons.storefront_rounded,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
                     controller: _nameController,
+                    onChanged: (_) {
+                      if (_nameAutoFilled) {
+                        setState(() => _nameAutoFilled = false);
+                      }
+                    },
                     decoration: InputDecoration(
-                      labelText: 'Nome del Kebabbaro *',
-                      hintText: 'Es. Bella Istanbul 3',
+                      labelText: S.of(context).kebab_place_name_label,
+                      hintText: S.of(context).kebab_place_name_hint,
                       prefixIcon: const Icon(Icons.badge_outlined, color: red),
-                      helperText: _nameController.text.isNotEmpty
-                          ? 'Compilato automaticamente dalla mappa (modificalo pure)'
+                      helperText: _nameAutoFilled
+                          ? S.of(context).name_autofilled_helper
                           : null,
                       filled: true,
                       fillColor: Colors.grey[50],
@@ -609,7 +621,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
-                        return 'Inserisci il nome del locale';
+                        return S.of(context).enter_place_name;
                       }
                       return null;
                     },
@@ -621,7 +633,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     children: [
                       Expanded(
                         child: _buildSelectablePill(
-                          label: 'Kebab 🌯',
+                          label: S.of(context).tag_kebab_pill,
                           isSelected: _tag == 'kebab',
                           onTap: () => setState(() => _tag = 'kebab'),
                         ),
@@ -629,9 +641,9 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildSelectablePill(
-                          label: 'Paninoteca 🥪',
-                          isSelected: _tag == 'paninoteca',
-                          onTap: () => setState(() => _tag = 'paninoteca'),
+                          label: S.of(context).tag_sandwich_pill,
+                          isSelected: _tag == 'sandwitch',
+                          onTap: () => setState(() => _tag = 'sandwitch'),
                         ),
                       ),
                     ],
@@ -649,12 +661,12 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     ),
                     child: SwitchListTile(
                       activeThumbColor: const Color(0xFFB06000),
-                      title: const Text(
-                        'Opzione Senza Glutine',
+                      title: Text(
+                        S.of(context).gluten_free_option,
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                       ),
-                      subtitle: const Text(
-                        'Dispone di piadina o opzioni certificate gluten-free',
+                      subtitle: Text(
+                        S.of(context).gluten_free_option_desc,
                         style: TextStyle(fontSize: 12),
                       ),
                       value: _glutenFree,
@@ -669,13 +681,13 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
 
             // 3. SEZIONE: Orari di Apertura
             _buildSectionCard(
-              title: '3. Orari di Apertura ⏰',
+              title: S.of(context).section_opening_hours,
               icon: Icons.access_time_filled_rounded,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Puoi lasciarli non specificati come standard, oppure scegliere un template o impostarli personalizzati:',
+                  Text(
+                    S.of(context).opening_hours_hint,
                     style: TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                   const SizedBox(height: 12),
@@ -684,32 +696,32 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     runSpacing: 8,
                     children: [
                       _buildPresetChip(
-                        label: 'Non specificati (Standard)',
+                        label: S.of(context).hours_preset_none,
                         preset: OpeningPreset.none,
                       ),
                       _buildPresetChip(
-                        label: 'Continuato (11-23) 🌯',
+                        label: S.of(context).hours_preset_continuous,
                         preset: OpeningPreset.continuato,
                       ),
                       _buildPresetChip(
-                        label: 'Notturno (11-02) 🌙',
+                        label: S.of(context).hours_preset_night,
                         preset: OpeningPreset.notturno,
                       ),
                       _buildPresetChip(
-                        label: 'Pranzo e Cena 🍽️',
+                        label: S.of(context).hours_preset_lunch_dinner,
                         preset: OpeningPreset.pranzoCena,
                       ),
                       _buildPresetChip(
-                        label: 'Personalizzati ⚙️',
+                        label: S.of(context).hours_preset_custom,
                         preset: OpeningPreset.personalizzato,
                       ),
                     ],
                   ),
                   if (_selectedPreset == OpeningPreset.none) ...[
                     const SizedBox(height: 8),
-                    const Text(
-                      'Nessun orario verrà salvato. La scheda mostrerà gli orari come "non disponibili".',
-                      style: TextStyle(fontSize: 11, color: Colors.black45, fontStyle: FontStyle.italic),
+                    Text(
+                      S.of(context).hours_none_note,
+                      style: const TextStyle(fontSize: 11, color: Colors.black45, fontStyle: FontStyle.italic),
                     ),
                   ],
                   if (_selectedPreset == OpeningPreset.personalizzato)
@@ -722,7 +734,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
 
             // 4. SEZIONE: Foto di Copertina
             _buildSectionCard(
-              title: '4. Foto del Locale (Opzionale)',
+              title: S.of(context).section_photo_optional,
               icon: Icons.camera_alt_rounded,
               child: Column(
                 children: [
@@ -772,7 +784,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                                   Icon(Icons.add_a_photo_outlined, size: 36, color: Colors.grey[600]),
                                   const SizedBox(height: 6),
                                   Text(
-                                    'Carica una foto dello spiedo o del locale',
+                                    S.of(context).upload_place_photo,
                                     style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                                   ),
                                 ],
@@ -787,7 +799,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
 
             // 5. SEZIONE: La Tua Prima Recensione
             _buildSectionCard(
-              title: '5. La Tua Recensione Iniziale',
+              title: S.of(context).section_initial_review,
               icon: Icons.rate_review_rounded,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -796,8 +808,8 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     controller: _reviewController,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      labelText: 'Descrizione / Recensione *',
-                      hintText: 'Racconta com\'è questo kebab: pane, carne, sapori...',
+                      labelText: S.of(context).description_review_label,
+                      hintText: S.of(context).description_review_hint,
                       filled: true,
                       fillColor: Colors.grey[50],
                       border: OutlineInputBorder(
@@ -806,35 +818,35 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
-                        return 'Scrivi un breve commento per presentare il kebabbaro';
+                        return S.of(context).description_review_required;
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 18),
 
-                  const Text(
-                    'Valutazione Generale (1 a 5)',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  Text(
+                    S.of(context).overall_rating_1_5,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   const SizedBox(height: 8),
-                  _buildSliderRow('Qualità', _quality, (v) => setState(() => _quality = v)),
-                  _buildSliderRow('Prezzo', _price, (v) => setState(() => _price = v)),
-                  _buildSliderRow('Quantità', _dimension, (v) => setState(() => _dimension = v)),
-                  _buildSliderRow('Menù', _menu, (v) => setState(() => _menu = v)),
-                  _buildSliderRow('Simpatia', _fun, (v) => setState(() => _fun = v)),
+                  _buildSliderRow(S.of(context).quality, _quality, (v) => setState(() => _quality = v)),
+                  _buildSliderRow(S.of(context).price, _price, (v) => setState(() => _price = v)),
+                  _buildSliderRow(S.of(context).quantity, _dimension, (v) => setState(() => _dimension = v)),
+                  _buildSliderRow(S.of(context).menu, _menu, (v) => setState(() => _menu = v)),
+                  _buildSliderRow(S.of(context).fun, _fun, (v) => setState(() => _fun = v)),
 
                   const SizedBox(height: 18),
-                  const Text(
-                    'Bilanciamento Ingredienti (1 a 10)',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  Text(
+                    S.of(context).ingredient_balance_1_10,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   const SizedBox(height: 8),
-                  _buildSliderRow('Carne', _meat, (v) => setState(() => _meat = v), max: 10, isInteger: true),
-                  _buildSliderRow('Yogurt', _yogurt, (v) => setState(() => _yogurt = v), max: 10, isInteger: true),
-                  _buildSliderRow('Piccante', _spicy, (v) => setState(() => _spicy = v), max: 10, isInteger: true),
-                  _buildSliderRow('Cipolla', _onion, (v) => setState(() => _onion = v), max: 10, isInteger: true),
-                  _buildSliderRow('Verdure', _vegetables, (v) => setState(() => _vegetables = v), max: 10, isInteger: true),
+                  _buildSliderRow(S.of(context).meat, _meat, (v) => setState(() => _meat = v), max: 10, isInteger: true),
+                  _buildSliderRow(S.of(context).yogurt, _yogurt, (v) => setState(() => _yogurt = v), max: 10, isInteger: true),
+                  _buildSliderRow(S.of(context).spicy, _spicy, (v) => setState(() => _spicy = v), max: 10, isInteger: true),
+                  _buildSliderRow(S.of(context).onion, _onion, (v) => setState(() => _onion = v), max: 10, isInteger: true),
+                  _buildSliderRow(S.of(context).vegetables, _vegetables, (v) => setState(() => _vegetables = v), max: 10, isInteger: true),
                 ],
               ),
             ),
@@ -859,8 +871,8 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                     : const Icon(Icons.rocket_launch_rounded),
                 label: _isSubmitting
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        'Aggiungi Kebabbaro a Kebabbo',
+                    : Text(
+                        S.of(context).add_kebab_to_kebabbo,
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                 onPressed: _isSubmitting ? null : _submitKebab,
@@ -873,15 +885,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
   }
 
   Widget _buildCustomOrariEditor() {
-    const days = [
-      'lunedì',
-      'martedì',
-      'mercoledì',
-      'giovedì',
-      'venerdì',
-      'sabato',
-      'domenica'
-    ];
+    const days = orariDayKeys;
 
     return Container(
       margin: const EdgeInsets.only(top: 12),
@@ -894,12 +898,13 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Imposta gli orari per ciascun giorno (es. 11:00-23:00 oppure "chiuso"):',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
+          Text(
+            S.of(context).custom_hours_hint,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
           ),
           const SizedBox(height: 8),
-          ...days.map((day) {
+          ...days.asMap().entries.map((entry) {
+            final day = entry.value;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
@@ -907,7 +912,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                   SizedBox(
                     width: 85,
                     child: Text(
-                      '${day[0].toUpperCase()}${day.substring(1)}:',
+                      '${localizedWeekdayName(context, entry.key)}:',
                       style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                   ),

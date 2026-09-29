@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/utils/maps_resolver.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class LocationPickerModal extends StatefulWidget {
   final LatLng? initialPosition;
@@ -30,7 +31,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
   final TextEditingController _searchController = TextEditingController();
 
   late LatLng _selectedPosition;
-  String _addressText = 'Tocca la mappa per selezionare il punto esatto';
+  String? _addressText;
   String? _placeName;
   String? _cityName;
   bool _isLoadingAddress = false;
@@ -111,9 +112,9 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
       setState(() {
         _addressText = details?['address'] ??
             'Lat: ${position.latitude.toStringAsFixed(5)}, Lng: ${position.longitude.toStringAsFixed(5)}';
-        if (details?['name'] != null && details!['name']!.isNotEmpty) {
-          _placeName = details['name'];
-        }
+        // Reset: un punto senza nome non deve ereditare il nome del precedente.
+        final name = details?['name'];
+        _placeName = (name != null && name.isNotEmpty) ? name : null;
         _cityName = details?['city'];
         _isLoadingAddress = false;
       });
@@ -173,7 +174,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
     final result = LocationDetails(
       lat: _selectedPosition.latitude,
       lng: _selectedPosition.longitude,
-      address: _addressText,
+      address: _addressText ?? '',
       placeName: _placeName,
       city: _cityName,
       googleMapsUrl: MapsResolver.buildGoogleMapsUrl(
@@ -193,8 +194,8 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        title: const Text(
-          'Seleziona sulla Mappa',
+        title: Text(
+          S.of(context).select_on_map,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -213,7 +214,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                     ),
                   )
                 : const Icon(Icons.my_location),
-            tooltip: 'Centra sulla mia posizione',
+            tooltip: S.of(context).center_on_my_location,
             onPressed: _locateUser,
           ),
         ],
@@ -305,7 +306,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                     controller: _searchController,
                     onChanged: _onSearchChanged,
                     decoration: InputDecoration(
-                      hintText: 'Cerca indirizzo o locale...',
+                      hintText: S.of(context).search_address_or_place,
                       hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
                       prefixIcon: const Icon(Icons.search, color: red),
                       suffixIcon: _isSearching
@@ -430,7 +431,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                             Text(
                               (_placeName != null && _placeName!.isNotEmpty)
                                   ? _placeName!
-                                  : 'Punto selezionato',
+                                  : S.of(context).selected_point,
                               style: TextStyle(
                                 fontSize: (_placeName != null && _placeName!.isNotEmpty) ? 14 : 11,
                                 fontWeight: FontWeight.bold,
@@ -449,7 +450,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                                     ),
                                   )
                                 : Text(
-                                    _addressText,
+                                    _addressText ?? S.of(context).tap_map_to_select,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -486,8 +487,8 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                         ),
                       ),
                       icon: const Icon(Icons.check_circle_outline, size: 20),
-                      label: const Text(
-                        'Conferma Questa Posizione',
+                      label: Text(
+                        S.of(context).confirm_this_location,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
