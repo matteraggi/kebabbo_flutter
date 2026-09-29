@@ -18,43 +18,97 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="La piattaforma numero uno per sapere i migliori kebab bolognesi">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>Kebabbo – I migliori kebab di Bologna: classifiche, recensioni e mappa</title>
+  <meta name="description" content="Kebabbo è la guida ai migliori kebab di Bologna: classifiche dello staff, recensioni della community, mappa dei kebabbari aperti ora, filtri per prezzo, qualità e distanza.">
+  <meta name="keywords" content="kebab Bologna, migliori kebab Bologna, kebabbari Bologna, recensioni kebab, döner Bologna, street food Bologna">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://kebabbo.top/">
+  <meta name="theme-color" content="#BB0000">
+
+  <!-- Open Graph / social previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Kebabbo">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:url" content="https://kebabbo.top/">
+  <meta property="og:title" content="Kebabbo – I migliori kebab di Bologna">
+  <meta property="og:description" content="Classifiche, recensioni e mappa dei migliori kebabbari di Bologna.">
+  <meta property="og:image" content="https://kebabbo.top/icons/Icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kebabbo – I migliori kebab di Bologna">
+  <meta name="twitter:description" content="Classifiche, recensioni e mappa dei migliori kebabbari di Bologna.">
+  <meta name="twitter:image" content="https://kebabbo.top/icons/Icon-512.png">
+
+  <!-- Android app -->
+  <meta name="google-play-app" content="app-id=com.canny.kebabbologna">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "Kebabbo",
+        "url": "https://kebabbo.top/",
+        "inLanguage": "it",
+        "description": "La guida ai migliori kebab di Bologna: classifiche, recensioni e mappa."
+      },
+      {
+        "@type": "MobileApplication",
+        "name": "Kebabbo",
+        "operatingSystem": "Android",
+        "applicationCategory": "LifestyleApplication",
+        "installUrl": "https://play.google.com/store/apps/details?id=com.canny.kebabbologna",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+      }
+    ]
+  }
+  </script>
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Kebabbo">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>Kebabbo</title>
   <link rel="manifest" href="manifest.json">
-  <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '{your-app-id}', // Replace with your Facebook App ID
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v14.0' // Replace with the Facebook API version you want to use
-      });
-      
-      FB.AppEvents.logPageView();   
-    };
 
-    (function(d, s, id){
-       var js, fjs = d.getElementsByTagName(s)[0];
-       if (d.getElementById(id)) {return;}
-       js = d.createElement(s); js.id = id;
-       js.src = "https://connect.facebook.net/en_US/sdk.js";
-       fjs.parentNode.insertBefore(js, fjs);
-     }(document, 'script', 'facebook-jssdk'));
-  </script> 
-  
+  <style>
+    html, body { margin: 0; background: #FFBA1C; }
+    #seo-splash {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 24px; box-sizing: border-box;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #3a0000; background: #FFBA1C;
+    }
+    #seo-splash img { width: 96px; height: 96px; }
+    #seo-splash h1 { font-size: 22px; margin: 16px 0 8px; color: #BB0000; }
+    #seo-splash p { max-width: 460px; margin: 4px 0; font-size: 15px; line-height: 1.4; }
+    #seo-splash a { color: #BB0000; font-weight: 600; }
+  </style>
 </head>
 <body>
+  <!-- Contenuto HTML reale per crawler e anteprime (Flutter disegna su canvas).
+       Viene rimosso quando l'app Flutter mostra il primo frame. -->
+  <main id="seo-splash">
+    <img src="icons/Icon-192.png" alt="Logo Kebabbo">
+    <h1>Kebabbo – I migliori kebab di Bologna</h1>
+    <p>Classifiche dello staff, recensioni della community e mappa dei kebabbari di Bologna: trova il kebab perfetto vicino a te, aperto ora, per prezzo, qualità e ingredienti.</p>
+    <p>Scrivi le tue recensioni, colleziona medaglie e carte Kebabbo.</p>
+    <p><a href="https://play.google.com/store/apps/details?id=com.canny.kebabbologna">Scarica l'app per Android</a> · <a href="/privacy-policy">Privacy Policy</a></p>
+  </main>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var splash = document.getElementById('seo-splash');
+      if (splash) splash.remove();
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

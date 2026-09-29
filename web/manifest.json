@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#FFBA1C",
     "theme_color": "#BB0000",
-    "description": "La vera guida per i miglior kebab di Bologna",
+    "description": "La guida ai migliori kebab di Bologna: classifiche, recensioni e mappa",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
@@ -30,6 +30,13 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "related_applications": [
+        {
+            "platform": "play",
+            "url": "https://play.google.com/store/apps/details?id=com.canny.kebabbologna",
+            "id": "com.canny.kebabbologna"
         }
     ]
 }
