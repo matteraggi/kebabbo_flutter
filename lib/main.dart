@@ -19,9 +19,9 @@ import 'generated/l10n.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:kebabbo_flutter/utils/notifications.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:flutter/foundation.dart'; // Import for kIsWeb
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 
 const Color red = Color.fromRGBO(187, 0, 0, 1.0);
@@ -33,6 +33,7 @@ const firebaseKey = String.fromEnvironment('FIREBASE_KEY');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  registerTimeagoLocales();
 
   if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
     debugPrint('⚠️ ATTENZIONE: variabili SUPABASE mancanti nel file .env');
@@ -113,15 +114,17 @@ class MyApp extends StatelessWidget {
         Locale('de', ''), // German
         Locale('pt', ''), // Portuguese
       ],
-      // Locale resolution to prefer system language, falling back to
-      // English (not just the first entry in the list) for unsupported
-      // languages such as Greek.
-      localeResolutionCallback: (locale, supportedLocales) {
-        return supportedLocales.firstWhere(
-          (supportedLocale) =>
-              supportedLocale.languageCode == locale?.languageCode,
-          orElse: () => const Locale('en', ''),
-        );
+      // Scorre tutte le lingue preferite del dispositivo (non solo la prima):
+      // es. [el, it] -> italiano. Se nessuna è supportata, inglese.
+      localeListResolutionCallback: (locales, supportedLocales) {
+        for (final locale in locales ?? const <Locale>[]) {
+          for (final supported in supportedLocales) {
+            if (supported.languageCode == locale.languageCode) {
+              return supported;
+            }
+          }
+        }
+        return const Locale('en', '');
       },
       home: MyHomePage(
         otherPaths: otherPaths,
@@ -158,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 0; // Home page by default
   final ValueNotifier<Position?> _currentPositionNotifier =
       ValueNotifier<Position?>(null);
-  late Stream<Position> _positionStream;
+  StreamSubscription<Position>? _positionSubscription;
 
   final GlobalKey<MapPageState> _mapPageKey = GlobalKey<MapPageState>();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -168,8 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     otherPaths = widget.otherPaths;
-    _checkFirstTimeOpen();
-    _checkIfAppInstalled();
+    _showStartupDialogs();
     _getLocation();
     if (!kIsWeb) {
       requestNotificationPermissions(
@@ -188,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Sessione scaduta. Effettua nuovamente il login.'),
+              content: Text(S.of(context).session_expired),
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
@@ -196,29 +198,63 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
 
-    _positionStream = Geolocator.getPositionStream(
+  }
+
+  // Avviato solo dopo aver ottenuto il permesso: altrimenti lo stream emette
+  // un errore non gestito (PermissionDeniedException).
+  void _startPositionStream() {
+    _positionSubscription?.cancel();
+    _positionSubscription = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 10,
       ),
+    ).listen(
+      (Position position) {
+        _currentPositionNotifier.value = position;
+        if (selectedIndex == 1 && _mapPageKey.currentState != null) {
+          _mapPageKey.currentState!.updatePosition(position);
+        }
+      },
+      onError: (e) => debugPrint('Position stream error: $e'),
     );
-    _positionStream.listen((Position position) {
-      _currentPositionNotifier.value = position;
-      if (selectedIndex == 1 && _mapPageKey.currentState != null) {
-        _mapPageKey.currentState!.updatePosition(position);
-      }
-    });
   }
 
-  Future<void> _checkFirstTimeOpen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+  // Al massimo un dialog per visita: benvenuto alla prima apertura,
+  // altrimenti (solo web su Android) l'invito ad aprire l'app.
+  Future<void> _showStartupDialogs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-    if (isFirstTime && mounted) {
-      // Show first-time dialog
+    if (isFirstTime) {
+      // Salvato prima di mostrare il dialog, così non riappare se l'app
+      // viene chiusa con il dialog aperto.
+      await prefs.setBool('isFirstTime', false);
+      if (!mounted) return;
       showFirstTimeDialog(context);
-      prefs.setBool('isFirstTime', false);
+      return;
     }
+
+    await _maybeShowOpenInAppPrompt(prefs);
+  }
+
+  static const _openInAppPromptKey = 'openInAppPromptShownAt';
+
+  Future<void> _maybeShowOpenInAppPrompt(SharedPreferences prefs) async {
+    // Un sito web non può sapere se l'app è installata: proponiamo di aprirla
+    // (con fallback al Play Store) al massimo una volta ogni 14 giorni.
+    if (!kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
+    if (otherPaths != null) return; // es. reset password / privacy policy
+
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final lastShown = prefs.getInt(_openInAppPromptKey);
+    if (lastShown != null &&
+        now - lastShown < const Duration(days: 14).inMilliseconds) {
+      return;
+    }
+    await prefs.setInt(_openInAppPromptKey, now);
+    if (!mounted) return;
+    showAppInstallDialog(context);
   }
 
   Future<void> _getLocation() async {
@@ -229,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _currentPositionNotifier.value = null;
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location services are disabled.')),
+            SnackBar(content: Text(S.of(context).location_services_disabled)),
           );
         }
         return;
@@ -241,15 +277,20 @@ class _MyHomePageState extends State<MyHomePage> {
         // If permission is still denied after asking, we will throw an error
         // that our catch block will handle.
         if (permission == LocationPermission.denied) {
-          throw Exception('Location permissions are denied.');
+          if (!mounted) return;
+          _showLocationError(S.of(context).location_permission_denied);
+          return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        throw Exception('Location permissions are permanently denied.');
+        if (!mounted) return;
+        _showLocationError(S.of(context).location_permission_denied_forever);
+        return;
       }
 
       // If we have permission, get the location
+      _startPositionStream();
       Position position = await Geolocator.getCurrentPosition();
       _currentPositionNotifier.value = position;
 
@@ -258,43 +299,26 @@ class _MyHomePageState extends State<MyHomePage> {
         _mapPageKey.currentState!.updatePosition(position);
       }
     } catch (e) {
-      // If any error occurs (denied permission, etc.), set position to null
-      // and show the error message.
+      // If any error occurs, set position to null.
       _currentPositionNotifier.value = null;
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
-      }
       debugPrint("Error getting location: $e");
     }
+  }
+
+  void _showLocationError(String message) {
+    _currentPositionNotifier.value = null;
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
   void dispose() {
     _authSubscription.cancel();
+    _positionSubscription?.cancel();
+    _currentPositionNotifier.dispose();
     super.dispose();
-  }
-
-  Future<void> _checkIfAppInstalled() async {
-    if (!kIsWeb) return; // Only check on web!
-
-    String appUrl =
-        'intent://kebabbo.top/path#Intent;scheme=https;package=com.canny.kebabbologna;end';
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      try {
-        if (await canLaunchUrl(Uri.parse(appUrl))) {
-          await launchUrl(Uri.parse(appUrl));
-        } else {
-          if (!mounted) return;
-          showAppInstallDialog(context);
-        }
-      } catch (e) {
-        if (!mounted) return;
-        showAppInstallDialog(context);
-      }
-    }
   }
 
   void _showContributeSheet(BuildContext context) {
@@ -321,8 +345,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               const SizedBox(height: 18),
-              const Text(
-                "Contribuisci a Kebabbo",
+              Text(
+                S.of(context).contribute_title,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -331,7 +355,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 6),
               Text(
-                "Aiutaci a mappare e recensire i migliori kebabbari!",
+                S.of(context).contribute_subtitle,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -380,9 +404,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
-                              "Aggiungi un Kebabbaro",
+                              S.of(context).add_kebab_place,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -391,7 +415,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             SizedBox(height: 2),
                             Text(
-                              "Inserisci un nuovo locale sulla mappa",
+                              S.of(context).add_kebab_place_subtitle,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 13,
@@ -448,9 +472,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
-                              "Scrivi una Recensione",
+                              S.of(context).write_review_title,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -459,7 +483,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             SizedBox(height: 2),
                             Text(
-                              "Vota la qualità, la carne e le salse",
+                              S.of(context).write_review_subtitle,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 13,
@@ -522,7 +546,7 @@ class _MyHomePageState extends State<MyHomePage> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.kebab_dining),
-            label: 'Home',
+            label: S.of(context).nav_home,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.map),
@@ -544,15 +568,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: const Icon(Icons.add, color: red, size: 22),
             ),
-            label: 'Aggiungi',
+            label: S.of(context).nav_add,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.comment),
-            label: 'Feed',
+            label: S.of(context).nav_feed,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person),
-            label: 'Account',
+            label: S.of(context).nav_account,
           ),
         ],
         backgroundColor: red,
@@ -615,8 +639,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildDefaultPage() {
     // Return a default widget for when otherPaths is not null but doesn't match known paths
-    return const Center(
-      child: Text("Page Not Found"),
+    return Center(
+      child: Text(S.of(context).page_not_found),
     ); // Or any other appropriate default
   }
 }

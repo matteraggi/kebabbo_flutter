@@ -22,8 +22,9 @@ class GoogleLoginButton extends StatelessWidget {
         '1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com';
     const iosClientId = 'my-ios.apps.googleusercontent.com';
 
+    // TODO: iosClientId è un segnaposto: serve il vero client ID iOS da Google Cloud.
     final GoogleSignIn googleSignIn = GoogleSignIn(
-      clientId: iosClientId,
+      clientId: Platform.isIOS ? iosClientId : null,
       serverClientId: webClientId,
     );
     final googleUser = await googleSignIn.signIn();

@@ -64,6 +64,7 @@ void showAppInstallDialog(BuildContext context) {
     btnOkColor: red,
     btnCancelColor: Colors.black,
     btnCancelText: S.of(context).no_thanks,
+    btnOkText: S.of(context).open_in_app,
     btnCancelOnPress: () {},
     btnOkOnPress: () {
       openApp();
