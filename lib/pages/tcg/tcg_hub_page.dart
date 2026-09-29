@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/pages/tcg/carousel.dart';
 import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class TcgHubPage extends StatefulWidget {
   const TcgHubPage({super.key});
@@ -146,11 +147,11 @@ class _TcgHubPageState extends State<TcgHubPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  children: const [
+                  children: [
                     Icon(Icons.style, color: Color(0xFFFFD700), size: 26),
                     SizedBox(width: 8),
                     Text(
-                      "Collezione Carte",
+                      S.of(context).card_collection,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -206,8 +207,8 @@ class _TcgHubPageState extends State<TcgHubPage> {
                 const Spacer(),
                 Text(
                   _collectedCardsCount == _totalCardsCount && _totalCardsCount > 0
-                      ? "Tutte trovate! 🏆"
-                      : "${_totalCardsCount - _collectedCardsCount} rimanenti",
+                      ? S.of(context).all_found
+                      : S.of(context).remaining_count((_totalCardsCount - _collectedCardsCount).toString()),
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.75),
                     fontSize: 13,
@@ -236,7 +237,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
                     color: const Color(0xFFFFD700).withValues(alpha: 0.9)),
                 const SizedBox(width: 6),
                 Text(
-                  "Tocca per sfogliare l'album completo ›",
+                  S.of(context).tap_to_browse_album,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 12,
@@ -264,8 +265,8 @@ class _TcgHubPageState extends State<TcgHubPage> {
         return Column(
           children: [
             const SizedBox(height: 6),
-            const Text(
-              "Spacchetta Nuove Carte",
+            Text(
+              S.of(context).unpack_new_cards,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w900,
@@ -275,7 +276,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
             ),
             const SizedBox(height: 4),
             Text(
-              "Ricarica 1 pacchetto ogni 12h (max 2)",
+              S.of(context).recharge_info,
               style: TextStyle(
                 fontSize: 13,
                 color: Colors.black54,
@@ -299,7 +300,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              "Nessun pacchetto pronto. Il prossimo sarà disponibile tra $timerText.",
+                              S.of(context).no_pack_ready_timer(timerText),
                             ),
                             duration: const Duration(seconds: 2),
                           ),
@@ -413,19 +414,19 @@ class _TcgHubPageState extends State<TcgHubPage> {
       children: [
         // Slot 1
         _buildSlotItem(
-          title: "1° Pacchetto",
+          title: S.of(context).first_pack_slot,
           isReady: availablePacks >= 1,
-          statusText: availablePacks >= 1 ? "Pronto!" : timerText,
+          statusText: availablePacks >= 1 ? S.of(context).ready : timerText,
           icon: availablePacks >= 1 ? Icons.check_circle : Icons.hourglass_top,
         ),
         const SizedBox(width: 12),
         // Slot 2
         _buildSlotItem(
-          title: "2° Pacchetto",
+          title: S.of(context).second_pack_slot,
           isReady: availablePacks >= 2,
           statusText: availablePacks >= 2
-              ? "Pronto!"
-              : (availablePacks == 1 ? timerText : "In coda"),
+              ? S.of(context).ready
+              : (availablePacks == 1 ? timerText : S.of(context).queued),
           icon: availablePacks >= 2
               ? Icons.check_circle
               : (availablePacks == 1 ? Icons.hourglass_top : Icons.lock_outline),
@@ -510,7 +511,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    "Nessun pacchetto pronto. Il prossimo sarà disponibile tra $timerText.",
+                    S.of(context).no_pack_ready_timer(timerText),
                   ),
                   duration: const Duration(seconds: 2),
                 ),
@@ -527,9 +528,9 @@ class _TcgHubPageState extends State<TcgHubPage> {
         await _loadData();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Pacchetti ricaricati al massimo: 2 / 2 pronti! 📦✨"),
-              duration: Duration(seconds: 2),
+            SnackBar(
+              content: Text(S.of(context).packs_full),
+              duration: const Duration(seconds: 2),
             ),
           );
         }
@@ -562,9 +563,9 @@ class _TcgHubPageState extends State<TcgHubPage> {
             Text(
               hasPacks
                   ? (availablePacks > 1
-                      ? "Apri Pacchetto (2 Pronti!)"
-                      : "Apri Pacchetto")
-                  : "Nessun pacchetto pronto",
+                      ? S.of(context).open_pack_two_ready
+                      : S.of(context).open_pack)
+                  : S.of(context).no_pack_ready,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,

@@ -7,11 +7,14 @@ import 'package:fuzzy/fuzzy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image/image.dart' as img;
 import 'package:kebabbo_flutter/main.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 List<Map<String, dynamic>> fuzzySearchAndSort(List<Map<String, dynamic>> items,
     String query, String searchKey, bool showOnlyOpen, bool showOnlyKebab) {
-  List<Map<String, dynamic>> tempList = items;
+  // Copia: removeWhere non deve modificare la lista del chiamante.
+  List<Map<String, dynamic>> tempList = List.of(items);
   if (query.isEmpty) {
     if (showOnlyOpen) {
       tempList.removeWhere((kebab) => !isKebabOpen(kebab['orari_apertura']));
@@ -125,23 +128,63 @@ String generateHash(String kebabberName) {
   return digest.toString();
 }
 
+/// Chiavi (in italiano) usate nel JSON `orari_apertura`, da lunedì a domenica.
+const List<String> orariDayKeys = [
+  'lunedì',
+  'martedì',
+  'mercoledì',
+  'giovedì',
+  'venerdì',
+  'sabato',
+  'domenica',
+];
+
+/// Normalizza `orari_apertura`: accetta sia una Map sia una stringa JSON
+/// (righe salvate in passato come stringa jsonb).
+Map<String, dynamic>? parseOrari(dynamic orariApertura) {
+  if (orariApertura is Map) return Map<String, dynamic>.from(orariApertura);
+  if (orariApertura is String && orariApertura.trim().isNotEmpty) {
+    try {
+      final decoded = jsonDecode(orariApertura);
+      if (decoded is Map) return Map<String, dynamic>.from(decoded);
+    } catch (_) {}
+  }
+  return null;
+}
+
+/// Nome del giorno localizzato per un indice 0 (lunedì) .. 6 (domenica).
+String localizedWeekdayName(BuildContext context, int index) {
+  final locale = Localizations.localeOf(context).languageCode;
+  // 1 gennaio 2024 era un lunedì.
+  final name = DateFormat.EEEE(locale).format(DateTime(2024, 1, 1 + index));
+  return name.isEmpty ? name : name[0].toUpperCase() + name.substring(1);
+}
+
+/// "3 giorni fa" / "3 days ago" nella lingua corrente dell'app.
+String formatTimeAgo(BuildContext context, DateTime date) {
+  final locale = Localizations.localeOf(context).languageCode;
+  return timeago.format(date, locale: locale);
+}
+
+/// Registra i messaggi timeago per tutte le lingue supportate (en è già incluso).
+void registerTimeagoLocales() {
+  timeago.setLocaleMessages('it', timeago.ItMessages());
+  timeago.setLocaleMessages('es', timeago.EsMessages());
+  timeago.setLocaleMessages('fr', timeago.FrMessages());
+  timeago.setLocaleMessages('de', timeago.DeMessages());
+  timeago.setLocaleMessages('pt', timeago.PtBrMessages());
+}
+
 bool isKebabOpen(dynamic orariApertura) {
-  if (orariApertura == null || orariApertura is! Map) {
+  final orari = parseOrari(orariApertura);
+  if (orari == null) {
     return false;
   }
 
   final now = DateTime.now();
   final int nowMinutes = now.hour * 60 + now.minute;
 
-  const daysItalian = [
-    'lunedì',
-    'martedì',
-    'mercoledì',
-    'giovedì',
-    'venerdì',
-    'sabato',
-    'domenica',
-  ];
+  const daysItalian = orariDayKeys;
 
   final int todayIndex = now.weekday - 1; // 0 for lunedì, 6 for domenica
   final String todayName = daysItalian[todayIndex];
@@ -207,13 +250,13 @@ bool isKebabOpen(dynamic orariApertura) {
   }
 
   // 1. Controlla il giorno corrente
-  final todaySchedule = orariApertura[todayName]?.toString();
+  final todaySchedule = orari[todayName]?.toString();
   if (checkDaySlots(todaySchedule, isYesterday: false)) {
     return true;
   }
 
   // 2. Controlla eventuale turno notturno iniziato ieri
-  final yesterdaySchedule = orariApertura[yesterdayName]?.toString();
+  final yesterdaySchedule = orari[yesterdayName]?.toString();
   if (checkDaySlots(yesterdaySchedule, isYesterday: true)) {
     return true;
   }

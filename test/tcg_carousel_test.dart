@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kebabbo_flutter/pages/tcg/rotation_scene_v1.dart';
 
+import 'test_helpers.dart';
+
 void main() {
   group('RotationSceneV1 (CoverFlow Carousel) Tests', () {
     testWidgets('Renders CoverFlow carousel with cards',
@@ -13,7 +15,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
             body: RotationSceneV1(imagePaths: testCards),
           ),
@@ -36,7 +38,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
             body: RotationSceneV1(imagePaths: testCards),
           ),

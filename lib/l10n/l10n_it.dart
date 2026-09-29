@@ -509,7 +509,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'La password deve essere di almeno 6 caratteri';
 
   @override
-  String get email_required => 'l\'Email è obbligatoria';
+  String get email_required => 'L\'email è obbligatoria';
 
   @override
   String get send_reset_email => 'Invia email di reimpostazione';
@@ -542,10 +542,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get app_is_installed_description =>
-      'Kebabbo è già installato sul tuo dispositivo. Vuoi aprirlo?';
+      'Aprilo nell\'app per un\'esperienza migliore. Se non ce l\'hai ancora, ti portiamo su Google Play.';
 
   @override
-  String get app_is_installed => 'App installata';
+  String get app_is_installed => 'Kebabbo è anche un\'app!';
 
   @override
   String get single_card => 'Carta Kebabbo';
@@ -576,7 +576,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Devi essere autenticato per commentare.';
 
   @override
-  String get commento_vuoto => 'il testo del commento non può essere vuoto.';
+  String get commento_vuoto => 'Il testo del commento non può essere vuoto.';
 
   @override
   String get found_all_cards => 'Tutte le carte trovate.';
@@ -606,7 +606,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get followers => 'Followers';
 
   @override
-  String get following => 'Followed';
+  String get following => 'Seguiti';
 
   @override
   String get error_processing_image =>
@@ -751,7 +751,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get fun_exclamation => 'fun!';
 
   @override
-  String get kebabbo_review => 'Kebabbo Review';
+  String get kebabbo_review => 'Recensione Kebabbo';
 
   @override
   String get review_this_kebab => 'Recensisci questo Kebab';
@@ -830,4 +830,779 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get already_have_an_account => 'Hai già un account? Accedi';
+
+  @override
+  String get location_services_disabled =>
+      'I servizi di localizzazione sono disattivati.';
+
+  @override
+  String get location_permission_denied => 'Permesso di localizzazione negato.';
+
+  @override
+  String get location_permission_denied_forever =>
+      'Permesso di localizzazione negato in modo permanente. Puoi attivarlo dalle impostazioni.';
+
+  @override
+  String get session_expired =>
+      'Sessione scaduta. Effettua nuovamente il login.';
+
+  @override
+  String get contribute_title => 'Contribuisci a Kebabbo';
+
+  @override
+  String get contribute_subtitle =>
+      'Aiutaci a mappare e recensire i migliori kebabbari!';
+
+  @override
+  String get add_kebab_place => 'Aggiungi un Kebabbaro';
+
+  @override
+  String get add_kebab_place_subtitle =>
+      'Inserisci un nuovo locale sulla mappa';
+
+  @override
+  String get write_review_title => 'Scrivi una Recensione';
+
+  @override
+  String get write_review_subtitle => 'Vota la qualità, la carne e le salse';
+
+  @override
+  String get nav_home => 'Home';
+
+  @override
+  String get nav_add => 'Aggiungi';
+
+  @override
+  String get nav_feed => 'Feed';
+
+  @override
+  String get nav_account => 'Account';
+
+  @override
+  String get page_not_found => 'Pagina non trovata';
+
+  @override
+  String get maps_link_name_and_coords_found =>
+      'Coordinate e nome rilevati dal link Maps! 📍';
+
+  @override
+  String get maps_link_coords_found =>
+      'Coordinate rilevate con successo dal link Maps! 📍';
+
+  @override
+  String get maps_link_failed =>
+      'Impossibile estrarre le coordinate dal link. Usa \"Scegli sulla Mappa\".';
+
+  @override
+  String get select_location_first =>
+      'Seleziona la posizione sulla mappa prima di continuare! 📍';
+
+  @override
+  String error_saving(String error) {
+    return 'Errore durante il salvataggio: $error';
+  }
+
+  @override
+  String get section_location => '1. Posizione sulla Mappa 📍';
+
+  @override
+  String get section_location_hint =>
+      'Tocca per posizionare il pin o cercare il locale. Coordinate, indirizzo e nome verranno estratti automaticamente!';
+
+  @override
+  String get edit_location_on_map => 'Modifica Posizione sulla Mappa';
+
+  @override
+  String get choose_on_map_recommended => 'Scegli sulla Mappa (Consigliato)';
+
+  @override
+  String city_label(String city) {
+    return 'Città: $city';
+  }
+
+  @override
+  String get location_selected => 'Posizione selezionata';
+
+  @override
+  String get paste_maps_link_prompt =>
+      'Hai già un link di Google Maps? Incollalo qui';
+
+  @override
+  String get google_maps_link => 'Link Google Maps';
+
+  @override
+  String get extract => 'Estrai';
+
+  @override
+  String get section_name_category => '2. Nome e Categoria 🌯';
+
+  @override
+  String get kebab_place_name_label => 'Nome del Kebabbaro *';
+
+  @override
+  String get kebab_place_name_hint => 'Es. Bella Istanbul 3';
+
+  @override
+  String get name_autofilled_helper =>
+      'Compilato automaticamente dalla mappa (modificalo pure)';
+
+  @override
+  String get enter_place_name => 'Inserisci il nome del locale';
+
+  @override
+  String get tag_kebab_pill => 'Kebab 🌯';
+
+  @override
+  String get tag_sandwich_pill => 'Paninoteca 🥪';
+
+  @override
+  String get gluten_free_option => 'Opzione Senza Glutine';
+
+  @override
+  String get gluten_free_option_desc =>
+      'Dispone di piadina o opzioni certificate gluten-free';
+
+  @override
+  String get section_opening_hours => '3. Orari di Apertura ⏰';
+
+  @override
+  String get opening_hours_hint =>
+      'Puoi lasciarli non specificati come standard, oppure scegliere un template o impostarli personalizzati:';
+
+  @override
+  String get hours_preset_none => 'Non specificati (Standard)';
+
+  @override
+  String get hours_preset_continuous => 'Continuato (11-23) 🌯';
+
+  @override
+  String get hours_preset_night => 'Notturno (11-02) 🌙';
+
+  @override
+  String get hours_preset_lunch_dinner => 'Pranzo e Cena 🍽️';
+
+  @override
+  String get hours_preset_custom => 'Personalizzati ⚙️';
+
+  @override
+  String get hours_none_note => 'Nessun orario verrà salvato.';
+
+  @override
+  String get custom_hours_hint =>
+      'Imposta gli orari per ciascun giorno (es. 11:00-23:00 oppure \"chiuso\"):';
+
+  @override
+  String get section_photo_optional => '4. Foto del Locale (Opzionale)';
+
+  @override
+  String get upload_place_photo => 'Carica una foto dello spiedo o del locale';
+
+  @override
+  String get section_initial_review => '5. La Tua Recensione Iniziale';
+
+  @override
+  String get description_review_label => 'Descrizione / Recensione *';
+
+  @override
+  String get description_review_hint =>
+      'Racconta com\'è questo kebab: pane, carne, sapori...';
+
+  @override
+  String get description_review_required =>
+      'Scrivi un breve commento per presentare il kebabbaro';
+
+  @override
+  String get overall_rating_1_5 => 'Valutazione Generale (1 a 5)';
+
+  @override
+  String get ingredient_balance_1_10 => 'Bilanciamento Ingredienti (1 a 10)';
+
+  @override
+  String get add_kebab_to_kebabbo => 'Aggiungi Kebabbaro a Kebabbo';
+
+  @override
+  String get added_to_favorites => 'Aggiunto ai preferiti ❤️';
+
+  @override
+  String get removed_from_favorites => 'Rimosso dai preferiti';
+
+  @override
+  String get remove_from_favorites => 'Rimuovi dai preferiti';
+
+  @override
+  String get save_to_favorites => 'Salva nei preferiti';
+
+  @override
+  String get map_not_available => 'Mappa non disponibile per questo kebabbaro';
+
+  @override
+  String get login_to_post_photos => 'Effettua il login per pubblicare foto';
+
+  @override
+  String get select_photo_first => 'Seleziona una foto prima di pubblicare';
+
+  @override
+  String get photo_added => 'Foto aggiunta con successo! 📸';
+
+  @override
+  String upload_error(String error) {
+    return 'Errore durante il caricamento: $error';
+  }
+
+  @override
+  String add_photo_to(String name) {
+    return 'Aggiungi Foto a $name';
+  }
+
+  @override
+  String get tap_to_select_photo => 'Tocca per selezionare una foto';
+
+  @override
+  String get photo_caption_hint =>
+      'Scrivi un commento o descrivi il tuo kebab...';
+
+  @override
+  String get publish_photo => 'Pubblica Foto';
+
+  @override
+  String get kebabbo_user => 'Utente Kebabbo';
+
+  @override
+  String get kebab_place_not_found => 'Kebabbaro non trovato o rimosso.';
+
+  @override
+  String get review_action => 'Recensisci';
+
+  @override
+  String get photo => 'Foto';
+
+  @override
+  String get tab_overview => 'Panoramica';
+
+  @override
+  String tab_photos(String count) {
+    return 'Foto ($count)';
+  }
+
+  @override
+  String tab_reviews(String count) {
+    return 'Recensioni ($count)';
+  }
+
+  @override
+  String get kebabbo_staff_review => 'La recensione di Kebabbo';
+
+  @override
+  String get rating_title => 'Valutazione';
+
+  @override
+  String community_count(String count) {
+    return 'Community ($count)';
+  }
+
+  @override
+  String get ingredient_balance => 'Bilanciamento Ingredienti';
+
+  @override
+  String get opening_hours => 'Orari di Apertura';
+
+  @override
+  String get no_photos_yet => 'Nessuna foto ancora';
+
+  @override
+  String get no_photos_yet_desc =>
+      'Sii il primo a condividere una foto della tua piadina o del tuo piatto in questo locale!';
+
+  @override
+  String get upload_first_photo => 'Carica la prima foto';
+
+  @override
+  String get user_generic => 'Utente';
+
+  @override
+  String get no_reviews_yet_desc =>
+      'Condividi la tua esperienza in questo kebabbaro con tutta la community!';
+
+  @override
+  String get write_first_review => 'Scrivi la prima recensione';
+
+  @override
+  String based_on_reviews(String count) {
+    return 'Basato su $count recensioni';
+  }
+
+  @override
+  String get select_place_to_review =>
+      'Seleziona il kebabbaro da recensire! 🌯';
+
+  @override
+  String error_sending_review(String error) {
+    return 'Errore invio recensione: $error';
+  }
+
+  @override
+  String get choose_place => 'Scegli il Kebabbaro';
+
+  @override
+  String get change => 'Cambia';
+
+  @override
+  String get search_kebabbo_places => 'Cerca tra i locali di Kebabbo';
+
+  @override
+  String get search_places_hint => 'Es. Istanbul, Agra, King...';
+
+  @override
+  String get no_place_found_add_it =>
+      'Nessun locale trovato. Se è nuovo, usa \"Aggiungi un Kebabbaro\"!';
+
+  @override
+  String get your_experience => 'La Tua Esperienza';
+
+  @override
+  String get comment_review_label => 'Commento / Recensione *';
+
+  @override
+  String get comment_review_hint =>
+      'Cosa ti è piaciuto di più? Consigli qualche salsa o menù?';
+
+  @override
+  String get comment_review_required =>
+      'Scrivi un breve commento sulla tua esperienza';
+
+  @override
+  String get add_dish_photo_optional => 'Aggiungi Foto al Piatto (Opzionale)';
+
+  @override
+  String get publish_review => 'Pubblica Recensione';
+
+  @override
+  String get tap_map_to_select =>
+      'Tocca la mappa per selezionare il punto esatto';
+
+  @override
+  String get select_on_map => 'Seleziona sulla Mappa';
+
+  @override
+  String get center_on_my_location => 'Centra sulla mia posizione';
+
+  @override
+  String get search_address_or_place => 'Cerca indirizzo o locale...';
+
+  @override
+  String get selected_point => 'Punto selezionato';
+
+  @override
+  String get confirm_this_location => 'Conferma Questa Posizione';
+
+  @override
+  String get map_style_google_road => 'Google Stradale';
+
+  @override
+  String get map_style_google_satellite => 'Google Satellite';
+
+  @override
+  String change_map_style(String style) {
+    return 'Cambia mappa: $style';
+  }
+
+  @override
+  String get map_style_satellite_short => 'Satellite';
+
+  @override
+  String get map_style_road_short => 'Stradale';
+
+  @override
+  String users_count(String count) {
+    return 'Utenti ($count)';
+  }
+
+  @override
+  String get community_review => 'Recensione Community';
+
+  @override
+  String get no_user_reviews_yet =>
+      'Nessun utente ha ancora recensito questo locale!';
+
+  @override
+  String get directions => 'Indicazioni';
+
+  @override
+  String get login_tagline =>
+      'Entra nella community per scoprire e recensire i migliori kebab';
+
+  @override
+  String get no_account_question => 'Non hai un account?';
+
+  @override
+  String get signup_tagline =>
+      'Crea il tuo profilo e inizia a recensire i kebab della tua città';
+
+  @override
+  String get have_account_question => 'Hai già un account?';
+
+  @override
+  String password_reset_failed(String error) {
+    return 'Reimpostazione password non riuscita: $error';
+  }
+
+  @override
+  String get objectives_and_medals => 'Obiettivi & Medaglie';
+
+  @override
+  String get no_more_kebabs_to_recommend =>
+      'Non ci sono altri kebab disponibili da consigliare.';
+
+  @override
+  String get reroll => 'Rilancia';
+
+  @override
+  String get see_hours_photos_reviews => 'Vedi orari, foto e recensioni';
+
+  @override
+  String get upload => 'Carica';
+
+  @override
+  String get ingredient_amounts_caps => 'QUANTITÀ INGREDIENTI';
+
+  @override
+  String error_deleting_post(String error) {
+    return 'Errore durante l\'eliminazione del post: $error';
+  }
+
+  @override
+  String get privacy_policy_load_error =>
+      'Errore nel caricamento della Privacy Policy';
+
+  @override
+  String get cooking_title => 'Preparazione Kebab';
+
+  @override
+  String get cooking_title_reroll => 'Ricerca Alternativa';
+
+  @override
+  String get cooking_step_1 => '🔥 Scaldo la piadina...';
+
+  @override
+  String get cooking_step_2 => '🥩 Taglio la carne allo spiedo...';
+
+  @override
+  String get cooking_step_3 => '🥗 Aggiungo verdure fresche e salse...';
+
+  @override
+  String get cooking_step_4 => '🌯 Arrotolo a regola d\'arte...';
+
+  @override
+  String get cooking_step_5 => '🔍 Cerco il miglior kebab per te...';
+
+  @override
+  String get reroll_step_1 => '👨‍🍳 Nuova combinazione in arrivo...';
+
+  @override
+  String get reroll_step_2 => '🔥 Bilancio spezie e cottura...';
+
+  @override
+  String get reroll_step_3 => '✨ Cerco un\'altra eccellente proposta...';
+
+  @override
+  String get user_not_found_login_again =>
+      'Utente non trovato. Effettua di nuovo il login.';
+
+  @override
+  String no_pack_ready_hours_minutes(String hours, String minutes) {
+    return 'Nessun pacchetto pronto al momento (0/2). Il prossimo pacchetto sarà pronto tra ${hours}h e ${minutes}m.';
+  }
+
+  @override
+  String get no_cards_available => 'Nessuna carta disponibile nel database.';
+
+  @override
+  String an_error_occurred_with(String error) {
+    return 'Si è verificato un errore: $error';
+  }
+
+  @override
+  String get opening_in_progress => 'Apertura in corso...';
+
+  @override
+  String get tap_to_open_pack => 'Tocca per aprire il pacchetto!';
+
+  @override
+  String get duplicate_card => 'CARTA DOPPIONE';
+
+  @override
+  String get new_card_unlocked => 'NUOVA CARTA SBLOCCATA!';
+
+  @override
+  String already_in_collection(String name) {
+    return '$name (Già in Collezione)';
+  }
+
+  @override
+  String get drag_to_tilt => 'Trascina con il dito per inclinare in 3D';
+
+  @override
+  String open_second_pack(String count) {
+    return 'Apri 2° Pacchetto ($count)';
+  }
+
+  @override
+  String get add_to_collection => 'Aggiungi alla Collezione';
+
+  @override
+  String card_x_of_y(String current, String total) {
+    return '#$current di $total';
+  }
+
+  @override
+  String get card_collection => 'Collezione Carte';
+
+  @override
+  String get all_found => 'Tutte trovate! 🏆';
+
+  @override
+  String remaining_count(String count) {
+    return '$count rimanenti';
+  }
+
+  @override
+  String get tap_to_browse_album => 'Tocca per sfogliare l\'album completo ›';
+
+  @override
+  String get unpack_new_cards => 'Spacchetta Nuove Carte';
+
+  @override
+  String get recharge_info => 'Ricarica 1 pacchetto ogni 12h (max 2)';
+
+  @override
+  String no_pack_ready_timer(String time) {
+    return 'Nessun pacchetto pronto. Il prossimo sarà disponibile tra $time.';
+  }
+
+  @override
+  String get first_pack_slot => '1° Pacchetto';
+
+  @override
+  String get second_pack_slot => '2° Pacchetto';
+
+  @override
+  String get ready => 'Pronto!';
+
+  @override
+  String get queued => 'In coda';
+
+  @override
+  String get packs_full => 'Pacchetti ricaricati al massimo: 2 / 2 pronti! 📦✨';
+
+  @override
+  String get open_pack_two_ready => 'Apri Pacchetto (2 Pronti!)';
+
+  @override
+  String get no_pack_ready => 'Nessun pacchetto pronto';
+
+  @override
+  String get tcg_album => 'Album Carte TCG';
+
+  @override
+  String get cards_unlocked => 'carte sbloccate';
+
+  @override
+  String missing_count(String count) {
+    return '$count mancanti';
+  }
+
+  @override
+  String get packs_ready_2 => '2 / 2 Pacchetti pronti da aprire';
+
+  @override
+  String get packs_ready_1 => '1 / 2 Pacchetto pronto da aprire';
+
+  @override
+  String get packs_ready_0 => '0 / 2 Pacchetti disponibili';
+
+  @override
+  String get max_charge_reached => 'Carica massima raggiunta (1 ogni 12h)';
+
+  @override
+  String next_recharge_in(String time) {
+    return 'Prossima ricarica tra $time';
+  }
+
+  @override
+  String recharging_next_in(String time) {
+    return 'Ricarica in corso: prossimo tra $time';
+  }
+
+  @override
+  String get unpack_and_view_collection => 'Spacchetta & Guarda Collezione';
+
+  @override
+  String get medal_0_title => 'Primo Assaggio';
+
+  @override
+  String get medal_1_title => 'Assaggiatore Seriale';
+
+  @override
+  String get medal_2_title => 'Critico del Kebab';
+
+  @override
+  String get medal_3_title => 'Maestro dello Spiedo';
+
+  @override
+  String get medal_4_title => 'Leggenda Gastronomica';
+
+  @override
+  String get medal_5_title => 'Voce del Feed';
+
+  @override
+  String get medal_6_title => 'Reporter del Gusto';
+
+  @override
+  String get medal_7_title => 'Influencer del Kebab';
+
+  @override
+  String get medal_8_title => 'Pilastro Sociale';
+
+  @override
+  String get medal_0_desc =>
+      'Hai scritto la tua prima recensione di un kebabbaro. Benvenuto nella famiglia dei critici di Kebabbo!';
+
+  @override
+  String get medal_1_desc =>
+      'Hai recensito 5 locali diversi. Il tuo palato comincia a distinguere la vera arte dello spiedo!';
+
+  @override
+  String get medal_2_desc =>
+      '10 recensioni completate! Le tue valutazioni guidano i kebabbari e orientano tutta la community.';
+
+  @override
+  String get medal_3_desc =>
+      '20 recensioni scritte! Nessun rotolo, salsa o pane arabo ha più segreti per te. Un vero maestro!';
+
+  @override
+  String get medal_4_desc =>
+      '30 recensioni all\'attivo! Hai raggiunto i vertici dell\'esperienza culinaria di Kebabbo. Una vera leggenda vivente!';
+
+  @override
+  String get medal_5_desc =>
+      'Hai pubblicato il tuo primo post nel feed sociale. La tua passione per il kebab ora è pubblica!';
+
+  @override
+  String get medal_6_desc =>
+      'Hai condiviso 5 post con foto e pensieri nel feed. La community adora i tuoi aggiornamenti!';
+
+  @override
+  String get medal_7_desc =>
+      '10 post condivisi! Con i tuoi scatti e i tuoi tag ai locali scateni la fame di tutta la città.';
+
+  @override
+  String get medal_8_desc =>
+      '50 post nella community! Sei un pilastro insostituibile del social feed di Kebabbo!';
+
+  @override
+  String get rank_5_name => 'Leggenda Suprema';
+
+  @override
+  String get rank_5_desc =>
+      'Hai conquistato tutti i traguardi! Sei nell\'Olimpo di Kebabbo.';
+
+  @override
+  String get rank_4_name => 'Veterano di Kebabbo';
+
+  @override
+  String get rank_4_desc =>
+      'Mancano pochissimi traguardi al completamento assoluto!';
+
+  @override
+  String get rank_3_name => 'Maestro delle Salse';
+
+  @override
+  String get rank_3_desc =>
+      'Un esperto riconosciuto sia nei gusti sia nella community.';
+
+  @override
+  String get rank_2_name => 'Gourmet del Döner';
+
+  @override
+  String get rank_2_desc => 'Hai un ottimo palato e una voce attiva nel feed.';
+
+  @override
+  String get rank_1_name => 'Appassionato di Spiedi';
+
+  @override
+  String get rank_1_desc =>
+      'I primi traguardi sono tuoi! Continua a recensire e postare.';
+
+  @override
+  String get rank_0_name => 'Novizio del Kebab';
+
+  @override
+  String get rank_0_desc =>
+      'Scrivi la tua prima recensione o crea un post per iniziare la collezione!';
+
+  @override
+  String get unit_reviews => 'recensioni';
+
+  @override
+  String get unit_posts => 'post';
+
+  @override
+  String get goal_reached => 'Traguardo Raggiunto 🎉';
+
+  @override
+  String get in_progress => 'In Corso ⏳';
+
+  @override
+  String get progress_label => 'Avanzamento';
+
+  @override
+  String medal_missing(String missing, String unit) {
+    return 'Ti mancano solo $missing $unit per sbloccare questa medaglia!';
+  }
+
+  @override
+  String get medals_page_title => 'Medagliere & Traguardi';
+
+  @override
+  String filter_all_count(String count) {
+    return 'Tutte ($count)';
+  }
+
+  @override
+  String filter_reviews_count(String count) {
+    return 'Recensioni ($count)';
+  }
+
+  @override
+  String filter_unlocked_count(String count) {
+    return 'Sbloccate ($count)';
+  }
+
+  @override
+  String get no_medals_in_filter => 'Nessuna medaglia in questo filtro';
+
+  @override
+  String unlocked_of_total(String unlocked, String total) {
+    return '$unlocked su $total sbloccate';
+  }
+
+  @override
+  String percent_completed(String percent) {
+    return '$percent% completato';
+  }
+
+  @override
+  String get reviews_label => 'Recensioni';
+
+  @override
+  String get feed_posts_label => 'Post Feed';
+
+  @override
+  String get unlocked_badge => 'Sbloccata';
+
+  @override
+  String get completed_badge => 'Completato! ⭐';
+
+  @override
+  String get open_in_app => 'Apri l\'app';
 }

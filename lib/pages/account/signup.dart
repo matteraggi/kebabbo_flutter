@@ -107,7 +107,7 @@ class SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Crea il tuo profilo e inizia a recensire i kebab della tua città',
+                    S.of(context).signup_tagline,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -282,9 +282,9 @@ class SignUpPageState extends State<SignUpPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Hai già un account?',
-                        style: TextStyle(
+                      Text(
+                        S.of(context).have_account_question,
+                        style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

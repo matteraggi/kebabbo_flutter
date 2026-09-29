@@ -235,8 +235,8 @@
   "nessun_kebab_vicino_a_te": "No kebab near you \nYou must be near the kebab shop to review it for authenticity reasons.\nCheck your location and reload the page.",
   "riprova": "Try again",
   "no_thanks": "No, thanks",
-  "app_is_installed_description": "You already have the app installed. Do you want to open it?",
-  "app_is_installed": "App is installed",
+  "app_is_installed_description": "Open it in the app for a better experience. If you don't have it yet, we'll take you to Google Play.",
+  "app_is_installed": "Kebabbo is also an app!",
   "single_card": "Kebabbo Card",
   "pack": "Kebabbo Pack",
   "my_cards": "Kebab TCG Carousel",
@@ -329,5 +329,444 @@
   "verified_by_staff_tooltip": "Verified by Kebabbo staff",
   "sign_up_with_google": "Sign up with Google",
   "or_continue_with_email": "or with email",
-  "already_have_an_account": "Already have an account? Sign in"
+  "already_have_an_account": "Already have an account? Sign in",
+  "location_services_disabled": "Location services are disabled.",
+  "location_permission_denied": "Location permission denied.",
+  "location_permission_denied_forever": "Location permission permanently denied. You can enable it in the settings.",
+  "session_expired": "Session expired. Please log in again.",
+  "contribute_title": "Contribute to Kebabbo",
+  "contribute_subtitle": "Help us map and review the best kebab places!",
+  "add_kebab_place": "Add a kebab place",
+  "add_kebab_place_subtitle": "Put a new place on the map",
+  "write_review_title": "Write a Review",
+  "write_review_subtitle": "Rate the quality, the meat and the sauces",
+  "nav_home": "Home",
+  "nav_add": "Add",
+  "nav_feed": "Feed",
+  "nav_account": "Account",
+  "page_not_found": "Page not found",
+  "maps_link_name_and_coords_found": "Coordinates and name detected from the Maps link! 📍",
+  "maps_link_coords_found": "Coordinates detected from the Maps link! 📍",
+  "maps_link_failed": "Couldn't extract the coordinates from the link. Use \"Choose on map\".",
+  "select_location_first": "Select the location on the map before continuing! 📍",
+  "error_saving": "Error while saving: {error}",
+  "@error_saving": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "section_location": "1. Location on the map 📍",
+  "section_location_hint": "Tap to drop the pin or search for the place. Coordinates, address and name will be filled in automatically!",
+  "edit_location_on_map": "Edit location on the map",
+  "choose_on_map_recommended": "Choose on map (recommended)",
+  "city_label": "City: {city}",
+  "@city_label": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "location_selected": "Location selected",
+  "paste_maps_link_prompt": "Already have a Google Maps link? Paste it here",
+  "google_maps_link": "Google Maps link",
+  "extract": "Extract",
+  "section_name_category": "2. Name and category 🌯",
+  "kebab_place_name_label": "Name of the place *",
+  "kebab_place_name_hint": "e.g. Bella Istanbul 3",
+  "name_autofilled_helper": "Filled in automatically from the map (feel free to edit it)",
+  "enter_place_name": "Enter the name of the place",
+  "tag_kebab_pill": "Kebab 🌯",
+  "tag_sandwich_pill": "Sandwich shop 🥪",
+  "gluten_free_option": "Gluten-free option",
+  "gluten_free_option_desc": "Offers certified gluten-free bread or options",
+  "section_opening_hours": "3. Opening hours ⏰",
+  "opening_hours_hint": "You can leave them unspecified, pick a template or set custom hours:",
+  "hours_preset_none": "Not specified (default)",
+  "hours_preset_continuous": "All day (11-23) 🌯",
+  "hours_preset_night": "Late night (11-02) 🌙",
+  "hours_preset_lunch_dinner": "Lunch and dinner 🍽️",
+  "hours_preset_custom": "Custom ⚙️",
+  "hours_none_note": "No opening hours will be saved.",
+  "custom_hours_hint": "Set the hours for each day (e.g. 11:00-23:00, or \"closed\"):",
+  "section_photo_optional": "4. Photo of the place (optional)",
+  "upload_place_photo": "Upload a photo of the spit or the place",
+  "section_initial_review": "5. Your first review",
+  "description_review_label": "Description / review *",
+  "description_review_hint": "Tell us about this kebab: bread, meat, flavours...",
+  "description_review_required": "Write a short comment to introduce the place",
+  "overall_rating_1_5": "Overall rating (1 to 5)",
+  "ingredient_balance_1_10": "Ingredient balance (1 to 10)",
+  "add_kebab_to_kebabbo": "Add place to Kebabbo",
+  "added_to_favorites": "Added to favorites ❤️",
+  "removed_from_favorites": "Removed from favorites",
+  "remove_from_favorites": "Remove from favorites",
+  "save_to_favorites": "Save to favorites",
+  "map_not_available": "Map not available for this place",
+  "login_to_post_photos": "Log in to post photos",
+  "select_photo_first": "Select a photo before posting",
+  "photo_added": "Photo added! 📸",
+  "upload_error": "Upload error: {error}",
+  "@upload_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "add_photo_to": "Add a photo to {name}",
+  "@add_photo_to": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tap_to_select_photo": "Tap to select a photo",
+  "photo_caption_hint": "Write a comment or describe your kebab...",
+  "publish_photo": "Post photo",
+  "kebabbo_user": "Kebabbo user",
+  "kebab_place_not_found": "Place not found or removed.",
+  "review_action": "Review",
+  "photo": "Photo",
+  "tab_overview": "Overview",
+  "tab_photos": "Photos ({count})",
+  "@tab_photos": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "tab_reviews": "Reviews ({count})",
+  "@tab_reviews": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "kebabbo_staff_review": "Kebabbo's review",
+  "rating_title": "Rating",
+  "community_count": "Community ({count})",
+  "@community_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ingredient_balance": "Ingredient balance",
+  "opening_hours": "Opening hours",
+  "no_photos_yet": "No photos yet",
+  "no_photos_yet_desc": "Be the first to share a photo of your kebab or dish from this place!",
+  "upload_first_photo": "Upload the first photo",
+  "user_generic": "User",
+  "no_reviews_yet_desc": "Share your experience at this place with the whole community!",
+  "write_first_review": "Write the first review",
+  "based_on_reviews": "Based on {count} reviews",
+  "@based_on_reviews": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "select_place_to_review": "Select the place you want to review! 🌯",
+  "error_sending_review": "Error sending the review: {error}",
+  "@error_sending_review": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "choose_place": "Choose the place",
+  "change": "Change",
+  "search_kebabbo_places": "Search Kebabbo places",
+  "search_places_hint": "e.g. Istanbul, Agra, King...",
+  "no_place_found_add_it": "No place found. If it's new, use \"Add a kebab place\"!",
+  "your_experience": "Your experience",
+  "comment_review_label": "Comment / review *",
+  "comment_review_hint": "What did you like most? Any sauce or menu you'd recommend?",
+  "comment_review_required": "Write a short comment about your experience",
+  "add_dish_photo_optional": "Add a photo of your dish (optional)",
+  "publish_review": "Post review",
+  "tap_map_to_select": "Tap the map to select the exact spot",
+  "select_on_map": "Select on map",
+  "center_on_my_location": "Center on my location",
+  "search_address_or_place": "Search address or place...",
+  "selected_point": "Selected point",
+  "confirm_this_location": "Confirm this location",
+  "map_style_google_road": "Google Roadmap",
+  "map_style_google_satellite": "Google Satellite",
+  "change_map_style": "Change map: {style}",
+  "@change_map_style": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "map_style_satellite_short": "Satellite",
+  "map_style_road_short": "Road",
+  "users_count": "Users ({count})",
+  "@users_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "community_review": "Community review",
+  "no_user_reviews_yet": "No users have reviewed this place yet!",
+  "directions": "Directions",
+  "login_tagline": "Join the community to discover and review the best kebabs",
+  "no_account_question": "Don't have an account?",
+  "signup_tagline": "Create your profile and start reviewing the kebabs in your city",
+  "have_account_question": "Already have an account?",
+  "password_reset_failed": "Failed to reset password: {error}",
+  "@password_reset_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "objectives_and_medals": "Goals & medals",
+  "no_more_kebabs_to_recommend": "There are no other kebabs to recommend.",
+  "reroll": "Reroll",
+  "see_hours_photos_reviews": "See hours, photos and reviews",
+  "upload": "Upload",
+  "ingredient_amounts_caps": "INGREDIENT AMOUNTS",
+  "error_deleting_post": "Error deleting the post: {error}",
+  "@error_deleting_post": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "privacy_policy_load_error": "Error loading the Privacy Policy",
+  "cooking_title": "Preparing your kebab",
+  "cooking_title_reroll": "Finding an alternative",
+  "cooking_step_1": "🔥 Warming up the bread...",
+  "cooking_step_2": "🥩 Slicing the meat off the spit...",
+  "cooking_step_3": "🥗 Adding fresh veggies and sauces...",
+  "cooking_step_4": "🌯 Rolling it up like a pro...",
+  "cooking_step_5": "🔍 Finding the best kebab for you...",
+  "reroll_step_1": "👨‍🍳 New combination coming up...",
+  "reroll_step_2": "🔥 Balancing spices and cooking...",
+  "reroll_step_3": "✨ Looking for another great pick...",
+  "user_not_found_login_again": "User not found. Please log in again.",
+  "no_pack_ready_hours_minutes": "No pack ready right now (0/2). The next pack will be ready in {hours}h {minutes}m.",
+  "@no_pack_ready_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "no_cards_available": "No cards available.",
+  "an_error_occurred_with": "An error occurred: {error}",
+  "@an_error_occurred_with": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "opening_in_progress": "Opening...",
+  "tap_to_open_pack": "Tap to open the pack!",
+  "duplicate_card": "DUPLICATE CARD",
+  "new_card_unlocked": "NEW CARD UNLOCKED!",
+  "already_in_collection": "{name} (already in collection)",
+  "@already_in_collection": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "drag_to_tilt": "Drag with your finger to tilt in 3D",
+  "open_second_pack": "Open 2nd pack ({count})",
+  "@open_second_pack": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "add_to_collection": "Add to collection",
+  "card_x_of_y": "#{current} of {total}",
+  "@card_x_of_y": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "card_collection": "Card collection",
+  "all_found": "All found! 🏆",
+  "remaining_count": "{count} remaining",
+  "@remaining_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "tap_to_browse_album": "Tap to browse the full album ›",
+  "unpack_new_cards": "Unpack new cards",
+  "recharge_info": "1 pack recharges every 12h (max 2)",
+  "no_pack_ready_timer": "No pack ready. The next one will be available in {time}.",
+  "@no_pack_ready_timer": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "first_pack_slot": "1st pack",
+  "second_pack_slot": "2nd pack",
+  "ready": "Ready!",
+  "queued": "Queued",
+  "packs_full": "Packs fully recharged: 2 / 2 ready! 📦✨",
+  "open_pack_two_ready": "Open pack (2 ready!)",
+  "no_pack_ready": "No pack ready",
+  "tcg_album": "TCG card album",
+  "cards_unlocked": "cards unlocked",
+  "missing_count": "{count} missing",
+  "@missing_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "packs_ready_2": "2 / 2 packs ready to open",
+  "packs_ready_1": "1 / 2 pack ready to open",
+  "packs_ready_0": "0 / 2 packs available",
+  "max_charge_reached": "Maximum charge reached (1 every 12h)",
+  "next_recharge_in": "Next recharge in {time}",
+  "@next_recharge_in": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "recharging_next_in": "Recharging: next one in {time}",
+  "@recharging_next_in": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "unpack_and_view_collection": "Unpack & view collection",
+  "medal_0_title": "First Bite",
+  "medal_1_title": "Serial Taster",
+  "medal_2_title": "Kebab Critic",
+  "medal_3_title": "Master of the Spit",
+  "medal_4_title": "Food Legend",
+  "medal_5_title": "Voice of the Feed",
+  "medal_6_title": "Taste Reporter",
+  "medal_7_title": "Kebab Influencer",
+  "medal_8_title": "Community Pillar",
+  "medal_0_desc": "You wrote your first review of a kebab place. Welcome to the family of Kebabbo critics!",
+  "medal_1_desc": "You've reviewed 5 different places. Your palate is starting to recognise the true art of the spit!",
+  "medal_2_desc": "10 reviews done! Your ratings guide kebab places and the whole community.",
+  "medal_3_desc": "20 reviews written! No wrap, sauce or flatbread holds any secrets from you. A true master!",
+  "medal_4_desc": "30 reviews under your belt! You've reached the top of the Kebabbo food experience. A living legend!",
+  "medal_5_desc": "You published your first post in the social feed. Your passion for kebab is now public!",
+  "medal_6_desc": "You've shared 5 posts with photos and thoughts in the feed. The community loves your updates!",
+  "medal_7_desc": "10 posts shared! Your shots and place tags make the whole city hungry.",
+  "medal_8_desc": "50 posts in the community! You're an irreplaceable pillar of the Kebabbo feed!",
+  "rank_5_name": "Supreme Legend",
+  "rank_5_desc": "You've achieved every milestone! You're in Kebabbo's Olympus.",
+  "rank_4_name": "Kebabbo Veteran",
+  "rank_4_desc": "Just a few milestones left to complete everything!",
+  "rank_3_name": "Sauce Master",
+  "rank_3_desc": "A recognised expert in both taste and community.",
+  "rank_2_name": "Döner Gourmet",
+  "rank_2_desc": "You have a great palate and an active voice in the feed.",
+  "rank_1_name": "Spit Enthusiast",
+  "rank_1_desc": "The first milestones are yours! Keep reviewing and posting.",
+  "rank_0_name": "Kebab Novice",
+  "rank_0_desc": "Write your first review or create a post to start your collection!",
+  "unit_reviews": "reviews",
+  "unit_posts": "posts",
+  "goal_reached": "Milestone reached 🎉",
+  "in_progress": "In progress ⏳",
+  "progress_label": "Progress",
+  "medal_missing": "Only {missing} {unit} left to unlock this medal!",
+  "@medal_missing": {
+    "placeholders": {
+      "missing": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "medals_page_title": "Medals & milestones",
+  "filter_all_count": "All ({count})",
+  "@filter_all_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "filter_reviews_count": "Reviews ({count})",
+  "@filter_reviews_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "filter_unlocked_count": "Unlocked ({count})",
+  "@filter_unlocked_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "no_medals_in_filter": "No medals in this filter",
+  "unlocked_of_total": "{unlocked} of {total} unlocked",
+  "@unlocked_of_total": {
+    "placeholders": {
+      "unlocked": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "percent_completed": "{percent}% complete",
+  "@percent_completed": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "reviews_label": "Reviews",
+  "feed_posts_label": "Feed posts",
+  "unlocked_badge": "Unlocked",
+  "completed_badge": "Completed! ⭐",
+  "open_in_app": "Open the app"
 }

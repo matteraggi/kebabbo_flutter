@@ -58,7 +58,7 @@ class _SingleChartState extends State<SingleChart> {
           Padding(
             padding: const EdgeInsets.only(bottom: 12.0, left: 6.0),
             child: Text(
-              "QUANTITÀ INGREDIENTI",
+              S.of(context).ingredient_amounts_caps,
               style: TextStyle(
                 color: textColor.withValues(alpha: 0.55),
                 fontSize: 11,

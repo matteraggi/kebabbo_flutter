@@ -90,9 +90,9 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage> {
           _isRerolling = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Non ci sono altri kebab disponibili da consigliare."),
-            duration: Duration(seconds: 2),
+          SnackBar(
+            content: Text(S.of(context).no_more_kebabs_to_recommend),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -182,7 +182,7 @@ class KebabRecommendationPageState extends State<KebabRecommendationPage> {
                               !_isRerolling)
                           ? _rerollRecommendation
                           : null, // Disable if rerollCounter exceeds available kebabs or while rerolling
-                      child: const Text("Reroll"),
+                      child: Text(S.of(context).reroll),
                     ),
                     ElevatedButton(
                       onPressed: () {

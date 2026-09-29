@@ -1003,7 +1003,7 @@ abstract class AppLocalizations {
   /// No description provided for @email_required.
   ///
   /// In it, this message translates to:
-  /// **'l\'Email è obbligatoria'**
+  /// **'L\'email è obbligatoria'**
   String get email_required;
 
   /// No description provided for @send_reset_email.
@@ -1063,13 +1063,13 @@ abstract class AppLocalizations {
   /// No description provided for @app_is_installed_description.
   ///
   /// In it, this message translates to:
-  /// **'Kebabbo è già installato sul tuo dispositivo. Vuoi aprirlo?'**
+  /// **'Aprilo nell\'app per un\'esperienza migliore. Se non ce l\'hai ancora, ti portiamo su Google Play.'**
   String get app_is_installed_description;
 
   /// No description provided for @app_is_installed.
   ///
   /// In it, this message translates to:
-  /// **'App installata'**
+  /// **'Kebabbo è anche un\'app!'**
   String get app_is_installed;
 
   /// No description provided for @single_card.
@@ -1129,7 +1129,7 @@ abstract class AppLocalizations {
   /// No description provided for @commento_vuoto.
   ///
   /// In it, this message translates to:
-  /// **'il testo del commento non può essere vuoto.'**
+  /// **'Il testo del commento non può essere vuoto.'**
   String get commento_vuoto;
 
   /// No description provided for @found_all_cards.
@@ -1189,7 +1189,7 @@ abstract class AppLocalizations {
   /// No description provided for @following.
   ///
   /// In it, this message translates to:
-  /// **'Followed'**
+  /// **'Seguiti'**
   String get following;
 
   /// No description provided for @error_processing_image.
@@ -1471,7 +1471,7 @@ abstract class AppLocalizations {
   /// No description provided for @kebabbo_review.
   ///
   /// In it, this message translates to:
-  /// **'Kebabbo Review'**
+  /// **'Recensione Kebabbo'**
   String get kebabbo_review;
 
   /// No description provided for @review_this_kebab.
@@ -1629,6 +1629,1350 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Hai già un account? Accedi'**
   String get already_have_an_account;
+
+  /// No description provided for @location_services_disabled.
+  ///
+  /// In it, this message translates to:
+  /// **'I servizi di localizzazione sono disattivati.'**
+  String get location_services_disabled;
+
+  /// No description provided for @location_permission_denied.
+  ///
+  /// In it, this message translates to:
+  /// **'Permesso di localizzazione negato.'**
+  String get location_permission_denied;
+
+  /// No description provided for @location_permission_denied_forever.
+  ///
+  /// In it, this message translates to:
+  /// **'Permesso di localizzazione negato in modo permanente. Puoi attivarlo dalle impostazioni.'**
+  String get location_permission_denied_forever;
+
+  /// No description provided for @session_expired.
+  ///
+  /// In it, this message translates to:
+  /// **'Sessione scaduta. Effettua nuovamente il login.'**
+  String get session_expired;
+
+  /// No description provided for @contribute_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Contribuisci a Kebabbo'**
+  String get contribute_title;
+
+  /// No description provided for @contribute_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Aiutaci a mappare e recensire i migliori kebabbari!'**
+  String get contribute_subtitle;
+
+  /// No description provided for @add_kebab_place.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi un Kebabbaro'**
+  String get add_kebab_place;
+
+  /// No description provided for @add_kebab_place_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci un nuovo locale sulla mappa'**
+  String get add_kebab_place_subtitle;
+
+  /// No description provided for @write_review_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi una Recensione'**
+  String get write_review_title;
+
+  /// No description provided for @write_review_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Vota la qualità, la carne e le salse'**
+  String get write_review_subtitle;
+
+  /// No description provided for @nav_home.
+  ///
+  /// In it, this message translates to:
+  /// **'Home'**
+  String get nav_home;
+
+  /// No description provided for @nav_add.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi'**
+  String get nav_add;
+
+  /// No description provided for @nav_feed.
+  ///
+  /// In it, this message translates to:
+  /// **'Feed'**
+  String get nav_feed;
+
+  /// No description provided for @nav_account.
+  ///
+  /// In it, this message translates to:
+  /// **'Account'**
+  String get nav_account;
+
+  /// No description provided for @page_not_found.
+  ///
+  /// In it, this message translates to:
+  /// **'Pagina non trovata'**
+  String get page_not_found;
+
+  /// No description provided for @maps_link_name_and_coords_found.
+  ///
+  /// In it, this message translates to:
+  /// **'Coordinate e nome rilevati dal link Maps! 📍'**
+  String get maps_link_name_and_coords_found;
+
+  /// No description provided for @maps_link_coords_found.
+  ///
+  /// In it, this message translates to:
+  /// **'Coordinate rilevate con successo dal link Maps! 📍'**
+  String get maps_link_coords_found;
+
+  /// No description provided for @maps_link_failed.
+  ///
+  /// In it, this message translates to:
+  /// **'Impossibile estrarre le coordinate dal link. Usa \"Scegli sulla Mappa\".'**
+  String get maps_link_failed;
+
+  /// No description provided for @select_location_first.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona la posizione sulla mappa prima di continuare! 📍'**
+  String get select_location_first;
+
+  /// No description provided for @error_saving.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore durante il salvataggio: {error}'**
+  String error_saving(String error);
+
+  /// No description provided for @section_location.
+  ///
+  /// In it, this message translates to:
+  /// **'1. Posizione sulla Mappa 📍'**
+  String get section_location;
+
+  /// No description provided for @section_location_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca per posizionare il pin o cercare il locale. Coordinate, indirizzo e nome verranno estratti automaticamente!'**
+  String get section_location_hint;
+
+  /// No description provided for @edit_location_on_map.
+  ///
+  /// In it, this message translates to:
+  /// **'Modifica Posizione sulla Mappa'**
+  String get edit_location_on_map;
+
+  /// No description provided for @choose_on_map_recommended.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli sulla Mappa (Consigliato)'**
+  String get choose_on_map_recommended;
+
+  /// No description provided for @city_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Città: {city}'**
+  String city_label(String city);
+
+  /// No description provided for @location_selected.
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione selezionata'**
+  String get location_selected;
+
+  /// No description provided for @paste_maps_link_prompt.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai già un link di Google Maps? Incollalo qui'**
+  String get paste_maps_link_prompt;
+
+  /// No description provided for @google_maps_link.
+  ///
+  /// In it, this message translates to:
+  /// **'Link Google Maps'**
+  String get google_maps_link;
+
+  /// No description provided for @extract.
+  ///
+  /// In it, this message translates to:
+  /// **'Estrai'**
+  String get extract;
+
+  /// No description provided for @section_name_category.
+  ///
+  /// In it, this message translates to:
+  /// **'2. Nome e Categoria 🌯'**
+  String get section_name_category;
+
+  /// No description provided for @kebab_place_name_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Nome del Kebabbaro *'**
+  String get kebab_place_name_label;
+
+  /// No description provided for @kebab_place_name_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Es. Bella Istanbul 3'**
+  String get kebab_place_name_hint;
+
+  /// No description provided for @name_autofilled_helper.
+  ///
+  /// In it, this message translates to:
+  /// **'Compilato automaticamente dalla mappa (modificalo pure)'**
+  String get name_autofilled_helper;
+
+  /// No description provided for @enter_place_name.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci il nome del locale'**
+  String get enter_place_name;
+
+  /// No description provided for @tag_kebab_pill.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebab 🌯'**
+  String get tag_kebab_pill;
+
+  /// No description provided for @tag_sandwich_pill.
+  ///
+  /// In it, this message translates to:
+  /// **'Paninoteca 🥪'**
+  String get tag_sandwich_pill;
+
+  /// No description provided for @gluten_free_option.
+  ///
+  /// In it, this message translates to:
+  /// **'Opzione Senza Glutine'**
+  String get gluten_free_option;
+
+  /// No description provided for @gluten_free_option_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Dispone di piadina o opzioni certificate gluten-free'**
+  String get gluten_free_option_desc;
+
+  /// No description provided for @section_opening_hours.
+  ///
+  /// In it, this message translates to:
+  /// **'3. Orari di Apertura ⏰'**
+  String get section_opening_hours;
+
+  /// No description provided for @opening_hours_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Puoi lasciarli non specificati come standard, oppure scegliere un template o impostarli personalizzati:'**
+  String get opening_hours_hint;
+
+  /// No description provided for @hours_preset_none.
+  ///
+  /// In it, this message translates to:
+  /// **'Non specificati (Standard)'**
+  String get hours_preset_none;
+
+  /// No description provided for @hours_preset_continuous.
+  ///
+  /// In it, this message translates to:
+  /// **'Continuato (11-23) 🌯'**
+  String get hours_preset_continuous;
+
+  /// No description provided for @hours_preset_night.
+  ///
+  /// In it, this message translates to:
+  /// **'Notturno (11-02) 🌙'**
+  String get hours_preset_night;
+
+  /// No description provided for @hours_preset_lunch_dinner.
+  ///
+  /// In it, this message translates to:
+  /// **'Pranzo e Cena 🍽️'**
+  String get hours_preset_lunch_dinner;
+
+  /// No description provided for @hours_preset_custom.
+  ///
+  /// In it, this message translates to:
+  /// **'Personalizzati ⚙️'**
+  String get hours_preset_custom;
+
+  /// No description provided for @hours_none_note.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun orario verrà salvato.'**
+  String get hours_none_note;
+
+  /// No description provided for @custom_hours_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Imposta gli orari per ciascun giorno (es. 11:00-23:00 oppure \"chiuso\"):'**
+  String get custom_hours_hint;
+
+  /// No description provided for @section_photo_optional.
+  ///
+  /// In it, this message translates to:
+  /// **'4. Foto del Locale (Opzionale)'**
+  String get section_photo_optional;
+
+  /// No description provided for @upload_place_photo.
+  ///
+  /// In it, this message translates to:
+  /// **'Carica una foto dello spiedo o del locale'**
+  String get upload_place_photo;
+
+  /// No description provided for @section_initial_review.
+  ///
+  /// In it, this message translates to:
+  /// **'5. La Tua Recensione Iniziale'**
+  String get section_initial_review;
+
+  /// No description provided for @description_review_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Descrizione / Recensione *'**
+  String get description_review_label;
+
+  /// No description provided for @description_review_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Racconta com\'è questo kebab: pane, carne, sapori...'**
+  String get description_review_hint;
+
+  /// No description provided for @description_review_required.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi un breve commento per presentare il kebabbaro'**
+  String get description_review_required;
+
+  /// No description provided for @overall_rating_1_5.
+  ///
+  /// In it, this message translates to:
+  /// **'Valutazione Generale (1 a 5)'**
+  String get overall_rating_1_5;
+
+  /// No description provided for @ingredient_balance_1_10.
+  ///
+  /// In it, this message translates to:
+  /// **'Bilanciamento Ingredienti (1 a 10)'**
+  String get ingredient_balance_1_10;
+
+  /// No description provided for @add_kebab_to_kebabbo.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi Kebabbaro a Kebabbo'**
+  String get add_kebab_to_kebabbo;
+
+  /// No description provided for @added_to_favorites.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiunto ai preferiti ❤️'**
+  String get added_to_favorites;
+
+  /// No description provided for @removed_from_favorites.
+  ///
+  /// In it, this message translates to:
+  /// **'Rimosso dai preferiti'**
+  String get removed_from_favorites;
+
+  /// No description provided for @remove_from_favorites.
+  ///
+  /// In it, this message translates to:
+  /// **'Rimuovi dai preferiti'**
+  String get remove_from_favorites;
+
+  /// No description provided for @save_to_favorites.
+  ///
+  /// In it, this message translates to:
+  /// **'Salva nei preferiti'**
+  String get save_to_favorites;
+
+  /// No description provided for @map_not_available.
+  ///
+  /// In it, this message translates to:
+  /// **'Mappa non disponibile per questo kebabbaro'**
+  String get map_not_available;
+
+  /// No description provided for @login_to_post_photos.
+  ///
+  /// In it, this message translates to:
+  /// **'Effettua il login per pubblicare foto'**
+  String get login_to_post_photos;
+
+  /// No description provided for @select_photo_first.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona una foto prima di pubblicare'**
+  String get select_photo_first;
+
+  /// No description provided for @photo_added.
+  ///
+  /// In it, this message translates to:
+  /// **'Foto aggiunta con successo! 📸'**
+  String get photo_added;
+
+  /// No description provided for @upload_error.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore durante il caricamento: {error}'**
+  String upload_error(String error);
+
+  /// No description provided for @add_photo_to.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi Foto a {name}'**
+  String add_photo_to(String name);
+
+  /// No description provided for @tap_to_select_photo.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca per selezionare una foto'**
+  String get tap_to_select_photo;
+
+  /// No description provided for @photo_caption_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi un commento o descrivi il tuo kebab...'**
+  String get photo_caption_hint;
+
+  /// No description provided for @publish_photo.
+  ///
+  /// In it, this message translates to:
+  /// **'Pubblica Foto'**
+  String get publish_photo;
+
+  /// No description provided for @kebabbo_user.
+  ///
+  /// In it, this message translates to:
+  /// **'Utente Kebabbo'**
+  String get kebabbo_user;
+
+  /// No description provided for @kebab_place_not_found.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebabbaro non trovato o rimosso.'**
+  String get kebab_place_not_found;
+
+  /// No description provided for @review_action.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensisci'**
+  String get review_action;
+
+  /// No description provided for @photo.
+  ///
+  /// In it, this message translates to:
+  /// **'Foto'**
+  String get photo;
+
+  /// No description provided for @tab_overview.
+  ///
+  /// In it, this message translates to:
+  /// **'Panoramica'**
+  String get tab_overview;
+
+  /// No description provided for @tab_photos.
+  ///
+  /// In it, this message translates to:
+  /// **'Foto ({count})'**
+  String tab_photos(String count);
+
+  /// No description provided for @tab_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensioni ({count})'**
+  String tab_reviews(String count);
+
+  /// No description provided for @kebabbo_staff_review.
+  ///
+  /// In it, this message translates to:
+  /// **'La recensione di Kebabbo'**
+  String get kebabbo_staff_review;
+
+  /// No description provided for @rating_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Valutazione'**
+  String get rating_title;
+
+  /// No description provided for @community_count.
+  ///
+  /// In it, this message translates to:
+  /// **'Community ({count})'**
+  String community_count(String count);
+
+  /// No description provided for @ingredient_balance.
+  ///
+  /// In it, this message translates to:
+  /// **'Bilanciamento Ingredienti'**
+  String get ingredient_balance;
+
+  /// No description provided for @opening_hours.
+  ///
+  /// In it, this message translates to:
+  /// **'Orari di Apertura'**
+  String get opening_hours;
+
+  /// No description provided for @no_photos_yet.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna foto ancora'**
+  String get no_photos_yet;
+
+  /// No description provided for @no_photos_yet_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Sii il primo a condividere una foto della tua piadina o del tuo piatto in questo locale!'**
+  String get no_photos_yet_desc;
+
+  /// No description provided for @upload_first_photo.
+  ///
+  /// In it, this message translates to:
+  /// **'Carica la prima foto'**
+  String get upload_first_photo;
+
+  /// No description provided for @user_generic.
+  ///
+  /// In it, this message translates to:
+  /// **'Utente'**
+  String get user_generic;
+
+  /// No description provided for @no_reviews_yet_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi la tua esperienza in questo kebabbaro con tutta la community!'**
+  String get no_reviews_yet_desc;
+
+  /// No description provided for @write_first_review.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi la prima recensione'**
+  String get write_first_review;
+
+  /// No description provided for @based_on_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Basato su {count} recensioni'**
+  String based_on_reviews(String count);
+
+  /// No description provided for @select_place_to_review.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona il kebabbaro da recensire! 🌯'**
+  String get select_place_to_review;
+
+  /// No description provided for @error_sending_review.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore invio recensione: {error}'**
+  String error_sending_review(String error);
+
+  /// No description provided for @choose_place.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli il Kebabbaro'**
+  String get choose_place;
+
+  /// No description provided for @change.
+  ///
+  /// In it, this message translates to:
+  /// **'Cambia'**
+  String get change;
+
+  /// No description provided for @search_kebabbo_places.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca tra i locali di Kebabbo'**
+  String get search_kebabbo_places;
+
+  /// No description provided for @search_places_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Es. Istanbul, Agra, King...'**
+  String get search_places_hint;
+
+  /// No description provided for @no_place_found_add_it.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun locale trovato. Se è nuovo, usa \"Aggiungi un Kebabbaro\"!'**
+  String get no_place_found_add_it;
+
+  /// No description provided for @your_experience.
+  ///
+  /// In it, this message translates to:
+  /// **'La Tua Esperienza'**
+  String get your_experience;
+
+  /// No description provided for @comment_review_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Commento / Recensione *'**
+  String get comment_review_label;
+
+  /// No description provided for @comment_review_hint.
+  ///
+  /// In it, this message translates to:
+  /// **'Cosa ti è piaciuto di più? Consigli qualche salsa o menù?'**
+  String get comment_review_hint;
+
+  /// No description provided for @comment_review_required.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi un breve commento sulla tua esperienza'**
+  String get comment_review_required;
+
+  /// No description provided for @add_dish_photo_optional.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi Foto al Piatto (Opzionale)'**
+  String get add_dish_photo_optional;
+
+  /// No description provided for @publish_review.
+  ///
+  /// In it, this message translates to:
+  /// **'Pubblica Recensione'**
+  String get publish_review;
+
+  /// No description provided for @tap_map_to_select.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca la mappa per selezionare il punto esatto'**
+  String get tap_map_to_select;
+
+  /// No description provided for @select_on_map.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona sulla Mappa'**
+  String get select_on_map;
+
+  /// No description provided for @center_on_my_location.
+  ///
+  /// In it, this message translates to:
+  /// **'Centra sulla mia posizione'**
+  String get center_on_my_location;
+
+  /// No description provided for @search_address_or_place.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca indirizzo o locale...'**
+  String get search_address_or_place;
+
+  /// No description provided for @selected_point.
+  ///
+  /// In it, this message translates to:
+  /// **'Punto selezionato'**
+  String get selected_point;
+
+  /// No description provided for @confirm_this_location.
+  ///
+  /// In it, this message translates to:
+  /// **'Conferma Questa Posizione'**
+  String get confirm_this_location;
+
+  /// No description provided for @map_style_google_road.
+  ///
+  /// In it, this message translates to:
+  /// **'Google Stradale'**
+  String get map_style_google_road;
+
+  /// No description provided for @map_style_google_satellite.
+  ///
+  /// In it, this message translates to:
+  /// **'Google Satellite'**
+  String get map_style_google_satellite;
+
+  /// No description provided for @change_map_style.
+  ///
+  /// In it, this message translates to:
+  /// **'Cambia mappa: {style}'**
+  String change_map_style(String style);
+
+  /// No description provided for @map_style_satellite_short.
+  ///
+  /// In it, this message translates to:
+  /// **'Satellite'**
+  String get map_style_satellite_short;
+
+  /// No description provided for @map_style_road_short.
+  ///
+  /// In it, this message translates to:
+  /// **'Stradale'**
+  String get map_style_road_short;
+
+  /// No description provided for @users_count.
+  ///
+  /// In it, this message translates to:
+  /// **'Utenti ({count})'**
+  String users_count(String count);
+
+  /// No description provided for @community_review.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensione Community'**
+  String get community_review;
+
+  /// No description provided for @no_user_reviews_yet.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun utente ha ancora recensito questo locale!'**
+  String get no_user_reviews_yet;
+
+  /// No description provided for @directions.
+  ///
+  /// In it, this message translates to:
+  /// **'Indicazioni'**
+  String get directions;
+
+  /// No description provided for @login_tagline.
+  ///
+  /// In it, this message translates to:
+  /// **'Entra nella community per scoprire e recensire i migliori kebab'**
+  String get login_tagline;
+
+  /// No description provided for @no_account_question.
+  ///
+  /// In it, this message translates to:
+  /// **'Non hai un account?'**
+  String get no_account_question;
+
+  /// No description provided for @signup_tagline.
+  ///
+  /// In it, this message translates to:
+  /// **'Crea il tuo profilo e inizia a recensire i kebab della tua città'**
+  String get signup_tagline;
+
+  /// No description provided for @have_account_question.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai già un account?'**
+  String get have_account_question;
+
+  /// No description provided for @password_reset_failed.
+  ///
+  /// In it, this message translates to:
+  /// **'Reimpostazione password non riuscita: {error}'**
+  String password_reset_failed(String error);
+
+  /// No description provided for @objectives_and_medals.
+  ///
+  /// In it, this message translates to:
+  /// **'Obiettivi & Medaglie'**
+  String get objectives_and_medals;
+
+  /// No description provided for @no_more_kebabs_to_recommend.
+  ///
+  /// In it, this message translates to:
+  /// **'Non ci sono altri kebab disponibili da consigliare.'**
+  String get no_more_kebabs_to_recommend;
+
+  /// No description provided for @reroll.
+  ///
+  /// In it, this message translates to:
+  /// **'Rilancia'**
+  String get reroll;
+
+  /// No description provided for @see_hours_photos_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Vedi orari, foto e recensioni'**
+  String get see_hours_photos_reviews;
+
+  /// No description provided for @upload.
+  ///
+  /// In it, this message translates to:
+  /// **'Carica'**
+  String get upload;
+
+  /// No description provided for @ingredient_amounts_caps.
+  ///
+  /// In it, this message translates to:
+  /// **'QUANTITÀ INGREDIENTI'**
+  String get ingredient_amounts_caps;
+
+  /// No description provided for @error_deleting_post.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore durante l\'eliminazione del post: {error}'**
+  String error_deleting_post(String error);
+
+  /// No description provided for @privacy_policy_load_error.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore nel caricamento della Privacy Policy'**
+  String get privacy_policy_load_error;
+
+  /// No description provided for @cooking_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Preparazione Kebab'**
+  String get cooking_title;
+
+  /// No description provided for @cooking_title_reroll.
+  ///
+  /// In it, this message translates to:
+  /// **'Ricerca Alternativa'**
+  String get cooking_title_reroll;
+
+  /// No description provided for @cooking_step_1.
+  ///
+  /// In it, this message translates to:
+  /// **'🔥 Scaldo la piadina...'**
+  String get cooking_step_1;
+
+  /// No description provided for @cooking_step_2.
+  ///
+  /// In it, this message translates to:
+  /// **'🥩 Taglio la carne allo spiedo...'**
+  String get cooking_step_2;
+
+  /// No description provided for @cooking_step_3.
+  ///
+  /// In it, this message translates to:
+  /// **'🥗 Aggiungo verdure fresche e salse...'**
+  String get cooking_step_3;
+
+  /// No description provided for @cooking_step_4.
+  ///
+  /// In it, this message translates to:
+  /// **'🌯 Arrotolo a regola d\'arte...'**
+  String get cooking_step_4;
+
+  /// No description provided for @cooking_step_5.
+  ///
+  /// In it, this message translates to:
+  /// **'🔍 Cerco il miglior kebab per te...'**
+  String get cooking_step_5;
+
+  /// No description provided for @reroll_step_1.
+  ///
+  /// In it, this message translates to:
+  /// **'👨‍🍳 Nuova combinazione in arrivo...'**
+  String get reroll_step_1;
+
+  /// No description provided for @reroll_step_2.
+  ///
+  /// In it, this message translates to:
+  /// **'🔥 Bilancio spezie e cottura...'**
+  String get reroll_step_2;
+
+  /// No description provided for @reroll_step_3.
+  ///
+  /// In it, this message translates to:
+  /// **'✨ Cerco un\'altra eccellente proposta...'**
+  String get reroll_step_3;
+
+  /// No description provided for @user_not_found_login_again.
+  ///
+  /// In it, this message translates to:
+  /// **'Utente non trovato. Effettua di nuovo il login.'**
+  String get user_not_found_login_again;
+
+  /// No description provided for @no_pack_ready_hours_minutes.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun pacchetto pronto al momento (0/2). Il prossimo pacchetto sarà pronto tra {hours}h e {minutes}m.'**
+  String no_pack_ready_hours_minutes(String hours, String minutes);
+
+  /// No description provided for @no_cards_available.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna carta disponibile nel database.'**
+  String get no_cards_available;
+
+  /// No description provided for @an_error_occurred_with.
+  ///
+  /// In it, this message translates to:
+  /// **'Si è verificato un errore: {error}'**
+  String an_error_occurred_with(String error);
+
+  /// No description provided for @opening_in_progress.
+  ///
+  /// In it, this message translates to:
+  /// **'Apertura in corso...'**
+  String get opening_in_progress;
+
+  /// No description provided for @tap_to_open_pack.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca per aprire il pacchetto!'**
+  String get tap_to_open_pack;
+
+  /// No description provided for @duplicate_card.
+  ///
+  /// In it, this message translates to:
+  /// **'CARTA DOPPIONE'**
+  String get duplicate_card;
+
+  /// No description provided for @new_card_unlocked.
+  ///
+  /// In it, this message translates to:
+  /// **'NUOVA CARTA SBLOCCATA!'**
+  String get new_card_unlocked;
+
+  /// No description provided for @already_in_collection.
+  ///
+  /// In it, this message translates to:
+  /// **'{name} (Già in Collezione)'**
+  String already_in_collection(String name);
+
+  /// No description provided for @drag_to_tilt.
+  ///
+  /// In it, this message translates to:
+  /// **'Trascina con il dito per inclinare in 3D'**
+  String get drag_to_tilt;
+
+  /// No description provided for @open_second_pack.
+  ///
+  /// In it, this message translates to:
+  /// **'Apri 2° Pacchetto ({count})'**
+  String open_second_pack(String count);
+
+  /// No description provided for @add_to_collection.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi alla Collezione'**
+  String get add_to_collection;
+
+  /// No description provided for @card_x_of_y.
+  ///
+  /// In it, this message translates to:
+  /// **'#{current} di {total}'**
+  String card_x_of_y(String current, String total);
+
+  /// No description provided for @card_collection.
+  ///
+  /// In it, this message translates to:
+  /// **'Collezione Carte'**
+  String get card_collection;
+
+  /// No description provided for @all_found.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutte trovate! 🏆'**
+  String get all_found;
+
+  /// No description provided for @remaining_count.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} rimanenti'**
+  String remaining_count(String count);
+
+  /// No description provided for @tap_to_browse_album.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca per sfogliare l\'album completo ›'**
+  String get tap_to_browse_album;
+
+  /// No description provided for @unpack_new_cards.
+  ///
+  /// In it, this message translates to:
+  /// **'Spacchetta Nuove Carte'**
+  String get unpack_new_cards;
+
+  /// No description provided for @recharge_info.
+  ///
+  /// In it, this message translates to:
+  /// **'Ricarica 1 pacchetto ogni 12h (max 2)'**
+  String get recharge_info;
+
+  /// No description provided for @no_pack_ready_timer.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun pacchetto pronto. Il prossimo sarà disponibile tra {time}.'**
+  String no_pack_ready_timer(String time);
+
+  /// No description provided for @first_pack_slot.
+  ///
+  /// In it, this message translates to:
+  /// **'1° Pacchetto'**
+  String get first_pack_slot;
+
+  /// No description provided for @second_pack_slot.
+  ///
+  /// In it, this message translates to:
+  /// **'2° Pacchetto'**
+  String get second_pack_slot;
+
+  /// No description provided for @ready.
+  ///
+  /// In it, this message translates to:
+  /// **'Pronto!'**
+  String get ready;
+
+  /// No description provided for @queued.
+  ///
+  /// In it, this message translates to:
+  /// **'In coda'**
+  String get queued;
+
+  /// No description provided for @packs_full.
+  ///
+  /// In it, this message translates to:
+  /// **'Pacchetti ricaricati al massimo: 2 / 2 pronti! 📦✨'**
+  String get packs_full;
+
+  /// No description provided for @open_pack_two_ready.
+  ///
+  /// In it, this message translates to:
+  /// **'Apri Pacchetto (2 Pronti!)'**
+  String get open_pack_two_ready;
+
+  /// No description provided for @no_pack_ready.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun pacchetto pronto'**
+  String get no_pack_ready;
+
+  /// No description provided for @tcg_album.
+  ///
+  /// In it, this message translates to:
+  /// **'Album Carte TCG'**
+  String get tcg_album;
+
+  /// No description provided for @cards_unlocked.
+  ///
+  /// In it, this message translates to:
+  /// **'carte sbloccate'**
+  String get cards_unlocked;
+
+  /// No description provided for @missing_count.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} mancanti'**
+  String missing_count(String count);
+
+  /// No description provided for @packs_ready_2.
+  ///
+  /// In it, this message translates to:
+  /// **'2 / 2 Pacchetti pronti da aprire'**
+  String get packs_ready_2;
+
+  /// No description provided for @packs_ready_1.
+  ///
+  /// In it, this message translates to:
+  /// **'1 / 2 Pacchetto pronto da aprire'**
+  String get packs_ready_1;
+
+  /// No description provided for @packs_ready_0.
+  ///
+  /// In it, this message translates to:
+  /// **'0 / 2 Pacchetti disponibili'**
+  String get packs_ready_0;
+
+  /// No description provided for @max_charge_reached.
+  ///
+  /// In it, this message translates to:
+  /// **'Carica massima raggiunta (1 ogni 12h)'**
+  String get max_charge_reached;
+
+  /// No description provided for @next_recharge_in.
+  ///
+  /// In it, this message translates to:
+  /// **'Prossima ricarica tra {time}'**
+  String next_recharge_in(String time);
+
+  /// No description provided for @recharging_next_in.
+  ///
+  /// In it, this message translates to:
+  /// **'Ricarica in corso: prossimo tra {time}'**
+  String recharging_next_in(String time);
+
+  /// No description provided for @unpack_and_view_collection.
+  ///
+  /// In it, this message translates to:
+  /// **'Spacchetta & Guarda Collezione'**
+  String get unpack_and_view_collection;
+
+  /// No description provided for @medal_0_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Primo Assaggio'**
+  String get medal_0_title;
+
+  /// No description provided for @medal_1_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Assaggiatore Seriale'**
+  String get medal_1_title;
+
+  /// No description provided for @medal_2_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Critico del Kebab'**
+  String get medal_2_title;
+
+  /// No description provided for @medal_3_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Maestro dello Spiedo'**
+  String get medal_3_title;
+
+  /// No description provided for @medal_4_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Leggenda Gastronomica'**
+  String get medal_4_title;
+
+  /// No description provided for @medal_5_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Voce del Feed'**
+  String get medal_5_title;
+
+  /// No description provided for @medal_6_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Reporter del Gusto'**
+  String get medal_6_title;
+
+  /// No description provided for @medal_7_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Influencer del Kebab'**
+  String get medal_7_title;
+
+  /// No description provided for @medal_8_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Pilastro Sociale'**
+  String get medal_8_title;
+
+  /// No description provided for @medal_0_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai scritto la tua prima recensione di un kebabbaro. Benvenuto nella famiglia dei critici di Kebabbo!'**
+  String get medal_0_desc;
+
+  /// No description provided for @medal_1_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai recensito 5 locali diversi. Il tuo palato comincia a distinguere la vera arte dello spiedo!'**
+  String get medal_1_desc;
+
+  /// No description provided for @medal_2_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'10 recensioni completate! Le tue valutazioni guidano i kebabbari e orientano tutta la community.'**
+  String get medal_2_desc;
+
+  /// No description provided for @medal_3_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'20 recensioni scritte! Nessun rotolo, salsa o pane arabo ha più segreti per te. Un vero maestro!'**
+  String get medal_3_desc;
+
+  /// No description provided for @medal_4_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'30 recensioni all\'attivo! Hai raggiunto i vertici dell\'esperienza culinaria di Kebabbo. Una vera leggenda vivente!'**
+  String get medal_4_desc;
+
+  /// No description provided for @medal_5_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai pubblicato il tuo primo post nel feed sociale. La tua passione per il kebab ora è pubblica!'**
+  String get medal_5_desc;
+
+  /// No description provided for @medal_6_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai condiviso 5 post con foto e pensieri nel feed. La community adora i tuoi aggiornamenti!'**
+  String get medal_6_desc;
+
+  /// No description provided for @medal_7_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'10 post condivisi! Con i tuoi scatti e i tuoi tag ai locali scateni la fame di tutta la città.'**
+  String get medal_7_desc;
+
+  /// No description provided for @medal_8_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'50 post nella community! Sei un pilastro insostituibile del social feed di Kebabbo!'**
+  String get medal_8_desc;
+
+  /// No description provided for @rank_5_name.
+  ///
+  /// In it, this message translates to:
+  /// **'Leggenda Suprema'**
+  String get rank_5_name;
+
+  /// No description provided for @rank_5_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai conquistato tutti i traguardi! Sei nell\'Olimpo di Kebabbo.'**
+  String get rank_5_desc;
+
+  /// No description provided for @rank_4_name.
+  ///
+  /// In it, this message translates to:
+  /// **'Veterano di Kebabbo'**
+  String get rank_4_name;
+
+  /// No description provided for @rank_4_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Mancano pochissimi traguardi al completamento assoluto!'**
+  String get rank_4_desc;
+
+  /// No description provided for @rank_3_name.
+  ///
+  /// In it, this message translates to:
+  /// **'Maestro delle Salse'**
+  String get rank_3_name;
+
+  /// No description provided for @rank_3_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Un esperto riconosciuto sia nei gusti sia nella community.'**
+  String get rank_3_desc;
+
+  /// No description provided for @rank_2_name.
+  ///
+  /// In it, this message translates to:
+  /// **'Gourmet del Döner'**
+  String get rank_2_name;
+
+  /// No description provided for @rank_2_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Hai un ottimo palato e una voce attiva nel feed.'**
+  String get rank_2_desc;
+
+  /// No description provided for @rank_1_name.
+  ///
+  /// In it, this message translates to:
+  /// **'Appassionato di Spiedi'**
+  String get rank_1_name;
+
+  /// No description provided for @rank_1_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'I primi traguardi sono tuoi! Continua a recensire e postare.'**
+  String get rank_1_desc;
+
+  /// No description provided for @rank_0_name.
+  ///
+  /// In it, this message translates to:
+  /// **'Novizio del Kebab'**
+  String get rank_0_name;
+
+  /// No description provided for @rank_0_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi la tua prima recensione o crea un post per iniziare la collezione!'**
+  String get rank_0_desc;
+
+  /// No description provided for @unit_reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'recensioni'**
+  String get unit_reviews;
+
+  /// No description provided for @unit_posts.
+  ///
+  /// In it, this message translates to:
+  /// **'post'**
+  String get unit_posts;
+
+  /// No description provided for @goal_reached.
+  ///
+  /// In it, this message translates to:
+  /// **'Traguardo Raggiunto 🎉'**
+  String get goal_reached;
+
+  /// No description provided for @in_progress.
+  ///
+  /// In it, this message translates to:
+  /// **'In Corso ⏳'**
+  String get in_progress;
+
+  /// No description provided for @progress_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Avanzamento'**
+  String get progress_label;
+
+  /// No description provided for @medal_missing.
+  ///
+  /// In it, this message translates to:
+  /// **'Ti mancano solo {missing} {unit} per sbloccare questa medaglia!'**
+  String medal_missing(String missing, String unit);
+
+  /// No description provided for @medals_page_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Medagliere & Traguardi'**
+  String get medals_page_title;
+
+  /// No description provided for @filter_all_count.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutte ({count})'**
+  String filter_all_count(String count);
+
+  /// No description provided for @filter_reviews_count.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensioni ({count})'**
+  String filter_reviews_count(String count);
+
+  /// No description provided for @filter_unlocked_count.
+  ///
+  /// In it, this message translates to:
+  /// **'Sbloccate ({count})'**
+  String filter_unlocked_count(String count);
+
+  /// No description provided for @no_medals_in_filter.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna medaglia in questo filtro'**
+  String get no_medals_in_filter;
+
+  /// No description provided for @unlocked_of_total.
+  ///
+  /// In it, this message translates to:
+  /// **'{unlocked} su {total} sbloccate'**
+  String unlocked_of_total(String unlocked, String total);
+
+  /// No description provided for @percent_completed.
+  ///
+  /// In it, this message translates to:
+  /// **'{percent}% completato'**
+  String percent_completed(String percent);
+
+  /// No description provided for @reviews_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensioni'**
+  String get reviews_label;
+
+  /// No description provided for @feed_posts_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Post Feed'**
+  String get feed_posts_label;
+
+  /// No description provided for @unlocked_badge.
+  ///
+  /// In it, this message translates to:
+  /// **'Sbloccata'**
+  String get unlocked_badge;
+
+  /// No description provided for @completed_badge.
+  ///
+  /// In it, this message translates to:
+  /// **'Completato! ⭐'**
+  String get completed_badge;
+
+  /// No description provided for @open_in_app.
+  ///
+  /// In it, this message translates to:
+  /// **'Apri l\'app'**
+  String get open_in_app;
 }
 
 class _AppLocalizationsDelegate

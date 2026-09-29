@@ -268,8 +268,8 @@ class _SingleUserPageState extends State<SingleUserPage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Text(
-                                  'Posts',
+                                Text(
+                                  S.of(context).posts,
                                   style: TextStyle(fontSize: 14),
                                 ),
                               ],
@@ -293,8 +293,8 @@ class _SingleUserPageState extends State<SingleUserPage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Text(
-                                  'Followers',
+                                Text(
+                                  S.of(context).followers,
                                   style: TextStyle(fontSize: 14),
                                 ),
                               ],

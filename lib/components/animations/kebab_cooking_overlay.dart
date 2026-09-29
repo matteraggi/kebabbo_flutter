@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 /// Modern, highly polished animated overlay shown while cooking/building a kebab
 /// or rerolling a recommendation. Replaces the legacy sliding cloud PNG.
@@ -31,19 +32,19 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
   Timer? _stepTimer;
   int _stepIndex = 0;
 
-  final List<String> _buildSteps = [
-    "🔥 Scaldo la piadina...",
-    "🥩 Taglio la carne allo spiedo...",
-    "🥗 Aggiungo verdure fresche e salse...",
-    "🌯 Arrotolo a regola d'arte...",
-    "🔍 Cerco il miglior kebab per te...",
-  ];
+  List<String> get _buildSteps => [
+        S.of(context).cooking_step_1,
+        S.of(context).cooking_step_2,
+        S.of(context).cooking_step_3,
+        S.of(context).cooking_step_4,
+        S.of(context).cooking_step_5,
+      ];
 
-  final List<String> _rerollSteps = [
-    "👨‍🍳 Nuova combinazione in arrivo...",
-    "🔥 Bilancio spezie e cottura...",
-    "✨ Cerco un'altra eccellente proposta...",
-  ];
+  List<String> get _rerollSteps => [
+        S.of(context).reroll_step_1,
+        S.of(context).reroll_step_2,
+        S.of(context).reroll_step_3,
+      ];
 
   static const List<Map<String, dynamic>> _ingredientMeta = [
     {
@@ -113,13 +114,15 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
     _ingredientsController.forward(from: 0.0);
     _stepTimer?.cancel();
 
-    final steps = widget.isReroll ? _rerollSteps : _buildSteps;
+    // Solo il numero di step: i testi localizzati si leggono in build()
+    // (S.of(context) non è utilizzabile da initState).
+    final stepCount = widget.isReroll ? 3 : 5;
     _stepTimer = Timer.periodic(const Duration(milliseconds: 450), (timer) {
       if (!mounted || !widget.isVisible) {
         timer.cancel();
         return;
       }
-      if (_stepIndex < steps.length - 1) {
+      if (_stepIndex < stepCount - 1) {
         setState(() => _stepIndex++);
       } else {
         timer.cancel();
@@ -233,8 +236,8 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
                                 const SizedBox(width: 8),
                                 Text(
                                   widget.isReroll
-                                      ? "Ricerca Alternativa"
-                                      : "Preparazione Kebab",
+                                      ? S.of(context).cooking_title_reroll
+                                      : S.of(context).cooking_title,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,

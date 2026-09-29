@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/pages/tcg/tcg_hub_page.dart';
 import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class TcgProfilePreview extends StatefulWidget {
   final String userId;
@@ -110,8 +111,8 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              const Text(
-                                "Album Carte TCG",
+                              Text(
+                                S.of(context).tcg_album,
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 16,
@@ -161,7 +162,7 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            "carte sbloccate",
+                            S.of(context).cards_unlocked,
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 12,
@@ -169,7 +170,7 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                           ),
                           const Spacer(),
                           Text(
-                            "${_totalCardsCount - _collectedCardsCount} mancanti",
+                            S.of(context).missing_count((_totalCardsCount - _collectedCardsCount).toString()),
                             style: TextStyle(
                               color: Colors.grey[500],
                               fontSize: 11,
@@ -241,9 +242,9 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                                       Text(
                                         hasPacks
                                             ? (isMax
-                                                ? "2 / 2 Pacchetti pronti da aprire"
-                                                : "1 / 2 Pacchetto pronto da aprire")
-                                            : "0 / 2 Pacchetti disponibili",
+                                                ? S.of(context).packs_ready_2
+                                                : S.of(context).packs_ready_1)
+                                            : S.of(context).packs_ready_0,
                                         style: TextStyle(
                                           color: hasPacks
                                               ? const Color(0xFF855A00)
@@ -256,9 +257,9 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                                       Text(
                                         hasPacks
                                             ? (isMax
-                                                ? "Carica massima raggiunta (1 ogni 12h)"
-                                                : "Prossima ricarica tra $timerText")
-                                            : "Ricarica in corso: prossimo tra $timerText",
+                                                ? S.of(context).max_charge_reached
+                                                : S.of(context).next_recharge_in(timerText))
+                                            : S.of(context).recharging_next_in(timerText),
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 11,
@@ -312,12 +313,12 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Icon(Icons.auto_awesome,
                                   color: Colors.white, size: 18),
                               SizedBox(width: 8),
                               Text(
-                                "Spacchetta & Guarda Collezione",
+                                S.of(context).unpack_and_view_collection,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,

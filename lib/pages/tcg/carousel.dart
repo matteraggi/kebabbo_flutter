@@ -99,7 +99,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.card_giftcard, color: Colors.white),
-            tooltip: "Apri Pacchetto",
+            tooltip: S.of(context).open_pack,
             onPressed: () {
               Navigator.push(
                 context,

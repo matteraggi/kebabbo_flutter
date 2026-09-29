@@ -60,7 +60,7 @@ class KebabListItemClickableState extends State<KebabListItemClickable> {
 
     if (user == null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(('Utente non autenticato'))));
+          .showSnackBar(SnackBar(content: Text(S.of(context).user_not_authenticated)));
       return;
     }
 

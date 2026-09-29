@@ -532,10 +532,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get app_is_installed_description =>
-      'You already have the app installed. Do you want to open it?';
+      'Open it in the app for a better experience. If you don\'t have it yet, we\'ll take you to Google Play.';
 
   @override
-  String get app_is_installed => 'App is installed';
+  String get app_is_installed => 'Kebabbo is also an app!';
 
   @override
   String get single_card => 'Kebabbo Card';
@@ -816,4 +816,773 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get already_have_an_account => 'Already have an account? Sign in';
+
+  @override
+  String get location_services_disabled => 'Location services are disabled.';
+
+  @override
+  String get location_permission_denied => 'Location permission denied.';
+
+  @override
+  String get location_permission_denied_forever =>
+      'Location permission permanently denied. You can enable it in the settings.';
+
+  @override
+  String get session_expired => 'Session expired. Please log in again.';
+
+  @override
+  String get contribute_title => 'Contribute to Kebabbo';
+
+  @override
+  String get contribute_subtitle =>
+      'Help us map and review the best kebab places!';
+
+  @override
+  String get add_kebab_place => 'Add a kebab place';
+
+  @override
+  String get add_kebab_place_subtitle => 'Put a new place on the map';
+
+  @override
+  String get write_review_title => 'Write a Review';
+
+  @override
+  String get write_review_subtitle =>
+      'Rate the quality, the meat and the sauces';
+
+  @override
+  String get nav_home => 'Home';
+
+  @override
+  String get nav_add => 'Add';
+
+  @override
+  String get nav_feed => 'Feed';
+
+  @override
+  String get nav_account => 'Account';
+
+  @override
+  String get page_not_found => 'Page not found';
+
+  @override
+  String get maps_link_name_and_coords_found =>
+      'Coordinates and name detected from the Maps link! 📍';
+
+  @override
+  String get maps_link_coords_found =>
+      'Coordinates detected from the Maps link! 📍';
+
+  @override
+  String get maps_link_failed =>
+      'Couldn\'t extract the coordinates from the link. Use \"Choose on map\".';
+
+  @override
+  String get select_location_first =>
+      'Select the location on the map before continuing! 📍';
+
+  @override
+  String error_saving(String error) {
+    return 'Error while saving: $error';
+  }
+
+  @override
+  String get section_location => '1. Location on the map 📍';
+
+  @override
+  String get section_location_hint =>
+      'Tap to drop the pin or search for the place. Coordinates, address and name will be filled in automatically!';
+
+  @override
+  String get edit_location_on_map => 'Edit location on the map';
+
+  @override
+  String get choose_on_map_recommended => 'Choose on map (recommended)';
+
+  @override
+  String city_label(String city) {
+    return 'City: $city';
+  }
+
+  @override
+  String get location_selected => 'Location selected';
+
+  @override
+  String get paste_maps_link_prompt =>
+      'Already have a Google Maps link? Paste it here';
+
+  @override
+  String get google_maps_link => 'Google Maps link';
+
+  @override
+  String get extract => 'Extract';
+
+  @override
+  String get section_name_category => '2. Name and category 🌯';
+
+  @override
+  String get kebab_place_name_label => 'Name of the place *';
+
+  @override
+  String get kebab_place_name_hint => 'e.g. Bella Istanbul 3';
+
+  @override
+  String get name_autofilled_helper =>
+      'Filled in automatically from the map (feel free to edit it)';
+
+  @override
+  String get enter_place_name => 'Enter the name of the place';
+
+  @override
+  String get tag_kebab_pill => 'Kebab 🌯';
+
+  @override
+  String get tag_sandwich_pill => 'Sandwich shop 🥪';
+
+  @override
+  String get gluten_free_option => 'Gluten-free option';
+
+  @override
+  String get gluten_free_option_desc =>
+      'Offers certified gluten-free bread or options';
+
+  @override
+  String get section_opening_hours => '3. Opening hours ⏰';
+
+  @override
+  String get opening_hours_hint =>
+      'You can leave them unspecified, pick a template or set custom hours:';
+
+  @override
+  String get hours_preset_none => 'Not specified (default)';
+
+  @override
+  String get hours_preset_continuous => 'All day (11-23) 🌯';
+
+  @override
+  String get hours_preset_night => 'Late night (11-02) 🌙';
+
+  @override
+  String get hours_preset_lunch_dinner => 'Lunch and dinner 🍽️';
+
+  @override
+  String get hours_preset_custom => 'Custom ⚙️';
+
+  @override
+  String get hours_none_note => 'No opening hours will be saved.';
+
+  @override
+  String get custom_hours_hint =>
+      'Set the hours for each day (e.g. 11:00-23:00, or \"closed\"):';
+
+  @override
+  String get section_photo_optional => '4. Photo of the place (optional)';
+
+  @override
+  String get upload_place_photo => 'Upload a photo of the spit or the place';
+
+  @override
+  String get section_initial_review => '5. Your first review';
+
+  @override
+  String get description_review_label => 'Description / review *';
+
+  @override
+  String get description_review_hint =>
+      'Tell us about this kebab: bread, meat, flavours...';
+
+  @override
+  String get description_review_required =>
+      'Write a short comment to introduce the place';
+
+  @override
+  String get overall_rating_1_5 => 'Overall rating (1 to 5)';
+
+  @override
+  String get ingredient_balance_1_10 => 'Ingredient balance (1 to 10)';
+
+  @override
+  String get add_kebab_to_kebabbo => 'Add place to Kebabbo';
+
+  @override
+  String get added_to_favorites => 'Added to favorites ❤️';
+
+  @override
+  String get removed_from_favorites => 'Removed from favorites';
+
+  @override
+  String get remove_from_favorites => 'Remove from favorites';
+
+  @override
+  String get save_to_favorites => 'Save to favorites';
+
+  @override
+  String get map_not_available => 'Map not available for this place';
+
+  @override
+  String get login_to_post_photos => 'Log in to post photos';
+
+  @override
+  String get select_photo_first => 'Select a photo before posting';
+
+  @override
+  String get photo_added => 'Photo added! 📸';
+
+  @override
+  String upload_error(String error) {
+    return 'Upload error: $error';
+  }
+
+  @override
+  String add_photo_to(String name) {
+    return 'Add a photo to $name';
+  }
+
+  @override
+  String get tap_to_select_photo => 'Tap to select a photo';
+
+  @override
+  String get photo_caption_hint => 'Write a comment or describe your kebab...';
+
+  @override
+  String get publish_photo => 'Post photo';
+
+  @override
+  String get kebabbo_user => 'Kebabbo user';
+
+  @override
+  String get kebab_place_not_found => 'Place not found or removed.';
+
+  @override
+  String get review_action => 'Review';
+
+  @override
+  String get photo => 'Photo';
+
+  @override
+  String get tab_overview => 'Overview';
+
+  @override
+  String tab_photos(String count) {
+    return 'Photos ($count)';
+  }
+
+  @override
+  String tab_reviews(String count) {
+    return 'Reviews ($count)';
+  }
+
+  @override
+  String get kebabbo_staff_review => 'Kebabbo\'s review';
+
+  @override
+  String get rating_title => 'Rating';
+
+  @override
+  String community_count(String count) {
+    return 'Community ($count)';
+  }
+
+  @override
+  String get ingredient_balance => 'Ingredient balance';
+
+  @override
+  String get opening_hours => 'Opening hours';
+
+  @override
+  String get no_photos_yet => 'No photos yet';
+
+  @override
+  String get no_photos_yet_desc =>
+      'Be the first to share a photo of your kebab or dish from this place!';
+
+  @override
+  String get upload_first_photo => 'Upload the first photo';
+
+  @override
+  String get user_generic => 'User';
+
+  @override
+  String get no_reviews_yet_desc =>
+      'Share your experience at this place with the whole community!';
+
+  @override
+  String get write_first_review => 'Write the first review';
+
+  @override
+  String based_on_reviews(String count) {
+    return 'Based on $count reviews';
+  }
+
+  @override
+  String get select_place_to_review =>
+      'Select the place you want to review! 🌯';
+
+  @override
+  String error_sending_review(String error) {
+    return 'Error sending the review: $error';
+  }
+
+  @override
+  String get choose_place => 'Choose the place';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get search_kebabbo_places => 'Search Kebabbo places';
+
+  @override
+  String get search_places_hint => 'e.g. Istanbul, Agra, King...';
+
+  @override
+  String get no_place_found_add_it =>
+      'No place found. If it\'s new, use \"Add a kebab place\"!';
+
+  @override
+  String get your_experience => 'Your experience';
+
+  @override
+  String get comment_review_label => 'Comment / review *';
+
+  @override
+  String get comment_review_hint =>
+      'What did you like most? Any sauce or menu you\'d recommend?';
+
+  @override
+  String get comment_review_required =>
+      'Write a short comment about your experience';
+
+  @override
+  String get add_dish_photo_optional => 'Add a photo of your dish (optional)';
+
+  @override
+  String get publish_review => 'Post review';
+
+  @override
+  String get tap_map_to_select => 'Tap the map to select the exact spot';
+
+  @override
+  String get select_on_map => 'Select on map';
+
+  @override
+  String get center_on_my_location => 'Center on my location';
+
+  @override
+  String get search_address_or_place => 'Search address or place...';
+
+  @override
+  String get selected_point => 'Selected point';
+
+  @override
+  String get confirm_this_location => 'Confirm this location';
+
+  @override
+  String get map_style_google_road => 'Google Roadmap';
+
+  @override
+  String get map_style_google_satellite => 'Google Satellite';
+
+  @override
+  String change_map_style(String style) {
+    return 'Change map: $style';
+  }
+
+  @override
+  String get map_style_satellite_short => 'Satellite';
+
+  @override
+  String get map_style_road_short => 'Road';
+
+  @override
+  String users_count(String count) {
+    return 'Users ($count)';
+  }
+
+  @override
+  String get community_review => 'Community review';
+
+  @override
+  String get no_user_reviews_yet => 'No users have reviewed this place yet!';
+
+  @override
+  String get directions => 'Directions';
+
+  @override
+  String get login_tagline =>
+      'Join the community to discover and review the best kebabs';
+
+  @override
+  String get no_account_question => 'Don\'t have an account?';
+
+  @override
+  String get signup_tagline =>
+      'Create your profile and start reviewing the kebabs in your city';
+
+  @override
+  String get have_account_question => 'Already have an account?';
+
+  @override
+  String password_reset_failed(String error) {
+    return 'Failed to reset password: $error';
+  }
+
+  @override
+  String get objectives_and_medals => 'Goals & medals';
+
+  @override
+  String get no_more_kebabs_to_recommend =>
+      'There are no other kebabs to recommend.';
+
+  @override
+  String get reroll => 'Reroll';
+
+  @override
+  String get see_hours_photos_reviews => 'See hours, photos and reviews';
+
+  @override
+  String get upload => 'Upload';
+
+  @override
+  String get ingredient_amounts_caps => 'INGREDIENT AMOUNTS';
+
+  @override
+  String error_deleting_post(String error) {
+    return 'Error deleting the post: $error';
+  }
+
+  @override
+  String get privacy_policy_load_error => 'Error loading the Privacy Policy';
+
+  @override
+  String get cooking_title => 'Preparing your kebab';
+
+  @override
+  String get cooking_title_reroll => 'Finding an alternative';
+
+  @override
+  String get cooking_step_1 => '🔥 Warming up the bread...';
+
+  @override
+  String get cooking_step_2 => '🥩 Slicing the meat off the spit...';
+
+  @override
+  String get cooking_step_3 => '🥗 Adding fresh veggies and sauces...';
+
+  @override
+  String get cooking_step_4 => '🌯 Rolling it up like a pro...';
+
+  @override
+  String get cooking_step_5 => '🔍 Finding the best kebab for you...';
+
+  @override
+  String get reroll_step_1 => '👨‍🍳 New combination coming up...';
+
+  @override
+  String get reroll_step_2 => '🔥 Balancing spices and cooking...';
+
+  @override
+  String get reroll_step_3 => '✨ Looking for another great pick...';
+
+  @override
+  String get user_not_found_login_again =>
+      'User not found. Please log in again.';
+
+  @override
+  String no_pack_ready_hours_minutes(String hours, String minutes) {
+    return 'No pack ready right now (0/2). The next pack will be ready in ${hours}h ${minutes}m.';
+  }
+
+  @override
+  String get no_cards_available => 'No cards available.';
+
+  @override
+  String an_error_occurred_with(String error) {
+    return 'An error occurred: $error';
+  }
+
+  @override
+  String get opening_in_progress => 'Opening...';
+
+  @override
+  String get tap_to_open_pack => 'Tap to open the pack!';
+
+  @override
+  String get duplicate_card => 'DUPLICATE CARD';
+
+  @override
+  String get new_card_unlocked => 'NEW CARD UNLOCKED!';
+
+  @override
+  String already_in_collection(String name) {
+    return '$name (already in collection)';
+  }
+
+  @override
+  String get drag_to_tilt => 'Drag with your finger to tilt in 3D';
+
+  @override
+  String open_second_pack(String count) {
+    return 'Open 2nd pack ($count)';
+  }
+
+  @override
+  String get add_to_collection => 'Add to collection';
+
+  @override
+  String card_x_of_y(String current, String total) {
+    return '#$current of $total';
+  }
+
+  @override
+  String get card_collection => 'Card collection';
+
+  @override
+  String get all_found => 'All found! 🏆';
+
+  @override
+  String remaining_count(String count) {
+    return '$count remaining';
+  }
+
+  @override
+  String get tap_to_browse_album => 'Tap to browse the full album ›';
+
+  @override
+  String get unpack_new_cards => 'Unpack new cards';
+
+  @override
+  String get recharge_info => '1 pack recharges every 12h (max 2)';
+
+  @override
+  String no_pack_ready_timer(String time) {
+    return 'No pack ready. The next one will be available in $time.';
+  }
+
+  @override
+  String get first_pack_slot => '1st pack';
+
+  @override
+  String get second_pack_slot => '2nd pack';
+
+  @override
+  String get ready => 'Ready!';
+
+  @override
+  String get queued => 'Queued';
+
+  @override
+  String get packs_full => 'Packs fully recharged: 2 / 2 ready! 📦✨';
+
+  @override
+  String get open_pack_two_ready => 'Open pack (2 ready!)';
+
+  @override
+  String get no_pack_ready => 'No pack ready';
+
+  @override
+  String get tcg_album => 'TCG card album';
+
+  @override
+  String get cards_unlocked => 'cards unlocked';
+
+  @override
+  String missing_count(String count) {
+    return '$count missing';
+  }
+
+  @override
+  String get packs_ready_2 => '2 / 2 packs ready to open';
+
+  @override
+  String get packs_ready_1 => '1 / 2 pack ready to open';
+
+  @override
+  String get packs_ready_0 => '0 / 2 packs available';
+
+  @override
+  String get max_charge_reached => 'Maximum charge reached (1 every 12h)';
+
+  @override
+  String next_recharge_in(String time) {
+    return 'Next recharge in $time';
+  }
+
+  @override
+  String recharging_next_in(String time) {
+    return 'Recharging: next one in $time';
+  }
+
+  @override
+  String get unpack_and_view_collection => 'Unpack & view collection';
+
+  @override
+  String get medal_0_title => 'First Bite';
+
+  @override
+  String get medal_1_title => 'Serial Taster';
+
+  @override
+  String get medal_2_title => 'Kebab Critic';
+
+  @override
+  String get medal_3_title => 'Master of the Spit';
+
+  @override
+  String get medal_4_title => 'Food Legend';
+
+  @override
+  String get medal_5_title => 'Voice of the Feed';
+
+  @override
+  String get medal_6_title => 'Taste Reporter';
+
+  @override
+  String get medal_7_title => 'Kebab Influencer';
+
+  @override
+  String get medal_8_title => 'Community Pillar';
+
+  @override
+  String get medal_0_desc =>
+      'You wrote your first review of a kebab place. Welcome to the family of Kebabbo critics!';
+
+  @override
+  String get medal_1_desc =>
+      'You\'ve reviewed 5 different places. Your palate is starting to recognise the true art of the spit!';
+
+  @override
+  String get medal_2_desc =>
+      '10 reviews done! Your ratings guide kebab places and the whole community.';
+
+  @override
+  String get medal_3_desc =>
+      '20 reviews written! No wrap, sauce or flatbread holds any secrets from you. A true master!';
+
+  @override
+  String get medal_4_desc =>
+      '30 reviews under your belt! You\'ve reached the top of the Kebabbo food experience. A living legend!';
+
+  @override
+  String get medal_5_desc =>
+      'You published your first post in the social feed. Your passion for kebab is now public!';
+
+  @override
+  String get medal_6_desc =>
+      'You\'ve shared 5 posts with photos and thoughts in the feed. The community loves your updates!';
+
+  @override
+  String get medal_7_desc =>
+      '10 posts shared! Your shots and place tags make the whole city hungry.';
+
+  @override
+  String get medal_8_desc =>
+      '50 posts in the community! You\'re an irreplaceable pillar of the Kebabbo feed!';
+
+  @override
+  String get rank_5_name => 'Supreme Legend';
+
+  @override
+  String get rank_5_desc =>
+      'You\'ve achieved every milestone! You\'re in Kebabbo\'s Olympus.';
+
+  @override
+  String get rank_4_name => 'Kebabbo Veteran';
+
+  @override
+  String get rank_4_desc =>
+      'Just a few milestones left to complete everything!';
+
+  @override
+  String get rank_3_name => 'Sauce Master';
+
+  @override
+  String get rank_3_desc => 'A recognised expert in both taste and community.';
+
+  @override
+  String get rank_2_name => 'Döner Gourmet';
+
+  @override
+  String get rank_2_desc =>
+      'You have a great palate and an active voice in the feed.';
+
+  @override
+  String get rank_1_name => 'Spit Enthusiast';
+
+  @override
+  String get rank_1_desc =>
+      'The first milestones are yours! Keep reviewing and posting.';
+
+  @override
+  String get rank_0_name => 'Kebab Novice';
+
+  @override
+  String get rank_0_desc =>
+      'Write your first review or create a post to start your collection!';
+
+  @override
+  String get unit_reviews => 'reviews';
+
+  @override
+  String get unit_posts => 'posts';
+
+  @override
+  String get goal_reached => 'Milestone reached 🎉';
+
+  @override
+  String get in_progress => 'In progress ⏳';
+
+  @override
+  String get progress_label => 'Progress';
+
+  @override
+  String medal_missing(String missing, String unit) {
+    return 'Only $missing $unit left to unlock this medal!';
+  }
+
+  @override
+  String get medals_page_title => 'Medals & milestones';
+
+  @override
+  String filter_all_count(String count) {
+    return 'All ($count)';
+  }
+
+  @override
+  String filter_reviews_count(String count) {
+    return 'Reviews ($count)';
+  }
+
+  @override
+  String filter_unlocked_count(String count) {
+    return 'Unlocked ($count)';
+  }
+
+  @override
+  String get no_medals_in_filter => 'No medals in this filter';
+
+  @override
+  String unlocked_of_total(String unlocked, String total) {
+    return '$unlocked of $total unlocked';
+  }
+
+  @override
+  String percent_completed(String percent) {
+    return '$percent% complete';
+  }
+
+  @override
+  String get reviews_label => 'Reviews';
+
+  @override
+  String get feed_posts_label => 'Feed posts';
+
+  @override
+  String get unlocked_badge => 'Unlocked';
+
+  @override
+  String get completed_badge => 'Completed! ⭐';
+
+  @override
+  String get open_in_app => 'Open the app';
 }

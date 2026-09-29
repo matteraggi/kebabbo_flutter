@@ -25,7 +25,7 @@ Future<Map<String, dynamic>?> getProfile(BuildContext context) async {
     debugPrint(error.toString());
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unexpected error occurred')),
+        SnackBar(content: Text(S.of(context).unexpected_error_occurred)),
       );
     }
     return null;

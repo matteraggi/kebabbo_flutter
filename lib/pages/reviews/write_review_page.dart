@@ -145,8 +145,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
   Future<void> _submitReview() async {
     if (_selectedKebab == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Seleziona il kebabbaro da recensire! 🌯'),
+        SnackBar(
+          content: Text(S.of(context).select_place_to_review),
           backgroundColor: red,
         ),
       );
@@ -278,7 +278,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore invio recensione: $e'),
+            content: Text(S.of(context).error_sending_review(e.toString())),
             backgroundColor: red,
           ),
         );
@@ -300,8 +300,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Scrivi una Recensione',
+        title: Text(
+          S.of(context).write_review_title,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -318,7 +318,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                 children: [
                   // 1. Selezione del Kebabbaro
                   _buildSectionCard(
-                    title: 'Scegli il Kebabbaro',
+                    title: S.of(context).choose_place,
                     icon: Icons.storefront_rounded,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,7 +353,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                                       _filteredKebabs = _allKebabs;
                                     });
                                   },
-                                  child: const Text('Cambia'),
+                                  child: Text(S.of(context).change),
                                 ),
                               ],
                             ),
@@ -363,8 +363,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                             controller: _searchController,
                             onChanged: _filterKebabs,
                             decoration: InputDecoration(
-                              labelText: 'Cerca tra i locali di Kebabbo',
-                              hintText: 'Es. Istanbul, Agra, King...',
+                              labelText: S.of(context).search_kebabbo_places,
+                              hintText: S.of(context).search_places_hint,
                               prefixIcon: const Icon(Icons.search, color: red),
                               filled: true,
                               fillColor: Colors.grey[50],
@@ -382,12 +382,12 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                               border: Border.all(color: Colors.grey[300]!),
                             ),
                             child: _filteredKebabs.isEmpty
-                                ? const Padding(
-                                    padding: EdgeInsets.all(16.0),
+                                ? Padding(
+                                    padding: const EdgeInsets.all(16.0),
                                     child: Center(
                                       child: Text(
-                                        'Nessun locale trovato. Se è nuovo, usa "Aggiungi un Kebabbaro"!',
-                                        style: TextStyle(color: Colors.grey, fontSize: 13),
+                                        S.of(context).no_place_found_add_it,
+                                        style: const TextStyle(color: Colors.grey, fontSize: 13),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -433,15 +433,15 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
 
                   // 2. Votazione Pilastri
                   _buildSectionCard(
-                    title: 'Valutazione Generale (1 a 5)',
+                    title: S.of(context).overall_rating_1_5,
                     icon: Icons.star_rounded,
                     child: Column(
                       children: [
-                        _buildSliderRow('Qualità', _quality, (v) => setState(() => _quality = v)),
-                        _buildSliderRow('Prezzo', _price, (v) => setState(() => _price = v)),
-                        _buildSliderRow('Quantità', _dimension, (v) => setState(() => _dimension = v)),
-                        _buildSliderRow('Menù', _menu, (v) => setState(() => _menu = v)),
-                        _buildSliderRow('Simpatia', _fun, (v) => setState(() => _fun = v)),
+                        _buildSliderRow(S.of(context).quality, _quality, (v) => setState(() => _quality = v)),
+                        _buildSliderRow(S.of(context).price, _price, (v) => setState(() => _price = v)),
+                        _buildSliderRow(S.of(context).quantity, _dimension, (v) => setState(() => _dimension = v)),
+                        _buildSliderRow(S.of(context).menu, _menu, (v) => setState(() => _menu = v)),
+                        _buildSliderRow(S.of(context).fun, _fun, (v) => setState(() => _fun = v)),
                       ],
                     ),
                   ),
@@ -450,15 +450,15 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
 
                   // 3. Bilanciamento Ingredienti
                   _buildSectionCard(
-                    title: 'Bilanciamento Ingredienti (1 a 10)',
+                    title: S.of(context).ingredient_balance_1_10,
                     icon: Icons.pie_chart_rounded,
                     child: Column(
                       children: [
-                        _buildSliderRow('Carne', _meat, (v) => setState(() => _meat = v), max: 10, isInteger: true),
-                        _buildSliderRow('Yogurt', _yogurt, (v) => setState(() => _yogurt = v), max: 10, isInteger: true),
-                        _buildSliderRow('Piccante', _spicy, (v) => setState(() => _spicy = v), max: 10, isInteger: true),
-                        _buildSliderRow('Cipolla', _onion, (v) => setState(() => _onion = v), max: 10, isInteger: true),
-                        _buildSliderRow('Verdure', _vegetables, (v) => setState(() => _vegetables = v), max: 10, isInteger: true),
+                        _buildSliderRow(S.of(context).meat, _meat, (v) => setState(() => _meat = v), max: 10, isInteger: true),
+                        _buildSliderRow(S.of(context).yogurt, _yogurt, (v) => setState(() => _yogurt = v), max: 10, isInteger: true),
+                        _buildSliderRow(S.of(context).spicy, _spicy, (v) => setState(() => _spicy = v), max: 10, isInteger: true),
+                        _buildSliderRow(S.of(context).onion, _onion, (v) => setState(() => _onion = v), max: 10, isInteger: true),
+                        _buildSliderRow(S.of(context).vegetables, _vegetables, (v) => setState(() => _vegetables = v), max: 10, isInteger: true),
                       ],
                     ),
                   ),
@@ -467,7 +467,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
 
                   // 4. Testo Recensione & Foto
                   _buildSectionCard(
-                    title: 'La Tua Esperienza',
+                    title: S.of(context).your_experience,
                     icon: Icons.rate_review_rounded,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -476,8 +476,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                           controller: _reviewController,
                           maxLines: 3,
                           decoration: InputDecoration(
-                            labelText: 'Commento / Recensione *',
-                            hintText: 'Cosa ti è piaciuto di più? Consigli qualche salsa o menù?',
+                            labelText: S.of(context).comment_review_label,
+                            hintText: S.of(context).comment_review_hint,
                             filled: true,
                             fillColor: Colors.grey[50],
                             border: OutlineInputBorder(
@@ -486,7 +486,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                           ),
                           validator: (val) {
                             if (val == null || val.trim().isEmpty) {
-                              return 'Scrivi un breve commento sulla tua esperienza';
+                              return S.of(context).comment_review_required;
                             }
                             return null;
                           },
@@ -536,7 +536,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                                     child: CircularProgressIndicator(strokeWidth: 2, color: red),
                                   )
                                 : const Icon(Icons.add_a_photo_outlined),
-                            label: const Text('Aggiungi Foto al Piatto (Opzionale)'),
+                            label: Text(S.of(context).add_dish_photo_optional),
                             onPressed: _pickPhoto,
                           ),
                       ],
@@ -563,8 +563,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                           : const Icon(Icons.send_rounded),
                       label: _isSubmitting
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              'Pubblica Recensione',
+                          : Text(
+                              S.of(context).publish_review,
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                       onPressed: _isSubmitting ? null : _submitReview,

@@ -490,13 +490,13 @@ class _AccountPageState extends State<AccountPage> {
                                   value: 4,
                                   height: 40,
                                   child: Row(
-                                    children: const [
-                                      Icon(Icons.emoji_events,
+                                    children: [
+                                      const Icon(Icons.emoji_events,
                                           color: Colors.black),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
-                                        "Obiettivi & Medaglie",
-                                        style: TextStyle(
+                                        S.of(context).objectives_and_medals,
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black87,

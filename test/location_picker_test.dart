@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kebabbo_flutter/components/map/location_picker_modal.dart';
 import 'package:latlong2/latlong.dart';
 
+import 'test_helpers.dart';
+
 // 1x1 transparent PNG bytes
 final Uint8List kTransparentImage = Uint8List.fromList(<int>[
   0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D,
@@ -28,7 +30,7 @@ void main() {
     const testLocation = LatLng(44.4949, 11.3426);
 
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: LocationPickerModal(
           initialPosition: testLocation,
           autoLocate: false,

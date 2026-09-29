@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/pages/misc/medal_page.dart';
 
 void main() {
@@ -34,13 +36,25 @@ void main() {
       expect(postMedals[2].requiredCount, 10);
       expect(postMedals[3].requiredCount, 50);
 
-      // Verify non-empty assets and descriptions
       for (final medal in allMedalsList) {
-        expect(medal.title.isNotEmpty, isTrue);
-        expect(medal.subtitle.isNotEmpty, isTrue);
-        expect(medal.description.isNotEmpty, isTrue);
         expect(medal.assetPath.endsWith('.png'), isTrue);
       }
+    });
+
+    test('medal texts are localized in every supported language', () async {
+      for (final code in ['it', 'en', 'es', 'fr', 'de', 'pt']) {
+        final s = await S.load(Locale(code));
+        for (final medal in allMedalsList) {
+          expect(medal.title(s).isNotEmpty, isTrue);
+          expect(medal.subtitle(s).isNotEmpty, isTrue);
+          expect(medal.description(s).isNotEmpty, isTrue);
+          expect(medal.unit(s).isNotEmpty, isTrue);
+        }
+      }
+      final it = await S.load(const Locale('it'));
+      expect(allMedalsList.first.title(it), 'Primo Assaggio');
+      final en = await S.load(const Locale('en'));
+      expect(allMedalsList.first.title(en), 'First Bite');
     });
   });
 }

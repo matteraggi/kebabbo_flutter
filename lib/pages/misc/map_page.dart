@@ -206,9 +206,9 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
   String _getMapStyleName() {
     switch (_currentMapStyle) {
       case MapStyleType.googleRoadmap:
-        return "Google Stradale";
+        return S.of(context).map_style_google_road;
       case MapStyleType.googleSatellite:
-        return "Google Satellite";
+        return S.of(context).map_style_google_satellite;
       case MapStyleType.openStreetMap:
         return "OpenStreetMap";
     }
@@ -548,7 +548,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
         side: BorderSide(color: Colors.grey.shade300),
       ),
       child: Tooltip(
-        message: "Cambia mappa: ${_getMapStyleName()}",
+        message: S.of(context).change_map_style(_getMapStyleName()),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: _toggleMapStyle,
@@ -567,10 +567,10 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 const SizedBox(width: 4),
                 Text(
                   _currentMapStyle == MapStyleType.googleSatellite
-                      ? "Satellite"
+                      ? S.of(context).map_style_satellite_short
                       : _currentMapStyle == MapStyleType.openStreetMap
                           ? "OSM"
-                          : "Stradale",
+                          : S.of(context).map_style_road_short,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -589,7 +589,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
     if (_selectedKebab == null) return const SizedBox.shrink();
 
     final item = _selectedKebab!;
-    final name = item['name'] ?? 'Nome non disponibile';
+    final name = item['name'] ?? S.of(context).nome_non_disponibile;
     final isKebab = item['tag'] == 'kebab';
     final bool isStaff = item['is_staff'] == true;
     final distanceStr = _calculateDistance(item['lat'], item['lng']);
@@ -728,7 +728,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    "Staff",
+                                    S.of(context).staff,
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
@@ -768,8 +768,8 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                   const SizedBox(width: 4),
                                   Text(
                                     commCount > 0
-                                        ? "Utenti ($commCount)"
-                                        : "Utenti",
+                                        ? S.of(context).users_count(commCount.toString())
+                                        : S.of(context).users,
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
@@ -794,14 +794,14 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(6.0),
                         border: Border.all(color: const Color(0xFF64B5F6)),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.people_alt_rounded,
                               size: 13, color: Color(0xFF1565C0)),
                           SizedBox(width: 4),
                           Text(
-                            "Recensione Community",
+                            S.of(context).community_review,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
@@ -845,9 +845,9 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       const Icon(Icons.rate_review_outlined,
                           color: Color(0xFF1565C0), size: 18),
                       const SizedBox(width: 8),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          "Nessun utente ha ancora recensito questo locale!",
+                          S.of(context).no_user_reviews_yet,
                           style:
                               TextStyle(fontSize: 11, color: Colors.black87),
                         ),
@@ -881,7 +881,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             _fetchCommunityStats(item['id']);
                           });
                         },
-                        child: const Text('Recensisci',
+                        child: Text(S.of(context).review_action,
                             style: TextStyle(
                                 fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
@@ -925,8 +925,8 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                   Expanded(
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.directions, size: 18),
-                      label: const Text(
-                        "Indicazioni",
+                      label: Text(
+                        S.of(context).directions,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -1126,7 +1126,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
             children: [
               _buildFilterToggle(
                 icon: Icons.workspace_premium,
-                label: 'Staff',
+                label: S.of(context).staff,
                 count: staffCount,
                 isSelected: _showStaff,
                 activeColor: const Color(0xFFE65100),
@@ -1135,7 +1135,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
               const SizedBox(width: 8),
               _buildFilterToggle(
                 icon: Icons.people_alt,
-                label: 'Community',
+                label: S.of(context).community_upload,
                 count: communityCount,
                 isSelected: _showCommunity,
                 activeColor: const Color(0xFF1565C0),

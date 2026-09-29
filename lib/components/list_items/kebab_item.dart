@@ -291,14 +291,14 @@ class KebabListItemState extends State<KebabListItem> {
                         color: red.withValues(alpha: 0.2),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.storefront_outlined,
                             size: 18, color: red),
                         SizedBox(width: 8),
                         Text(
-                          'Vedi orari, foto e recensioni',
+                          S.of(context).see_hours_photos_reviews,
                           style: TextStyle(
                             color: red,
                             fontWeight: FontWeight.bold,
@@ -522,14 +522,14 @@ class KebabListItemState extends State<KebabListItem> {
                         color: Colors.white.withValues(alpha: 0.25),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.storefront_outlined,
                             size: 18, color: Colors.white),
                         SizedBox(width: 8),
                         Text(
-                          'Vedi orari, foto e recensioni',
+                          S.of(context).see_hours_photos_reviews,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

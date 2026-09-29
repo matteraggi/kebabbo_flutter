@@ -29,7 +29,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
       if (!mounted) return;
       context.showSnackBar(S.of(context).password_reset_success);
     } catch (e) {
-      context.showSnackBar('Failed to reset password: ${e.toString()}',
+      context.showSnackBar(S.of(context).password_reset_failed(e.toString()),
           isError: true);
       debugPrint(e.toString());
     } finally {

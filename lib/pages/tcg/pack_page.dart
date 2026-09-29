@@ -180,7 +180,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
     if (userId == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("User not found. Please log in again.")),
+          SnackBar(content: Text(S.of(context).user_not_found_login_again)),
         );
         Navigator.pop(context);
       }
@@ -218,7 +218,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                "Nessun pacchetto pronto al momento (0/2). Il prossimo pacchetto sarà pronto tra ${remainingHours}h e ${remainingMinutes}m.",
+                S.of(context).no_pack_ready_hours_minutes(remainingHours.toString(), remainingMinutes.toString()),
               ),
               duration: const Duration(seconds: 3),
             ),
@@ -239,7 +239,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
       if (availableKebabs.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Nessuna carta disponibile nel database.")),
+            SnackBar(content: Text(S.of(context).no_cards_available)),
           );
           Navigator.pop(context);
         }
@@ -296,7 +296,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
       debugPrint('Error opening pack: $e\n$stacktrace');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: ${e.toString()}')),
+          SnackBar(content: Text(S.of(context).an_error_occurred_with(e.toString()))),
         );
         Navigator.pop(context);
       }
@@ -796,8 +796,8 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                               const SizedBox(width: 10),
                               Text(
                                 _isOpeningLogicRunning
-                                    ? "Apertura in corso..."
-                                    : "Tocca per aprire il pacchetto!",
+                                    ? S.of(context).opening_in_progress
+                                    : S.of(context).tap_to_open_pack,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -873,8 +873,8 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                     const SizedBox(width: 6),
                                     Text(
                                       _isDuplicate
-                                          ? "CARTA DOPPIONE"
-                                          : "NUOVA CARTA SBLOCCATA!",
+                                          ? S.of(context).duplicate_card
+                                          : S.of(context).new_card_unlocked,
                                       style: TextStyle(
                                         color: _isDuplicate
                                             ? const Color(0xFFFFB300)
@@ -918,7 +918,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                 ),
                                 child: Text(
                                   _isDuplicate
-                                      ? "${_kebabDisplayName ?? 'KEBABBO CARD'} (Già in Collezione)"
+                                      ? S.of(context).already_in_collection(_kebabDisplayName ?? 'KEBABBO CARD')
                                       : "✨ ${_kebabDisplayName ?? 'KEBABBO CARD'} ✨",
                                   style: const TextStyle(
                                     color: Colors.black87,
@@ -932,7 +932,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
 
                               // Interactive hint
                               Text(
-                                "Trascina con il dito per inclinare in 3D",
+                                S.of(context).drag_to_tilt,
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.65),
                                   fontSize: 12,
@@ -959,8 +959,8 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       onPressed: () => Navigator.pop(context),
-                                      child: const Text(
-                                        "Collezione",
+                                      child: Text(
+                                        S.of(context).collection_title,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -992,7 +992,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                               color: Color(0xFFFFBA1C)),
                                           const SizedBox(width: 6),
                                           Text(
-                                            "Apri 2° Pacchetto ($_availablePacks)",
+                                            S.of(context).open_second_pack(_availablePacks.toString()),
                                             style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
@@ -1022,13 +1022,13 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                     shadowColor: red.withValues(alpha: 0.5),
                                   ),
                                   onPressed: () => Navigator.pop(context),
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(Icons.check_circle, size: 20),
                                       SizedBox(width: 8),
                                       Text(
-                                        "Aggiungi alla Collezione",
+                                        S.of(context).add_to_collection,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,

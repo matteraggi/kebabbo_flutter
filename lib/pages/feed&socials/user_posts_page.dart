@@ -60,7 +60,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: yellow,
-        title: const Text("Posts"),
+        title: Text(S.of(context).posts),
       ),
       body: SafeArea(
         child: Padding(

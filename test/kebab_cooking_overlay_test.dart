@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kebabbo_flutter/components/animations/kebab_cooking_overlay.dart';
 
+import 'test_helpers.dart';
+
 void main() {
   group('KebabCookingOverlay Tests', () {
     testWidgets('Hidden when isVisible is false', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
+        localizedApp(
+          home: const Scaffold(
             body: KebabCookingOverlay(
               isVisible: false,
             ),
@@ -22,8 +24,8 @@ void main() {
     testWidgets('Renders properly when isVisible is true with ingredients',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
+        localizedApp(
+          home: const Scaffold(
             body: KebabCookingOverlay(
               isVisible: true,
               isReroll: false,
@@ -49,8 +51,8 @@ void main() {
     testWidgets('Renders reroll mode properly',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
+        localizedApp(
+          home: const Scaffold(
             body: KebabCookingOverlay(
               isVisible: true,
               isReroll: true,
@@ -63,6 +65,23 @@ void main() {
 
       expect(find.text('Ricerca Alternativa'), findsOneWidget);
       expect(find.text('👨‍🍳 Nuova combinazione in arrivo...'), findsOneWidget);
+    });
+
+    testWidgets('Uses the device language (English)',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        localizedApp(
+          locale: const Locale('en'),
+          home: const Scaffold(
+            body: KebabCookingOverlay(isVisible: true, isReroll: false),
+          ),
+        ),
+      );
+
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Preparing your kebab'), findsOneWidget);
+      expect(find.text('Preparazione Kebab'), findsNothing);
     });
   });
 }

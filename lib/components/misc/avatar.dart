@@ -43,7 +43,7 @@ class _AvatarState extends State<Avatar> {
           ),
         ElevatedButton(
           onPressed: _isLoading ? null : _upload,
-          child: const Text('Upload'),
+          child: Text(S.of(context).upload),
         ),
       ],
     );

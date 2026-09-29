@@ -2,6 +2,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
+import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
@@ -18,7 +19,7 @@ class PrivacyPolicyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Privacy Policy')),
+      appBar: AppBar(title: Text(S.of(context).privacy_policy)),
       body: FutureBuilder(
         future: loadHtmlFromAssets('assets/privacy-policy/index.html'),
         builder: (context, snapshot) {
@@ -26,7 +27,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             if (snapshot.hasError) {
               return Center(
                 child: Text(
-                  'Errore nel caricamento della Privacy Policy',
+                  S.of(context).privacy_policy_load_error,
                   style: TextStyle(color: red),
                 ),
               );

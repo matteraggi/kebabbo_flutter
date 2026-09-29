@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1456,20 +1455,20 @@ class S {
     return Intl.message('No, thanks', name: 'no_thanks', desc: '', args: []);
   }
 
-  /// `You already have the app installed. Do you want to open it?`
+  /// `Open it in the app for a better experience. If you don't have it yet, we'll take you to Google Play.`
   String get app_is_installed_description {
     return Intl.message(
-      'You already have the app installed. Do you want to open it?',
+      'Open it in the app for a better experience. If you don\'t have it yet, we\'ll take you to Google Play.',
       name: 'app_is_installed_description',
       desc: '',
       args: [],
     );
   }
 
-  /// `App is installed`
+  /// `Kebabbo is also an app!`
   String get app_is_installed {
     return Intl.message(
-      'App is installed',
+      'Kebabbo is also an app!',
       name: 'app_is_installed',
       desc: '',
       args: [],
@@ -2066,69 +2065,2239 @@ class S {
     return Intl.message('50 posts', name: 'fifty_posts', desc: '', args: []);
   }
 
-  /// `Obiettivi`
+  /// `Objectives`
   String get objectives {
-    return Intl.message('Obiettivi', name: 'objectives', desc: '', args: []);
+    return Intl.message('Objectives', name: 'objectives', desc: '', args: []);
   }
 
-  /// `Il tuo kebab`
+  /// `Your kebab`
   String get your_kebab {
-    return Intl.message('Il tuo kebab', name: 'your_kebab', desc: '', args: []);
+    return Intl.message('Your kebab', name: 'your_kebab', desc: '', args: []);
   }
 
-  /// `Kebab non più disponibile`
+  /// `Kebab no longer available`
   String get kebab_no_longer_available {
-    return Intl.message('Kebab non più disponibile', name: 'kebab_no_longer_available', desc: '', args: []);
+    return Intl.message(
+      'Kebab no longer available',
+      name: 'kebab_no_longer_available',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Inserito da`
+  /// `Added by`
   String get inserted_by {
-    return Intl.message('Inserito da', name: 'inserted_by', desc: '', args: []);
+    return Intl.message('Added by', name: 'inserted_by', desc: '', args: []);
   }
 
   /// `Community`
   String get community_upload {
-    return Intl.message('Community', name: 'community_upload', desc: '', args: []);
+    return Intl.message(
+      'Community',
+      name: 'community_upload',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Certificato Staff Kebabbo`
+  /// `Kebabbo Staff Certified`
   String get staff_certified {
-    return Intl.message('Certificato Staff Kebabbo', name: 'staff_certified', desc: '', args: []);
+    return Intl.message(
+      'Kebabbo Staff Certified',
+      name: 'staff_certified',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Scorri per sfogliare la collezione`
+  /// `Swipe to browse collection`
   String get swipe_collection_hint {
-    return Intl.message('Scorri per sfogliare la collezione', name: 'swipe_collection_hint', desc: '', args: []);
+    return Intl.message(
+      'Swipe to browse collection',
+      name: 'swipe_collection_hint',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Esamina in 3D`
+  /// `Examine in 3D`
   String get examine_3d {
-    return Intl.message('Esamina in 3D', name: 'examine_3d', desc: '', args: []);
+    return Intl.message(
+      'Examine in 3D',
+      name: 'examine_3d',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Dettagli`
+  /// `Details`
   String get details {
-    return Intl.message('Dettagli', name: 'details', desc: '', args: []);
+    return Intl.message('Details', name: 'details', desc: '', args: []);
   }
 
-  /// `Verificato dallo staff Kebabbo`
+  /// `Verified by Kebabbo staff`
   String get verified_by_staff_tooltip {
-    return Intl.message('Verificato dallo staff Kebabbo', name: 'verified_by_staff_tooltip', desc: '', args: []);
+    return Intl.message(
+      'Verified by Kebabbo staff',
+      name: 'verified_by_staff_tooltip',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Registrati con Google`
+  /// `Sign up with Google`
   String get sign_up_with_google {
-    return Intl.message('Registrati con Google', name: 'sign_up_with_google', desc: '', args: []);
+    return Intl.message(
+      'Sign up with Google',
+      name: 'sign_up_with_google',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `oppure con email`
+  /// `or with email`
   String get or_continue_with_email {
-    return Intl.message('oppure con email', name: 'or_continue_with_email', desc: '', args: []);
+    return Intl.message(
+      'or with email',
+      name: 'or_continue_with_email',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Hai già un account? Accedi`
+  /// `Already have an account? Sign in`
   String get already_have_an_account {
-    return Intl.message('Hai già un account? Accedi', name: 'already_have_an_account', desc: '', args: []);
+    return Intl.message(
+      'Already have an account? Sign in',
+      name: 'already_have_an_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location services are disabled.`
+  String get location_services_disabled {
+    return Intl.message(
+      'Location services are disabled.',
+      name: 'location_services_disabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission denied.`
+  String get location_permission_denied {
+    return Intl.message(
+      'Location permission denied.',
+      name: 'location_permission_denied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission permanently denied. You can enable it in the settings.`
+  String get location_permission_denied_forever {
+    return Intl.message(
+      'Location permission permanently denied. You can enable it in the settings.',
+      name: 'location_permission_denied_forever',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session expired. Please log in again.`
+  String get session_expired {
+    return Intl.message(
+      'Session expired. Please log in again.',
+      name: 'session_expired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contribute to Kebabbo`
+  String get contribute_title {
+    return Intl.message(
+      'Contribute to Kebabbo',
+      name: 'contribute_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help us map and review the best kebab places!`
+  String get contribute_subtitle {
+    return Intl.message(
+      'Help us map and review the best kebab places!',
+      name: 'contribute_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a kebab place`
+  String get add_kebab_place {
+    return Intl.message(
+      'Add a kebab place',
+      name: 'add_kebab_place',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Put a new place on the map`
+  String get add_kebab_place_subtitle {
+    return Intl.message(
+      'Put a new place on the map',
+      name: 'add_kebab_place_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a Review`
+  String get write_review_title {
+    return Intl.message(
+      'Write a Review',
+      name: 'write_review_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rate the quality, the meat and the sauces`
+  String get write_review_subtitle {
+    return Intl.message(
+      'Rate the quality, the meat and the sauces',
+      name: 'write_review_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get nav_home {
+    return Intl.message('Home', name: 'nav_home', desc: '', args: []);
+  }
+
+  /// `Add`
+  String get nav_add {
+    return Intl.message('Add', name: 'nav_add', desc: '', args: []);
+  }
+
+  /// `Feed`
+  String get nav_feed {
+    return Intl.message('Feed', name: 'nav_feed', desc: '', args: []);
+  }
+
+  /// `Account`
+  String get nav_account {
+    return Intl.message('Account', name: 'nav_account', desc: '', args: []);
+  }
+
+  /// `Page not found`
+  String get page_not_found {
+    return Intl.message(
+      'Page not found',
+      name: 'page_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coordinates and name detected from the Maps link! 📍`
+  String get maps_link_name_and_coords_found {
+    return Intl.message(
+      'Coordinates and name detected from the Maps link! 📍',
+      name: 'maps_link_name_and_coords_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coordinates detected from the Maps link! 📍`
+  String get maps_link_coords_found {
+    return Intl.message(
+      'Coordinates detected from the Maps link! 📍',
+      name: 'maps_link_coords_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Couldn't extract the coordinates from the link. Use "Choose on map".`
+  String get maps_link_failed {
+    return Intl.message(
+      'Couldn\'t extract the coordinates from the link. Use "Choose on map".',
+      name: 'maps_link_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the location on the map before continuing! 📍`
+  String get select_location_first {
+    return Intl.message(
+      'Select the location on the map before continuing! 📍',
+      name: 'select_location_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error while saving: {error}`
+  String error_saving(String error) {
+    return Intl.message(
+      'Error while saving: $error',
+      name: 'error_saving',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `1. Location on the map 📍`
+  String get section_location {
+    return Intl.message(
+      '1. Location on the map 📍',
+      name: 'section_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap to drop the pin or search for the place. Coordinates, address and name will be filled in automatically!`
+  String get section_location_hint {
+    return Intl.message(
+      'Tap to drop the pin or search for the place. Coordinates, address and name will be filled in automatically!',
+      name: 'section_location_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit location on the map`
+  String get edit_location_on_map {
+    return Intl.message(
+      'Edit location on the map',
+      name: 'edit_location_on_map',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose on map (recommended)`
+  String get choose_on_map_recommended {
+    return Intl.message(
+      'Choose on map (recommended)',
+      name: 'choose_on_map_recommended',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `City: {city}`
+  String city_label(String city) {
+    return Intl.message(
+      'City: $city',
+      name: 'city_label',
+      desc: '',
+      args: [city],
+    );
+  }
+
+  /// `Location selected`
+  String get location_selected {
+    return Intl.message(
+      'Location selected',
+      name: 'location_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already have a Google Maps link? Paste it here`
+  String get paste_maps_link_prompt {
+    return Intl.message(
+      'Already have a Google Maps link? Paste it here',
+      name: 'paste_maps_link_prompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google Maps link`
+  String get google_maps_link {
+    return Intl.message(
+      'Google Maps link',
+      name: 'google_maps_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extract`
+  String get extract {
+    return Intl.message('Extract', name: 'extract', desc: '', args: []);
+  }
+
+  /// `2. Name and category 🌯`
+  String get section_name_category {
+    return Intl.message(
+      '2. Name and category 🌯',
+      name: 'section_name_category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name of the place *`
+  String get kebab_place_name_label {
+    return Intl.message(
+      'Name of the place *',
+      name: 'kebab_place_name_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Bella Istanbul 3`
+  String get kebab_place_name_hint {
+    return Intl.message(
+      'e.g. Bella Istanbul 3',
+      name: 'kebab_place_name_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filled in automatically from the map (feel free to edit it)`
+  String get name_autofilled_helper {
+    return Intl.message(
+      'Filled in automatically from the map (feel free to edit it)',
+      name: 'name_autofilled_helper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the name of the place`
+  String get enter_place_name {
+    return Intl.message(
+      'Enter the name of the place',
+      name: 'enter_place_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebab 🌯`
+  String get tag_kebab_pill {
+    return Intl.message('Kebab 🌯', name: 'tag_kebab_pill', desc: '', args: []);
+  }
+
+  /// `Sandwich shop 🥪`
+  String get tag_sandwich_pill {
+    return Intl.message(
+      'Sandwich shop 🥪',
+      name: 'tag_sandwich_pill',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gluten-free option`
+  String get gluten_free_option {
+    return Intl.message(
+      'Gluten-free option',
+      name: 'gluten_free_option',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Offers certified gluten-free bread or options`
+  String get gluten_free_option_desc {
+    return Intl.message(
+      'Offers certified gluten-free bread or options',
+      name: 'gluten_free_option_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3. Opening hours ⏰`
+  String get section_opening_hours {
+    return Intl.message(
+      '3. Opening hours ⏰',
+      name: 'section_opening_hours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can leave them unspecified, pick a template or set custom hours:`
+  String get opening_hours_hint {
+    return Intl.message(
+      'You can leave them unspecified, pick a template or set custom hours:',
+      name: 'opening_hours_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not specified (default)`
+  String get hours_preset_none {
+    return Intl.message(
+      'Not specified (default)',
+      name: 'hours_preset_none',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All day (11-23) 🌯`
+  String get hours_preset_continuous {
+    return Intl.message(
+      'All day (11-23) 🌯',
+      name: 'hours_preset_continuous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Late night (11-02) 🌙`
+  String get hours_preset_night {
+    return Intl.message(
+      'Late night (11-02) 🌙',
+      name: 'hours_preset_night',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lunch and dinner 🍽️`
+  String get hours_preset_lunch_dinner {
+    return Intl.message(
+      'Lunch and dinner 🍽️',
+      name: 'hours_preset_lunch_dinner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom ⚙️`
+  String get hours_preset_custom {
+    return Intl.message(
+      'Custom ⚙️',
+      name: 'hours_preset_custom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No opening hours will be saved.`
+  String get hours_none_note {
+    return Intl.message(
+      'No opening hours will be saved.',
+      name: 'hours_none_note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set the hours for each day (e.g. 11:00-23:00, or "closed"):`
+  String get custom_hours_hint {
+    return Intl.message(
+      'Set the hours for each day (e.g. 11:00-23:00, or "closed"):',
+      name: 'custom_hours_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `4. Photo of the place (optional)`
+  String get section_photo_optional {
+    return Intl.message(
+      '4. Photo of the place (optional)',
+      name: 'section_photo_optional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload a photo of the spit or the place`
+  String get upload_place_photo {
+    return Intl.message(
+      'Upload a photo of the spit or the place',
+      name: 'upload_place_photo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `5. Your first review`
+  String get section_initial_review {
+    return Intl.message(
+      '5. Your first review',
+      name: 'section_initial_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description / review *`
+  String get description_review_label {
+    return Intl.message(
+      'Description / review *',
+      name: 'description_review_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tell us about this kebab: bread, meat, flavours...`
+  String get description_review_hint {
+    return Intl.message(
+      'Tell us about this kebab: bread, meat, flavours...',
+      name: 'description_review_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a short comment to introduce the place`
+  String get description_review_required {
+    return Intl.message(
+      'Write a short comment to introduce the place',
+      name: 'description_review_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Overall rating (1 to 5)`
+  String get overall_rating_1_5 {
+    return Intl.message(
+      'Overall rating (1 to 5)',
+      name: 'overall_rating_1_5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ingredient balance (1 to 10)`
+  String get ingredient_balance_1_10 {
+    return Intl.message(
+      'Ingredient balance (1 to 10)',
+      name: 'ingredient_balance_1_10',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add place to Kebabbo`
+  String get add_kebab_to_kebabbo {
+    return Intl.message(
+      'Add place to Kebabbo',
+      name: 'add_kebab_to_kebabbo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Added to favorites ❤️`
+  String get added_to_favorites {
+    return Intl.message(
+      'Added to favorites ❤️',
+      name: 'added_to_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Removed from favorites`
+  String get removed_from_favorites {
+    return Intl.message(
+      'Removed from favorites',
+      name: 'removed_from_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove from favorites`
+  String get remove_from_favorites {
+    return Intl.message(
+      'Remove from favorites',
+      name: 'remove_from_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save to favorites`
+  String get save_to_favorites {
+    return Intl.message(
+      'Save to favorites',
+      name: 'save_to_favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map not available for this place`
+  String get map_not_available {
+    return Intl.message(
+      'Map not available for this place',
+      name: 'map_not_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log in to post photos`
+  String get login_to_post_photos {
+    return Intl.message(
+      'Log in to post photos',
+      name: 'login_to_post_photos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a photo before posting`
+  String get select_photo_first {
+    return Intl.message(
+      'Select a photo before posting',
+      name: 'select_photo_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photo added! 📸`
+  String get photo_added {
+    return Intl.message(
+      'Photo added! 📸',
+      name: 'photo_added',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload error: {error}`
+  String upload_error(String error) {
+    return Intl.message(
+      'Upload error: $error',
+      name: 'upload_error',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Add a photo to {name}`
+  String add_photo_to(String name) {
+    return Intl.message(
+      'Add a photo to $name',
+      name: 'add_photo_to',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Tap to select a photo`
+  String get tap_to_select_photo {
+    return Intl.message(
+      'Tap to select a photo',
+      name: 'tap_to_select_photo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a comment or describe your kebab...`
+  String get photo_caption_hint {
+    return Intl.message(
+      'Write a comment or describe your kebab...',
+      name: 'photo_caption_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Post photo`
+  String get publish_photo {
+    return Intl.message(
+      'Post photo',
+      name: 'publish_photo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebabbo user`
+  String get kebabbo_user {
+    return Intl.message(
+      'Kebabbo user',
+      name: 'kebabbo_user',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Place not found or removed.`
+  String get kebab_place_not_found {
+    return Intl.message(
+      'Place not found or removed.',
+      name: 'kebab_place_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review`
+  String get review_action {
+    return Intl.message('Review', name: 'review_action', desc: '', args: []);
+  }
+
+  /// `Photo`
+  String get photo {
+    return Intl.message('Photo', name: 'photo', desc: '', args: []);
+  }
+
+  /// `Overview`
+  String get tab_overview {
+    return Intl.message('Overview', name: 'tab_overview', desc: '', args: []);
+  }
+
+  /// `Photos ({count})`
+  String tab_photos(String count) {
+    return Intl.message(
+      'Photos ($count)',
+      name: 'tab_photos',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Reviews ({count})`
+  String tab_reviews(String count) {
+    return Intl.message(
+      'Reviews ($count)',
+      name: 'tab_reviews',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Kebabbo's review`
+  String get kebabbo_staff_review {
+    return Intl.message(
+      'Kebabbo\'s review',
+      name: 'kebabbo_staff_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rating`
+  String get rating_title {
+    return Intl.message('Rating', name: 'rating_title', desc: '', args: []);
+  }
+
+  /// `Community ({count})`
+  String community_count(String count) {
+    return Intl.message(
+      'Community ($count)',
+      name: 'community_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Ingredient balance`
+  String get ingredient_balance {
+    return Intl.message(
+      'Ingredient balance',
+      name: 'ingredient_balance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Opening hours`
+  String get opening_hours {
+    return Intl.message(
+      'Opening hours',
+      name: 'opening_hours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No photos yet`
+  String get no_photos_yet {
+    return Intl.message(
+      'No photos yet',
+      name: 'no_photos_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Be the first to share a photo of your kebab or dish from this place!`
+  String get no_photos_yet_desc {
+    return Intl.message(
+      'Be the first to share a photo of your kebab or dish from this place!',
+      name: 'no_photos_yet_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload the first photo`
+  String get upload_first_photo {
+    return Intl.message(
+      'Upload the first photo',
+      name: 'upload_first_photo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User`
+  String get user_generic {
+    return Intl.message('User', name: 'user_generic', desc: '', args: []);
+  }
+
+  /// `Share your experience at this place with the whole community!`
+  String get no_reviews_yet_desc {
+    return Intl.message(
+      'Share your experience at this place with the whole community!',
+      name: 'no_reviews_yet_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write the first review`
+  String get write_first_review {
+    return Intl.message(
+      'Write the first review',
+      name: 'write_first_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Based on {count} reviews`
+  String based_on_reviews(String count) {
+    return Intl.message(
+      'Based on $count reviews',
+      name: 'based_on_reviews',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Select the place you want to review! 🌯`
+  String get select_place_to_review {
+    return Intl.message(
+      'Select the place you want to review! 🌯',
+      name: 'select_place_to_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error sending the review: {error}`
+  String error_sending_review(String error) {
+    return Intl.message(
+      'Error sending the review: $error',
+      name: 'error_sending_review',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Choose the place`
+  String get choose_place {
+    return Intl.message(
+      'Choose the place',
+      name: 'choose_place',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change`
+  String get change {
+    return Intl.message('Change', name: 'change', desc: '', args: []);
+  }
+
+  /// `Search Kebabbo places`
+  String get search_kebabbo_places {
+    return Intl.message(
+      'Search Kebabbo places',
+      name: 'search_kebabbo_places',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Istanbul, Agra, King...`
+  String get search_places_hint {
+    return Intl.message(
+      'e.g. Istanbul, Agra, King...',
+      name: 'search_places_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No place found. If it's new, use "Add a kebab place"!`
+  String get no_place_found_add_it {
+    return Intl.message(
+      'No place found. If it\'s new, use "Add a kebab place"!',
+      name: 'no_place_found_add_it',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your experience`
+  String get your_experience {
+    return Intl.message(
+      'Your experience',
+      name: 'your_experience',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comment / review *`
+  String get comment_review_label {
+    return Intl.message(
+      'Comment / review *',
+      name: 'comment_review_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What did you like most? Any sauce or menu you'd recommend?`
+  String get comment_review_hint {
+    return Intl.message(
+      'What did you like most? Any sauce or menu you\'d recommend?',
+      name: 'comment_review_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a short comment about your experience`
+  String get comment_review_required {
+    return Intl.message(
+      'Write a short comment about your experience',
+      name: 'comment_review_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a photo of your dish (optional)`
+  String get add_dish_photo_optional {
+    return Intl.message(
+      'Add a photo of your dish (optional)',
+      name: 'add_dish_photo_optional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Post review`
+  String get publish_review {
+    return Intl.message(
+      'Post review',
+      name: 'publish_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap the map to select the exact spot`
+  String get tap_map_to_select {
+    return Intl.message(
+      'Tap the map to select the exact spot',
+      name: 'tap_map_to_select',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select on map`
+  String get select_on_map {
+    return Intl.message(
+      'Select on map',
+      name: 'select_on_map',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Center on my location`
+  String get center_on_my_location {
+    return Intl.message(
+      'Center on my location',
+      name: 'center_on_my_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search address or place...`
+  String get search_address_or_place {
+    return Intl.message(
+      'Search address or place...',
+      name: 'search_address_or_place',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected point`
+  String get selected_point {
+    return Intl.message(
+      'Selected point',
+      name: 'selected_point',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm this location`
+  String get confirm_this_location {
+    return Intl.message(
+      'Confirm this location',
+      name: 'confirm_this_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google Roadmap`
+  String get map_style_google_road {
+    return Intl.message(
+      'Google Roadmap',
+      name: 'map_style_google_road',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google Satellite`
+  String get map_style_google_satellite {
+    return Intl.message(
+      'Google Satellite',
+      name: 'map_style_google_satellite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change map: {style}`
+  String change_map_style(String style) {
+    return Intl.message(
+      'Change map: $style',
+      name: 'change_map_style',
+      desc: '',
+      args: [style],
+    );
+  }
+
+  /// `Satellite`
+  String get map_style_satellite_short {
+    return Intl.message(
+      'Satellite',
+      name: 'map_style_satellite_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Road`
+  String get map_style_road_short {
+    return Intl.message(
+      'Road',
+      name: 'map_style_road_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Users ({count})`
+  String users_count(String count) {
+    return Intl.message(
+      'Users ($count)',
+      name: 'users_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Community review`
+  String get community_review {
+    return Intl.message(
+      'Community review',
+      name: 'community_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No users have reviewed this place yet!`
+  String get no_user_reviews_yet {
+    return Intl.message(
+      'No users have reviewed this place yet!',
+      name: 'no_user_reviews_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Directions`
+  String get directions {
+    return Intl.message('Directions', name: 'directions', desc: '', args: []);
+  }
+
+  /// `Join the community to discover and review the best kebabs`
+  String get login_tagline {
+    return Intl.message(
+      'Join the community to discover and review the best kebabs',
+      name: 'login_tagline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't have an account?`
+  String get no_account_question {
+    return Intl.message(
+      'Don\'t have an account?',
+      name: 'no_account_question',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create your profile and start reviewing the kebabs in your city`
+  String get signup_tagline {
+    return Intl.message(
+      'Create your profile and start reviewing the kebabs in your city',
+      name: 'signup_tagline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already have an account?`
+  String get have_account_question {
+    return Intl.message(
+      'Already have an account?',
+      name: 'have_account_question',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to reset password: {error}`
+  String password_reset_failed(String error) {
+    return Intl.message(
+      'Failed to reset password: $error',
+      name: 'password_reset_failed',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Goals & medals`
+  String get objectives_and_medals {
+    return Intl.message(
+      'Goals & medals',
+      name: 'objectives_and_medals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no other kebabs to recommend.`
+  String get no_more_kebabs_to_recommend {
+    return Intl.message(
+      'There are no other kebabs to recommend.',
+      name: 'no_more_kebabs_to_recommend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reroll`
+  String get reroll {
+    return Intl.message('Reroll', name: 'reroll', desc: '', args: []);
+  }
+
+  /// `See hours, photos and reviews`
+  String get see_hours_photos_reviews {
+    return Intl.message(
+      'See hours, photos and reviews',
+      name: 'see_hours_photos_reviews',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload`
+  String get upload {
+    return Intl.message('Upload', name: 'upload', desc: '', args: []);
+  }
+
+  /// `INGREDIENT AMOUNTS`
+  String get ingredient_amounts_caps {
+    return Intl.message(
+      'INGREDIENT AMOUNTS',
+      name: 'ingredient_amounts_caps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error deleting the post: {error}`
+  String error_deleting_post(String error) {
+    return Intl.message(
+      'Error deleting the post: $error',
+      name: 'error_deleting_post',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Error loading the Privacy Policy`
+  String get privacy_policy_load_error {
+    return Intl.message(
+      'Error loading the Privacy Policy',
+      name: 'privacy_policy_load_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preparing your kebab`
+  String get cooking_title {
+    return Intl.message(
+      'Preparing your kebab',
+      name: 'cooking_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finding an alternative`
+  String get cooking_title_reroll {
+    return Intl.message(
+      'Finding an alternative',
+      name: 'cooking_title_reroll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🔥 Warming up the bread...`
+  String get cooking_step_1 {
+    return Intl.message(
+      '🔥 Warming up the bread...',
+      name: 'cooking_step_1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🥩 Slicing the meat off the spit...`
+  String get cooking_step_2 {
+    return Intl.message(
+      '🥩 Slicing the meat off the spit...',
+      name: 'cooking_step_2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🥗 Adding fresh veggies and sauces...`
+  String get cooking_step_3 {
+    return Intl.message(
+      '🥗 Adding fresh veggies and sauces...',
+      name: 'cooking_step_3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🌯 Rolling it up like a pro...`
+  String get cooking_step_4 {
+    return Intl.message(
+      '🌯 Rolling it up like a pro...',
+      name: 'cooking_step_4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🔍 Finding the best kebab for you...`
+  String get cooking_step_5 {
+    return Intl.message(
+      '🔍 Finding the best kebab for you...',
+      name: 'cooking_step_5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `👨‍🍳 New combination coming up...`
+  String get reroll_step_1 {
+    return Intl.message(
+      '👨‍🍳 New combination coming up...',
+      name: 'reroll_step_1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🔥 Balancing spices and cooking...`
+  String get reroll_step_2 {
+    return Intl.message(
+      '🔥 Balancing spices and cooking...',
+      name: 'reroll_step_2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `✨ Looking for another great pick...`
+  String get reroll_step_3 {
+    return Intl.message(
+      '✨ Looking for another great pick...',
+      name: 'reroll_step_3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User not found. Please log in again.`
+  String get user_not_found_login_again {
+    return Intl.message(
+      'User not found. Please log in again.',
+      name: 'user_not_found_login_again',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No pack ready right now (0/2). The next pack will be ready in {hours}h {minutes}m.`
+  String no_pack_ready_hours_minutes(String hours, String minutes) {
+    return Intl.message(
+      'No pack ready right now (0/2). The next pack will be ready in ${hours}h ${minutes}m.',
+      name: 'no_pack_ready_hours_minutes',
+      desc: '',
+      args: [hours, minutes],
+    );
+  }
+
+  /// `No cards available.`
+  String get no_cards_available {
+    return Intl.message(
+      'No cards available.',
+      name: 'no_cards_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred: {error}`
+  String an_error_occurred_with(String error) {
+    return Intl.message(
+      'An error occurred: $error',
+      name: 'an_error_occurred_with',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Opening...`
+  String get opening_in_progress {
+    return Intl.message(
+      'Opening...',
+      name: 'opening_in_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap to open the pack!`
+  String get tap_to_open_pack {
+    return Intl.message(
+      'Tap to open the pack!',
+      name: 'tap_to_open_pack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DUPLICATE CARD`
+  String get duplicate_card {
+    return Intl.message(
+      'DUPLICATE CARD',
+      name: 'duplicate_card',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NEW CARD UNLOCKED!`
+  String get new_card_unlocked {
+    return Intl.message(
+      'NEW CARD UNLOCKED!',
+      name: 'new_card_unlocked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{name} (already in collection)`
+  String already_in_collection(String name) {
+    return Intl.message(
+      '$name (already in collection)',
+      name: 'already_in_collection',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Drag with your finger to tilt in 3D`
+  String get drag_to_tilt {
+    return Intl.message(
+      'Drag with your finger to tilt in 3D',
+      name: 'drag_to_tilt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open 2nd pack ({count})`
+  String open_second_pack(String count) {
+    return Intl.message(
+      'Open 2nd pack ($count)',
+      name: 'open_second_pack',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Add to collection`
+  String get add_to_collection {
+    return Intl.message(
+      'Add to collection',
+      name: 'add_to_collection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `#{current} of {total}`
+  String card_x_of_y(String current, String total) {
+    return Intl.message(
+      '#$current of $total',
+      name: 'card_x_of_y',
+      desc: '',
+      args: [current, total],
+    );
+  }
+
+  /// `Card collection`
+  String get card_collection {
+    return Intl.message(
+      'Card collection',
+      name: 'card_collection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All found! 🏆`
+  String get all_found {
+    return Intl.message('All found! 🏆', name: 'all_found', desc: '', args: []);
+  }
+
+  /// `{count} remaining`
+  String remaining_count(String count) {
+    return Intl.message(
+      '$count remaining',
+      name: 'remaining_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Tap to browse the full album ›`
+  String get tap_to_browse_album {
+    return Intl.message(
+      'Tap to browse the full album ›',
+      name: 'tap_to_browse_album',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unpack new cards`
+  String get unpack_new_cards {
+    return Intl.message(
+      'Unpack new cards',
+      name: 'unpack_new_cards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 pack recharges every 12h (max 2)`
+  String get recharge_info {
+    return Intl.message(
+      '1 pack recharges every 12h (max 2)',
+      name: 'recharge_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No pack ready. The next one will be available in {time}.`
+  String no_pack_ready_timer(String time) {
+    return Intl.message(
+      'No pack ready. The next one will be available in $time.',
+      name: 'no_pack_ready_timer',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `1st pack`
+  String get first_pack_slot {
+    return Intl.message(
+      '1st pack',
+      name: 'first_pack_slot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2nd pack`
+  String get second_pack_slot {
+    return Intl.message(
+      '2nd pack',
+      name: 'second_pack_slot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ready!`
+  String get ready {
+    return Intl.message('Ready!', name: 'ready', desc: '', args: []);
+  }
+
+  /// `Queued`
+  String get queued {
+    return Intl.message('Queued', name: 'queued', desc: '', args: []);
+  }
+
+  /// `Packs fully recharged: 2 / 2 ready! 📦✨`
+  String get packs_full {
+    return Intl.message(
+      'Packs fully recharged: 2 / 2 ready! 📦✨',
+      name: 'packs_full',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open pack (2 ready!)`
+  String get open_pack_two_ready {
+    return Intl.message(
+      'Open pack (2 ready!)',
+      name: 'open_pack_two_ready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No pack ready`
+  String get no_pack_ready {
+    return Intl.message(
+      'No pack ready',
+      name: 'no_pack_ready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TCG card album`
+  String get tcg_album {
+    return Intl.message(
+      'TCG card album',
+      name: 'tcg_album',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `cards unlocked`
+  String get cards_unlocked {
+    return Intl.message(
+      'cards unlocked',
+      name: 'cards_unlocked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} missing`
+  String missing_count(String count) {
+    return Intl.message(
+      '$count missing',
+      name: 'missing_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `2 / 2 packs ready to open`
+  String get packs_ready_2 {
+    return Intl.message(
+      '2 / 2 packs ready to open',
+      name: 'packs_ready_2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 / 2 pack ready to open`
+  String get packs_ready_1 {
+    return Intl.message(
+      '1 / 2 pack ready to open',
+      name: 'packs_ready_1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `0 / 2 packs available`
+  String get packs_ready_0 {
+    return Intl.message(
+      '0 / 2 packs available',
+      name: 'packs_ready_0',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum charge reached (1 every 12h)`
+  String get max_charge_reached {
+    return Intl.message(
+      'Maximum charge reached (1 every 12h)',
+      name: 'max_charge_reached',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next recharge in {time}`
+  String next_recharge_in(String time) {
+    return Intl.message(
+      'Next recharge in $time',
+      name: 'next_recharge_in',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `Recharging: next one in {time}`
+  String recharging_next_in(String time) {
+    return Intl.message(
+      'Recharging: next one in $time',
+      name: 'recharging_next_in',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `Unpack & view collection`
+  String get unpack_and_view_collection {
+    return Intl.message(
+      'Unpack & view collection',
+      name: 'unpack_and_view_collection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `First Bite`
+  String get medal_0_title {
+    return Intl.message(
+      'First Bite',
+      name: 'medal_0_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Serial Taster`
+  String get medal_1_title {
+    return Intl.message(
+      'Serial Taster',
+      name: 'medal_1_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebab Critic`
+  String get medal_2_title {
+    return Intl.message(
+      'Kebab Critic',
+      name: 'medal_2_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Master of the Spit`
+  String get medal_3_title {
+    return Intl.message(
+      'Master of the Spit',
+      name: 'medal_3_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Food Legend`
+  String get medal_4_title {
+    return Intl.message(
+      'Food Legend',
+      name: 'medal_4_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Voice of the Feed`
+  String get medal_5_title {
+    return Intl.message(
+      'Voice of the Feed',
+      name: 'medal_5_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Taste Reporter`
+  String get medal_6_title {
+    return Intl.message(
+      'Taste Reporter',
+      name: 'medal_6_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebab Influencer`
+  String get medal_7_title {
+    return Intl.message(
+      'Kebab Influencer',
+      name: 'medal_7_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Community Pillar`
+  String get medal_8_title {
+    return Intl.message(
+      'Community Pillar',
+      name: 'medal_8_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You wrote your first review of a kebab place. Welcome to the family of Kebabbo critics!`
+  String get medal_0_desc {
+    return Intl.message(
+      'You wrote your first review of a kebab place. Welcome to the family of Kebabbo critics!',
+      name: 'medal_0_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You've reviewed 5 different places. Your palate is starting to recognise the true art of the spit!`
+  String get medal_1_desc {
+    return Intl.message(
+      'You\'ve reviewed 5 different places. Your palate is starting to recognise the true art of the spit!',
+      name: 'medal_1_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `10 reviews done! Your ratings guide kebab places and the whole community.`
+  String get medal_2_desc {
+    return Intl.message(
+      '10 reviews done! Your ratings guide kebab places and the whole community.',
+      name: 'medal_2_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `20 reviews written! No wrap, sauce or flatbread holds any secrets from you. A true master!`
+  String get medal_3_desc {
+    return Intl.message(
+      '20 reviews written! No wrap, sauce or flatbread holds any secrets from you. A true master!',
+      name: 'medal_3_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `30 reviews under your belt! You've reached the top of the Kebabbo food experience. A living legend!`
+  String get medal_4_desc {
+    return Intl.message(
+      '30 reviews under your belt! You\'ve reached the top of the Kebabbo food experience. A living legend!',
+      name: 'medal_4_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You published your first post in the social feed. Your passion for kebab is now public!`
+  String get medal_5_desc {
+    return Intl.message(
+      'You published your first post in the social feed. Your passion for kebab is now public!',
+      name: 'medal_5_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You've shared 5 posts with photos and thoughts in the feed. The community loves your updates!`
+  String get medal_6_desc {
+    return Intl.message(
+      'You\'ve shared 5 posts with photos and thoughts in the feed. The community loves your updates!',
+      name: 'medal_6_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `10 posts shared! Your shots and place tags make the whole city hungry.`
+  String get medal_7_desc {
+    return Intl.message(
+      '10 posts shared! Your shots and place tags make the whole city hungry.',
+      name: 'medal_7_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `50 posts in the community! You're an irreplaceable pillar of the Kebabbo feed!`
+  String get medal_8_desc {
+    return Intl.message(
+      '50 posts in the community! You\'re an irreplaceable pillar of the Kebabbo feed!',
+      name: 'medal_8_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Supreme Legend`
+  String get rank_5_name {
+    return Intl.message(
+      'Supreme Legend',
+      name: 'rank_5_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You've achieved every milestone! You're in Kebabbo's Olympus.`
+  String get rank_5_desc {
+    return Intl.message(
+      'You\'ve achieved every milestone! You\'re in Kebabbo\'s Olympus.',
+      name: 'rank_5_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebabbo Veteran`
+  String get rank_4_name {
+    return Intl.message(
+      'Kebabbo Veteran',
+      name: 'rank_4_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just a few milestones left to complete everything!`
+  String get rank_4_desc {
+    return Intl.message(
+      'Just a few milestones left to complete everything!',
+      name: 'rank_4_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sauce Master`
+  String get rank_3_name {
+    return Intl.message(
+      'Sauce Master',
+      name: 'rank_3_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A recognised expert in both taste and community.`
+  String get rank_3_desc {
+    return Intl.message(
+      'A recognised expert in both taste and community.',
+      name: 'rank_3_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Döner Gourmet`
+  String get rank_2_name {
+    return Intl.message(
+      'Döner Gourmet',
+      name: 'rank_2_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have a great palate and an active voice in the feed.`
+  String get rank_2_desc {
+    return Intl.message(
+      'You have a great palate and an active voice in the feed.',
+      name: 'rank_2_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spit Enthusiast`
+  String get rank_1_name {
+    return Intl.message(
+      'Spit Enthusiast',
+      name: 'rank_1_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The first milestones are yours! Keep reviewing and posting.`
+  String get rank_1_desc {
+    return Intl.message(
+      'The first milestones are yours! Keep reviewing and posting.',
+      name: 'rank_1_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kebab Novice`
+  String get rank_0_name {
+    return Intl.message(
+      'Kebab Novice',
+      name: 'rank_0_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write your first review or create a post to start your collection!`
+  String get rank_0_desc {
+    return Intl.message(
+      'Write your first review or create a post to start your collection!',
+      name: 'rank_0_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `reviews`
+  String get unit_reviews {
+    return Intl.message('reviews', name: 'unit_reviews', desc: '', args: []);
+  }
+
+  /// `posts`
+  String get unit_posts {
+    return Intl.message('posts', name: 'unit_posts', desc: '', args: []);
+  }
+
+  /// `Milestone reached 🎉`
+  String get goal_reached {
+    return Intl.message(
+      'Milestone reached 🎉',
+      name: 'goal_reached',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In progress ⏳`
+  String get in_progress {
+    return Intl.message(
+      'In progress ⏳',
+      name: 'in_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Progress`
+  String get progress_label {
+    return Intl.message('Progress', name: 'progress_label', desc: '', args: []);
+  }
+
+  /// `Only {missing} {unit} left to unlock this medal!`
+  String medal_missing(String missing, String unit) {
+    return Intl.message(
+      'Only $missing $unit left to unlock this medal!',
+      name: 'medal_missing',
+      desc: '',
+      args: [missing, unit],
+    );
+  }
+
+  /// `Medals & milestones`
+  String get medals_page_title {
+    return Intl.message(
+      'Medals & milestones',
+      name: 'medals_page_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All ({count})`
+  String filter_all_count(String count) {
+    return Intl.message(
+      'All ($count)',
+      name: 'filter_all_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Reviews ({count})`
+  String filter_reviews_count(String count) {
+    return Intl.message(
+      'Reviews ($count)',
+      name: 'filter_reviews_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Unlocked ({count})`
+  String filter_unlocked_count(String count) {
+    return Intl.message(
+      'Unlocked ($count)',
+      name: 'filter_unlocked_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `No medals in this filter`
+  String get no_medals_in_filter {
+    return Intl.message(
+      'No medals in this filter',
+      name: 'no_medals_in_filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{unlocked} of {total} unlocked`
+  String unlocked_of_total(String unlocked, String total) {
+    return Intl.message(
+      '$unlocked of $total unlocked',
+      name: 'unlocked_of_total',
+      desc: '',
+      args: [unlocked, total],
+    );
+  }
+
+  /// `{percent}% complete`
+  String percent_completed(String percent) {
+    return Intl.message(
+      '$percent% complete',
+      name: 'percent_completed',
+      desc: '',
+      args: [percent],
+    );
+  }
+
+  /// `Reviews`
+  String get reviews_label {
+    return Intl.message('Reviews', name: 'reviews_label', desc: '', args: []);
+  }
+
+  /// `Feed posts`
+  String get feed_posts_label {
+    return Intl.message(
+      'Feed posts',
+      name: 'feed_posts_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unlocked`
+  String get unlocked_badge {
+    return Intl.message('Unlocked', name: 'unlocked_badge', desc: '', args: []);
+  }
+
+  /// `Completed! ⭐`
+  String get completed_badge {
+    return Intl.message(
+      'Completed! ⭐',
+      name: 'completed_badge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open the app`
+  String get open_in_app {
+    return Intl.message(
+      'Open the app',
+      name: 'open_in_app',
+      desc: '',
+      args: [],
+    );
   }
 }
 

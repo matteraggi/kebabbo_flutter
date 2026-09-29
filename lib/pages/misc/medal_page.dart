@@ -5,129 +5,69 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MedalInfo {
   final int id;
-  final String title;
-  final String subtitle;
-  final String description;
   final String assetPath;
   final String category; // 'reviews' or 'posts'
   final int requiredCount;
-  final String unit; // 'recensioni' or 'post'
 
   const MedalInfo({
     required this.id,
-    required this.title,
-    required this.subtitle,
-    required this.description,
     required this.assetPath,
     required this.category,
     required this.requiredCount,
-    required this.unit,
   });
+
+  String title(S s) => [
+        s.medal_0_title,
+        s.medal_1_title,
+        s.medal_2_title,
+        s.medal_3_title,
+        s.medal_4_title,
+        s.medal_5_title,
+        s.medal_6_title,
+        s.medal_7_title,
+        s.medal_8_title,
+      ][id];
+
+  String subtitle(S s) => [
+        s.one_review,
+        s.five_reviews,
+        s.ten_reviews,
+        s.twenty_reviews,
+        s.thirty_reviews,
+        s.one_post,
+        s.five_posts,
+        s.ten_posts,
+        s.fifty_posts,
+      ][id];
+
+  String description(S s) => [
+        s.medal_0_desc,
+        s.medal_1_desc,
+        s.medal_2_desc,
+        s.medal_3_desc,
+        s.medal_4_desc,
+        s.medal_5_desc,
+        s.medal_6_desc,
+        s.medal_7_desc,
+        s.medal_8_desc,
+      ][id];
+
+  String unit(S s) => category == 'reviews' ? s.unit_reviews : s.unit_posts;
 }
 
 const List<MedalInfo> allMedalsList = [
   // Categoria Recensioni
-  MedalInfo(
-    id: 0,
-    title: 'Primo Assaggio',
-    subtitle: '1 Recensione',
-    description:
-        'Hai scritto la tua prima recensione di un kebabbaro. Benvenuto nella famiglia dei critici di Kebabbo!',
-    assetPath: 'assets/images/1_review_medal.png',
-    category: 'reviews',
-    requiredCount: 1,
-    unit: 'recensioni',
-  ),
-  MedalInfo(
-    id: 1,
-    title: 'Assaggiatore Seriale',
-    subtitle: '5 Recensioni',
-    description:
-        'Hai recensito 5 locali diversi. Il tuo palato comincia a distinguere la vera arte dello spiedo!',
-    assetPath: 'assets/images/5_review_medal.png',
-    category: 'reviews',
-    requiredCount: 5,
-    unit: 'recensioni',
-  ),
-  MedalInfo(
-    id: 2,
-    title: 'Critico del Kebab',
-    subtitle: '10 Recensioni',
-    description:
-        '10 recensioni completate! Le tue valutazioni guidano i kebabbari e orientano tutta la community.',
-    assetPath: 'assets/images/10_review_medal.png',
-    category: 'reviews',
-    requiredCount: 10,
-    unit: 'recensioni',
-  ),
-  MedalInfo(
-    id: 3,
-    title: 'Maestro dello Spiedo',
-    subtitle: '20 Recensioni',
-    description:
-        '20 recensioni scritte! Nessun rotolo, salsa o pane arabo ha più segreti per te. Un vero maestro!',
-    assetPath: 'assets/images/20_review_medal.png',
-    category: 'reviews',
-    requiredCount: 20,
-    unit: 'recensioni',
-  ),
-  MedalInfo(
-    id: 4,
-    title: 'Leggenda Gastronomica',
-    subtitle: '30 Recensioni',
-    description:
-        '30 recensioni all’attivo! Hai raggiunto i vertici dell’esperienza culinaria di Kebabbo. Una vera leggenda vivente!',
-    assetPath: 'assets/images/30_review_medal.png',
-    category: 'reviews',
-    requiredCount: 30,
-    unit: 'recensioni',
-  ),
+  MedalInfo(id: 0, assetPath: 'assets/images/1_review_medal.png', category: 'reviews', requiredCount: 1),
+  MedalInfo(id: 1, assetPath: 'assets/images/5_review_medal.png', category: 'reviews', requiredCount: 5),
+  MedalInfo(id: 2, assetPath: 'assets/images/10_review_medal.png', category: 'reviews', requiredCount: 10),
+  MedalInfo(id: 3, assetPath: 'assets/images/20_review_medal.png', category: 'reviews', requiredCount: 20),
+  MedalInfo(id: 4, assetPath: 'assets/images/30_review_medal.png', category: 'reviews', requiredCount: 30),
 
-  // Categoria Community & Feed
-  MedalInfo(
-    id: 5,
-    title: 'Voce del Feed',
-    subtitle: '1 Post',
-    description:
-        'Hai pubblicato il tuo primo post nel feed sociale. La tua passione per il kebab ora è pubblica!',
-    assetPath: 'assets/images/1_post_medal.png',
-    category: 'posts',
-    requiredCount: 1,
-    unit: 'post',
-  ),
-  MedalInfo(
-    id: 6,
-    title: 'Reporter del Gusto',
-    subtitle: '5 Post',
-    description:
-        'Hai condiviso 5 post con foto e pensieri nel feed. La community adora i tuoi aggiornamenti!',
-    assetPath: 'assets/images/5_post_medal.png',
-    category: 'posts',
-    requiredCount: 5,
-    unit: 'post',
-  ),
-  MedalInfo(
-    id: 7,
-    title: 'Influencer del Kebab',
-    subtitle: '10 Post',
-    description:
-        '10 post condivisi! Con i tuoi scatti e i tuoi tag ai locali scateni la fame di tutta la città.',
-    assetPath: 'assets/images/10_post_medal.png',
-    category: 'posts',
-    requiredCount: 10,
-    unit: 'post',
-  ),
-  MedalInfo(
-    id: 8,
-    title: 'Pilastro Sociale',
-    subtitle: '50 Post',
-    description:
-        '50 post nella community! Sei un pilastro insostituibile del social feed di Kebabbo!',
-    assetPath: 'assets/images/50_post_medal.png',
-    category: 'posts',
-    requiredCount: 50,
-    unit: 'post',
-  ),
+  // Categoria Community / Post
+  MedalInfo(id: 5, assetPath: 'assets/images/1_post_medal.png', category: 'posts', requiredCount: 1),
+  MedalInfo(id: 6, assetPath: 'assets/images/5_post_medal.png', category: 'posts', requiredCount: 5),
+  MedalInfo(id: 7, assetPath: 'assets/images/10_post_medal.png', category: 'posts', requiredCount: 10),
+  MedalInfo(id: 8, assetPath: 'assets/images/50_post_medal.png', category: 'posts', requiredCount: 50),
 ];
 
 class MedalPage extends StatefulWidget {
@@ -258,41 +198,42 @@ class _MedalPageState extends State<MedalPage> {
   }
 
   ({String rankName, String icon, String description}) _calculateRank(int count) {
+    final s = S.of(context);
     if (count >= 9) {
       return (
-        rankName: 'Leggenda Suprema',
+        rankName: s.rank_5_name,
         icon: '🏆',
-        description: 'Hai conquistato tutti i traguardi! Sei nell’Olimpo di Kebabbo.',
+        description: s.rank_5_desc,
       );
     } else if (count >= 7) {
       return (
-        rankName: 'Veterano di Kebabbo',
+        rankName: s.rank_4_name,
         icon: '👑',
-        description: 'Mancano pochissimi traguardi al completamento assoluto!',
+        description: s.rank_4_desc,
       );
     } else if (count >= 5) {
       return (
-        rankName: 'Maestro delle Salse',
+        rankName: s.rank_3_name,
         icon: '🌶️',
-        description: 'Un esperto riconosciuto sia nei gusti sia nella community.',
+        description: s.rank_3_desc,
       );
     } else if (count >= 3) {
       return (
-        rankName: 'Gourmet del Döner',
+        rankName: s.rank_2_name,
         icon: '🎖️',
-        description: 'Hai un ottimo palato e una voce attiva nel feed.',
+        description: s.rank_2_desc,
       );
     } else if (count >= 1) {
       return (
-        rankName: 'Appassionato di Spiedi',
+        rankName: s.rank_1_name,
         icon: '🌯',
-        description: 'I primi traguardi sono tuoi! Continua a recensire e postare.',
+        description: s.rank_1_desc,
       );
     } else {
       return (
-        rankName: 'Novizio del Kebab',
+        rankName: s.rank_0_name,
         icon: '🥙',
-        description: 'Scrivi la tua prima recensione o crea un post per iniziare la collezione!',
+        description: s.rank_0_desc,
       );
     }
   }
@@ -391,7 +332,7 @@ class _MedalPageState extends State<MedalPage> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      isUnlocked ? 'Traguardo Raggiunto 🎉' : 'In Corso ⏳',
+                      isUnlocked ? S.of(context).goal_reached : S.of(context).in_progress,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -407,7 +348,7 @@ class _MedalPageState extends State<MedalPage> {
 
               // Titolo & Sottotitolo
               Text(
-                medal.title,
+                medal.title(S.of(context)),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 22,
@@ -417,7 +358,7 @@ class _MedalPageState extends State<MedalPage> {
               ),
               const SizedBox(height: 4),
               Text(
-                medal.subtitle,
+                medal.subtitle(S.of(context)),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -435,7 +376,7 @@ class _MedalPageState extends State<MedalPage> {
                   border: Border.all(color: Colors.grey[200]!),
                 ),
                 child: Text(
-                  medal.description,
+                  medal.description(S.of(context)),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -464,7 +405,7 @@ class _MedalPageState extends State<MedalPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Avanzamento',
+                          S.of(context).progress_label,
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
@@ -473,8 +414,8 @@ class _MedalPageState extends State<MedalPage> {
                         ),
                         Text(
                           isUnlocked
-                              ? '${medal.requiredCount} / ${medal.requiredCount} ${medal.unit} (100%)'
-                              : '$userProgress / ${medal.requiredCount} ${medal.unit} (${(progressFraction * 100).toInt()}%)',
+                              ? '${medal.requiredCount} / ${medal.requiredCount} ${medal.unit(S.of(context))} (100%)'
+                              : '$userProgress / ${medal.requiredCount} ${medal.unit(S.of(context))} (${(progressFraction * 100).toInt()}%)',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
@@ -498,7 +439,7 @@ class _MedalPageState extends State<MedalPage> {
                     if (!isUnlocked) ...[
                       const SizedBox(height: 8),
                       Text(
-                        'Ti mancano solo $missing ${medal.unit} per sbloccare questa medaglia!',
+                        S.of(context).medal_missing(missing.toString(), medal.unit(S.of(context))),
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
@@ -524,8 +465,8 @@ class _MedalPageState extends State<MedalPage> {
                     ),
                   ),
                   onPressed: () => Navigator.pop(sheetContext),
-                  child: const Text(
-                    'Chiudi',
+                  child: Text(
+                    S.of(context).close,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                 ),
@@ -558,8 +499,8 @@ class _MedalPageState extends State<MedalPage> {
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Medagliere & Traguardi',
+        title: Text(
+          S.of(context).medals_page_title,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -599,25 +540,25 @@ class _MedalPageState extends State<MedalPage> {
                         children: [
                           _buildFilterChip(
                             key: 'all',
-                            label: 'Tutte ($totalMedals)',
+                            label: S.of(context).filter_all_count(totalMedals.toString()),
                             icon: Icons.grid_view_rounded,
                           ),
                           const SizedBox(width: 8),
                           _buildFilterChip(
                             key: 'reviews',
-                            label: 'Recensioni (5)',
+                            label: S.of(context).filter_reviews_count('5'),
                             icon: Icons.rate_review_outlined,
                           ),
                           const SizedBox(width: 8),
                           _buildFilterChip(
                             key: 'posts',
-                            label: 'Community (4)',
+                            label: S.of(context).community_count('4'),
                             icon: Icons.photo_camera_outlined,
                           ),
                           const SizedBox(width: 8),
                           _buildFilterChip(
                             key: 'unlocked',
-                            label: 'Sbloccate ($unlockedCount)',
+                            label: S.of(context).filter_unlocked_count(unlockedCount.toString()),
                             icon: Icons.emoji_events_outlined,
                           ),
                         ],
@@ -639,7 +580,7 @@ class _MedalPageState extends State<MedalPage> {
                                   size: 48, color: Colors.grey[400]),
                               const SizedBox(height: 12),
                               Text(
-                                'Nessuna medaglia in questo filtro',
+                                S.of(context).no_medals_in_filter,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -756,7 +697,7 @@ class _MedalPageState extends State<MedalPage> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '$unlockedCount su $totalMedals sbloccate',
+                      S.of(context).unlocked_of_total(unlockedCount.toString(), totalMedals.toString()),
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -765,7 +706,7 @@ class _MedalPageState extends State<MedalPage> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${(completionFraction * 100).toInt()}% completato',
+                      S.of(context).percent_completed((completionFraction * 100).toInt().toString()),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -787,13 +728,13 @@ class _MedalPageState extends State<MedalPage> {
             children: [
               _buildStatSummaryItem(
                 icon: Icons.rate_review_outlined,
-                label: 'Recensioni',
+                label: S.of(context).reviews_label,
                 value: '$_reviewsCount',
               ),
               Container(width: 1, height: 26, color: Colors.grey[300]),
               _buildStatSummaryItem(
                 icon: Icons.photo_camera_outlined,
-                label: 'Post Feed',
+                label: S.of(context).feed_posts_label,
                 value: '$_postsCount',
               ),
             ],
@@ -934,13 +875,13 @@ class _MedalPageState extends State<MedalPage> {
                       color: const Color(0xFFE6F4EA),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.check, size: 10, color: Color(0xFF137333)),
                         SizedBox(width: 2),
                         Text(
-                          'Sbloccata',
+                          S.of(context).unlocked_badge,
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.bold,
@@ -993,7 +934,7 @@ class _MedalPageState extends State<MedalPage> {
             Column(
               children: [
                 Text(
-                  medal.title,
+                  medal.title(S.of(context)),
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -1005,7 +946,7 @@ class _MedalPageState extends State<MedalPage> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  medal.subtitle,
+                  medal.subtitle(S.of(context)),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 11,
@@ -1025,8 +966,8 @@ class _MedalPageState extends State<MedalPage> {
                   color: const Color(0xFFFFF9E6),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'Completato! ⭐',
+                child: Text(
+                  S.of(context).completed_badge,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 10,

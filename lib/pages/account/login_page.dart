@@ -128,7 +128,7 @@ class LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Entra nella community per scoprire e recensire i migliori kebab',
+                    S.of(context).login_tagline,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -304,9 +304,9 @@ class LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Non hai un account?',
-                        style: TextStyle(
+                      Text(
+                        S.of(context).no_account_question,
+                        style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
