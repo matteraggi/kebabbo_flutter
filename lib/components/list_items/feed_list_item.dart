@@ -4,9 +4,8 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab/kebab_single_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'package:timeago/timeago.dart' as timeago_it;
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 
 class FeedListItem extends StatefulWidget {
   final String text;
@@ -60,7 +59,6 @@ class FeedListItemState extends State<FeedListItem> {
     _checkIfLiked();
     fetchUserNames();
     _currentCommentNumber = widget.commentNumber;
-    timeago_it.setLocaleMessages('it', timeago_it.ItMessages());
   }
 
   @override
@@ -130,41 +128,36 @@ class FeedListItemState extends State<FeedListItem> {
 
   Future<void> _toggleLike(int postId) async {
     final userId = supabase.auth.currentSession?.user.id;
-    final updatedLikes = List<String>.from(widget.likeList);
-
-    if (hasLiked) {
-      updatedLikes.remove(userId);
-      likeCount--;
-    } else {
-      if (userId == null) {
-        //show a toast
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  S.of(context).devi_essere_autenticato_per_mettere_mi_piace)),
-        );
-        return;
-      }
-      updatedLikes.add(userId);
-      likeCount++;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text(S.of(context).devi_essere_autenticato_per_mettere_mi_piace)),
+      );
+      return;
     }
 
     try {
-      await supabase
-          .from('posts')
-          .update({'like': updatedLikes}).eq('id', postId);
+      // RLS permette di aggiornare solo i propri post: il toggle passa da una
+      // funzione SECURITY DEFINER che restituisce la lista aggiornata.
+      final result =
+          await supabase.rpc('toggle_post_like', params: {'post_id': postId});
+      final likes = List<String>.from(result as List? ?? []);
 
-      setState(() {
-        hasLiked = !hasLiked;
-      });
+      if (mounted) {
+        setState(() {
+          hasLiked = likes.contains(userId);
+          likeCount = likes.length;
+        });
+      }
     } catch (error) {
-      debugPrint('Errore durante l\'aggiornamento dei like: $error');
+      debugPrint("Errore durante l'aggiornamento dei like: $error");
     }
   }
 
   String _formatTimestamp(String createdAt) {
     final DateTime postDate = DateTime.parse(createdAt);
-    return timeago.format(postDate, locale: 'it');
+    return formatTimeAgo(context, postDate);
   }
 
   Future<void> _postComment() async {
@@ -190,17 +183,15 @@ class FeedListItemState extends State<FeedListItem> {
     };
 
     try {
-      // Inserisce il nuovo commento
+      // Inserisce il nuovo commento. Il contatore comments_number del post
+      // viene aggiornato dal trigger sync_comment_count sul database.
       await supabase.from('posts').insert(commentData);
 
-      await supabase
-          .from('posts')
-          .update({'comments_number': _currentCommentNumber + 1}).eq(
-              'id', widget.postId);
-
-      setState(() {
-        _currentCommentNumber++;
-      });
+      if (mounted) {
+        setState(() {
+          _currentCommentNumber++;
+        });
+      }
 
       // Resetta il controller del commento
       commentController.clear();
@@ -273,7 +264,7 @@ class FeedListItemState extends State<FeedListItem> {
                             title: Text(comment['text'] ??
                                 S.of(context).commento_non_disponibile),
                             subtitle: Text(
-                              '${userProfile['username'] ?? 'Anonimo'} - ${_formatTimestamp(comment['created_at'])}',
+                              '${userProfile['username'] ?? anonymous} - ${_formatTimestamp(comment['created_at'])}',
                             ),
                           );
                         },
@@ -338,7 +329,7 @@ class FeedListItemState extends State<FeedListItem> {
 
       if (supabase.auth.currentUser == null) {
         for (var comment in comments) {
-          comment['user_profile'] = {'username': 'Anonimo', 'avatar_url': null};
+          comment['user_profile'] = {'username': anonymous, 'avatar_url': null};
         }
         return List<Map<String, dynamic>>.from(comments);
       }
@@ -355,7 +346,7 @@ class FeedListItemState extends State<FeedListItem> {
       for (var comment in comments) {
         final userProfile = userProfiles.firstWhere(
             (profile) => profile['id'] == comment['user_id'],
-            orElse: () => {'username': 'Anonimo', 'avatar_url': null});
+            orElse: () => {'username': anonymous, 'avatar_url': null});
         comment['user_profile'] = userProfile;
       }
 
@@ -668,7 +659,7 @@ class FeedListItemState extends State<FeedListItem> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error deleting post: $error")),
+          SnackBar(content: Text(S.of(context).error_deleting_post(error.toString()))),
         );
       }
     }
