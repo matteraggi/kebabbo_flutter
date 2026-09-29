@@ -1,24 +1,16 @@
 // Function to show the info dialog
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 
 void showInfoDialog(BuildContext context, String title, String description) {
-  AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.scale,
-      title: title,
-      desc: description,
-      btnOkColor: red,
-      btnOkOnPress: () {},
-      customHeader: Icon(
-        Icons.info_outline,
-        color: red,
-        size: 100,
-      ) // No animation for the image
-      ).show();
+  showKebabboDialog(
+    context,
+    title: title,
+    description: description,
+    header: const Icon(Icons.info_outline, color: red, size: 100),
+  );
 }
 
 // The "i" circular button widget
