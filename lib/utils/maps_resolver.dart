@@ -40,25 +40,44 @@ class MapsResolver {
     try {
       String resolvedUrl = trimmed;
 
-      // Se è un link breve (maps.app.goo.gl o goo.gl), seguiamo i redirect
-      if (trimmed.contains('goo.gl') || !trimmed.contains('@')) {
-        final client = http.Client();
-        try {
-          final request = http.Request('GET', Uri.parse(trimmed))
-            ..followRedirects = true
-            ..maxRedirects = 5;
-          final response = await client.send(request);
-          resolvedUrl = response.request?.url.toString() ?? trimmed;
-        } finally {
-          client.close();
+      // 1. Controlla prima se il link contiene già le coordinate (come i link estesi di Google Maps)
+      LatLng? coords = extractCoordsFromUrl(trimmed);
+
+      // 2. Se non ha coordinate ed è un link breve (maps.app.goo.gl o goo.gl), srotoliamo l'URL
+      if (coords == null && (trimmed.contains('goo.gl') || !trimmed.contains('@'))) {
+        if (kIsWeb) {
+          // Su Web i browser bloccano le chiamate dirette a maps.app.goo.gl per via della CORS policy.
+          // Utilizziamo un endpoint unshortener pubblico con CORS abilitato (Access-Control-Allow-Origin: *).
+          final unshortened = await _unshortenWebUrl(trimmed);
+          if (unshortened != null && unshortened.isNotEmpty) {
+            resolvedUrl = unshortened;
+          }
+        } else {
+          final client = http.Client();
+          try {
+            String currentUrl = trimmed;
+            for (int i = 0; i < 5; i++) {
+              final request = http.Request('GET', Uri.parse(currentUrl))
+                ..followRedirects = false;
+              final response = await client.send(request);
+              final location = response.headers['location'];
+              if (location != null && location.isNotEmpty) {
+                currentUrl = Uri.parse(currentUrl).resolve(location).toString();
+              } else {
+                break;
+              }
+            }
+            resolvedUrl = currentUrl;
+          } catch (_) {
+            // Fallback
+          } finally {
+            client.close();
+          }
         }
       }
 
       // Estrai coordinate tramite regex su vari formati Google Maps
-      LatLng? coords = extractCoordsFromUrl(resolvedUrl);
-
-      // Se non trovate nel link finale, proviamo anche sul link originale
-      coords ??= extractCoordsFromUrl(trimmed);
+      coords = extractCoordsFromUrl(resolvedUrl) ?? coords ?? extractCoordsFromUrl(trimmed);
 
       // Estrai nome del luogo dall'URL se presente (es. /place/Nome+Locale/@... o ?q=Nome+Locale)
       final extractedName = extractPlaceNameFromUrl(resolvedUrl) ?? extractPlaceNameFromUrl(trimmed);
@@ -88,6 +107,43 @@ class MapsResolver {
     return null;
   }
 
+  /// Su Web usiamo unshorten.me con CORS abilitato per espandere i link brevi maps.app.goo.gl
+  static Future<String?> _unshortenWebUrl(String url) async {
+    try {
+      final unshortenUri = Uri.parse('https://unshorten.me/json/${Uri.encodeComponent(url)}');
+      final res = await http.get(unshortenUri, headers: _headers);
+      if (res.statusCode == 200) {
+        final data = json.decode(res.body);
+        if (data is Map && data['success'] == true && data['resolved_url'] != null) {
+          String resolved = data['resolved_url'].toString();
+          if (resolved.contains('continue=')) {
+            final uri = Uri.tryParse(resolved);
+            final continueParam = uri?.queryParameters['continue'];
+            if (continueParam != null && continueParam.isNotEmpty) {
+              resolved = continueParam;
+            }
+          }
+          return Uri.decodeFull(resolved);
+        }
+      }
+    } catch (e) {
+      debugPrint('Errore unshorten web proxy: $e');
+    }
+    return null;
+  }
+
+  static String _safeDecode(String encoded) {
+    try {
+      return Uri.decodeComponent(encoded).replaceAll('+', ' ').trim();
+    } catch (_) {
+      try {
+        return Uri.decodeQueryComponent(encoded).trim();
+      } catch (_) {
+        return encoded.replaceAll('+', ' ').trim();
+      }
+    }
+  }
+
   /// Estrae il nome del locale dall'URL Google Maps (se presente)
   static String? extractPlaceNameFromUrl(String url) {
     try {
@@ -95,7 +151,7 @@ class MapsResolver {
       final placeRegex = RegExp(r'/place/([^/@?]+)');
       final placeMatch = placeRegex.firstMatch(url);
       if (placeMatch != null) {
-        final raw = Uri.decodeComponent(placeMatch.group(1)!).replaceAll('+', ' ').trim();
+        final raw = _safeDecode(placeMatch.group(1)!);
         if (raw.isNotEmpty && !RegExp(r'^-?\d+\.\d+,-?\d+\.\d+$').hasMatch(raw)) {
           return raw;
         }
@@ -105,7 +161,7 @@ class MapsResolver {
       final qRegex = RegExp(r'[?&](?:query|q)=([^&]+)');
       final qMatch = qRegex.firstMatch(url);
       if (qMatch != null) {
-        final raw = Uri.decodeComponent(qMatch.group(1)!).replaceAll('+', ' ').trim();
+        final raw = _safeDecode(qMatch.group(1)!);
         if (raw.isNotEmpty && !RegExp(r'^-?\d+\.\d+,-?\d+\.\d+$').hasMatch(raw)) {
           return raw;
         }
@@ -118,25 +174,17 @@ class MapsResolver {
 
   /// Estrae LatLng da un URL o stringa
   static LatLng? extractCoordsFromUrl(String url) {
-    // 1. Formato standard @lat,lng,zoom (es. /place/.../@44.495536,11.3486402,17z)
-    final atRegex = RegExp(r'@(-?\d+\.\d+),(-?\d+\.\d+)');
-    final atMatch = atRegex.firstMatch(url);
-    if (atMatch != null) {
-      final lat = double.tryParse(atMatch.group(1)!);
-      final lng = double.tryParse(atMatch.group(2)!);
+    // 1. Formato Protobuf Pin Google Place (!3d<lat>!4d<lng>)
+    // PRIORITARIO: rappresenta il pin esatto del locale, mentre @lat,lng è spesso solo la viewport della mappa
+    final protoRegex = RegExp(r'!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)');
+    final protoMatch = protoRegex.firstMatch(url);
+    if (protoMatch != null) {
+      final lat = double.tryParse(protoMatch.group(1)!);
+      final lng = double.tryParse(protoMatch.group(2)!);
       if (lat != null && lng != null) return LatLng(lat, lng);
     }
 
-    // 2. Formato query q=lat,lng o query=lat,lng o destination=lat,lng
-    final qRegex = RegExp(r'(?:q|query|destination|ll)=(-?\d+\.\d+),(-?\d+\.\d+)');
-    final qMatch = qRegex.firstMatch(url);
-    if (qMatch != null) {
-      final lat = double.tryParse(qMatch.group(1)!);
-      final lng = double.tryParse(qMatch.group(2)!);
-      if (lat != null && lng != null) return LatLng(lat, lng);
-    }
-
-    // 3. Formato Protobuf Embed Google (!2d<lng>!3d<lat> oppure !3d<lat>!4d<lng>)
+    // 2. Formato Protobuf Embed Google (!2d<lng>!3d<lat>)
     final proto2d3dRegex = RegExp(r'!2d(-?\d+\.\d+)!3d(-?\d+\.\d+)');
     final proto2d3dMatch = proto2d3dRegex.firstMatch(url);
     if (proto2d3dMatch != null) {
@@ -145,11 +193,21 @@ class MapsResolver {
       if (lat != null && lng != null) return LatLng(lat, lng);
     }
 
-    final protoRegex = RegExp(r'!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)');
-    final protoMatch = protoRegex.firstMatch(url);
-    if (protoMatch != null) {
-      final lat = double.tryParse(protoMatch.group(1)!);
-      final lng = double.tryParse(protoMatch.group(2)!);
+    // 3. Formato query esplicita q=lat,lng o query=lat,lng o destination=lat,lng o ll=lat,lng
+    final qRegex = RegExp(r'(?:q|query|destination|ll)=(-?\d+\.\d+),(-?\d+\.\d+)');
+    final qMatch = qRegex.firstMatch(url);
+    if (qMatch != null) {
+      final lat = double.tryParse(qMatch.group(1)!);
+      final lng = double.tryParse(qMatch.group(2)!);
+      if (lat != null && lng != null) return LatLng(lat, lng);
+    }
+
+    // 4. Formato standard camera/viewport @lat,lng,zoom (es. /place/.../@44.495536,11.3486402,17z)
+    final atRegex = RegExp(r'@(-?\d+\.\d+),(-?\d+\.\d+)');
+    final atMatch = atRegex.firstMatch(url);
+    if (atMatch != null) {
+      final lat = double.tryParse(atMatch.group(1)!);
+      final lng = double.tryParse(atMatch.group(2)!);
       if (lat != null && lng != null) return LatLng(lat, lng);
     }
 
@@ -206,7 +264,7 @@ class MapsResolver {
     try {
       final encoded = Uri.encodeComponent(query.trim());
       final uri = Uri.parse(
-          '$_nominatimBaseUrl/search?q=$encoded&format=json&addressdetails=1&limit=5&countrycodes=it');
+          '$_nominatimBaseUrl/search?q=$encoded&format=json&addressdetails=1&limit=8');
       final res = await http.get(uri, headers: _headers);
       if (res.statusCode == 200) {
         final List list = json.decode(res.body);

@@ -53,6 +53,41 @@ void main() {
       const coordsOnlyUrl = 'https://maps.google.com/?q=44.4955,11.3512';
       final name3 = MapsResolver.extractPlaceNameFromUrl(coordsOnlyUrl);
       expect(name3, isNull);
+
+      const complexUrl =
+          'https://www.google.com/maps/place/Galata+Tantuni+%26+k%C3%BCnefe/@42.5791576,12.8364487,6z/data=!4m6!3m5!1s0x14cab9ba43533c3f:0xffcfb91435c4dccf!8m2!3d41.0278679!4d28.9738275!16s';
+      final name4 = MapsResolver.extractPlaceNameFromUrl(complexUrl);
+      expect(name4, 'Galata Tantuni & künefe');
+    });
+
+    test('extractCoordsFromUrl prioritizes exact place pin (!3d!4d) over viewport camera (@)', () {
+      // Nel link reale condiviso dall'utente, @42.579,12.836 è la camera sull'Italia,
+      // mentre !3d41.0278679!4d28.9738275 è la posizione reale del locale a Istanbul
+      const urlWithBoth =
+          'https://www.google.com/maps/place/Galata+Tantuni+%26+k%C3%BCnefe/@42.5791576,12.8364487,6z/data=!4m6!3m5!1s0x14cab9ba43533c3f:0xffcfb91435c4dccf!8m2!3d41.0278679!4d28.9738275!16s%2Fg%2F11qpkckrg1';
+      final coords = MapsResolver.extractCoordsFromUrl(urlWithBoth);
+      expect(coords, isNotNull);
+      // Deve restituire le coordinate di Istanbul, NON quelle dell'Italia
+      expect(coords!.latitude, closeTo(41.0278679, 0.0001));
+      expect(coords.longitude, closeTo(28.9738275, 0.0001));
+    });
+
+    test('resolveGoogleMapsUrl resolves short link Ydk7NbzKFhyvbVXk8 with correct Istanbul coords and name', () async {
+      final details = await MapsResolver.resolveGoogleMapsUrl('https://maps.app.goo.gl/Ydk7NbzKFhyvbVXk8');
+      expect(details, isNotNull);
+      expect(details!.placeName, 'Galata Tantuni & künefe');
+      expect(details.lat, closeTo(41.0278, 0.001));
+      expect(details.lng, closeTo(28.9738, 0.001));
+    });
+
+    test('resolveGoogleMapsUrl resolves full Google Maps browser URL instantly', () async {
+      const fullUrl =
+          'https://www.google.com/maps/place/Galata+Tantuni+%26+k%C3%BCnefe/@41.0271473,28.9702217,15.79z/data=!4m6!3m5!1s0x14cab9ba43533c3f:0xffcfb91435c4dccf!8m2!3d41.0278679!4d28.9738275!16s%2Fg%2F11qpkckrg1';
+      final details = await MapsResolver.resolveGoogleMapsUrl(fullUrl);
+      expect(details, isNotNull);
+      expect(details!.placeName, 'Galata Tantuni & künefe');
+      expect(details.lat, closeTo(41.0278, 0.001));
+      expect(details.lng, closeTo(28.9738, 0.001));
     });
   });
 }

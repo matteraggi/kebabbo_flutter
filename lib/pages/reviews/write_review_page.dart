@@ -171,23 +171,77 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
     try {
       final kebabId = _selectedKebab!['id'].toString();
 
-      // 1. Inserisci la recensione in 'reviews'
-      await supabase.from('reviews').insert({
-        'kebabber_id': kebabId,
-        'user_id': user.id,
-        'description': _reviewController.text.trim(),
-        'quality': _quality,
-        'price': _price,
-        'quantity': _dimension,
-        'fun': _fun,
-        'menu': _menu,
-        'meat': _meat.round(),
-        'yogurt': _yogurt.round(),
-        'spicy': _spicy.round(),
-        'onion': _onion.round(),
-        'vegetables': _vegetables.round(),
-        'created_at': DateTime.now().toIso8601String(),
-      });
+      // Controlla se l'utente ha già recensito questo locale
+      final existingReview = await supabase
+          .from('reviews')
+          .select('id')
+          .eq('kebabber_id', kebabId)
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+      if (existingReview != null) {
+        if (!mounted) return;
+        final bool? shouldOverwrite = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(S.of(ctx).review_already_exists_title),
+            content: Text(S.of(ctx).review_already_exists_message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: Text(S.of(ctx).annulla),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: red,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () => Navigator.of(ctx).pop(true),
+                child: Text(S.of(ctx).sovrascrivi),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldOverwrite != true) {
+          setState(() => _isSubmitting = false);
+          return;
+        }
+
+        // Sovrascrive la recensione esistente
+        await supabase.from('reviews').update({
+          'description': _reviewController.text.trim(),
+          'quality': _quality,
+          'price': _price,
+          'quantity': _dimension,
+          'fun': _fun,
+          'menu': _menu,
+          'meat': _meat.round(),
+          'yogurt': _yogurt.round(),
+          'spicy': _spicy.round(),
+          'onion': _onion.round(),
+          'vegetables': _vegetables.round(),
+          'created_at': DateTime.now().toIso8601String(),
+        }).eq('id', existingReview['id']);
+      } else {
+        // 1. Inserisci la nuova recensione in 'reviews'
+        await supabase.from('reviews').insert({
+          'kebabber_id': kebabId,
+          'user_id': user.id,
+          'description': _reviewController.text.trim(),
+          'quality': _quality,
+          'price': _price,
+          'quantity': _dimension,
+          'fun': _fun,
+          'menu': _menu,
+          'meat': _meat.round(),
+          'yogurt': _yogurt.round(),
+          'spicy': _spicy.round(),
+          'onion': _onion.round(),
+          'vegetables': _vegetables.round(),
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      }
 
       // 2. Se c'è una foto, crea anche un post correlato
       if (_selectedImageBytes != null) {

@@ -416,7 +416,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
         final double avgM = totalMenu / count;
         final double avgF = totalFun / count;
         final double avgRating =
-            (avgQ + avgDim + avgP + avgM + avgF) / 5.0;
+            (avgQ + avgDim + avgP + avgM) / 4.0;
 
         _communityStatsCache[kebabId] = {
           'count': count,

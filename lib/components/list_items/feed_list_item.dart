@@ -73,6 +73,20 @@ class FeedListItemState extends State<FeedListItem> {
     }
   }
 
+  @override
+  void didUpdateWidget(covariant FeedListItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.commentNumber != widget.commentNumber) {
+      _currentCommentNumber = widget.commentNumber;
+    }
+    if (oldWidget.likeList != widget.likeList) {
+      _checkIfLiked();
+    }
+    if (oldWidget.userId != widget.userId) {
+      _fetchUserProfile(widget.userId);
+    }
+  }
+
   Future<void> _fetchUserProfile(String userId) async {
     try {
       // If userId is empty, set default values

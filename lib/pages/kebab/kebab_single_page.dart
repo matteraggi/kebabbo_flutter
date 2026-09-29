@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/components/misc/single_chart.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
+import 'package:kebabbo_flutter/pages/kebab/kebab_comparison_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
@@ -674,7 +675,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
     final avgM = totM / c;
     final avgF = totF / c;
 
-    final overall = (avgQ + avgDim + avgP + avgM + avgF) / 5.0;
+    final overall = (avgQ + avgDim + avgP + avgM) / 4.0;
 
     return (
       quality: avgQ,
@@ -794,6 +795,18 @@ class KebabSinglePageState extends State<KebabSinglePage>
                       );
                     },
                   ),
+                IconButton(
+                  icon: const Icon(Icons.compare_arrows, color: Colors.white),
+                  tooltip: S.of(context).compare_kebabs,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => KebabComparisonPage(initialKebabId: widget.kebabId),
+                      ),
+                    );
+                  },
+                ),
                 IconButton(
                   icon: Icon(
                     isFavorite ? Icons.bookmark : Icons.bookmark_border,
@@ -1886,13 +1899,13 @@ class KebabSinglePageState extends State<KebabSinglePage>
             ? formatTimeAgo(context, DateTime.parse(createdAt))
             : '';
 
-        // Calculate single review score
+        // Calculate single review score (esclude il divertimento)
         final double q = (review['quality'] ?? 0.0).toDouble();
         final double dim = (review['quantity'] ?? 0.0).toDouble();
         final double p = (review['price'] ?? 0.0).toDouble();
         final double m = (review['menu'] ?? 0.0).toDouble();
         final double f = (review['fun'] ?? 0.0).toDouble();
-        final double avgScore = (q + dim + p + m + f) / 5.0;
+        final double avgScore = (q + dim + p + m) / 4.0;
 
         return Container(
           padding: const EdgeInsets.all(16),

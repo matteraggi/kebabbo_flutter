@@ -1,5 +1,5 @@
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/map/location_picker_modal.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
@@ -119,7 +119,9 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              S.of(context).maps_link_failed,
+              kIsWeb && text.contains('goo.gl')
+                  ? 'Su Web usa il link completo da Google Maps (https://www.google.com/maps/place/...) per restrizioni del browser.'
+                  : S.of(context).maps_link_failed,
             ),
             backgroundColor: red,
           ),
@@ -264,7 +266,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
 
     try {
       final double calculatedRating =
-          (_quality + _price + _dimension + _menu + _fun) / 5.0;
+          (_quality + _price + _dimension + _menu) / 4.0;
       final orariMap = _buildOrariMap();
       final finalMapUrl = _mapUrl ?? MapsResolver.buildGoogleMapsUrl(_selectedLat!, _selectedLng!);
       final finalMapLink = _mapLinkUrl ?? finalMapUrl;

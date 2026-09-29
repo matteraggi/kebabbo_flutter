@@ -74,6 +74,7 @@ class _UserPostsPageState extends State<UserPostsPage> {
                       itemBuilder: (context, index) {
                         final post = _userPosts[index];
                         return FeedListItem(
+                          key: ValueKey(post['id']),
                           text: post['text'] ??
                               S.of(context).testo_non_disponibile,
                           createdAt: post['created_at'] ?? '',

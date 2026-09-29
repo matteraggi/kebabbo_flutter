@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
@@ -34,6 +35,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
   String? _addressText;
   String? _placeName;
   String? _cityName;
+  String? _customGoogleMapsUrl;
   bool _isLoadingAddress = false;
   bool _isLocatingUser = false;
 
@@ -125,6 +127,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
     setState(() {
       _selectedPosition = point;
       _searchResults = [];
+      _customGoogleMapsUrl = null;
     });
     FocusScope.of(context).unfocus();
     _loadAddressForPosition(point);
@@ -132,7 +135,8 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
 
   void _onSearchChanged(String query) {
     _debounceTimer?.cancel();
-    if (query.trim().length < 3) {
+    final trimmed = query.trim();
+    if (trimmed.length < 3) {
       setState(() {
         _searchResults = [];
         _isSearching = false;
@@ -140,16 +144,65 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
       return;
     }
 
-    _debounceTimer = Timer(const Duration(milliseconds: 400), () async {
-      setState(() => _isSearching = true);
-      final results = await MapsResolver.searchPlaces(query);
-      if (mounted) {
+    final isUrl = trimmed.startsWith('http://') ||
+        trimmed.startsWith('https://') ||
+        trimmed.contains('goo.gl') ||
+        trimmed.contains('google.com/maps');
+
+    _debounceTimer = Timer(Duration(milliseconds: isUrl ? 150 : 400), () {
+      _executeSearch(trimmed, isUrl: isUrl);
+    });
+  }
+
+  Future<void> _executeSearch(String query, {bool isUrl = false}) async {
+    setState(() => _isSearching = true);
+
+    if (isUrl) {
+      final details = await MapsResolver.resolveGoogleMapsUrl(query);
+      if (details != null && mounted) {
+        final latLng = LatLng(details.lat, details.lng);
         setState(() {
-          _searchResults = results;
+          _selectedPosition = latLng;
+          _addressText = details.address ??
+              'Lat: ${details.lat.toStringAsFixed(5)}, Lng: ${details.lng.toStringAsFixed(5)}';
+          _placeName = (details.placeName != null && details.placeName!.isNotEmpty)
+              ? details.placeName
+              : null;
+          _cityName = details.city;
+          _customGoogleMapsUrl = details.googleMapsUrl;
+          _searchResults = [];
           _isSearching = false;
         });
+        _searchController.text = details.placeName ?? details.address ?? '';
+        FocusScope.of(context).unfocus();
+        _mapController.move(latLng, 16.5);
+        return;
+      } else if (mounted) {
+        setState(() {
+          _searchResults = [];
+          _isSearching = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              kIsWeb && query.contains('goo.gl')
+                  ? 'Su Web usa il link completo da Google Maps (https://www.google.com/maps/place/...) per restrizioni del browser.'
+                  : S.of(context).maps_link_failed,
+            ),
+            backgroundColor: red,
+          ),
+        );
+        return;
       }
-    });
+    }
+
+    final results = await MapsResolver.searchPlaces(query);
+    if (mounted) {
+      setState(() {
+        _searchResults = results;
+        _isSearching = false;
+      });
+    }
   }
 
   void _selectSearchResult(Map<String, dynamic> result) {
@@ -162,6 +215,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
       _addressText = result['displayName'] ?? '';
       _placeName = result['name'] ?? '';
       _cityName = result['city'];
+      _customGoogleMapsUrl = null;
       _searchResults = [];
     });
 
@@ -177,7 +231,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
       address: _addressText ?? '',
       placeName: _placeName,
       city: _cityName,
-      googleMapsUrl: MapsResolver.buildGoogleMapsUrl(
+      googleMapsUrl: _customGoogleMapsUrl ?? MapsResolver.buildGoogleMapsUrl(
         _selectedPosition.latitude,
         _selectedPosition.longitude,
       ),
@@ -305,6 +359,18 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                   child: TextField(
                     controller: _searchController,
                     onChanged: _onSearchChanged,
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (val) {
+                      _debounceTimer?.cancel();
+                      final trimmed = val.trim();
+                      if (trimmed.isNotEmpty) {
+                        final isUrl = trimmed.startsWith('http://') ||
+                            trimmed.startsWith('https://') ||
+                            trimmed.contains('goo.gl') ||
+                            trimmed.contains('google.com/maps');
+                        _executeSearch(trimmed, isUrl: isUrl);
+                      }
+                    },
                     decoration: InputDecoration(
                       hintText: S.of(context).search_address_or_place,
                       hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),

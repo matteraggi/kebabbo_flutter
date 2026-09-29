@@ -273,17 +273,24 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                           );
                         },
                       ),
-                      // 4. IMMAGINE PACCHETTI RESPONSIVE CHE OCCUPA LO SPAZIO
+                      // 4. IMMAGINE PACCHETTI RESPONSIVE CHE OCCUPA LO SPAZIO (o si nasconde se troppo piccola)
                       Expanded(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Image.asset(
-                              "assets/images/kebabbo_packs_row.png",
-                              width: double.infinity,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            if (constraints.maxHeight < 65) {
+                              return const SizedBox.shrink();
+                            }
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                child: Image.asset(
+                                  "assets/images/kebabbo_packs_row.png",
+                                  width: double.infinity,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 6),

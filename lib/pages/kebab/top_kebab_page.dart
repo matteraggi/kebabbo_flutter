@@ -5,7 +5,6 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/order_bar.dart';
 import 'package:kebabbo_flutter/components/list_items/kebab_item.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 
 class TopKebabPage extends StatefulWidget {
@@ -18,6 +17,7 @@ class TopKebabPage extends StatefulWidget {
 }
 
 class TopKebabPageState extends State<TopKebabPage> {
+  List<Map<String, dynamic>> _allKebabs = [];
   List<Map<String, dynamic>> dashList = [];
   List<Map<String, dynamic>> searchResultList = [];
   bool isLoading = true;
@@ -52,139 +52,247 @@ class TopKebabPageState extends State<TopKebabPage> {
   Future<void> fetchKebab(Position? userPosition,
       {required bool useStaffRatings}) async {
     try {
-      final PostgrestList response = await supabase.from('kebab').select('*');
-
-      if (mounted) {
-        List<Map<String, dynamic>> kebabs =
-            List<Map<String, dynamic>>.from(response as List);
-
-        for (var kebab in kebabs) {
-          if (userPosition != null) {
-            final double lat =
-                (kebab['lat'] is num) ? (kebab['lat'] as num).toDouble() : 0.0;
-            final double lng =
-                (kebab['lng'] is num) ? (kebab['lng'] as num).toDouble() : 0.0;
-
-            if (lat != 0.0 || lng != 0.0) {
-              double distanceInMeters = Geolocator.distanceBetween(
-                userPosition.latitude,
-                userPosition.longitude,
-                lat,
-                lng,
-              );
-              kebab['distance'] = distanceInMeters / 1000;
-            } else {
-              kebab['distance'] = null;
-            }
-          } else {
-            kebab['distance'] = null;
-          }
-
-          // 2. Controllo Orari
-          kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
-
-          kebab['rating'] = kebab['rating'] ?? 0.0;
-          kebab['quality'] = kebab['quality'] ?? 0.0;
-          kebab['price'] = kebab['price'] ?? 0.0;
-          kebab['vegetables'] = kebab['vegetables'] ?? 0.0;
-          kebab['onion'] = kebab['onion'] ?? 0.0;
-          kebab['spicy'] = kebab['spicy'] ?? 0.0;
-          kebab['meat'] = kebab['meat'] ?? 0.0;
-          kebab['name'] = kebab['name'] ?? '';
-
-          if (kebab['distance'] == null) {
-            kebab['distance_sortable'] = double.maxFinite;
-          } else {
-            kebab['distance_sortable'] = kebab['distance'];
-          }
-        }
-
-        if (userPosition != null &&
-            useDistanceFilter &&
-            !maxDistance.isInfinite) {
-          kebabs = kebabs
-              .where((kebab) =>
-                  (kebab['distance'] ?? double.infinity) <= maxDistance)
-              .toList();
-        }
-
-        // Filtro staff / utenti
-        if (useStaffRatings) {
-          kebabs = kebabs.where((kebab) => kebab['is_staff'] == true).toList();
-        } else {
-          kebabs = kebabs
-              .where((kebab) =>
-                  kebab['user_reviewed'] == true && kebab['approved'] != false)
-              .toList();
-        }
-
-        kebabs = sortKebabs(kebabs, orderByField, orderDirection, userPosition,
-            showOnlyOpen, showOnlyKebab);
-
-        Map<String, dynamic>? closestKebab;
-        if (userPosition != null && kebabs.isNotEmpty) {
-          final tempClosest = kebabs.reduce((curr, next) =>
-              (curr['distance'] ?? double.infinity) <
-                      (next['distance'] ?? double.infinity)
-                  ? curr
-                  : next);
-          if ((tempClosest['distance'] ?? double.infinity) < 0.2) {
-            closestKebab = tempClosest;
-          }
-        }
-
-        // Aggiungi lo stato di "preferito" per ciascun kebab
-        final user = supabase.auth.currentUser;
-        if (user != null) {
-          final userResponse = await supabase
+      final user = supabase.auth.currentUser;
+      final Future<dynamic> kebabsFuture = supabase.from('kebab').select('*');
+      final Future<dynamic> reviewsFuture = supabase.from('reviews').select(
+          'kebabber_id, quality, quantity, menu, price, fun, vegetables, yogurt, spicy, onion');
+      final Future<dynamic> favoritesFuture = user != null
+          ? supabase
               .from('profiles')
               .select('favorites')
               .eq('id', user.id)
-              .single();
+              .maybeSingle()
+          : Future<dynamic>.value(null);
 
-          final List<String> favoriteIds =
-              List<String>.from(userResponse['favorites'] ?? []);
-          for (var kebab in kebabs) {
-            kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
-          }
-        }
-        if (mounted) {
-          setState(() {
-            dashList = kebabs;
-            searchResultList = fuzzySearchAndSort(
-                dashList,
-                searchController.text, // Usa il testo già presente nella barra
-                'name',
-                showOnlyOpen,
-                showOnlyKebab);
-            isLoading = false;
+      final results = await Future.wait<dynamic>([
+        kebabsFuture,
+        reviewsFuture,
+        favoritesFuture,
+      ]);
+      final response = results[0] as List;
+      final reviewsList = results[1] as List;
+      final userProfile = results[2] as Map<String, dynamic>?;
 
-            setState(() {
-              dashList = dashList; // Salva la master list
-              searchResultList =
-                  searchResultList; // Salva la display list filtrata
-              isLoading = false;
+      if (!mounted) return;
 
-              // Se troviamo un kebab vicino, salviamo il suo ID
-              if (closestKebab != null && !_hasAutoScrolled) {
-                _expandedKebabId = closestKebab['id'].toString();
-              }
-            });
-          });
+      List<Map<String, dynamic>> kebabs =
+          List<Map<String, dynamic>>.from(response);
 
-          // Lo scroll viene attivato qui, dopo che lo stato è stato aggiornato
-          if (closestKebab != null && !_hasAutoScrolled) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _scrollToKebab(closestKebab!);
-            });
-          }
+      final List<String> favoriteIds = userProfile != null
+          ? List<String>.from(userProfile['favorites'] ?? [])
+          : [];
+
+      // Raggruppa le recensioni utenti per kebabber_id
+      final Map<String, List<Map<String, dynamic>>> reviewsByKebabId = {};
+      for (var r in reviewsList) {
+        final kid = r['kebabber_id']?.toString();
+        if (kid != null) {
+          reviewsByKebabId
+              .putIfAbsent(kid, () => [])
+              .add(Map<String, dynamic>.from(r));
         }
       }
+
+      for (var kebab in kebabs) {
+        if (userPosition != null) {
+          final double lat =
+              (kebab['lat'] is num) ? (kebab['lat'] as num).toDouble() : 0.0;
+          final double lng =
+              (kebab['lng'] is num) ? (kebab['lng'] as num).toDouble() : 0.0;
+
+          if (lat != 0.0 || lng != 0.0) {
+            double distanceInMeters = Geolocator.distanceBetween(
+              userPosition.latitude,
+              userPosition.longitude,
+              lat,
+              lng,
+            );
+            kebab['distance'] = distanceInMeters / 1000;
+          } else {
+            kebab['distance'] = null;
+          }
+        } else {
+          kebab['distance'] = null;
+        }
+
+        // Controllo Orari
+        kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
+
+        kebab['staff_rating'] = (kebab['rating'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_quality'] = (kebab['quality'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_price'] = (kebab['price'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_dimension'] =
+            (kebab['dimension'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_menu'] = (kebab['menu'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_fun'] = (kebab['fun'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_vegetables'] =
+            (kebab['vegetables'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_onion'] = (kebab['onion'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_spicy'] = (kebab['spicy'] as num?)?.toDouble() ?? 0.0;
+        kebab['staff_meat'] = (kebab['meat'] as num?)?.toDouble() ?? 0.0;
+        kebab['name'] = kebab['name'] ?? '';
+
+        if (kebab['distance'] == null) {
+          kebab['distance_sortable'] = double.maxFinite;
+        } else {
+          kebab['distance_sortable'] = kebab['distance'];
+        }
+
+        // Calcola medie delle recensioni utenti
+        final kid = kebab['id'].toString();
+        final userReviews = reviewsByKebabId[kid];
+
+        if (userReviews != null && userReviews.isNotEmpty) {
+          double totalQuality = 0;
+          double totalQuantity = 0;
+          double totalMenu = 0;
+          double totalPrice = 0;
+          double totalFun = 0;
+          double totalVegetables = 0;
+          double totalYogurt = 0;
+          double totalSpicy = 0;
+          double totalOnion = 0;
+
+          for (var review in userReviews) {
+            totalQuality += (review['quality'] as num?)?.toDouble() ?? 0.0;
+            totalQuantity += (review['quantity'] as num?)?.toDouble() ?? 0.0;
+            totalMenu += (review['menu'] as num?)?.toDouble() ?? 0.0;
+            totalPrice += (review['price'] as num?)?.toDouble() ?? 0.0;
+            totalFun += (review['fun'] as num?)?.toDouble() ?? 0.0;
+            totalVegetables +=
+                (review['vegetables'] as num?)?.toDouble() ?? 0.0;
+            totalYogurt += (review['yogurt'] as num?)?.toDouble() ?? 0.0;
+            totalSpicy += (review['spicy'] as num?)?.toDouble() ?? 0.0;
+            totalOnion += (review['onion'] as num?)?.toDouble() ?? 0.0;
+          }
+
+          int count = userReviews.length;
+          double avgQuality = totalQuality / count;
+          double avgQuantity = totalQuantity / count;
+          double avgMenu = totalMenu / count;
+          double avgPrice = totalPrice / count;
+          double avgFun = totalFun / count;
+          double overallAvg =
+              (avgQuality + avgQuantity + avgMenu + avgPrice) / 4;
+
+          kebab['user_rating'] = overallAvg;
+          kebab['user_quality'] = avgQuality;
+          kebab['user_dimension'] = avgQuantity;
+          kebab['user_menu'] = avgMenu;
+          kebab['user_price'] = avgPrice;
+          kebab['user_fun'] = avgFun;
+          kebab['user_vegetables'] = totalVegetables / count;
+          kebab['user_yogurt'] = totalYogurt / count;
+          kebab['user_spicy'] = totalSpicy / count;
+          kebab['user_onion'] = totalOnion / count;
+          kebab['user_reviews_count'] = count;
+        } else {
+          kebab['user_rating'] = kebab['staff_rating'] ?? 0.0;
+          kebab['user_quality'] = kebab['staff_quality'] ?? 0.0;
+          kebab['user_dimension'] = kebab['staff_dimension'] ?? 0.0;
+          kebab['user_menu'] = kebab['staff_menu'] ?? 0.0;
+          kebab['user_price'] = kebab['staff_price'] ?? 0.0;
+          kebab['user_fun'] = kebab['staff_fun'] ?? 0.0;
+          kebab['user_vegetables'] = kebab['staff_vegetables'] ?? 0.0;
+          kebab['user_yogurt'] =
+              (kebab['yogurt'] as num?)?.toDouble() ?? 0.0;
+          kebab['user_spicy'] = kebab['staff_spicy'] ?? 0.0;
+          kebab['user_onion'] = kebab['staff_onion'] ?? 0.0;
+          kebab['user_reviews_count'] = 0;
+        }
+
+        kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
+      }
+
+      _allKebabs = kebabs;
+      _applyFilterAndSort(useStaffRatings: useStaffRatings);
     } catch (error) {
       if (mounted) {
         setState(() {
           errorMessage = error.toString();
           isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _applyFilterAndSort({required bool useStaffRatings}) {
+    List<Map<String, dynamic>> kebabs =
+        _allKebabs.map((k) => Map<String, dynamic>.from(k)).toList();
+
+    for (var kebab in kebabs) {
+      if (useStaffRatings) {
+        kebab['rating'] = kebab['staff_rating'] ?? 0.0;
+        kebab['quality'] = kebab['staff_quality'] ?? 0.0;
+        kebab['dimension'] = kebab['staff_dimension'] ?? 0.0;
+        kebab['menu'] = kebab['staff_menu'] ?? 0.0;
+        kebab['price'] = kebab['staff_price'] ?? 0.0;
+        kebab['fun'] = kebab['staff_fun'] ?? 0.0;
+      } else {
+        kebab['rating'] = kebab['user_rating'] ?? 0.0;
+        kebab['quality'] = kebab['user_quality'] ?? 0.0;
+        kebab['dimension'] = kebab['user_dimension'] ?? 0.0;
+        kebab['menu'] = kebab['user_menu'] ?? 0.0;
+        kebab['price'] = kebab['user_price'] ?? 0.0;
+        kebab['fun'] = kebab['user_fun'] ?? 0.0;
+      }
+    }
+
+    if (widget.currentPosition != null &&
+        useDistanceFilter &&
+        !maxDistance.isInfinite) {
+      kebabs = kebabs
+          .where((kebab) =>
+              (kebab['distance'] ?? double.infinity) <= maxDistance)
+          .toList();
+    }
+
+    // Filtro staff / utenti
+    if (useStaffRatings) {
+      kebabs = kebabs.where((kebab) => kebab['is_staff'] == true).toList();
+    } else {
+      kebabs = kebabs
+          .where((kebab) =>
+              kebab['user_reviewed'] == true && kebab['approved'] != false)
+          .toList();
+    }
+
+    kebabs = sortKebabs(kebabs, orderByField, orderDirection,
+        widget.currentPosition, showOnlyOpen, showOnlyKebab);
+
+    Map<String, dynamic>? closestKebab;
+    if (widget.currentPosition != null && kebabs.isNotEmpty) {
+      final tempClosest = kebabs.reduce((curr, next) =>
+          (curr['distance'] ?? double.infinity) <
+                  (next['distance'] ?? double.infinity)
+              ? curr
+              : next);
+      if ((tempClosest['distance'] ?? double.infinity) < 0.2) {
+        closestKebab = tempClosest;
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        dashList = kebabs;
+        searchResultList = fuzzySearchAndSort(
+            dashList,
+            searchController.text,
+            'name',
+            showOnlyOpen,
+            showOnlyKebab);
+        isLoading = false;
+
+        // Se troviamo un kebab vicino, salviamo il suo ID
+        if (closestKebab != null && !_hasAutoScrolled) {
+          _expandedKebabId = closestKebab['id'].toString();
+        }
+      });
+
+      // Lo scroll viene attivato qui, dopo che lo stato è stato aggiornato
+      if (closestKebab != null && !_hasAutoScrolled) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToKebab(closestKebab!);
         });
       }
     }
@@ -260,9 +368,14 @@ class TopKebabPageState extends State<TopKebabPage> {
           .from('profiles')
           .update({'favorites': updatedFavorites}).eq('id', user.id);
 
-      // Aggiorna lo stato in dashList
+      // Aggiorna lo stato in dashList e in _allKebabs
       setState(() {
         dashList[kebabIndex]['isFavorite'] = !isCurrentlyFavorite;
+        final allIndex = _allKebabs
+            .indexWhere((k) => k['id'].toString() == kebabId.toString());
+        if (allIndex != -1) {
+          _allKebabs[allIndex]['isFavorite'] = !isCurrentlyFavorite;
+        }
       });
 
       // Log del nuovo stato
@@ -281,21 +394,21 @@ class TopKebabPageState extends State<TopKebabPage> {
   void changeOrderByField(String field) {
     setState(() {
       orderByField = field;
-      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
+      _applyFilterAndSort(useStaffRatings: showStaffRatings);
     });
   }
 
   void changeOrderDirection(bool direction) {
     setState(() {
       orderDirection = direction;
-      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
+      _applyFilterAndSort(useStaffRatings: showStaffRatings);
     });
   }
 
   void toggleShowOnlyKebab() {
     setState(() {
       showOnlyKebab = !showOnlyKebab;
-      fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
+      _applyFilterAndSort(useStaffRatings: showStaffRatings);
     });
   }
 
@@ -320,19 +433,13 @@ class TopKebabPageState extends State<TopKebabPage> {
                           const SizedBox(height: 16),
                           OrderBar(
                             showStaffRatings: showStaffRatings,
-                            onToggleShowStaffRatings: () async {
-                              // 1. Define the new state
+                            onToggleShowStaffRatings: () {
                               final bool newStaffRatingsValue =
                                   !showStaffRatings;
-
-                              // 2. Await the fetch *with the new value*.
-                              //    fetchKebab will call its own setState internally to update the list.
-                              await fetchKebab(widget.currentPosition,
-                                  useStaffRatings: newStaffRatingsValue);
-
-                              // 3. AFTER the await, update the class variable to change the color.
                               setState(() {
                                 showStaffRatings = newStaffRatingsValue;
+                                _applyFilterAndSort(
+                                    useStaffRatings: newStaffRatingsValue);
                               });
                             },
                           ),
@@ -394,7 +501,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           onToggleShowOnlyOpen: (value) {
                                             setState(() {
                                               showOnlyOpen = value;
-                                              fetchKebab(widget.currentPosition,
+                                              _applyFilterAndSort(
                                                   useStaffRatings:
                                                       showStaffRatings);
                                             });
@@ -403,7 +510,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           onToggleShowOnlyKebab: () {
                                             setState(() {
                                               showOnlyKebab = !showOnlyKebab;
-                                              fetchKebab(widget.currentPosition,
+                                              _applyFilterAndSort(
                                                   useStaffRatings:
                                                       showStaffRatings);
                                             });
@@ -413,7 +520,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           onChangeOrderByField: (value) {
                                             setState(() {
                                               orderByField = value;
-                                              fetchKebab(widget.currentPosition,
+                                              _applyFilterAndSort(
                                                   useStaffRatings:
                                                       showStaffRatings);
                                             });
@@ -421,7 +528,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           onChangeOrderByDirection: (value) {
                                             setState(() {
                                               orderDirection = value;
-                                              fetchKebab(widget.currentPosition,
+                                              _applyFilterAndSort(
                                                   useStaffRatings:
                                                       showStaffRatings);
                                             });
@@ -437,7 +544,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                               maxDistance = enabled
                                                   ? maxDistance
                                                   : double.infinity;
-                                              fetchKebab(widget.currentPosition,
+                                              _applyFilterAndSort(
                                                   useStaffRatings:
                                                       showStaffRatings);
                                             });
@@ -446,7 +553,7 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             setState(() {
                                               maxDistance = km;
                                               useDistanceFilter = true;
-                                              fetchKebab(widget.currentPosition,
+                                              _applyFilterAndSort(
                                                   useStaffRatings:
                                                       showStaffRatings);
                                             });
@@ -515,6 +622,16 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             kebab['user_reviewed'] ?? false,
                                         flipped: !showStaffRatings,
                                         approved: kebab['approved'],
+                                        userRating: (kebab['user_rating'] as num?)?.toDouble(),
+                                        userQuality: (kebab['user_quality'] as num?)?.toDouble(),
+                                        userQuantity: (kebab['user_dimension'] as num?)?.toDouble(),
+                                        userMenu: (kebab['user_menu'] as num?)?.toDouble(),
+                                        userPrice: (kebab['user_price'] as num?)?.toDouble(),
+                                        userFun: (kebab['user_fun'] as num?)?.toDouble(),
+                                        userVegetables: (kebab['user_vegetables'] as num?)?.toDouble(),
+                                        userYogurt: (kebab['user_yogurt'] as num?)?.toDouble(),
+                                        userSpicy: (kebab['user_spicy'] as num?)?.toDouble(),
+                                        userOnion: (kebab['user_onion'] as num?)?.toDouble(),
                                       );
                                     },
                                   ),

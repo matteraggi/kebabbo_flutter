@@ -37,6 +37,16 @@ class KebabListItem extends StatefulWidget {
   final bool hasUserReview;
   final bool flipped;
   final bool? approved;
+  final double? userRating;
+  final double? userQuality;
+  final double? userQuantity;
+  final double? userMenu;
+  final double? userPrice;
+  final double? userFun;
+  final double? userVegetables;
+  final double? userYogurt;
+  final double? userSpicy;
+  final double? userOnion;
 
   const KebabListItem({
     super.key,
@@ -67,6 +77,16 @@ class KebabListItem extends StatefulWidget {
     required this.hasUserReview,
     this.flipped = false,
     this.approved,
+    this.userRating,
+    this.userQuality,
+    this.userQuantity,
+    this.userMenu,
+    this.userPrice,
+    this.userFun,
+    this.userVegetables,
+    this.userYogurt,
+    this.userSpicy,
+    this.userOnion,
   });
 
   @override
@@ -93,11 +113,46 @@ class KebabListItemState extends State<KebabListItem> {
     super.initState();
     isExpanded = widget.initiallyExpanded;
     _controller = FlipCardController();
+
+    if (widget.userRating != null) {
+      overallAvgRating = widget.userRating!;
+      avgQuality = widget.userQuality ?? 0.0;
+      avgQuantity = widget.userQuantity ?? 0.0;
+      avgMenu = widget.userMenu ?? 0.0;
+      avgPrice = widget.userPrice ?? 0.0;
+      avgFun = widget.userFun ?? 0.0;
+      avgVegetables = widget.userVegetables ?? 0.0;
+      avgYogurt = widget.userYogurt ?? 0.0;
+      avgSpicy = widget.userSpicy ?? 0.0;
+      avgOnion = widget.userOnion ?? 0.0;
+    }
+
     if (widget.flipped) {
       isFront = false;
-      getUsersReviews();
+      if (widget.userRating == null) {
+        getUsersReviews();
+      }
     } else {
       isFront = true;
+    }
+  }
+
+  @override
+  void didUpdateWidget(KebabListItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.userRating != oldWidget.userRating && widget.userRating != null) {
+      setState(() {
+        overallAvgRating = widget.userRating!;
+        avgQuality = widget.userQuality ?? 0.0;
+        avgQuantity = widget.userQuantity ?? 0.0;
+        avgMenu = widget.userMenu ?? 0.0;
+        avgPrice = widget.userPrice ?? 0.0;
+        avgFun = widget.userFun ?? 0.0;
+        avgVegetables = widget.userVegetables ?? 0.0;
+        avgYogurt = widget.userYogurt ?? 0.0;
+        avgSpicy = widget.userSpicy ?? 0.0;
+        avgOnion = widget.userOnion ?? 0.0;
+      });
     }
   }
 
@@ -150,7 +205,7 @@ class KebabListItemState extends State<KebabListItem> {
       avgOnion = totalOnion / count;
 
       overallAvgRating =
-          (avgQuality + avgQuantity + avgMenu + avgPrice + avgFun) / 5;
+          (avgQuality + avgQuantity + avgMenu + avgPrice) / 4;
       if (mounted) {
         setState(() {});
       }
