@@ -191,7 +191,8 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                           final bool isCenter = absDiff < 0.45;
 
                           return Center(
-                            child: Transform(
+                            child: RepaintBoundary(
+                              child: Transform(
                               alignment: Alignment.center,
                               transform: matrix,
                               child: GestureDetector(
@@ -215,6 +216,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                                   isCenter,
                                   absDiff,
                                 ),
+                              ),
                               ),
                             ),
                           );
@@ -260,7 +262,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                               Border.all(color: red.withValues(alpha: 0.35)),
                         ),
                         child: Text(
-                          '#${_currentPage + 1} di $totalCards',
+                          S.of(context).card_x_of_y((_currentPage + 1).toString(), totalCards.toString()),
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -405,6 +407,10 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                 path,
                 fit: BoxFit.cover,
                 gaplessPlayback: true,
+                // Le carte sono 1080x1920: decodificarle alla dimensione
+                // mostrata evita ~8 MB di memoria per carta.
+                cacheWidth:
+                    (width * MediaQuery.devicePixelRatioOf(context)).round(),
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: Colors.grey[300],
