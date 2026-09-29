@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab/favorites_page.dart';
+import 'package:kebabbo_flutter/pages/kebab/kebab_comparison_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/followers_page.dart';
 import 'package:kebabbo_flutter/pages/misc/about_page.dart';
 import 'package:kebabbo_flutter/pages/misc/medal_page.dart';
@@ -17,7 +18,6 @@ import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:kebabbo_flutter/pages/reviews/add_kebab.dart';
 import 'package:kebabbo_flutter/pages/tcg/tcg_profile_preview.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
 
@@ -487,34 +487,15 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                 ),
                                 PopupMenuItem<int>(
-                                  value: 4,
+                                  value: 7,
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.emoji_events,
+                                      const Icon(Icons.compare_arrows,
                                           color: Colors.black),
                                       const SizedBox(width: 8),
                                       Text(
-                                        S.of(context).objectives_and_medals,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem<int>(
-                                  value: 5,
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.add_business,
-                                          color: Colors.black),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        S.of(context).add_kebab,
+                                        S.of(context).compare_kebabs,
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -581,17 +562,10 @@ class _AccountPageState extends State<AccountPage> {
                                       );
                                     }
                                   }();
-                                } else if (value == 4) {
+                                } else if (value == 7) {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          MedalPage(userId: _id),
-                                    ),
-                                  ).then((_) => _loadProfile());
-                                } else if (value == 5) {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) => const AddKebab()),
+                                        builder: (context) => const KebabComparisonPage()),
                                   );
                                 } else if (value == 6) {
                                   _signOut();
@@ -713,89 +687,106 @@ class _AccountPageState extends State<AccountPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   // POSTS
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              UserPostsPage(userId: _id),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          "$_postCount",
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserPostsPage(userId: _id),
                                           ),
-                                        ),
-                                        Text(
-                                          S.of(context).posts,
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ],
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "$_postCount",
+                                            style: const TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            S.of(context).posts,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
 
                                   // FOLLOWERS
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              FollowersPage(userId: _id),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '$_followersCount',
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                FollowersPage(userId: _id),
                                           ),
-                                        ),
-                                        Text(
-                                          S.of(context).followers,
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ],
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            '$_followersCount',
+                                            style: const TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            S.of(context).followers,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
 
                                   // SEGUITI
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SeguitiPage(userId: _id),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '$_seguitiCount',
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SeguitiPage(userId: _id),
                                           ),
-                                        ),
-                                        Text(
-                                          S.of(context).following,
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ],
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            '$_seguitiCount',
+                                            style: const TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            S.of(context).following,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

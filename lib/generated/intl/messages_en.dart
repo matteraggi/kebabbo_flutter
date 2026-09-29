@@ -235,6 +235,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Community review",
     ),
     "community_upload": MessageLookupByLibrary.simpleMessage("Community"),
+    "compare_kebabs": MessageLookupByLibrary.simpleMessage("Compare Kebabs"),
     "completed_badge": MessageLookupByLibrary.simpleMessage("Completed! ⭐"),
     "conferma_eliminazione": MessageLookupByLibrary.simpleMessage(
       "Confirm deletion",
@@ -482,6 +483,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "ingredient_balance_1_10": MessageLookupByLibrary.simpleMessage(
       "Ingredient balance (1 to 10)",
     ),
+    "ingredients_comparison": MessageLookupByLibrary.simpleMessage(
+      "Ingredients Comparison",
+    ),
     "inserted_by": MessageLookupByLibrary.simpleMessage("Added by"),
     "invia": MessageLookupByLibrary.simpleMessage("Send"),
     "it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again":
@@ -723,6 +727,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "open_in_app": MessageLookupByLibrary.simpleMessage("Open the app"),
     "open_now": MessageLookupByLibrary.simpleMessage("Open Now"),
+    "open_or_get_app": MessageLookupByLibrary.simpleMessage(
+      "Open or get the app",
+    ),
     "open_pack": MessageLookupByLibrary.simpleMessage("Open Pack"),
     "open_pack_two_ready": MessageLookupByLibrary.simpleMessage(
       "Open pack (2 ready!)",
@@ -785,6 +792,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "photo_added": MessageLookupByLibrary.simpleMessage("Photo added! 📸"),
     "photo_caption_hint": MessageLookupByLibrary.simpleMessage(
       "Write a comment or describe your kebab...",
+    ),
+    "pillars_comparison": MessageLookupByLibrary.simpleMessage(
+      "Pillars Comparison",
     ),
     "please_enter_a_password": MessageLookupByLibrary.simpleMessage(
       "Please enter a password",
@@ -885,6 +895,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "review": MessageLookupByLibrary.simpleMessage("Review"),
     "reviewMessage": m29,
     "review_action": MessageLookupByLibrary.simpleMessage("Review"),
+    "review_already_exists_message": MessageLookupByLibrary.simpleMessage(
+      "A review already exists for this place, do you want to overwrite it?",
+    ),
+    "review_already_exists_title": MessageLookupByLibrary.simpleMessage(
+      "Review already exists",
+    ),
     "review_submitted_successfully": MessageLookupByLibrary.simpleMessage(
       "Review submitted successfully",
     ),
@@ -907,6 +923,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "scrivi_un_post": MessageLookupByLibrary.simpleMessage("Write a post..."),
     "search_address_or_place": MessageLookupByLibrary.simpleMessage(
       "Search address or place...",
+    ),
+    "search_kebab_to_compare": MessageLookupByLibrary.simpleMessage(
+      "Search a kebab to compare...",
     ),
     "search_kebabbo_places": MessageLookupByLibrary.simpleMessage(
       "Search Kebabbo places",
@@ -939,6 +958,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "segui": MessageLookupByLibrary.simpleMessage("Follow"),
     "segui_gia": MessageLookupByLibrary.simpleMessage("Already following"),
     "seguiti": MessageLookupByLibrary.simpleMessage("Followed"),
+    "select_first_kebab": MessageLookupByLibrary.simpleMessage(
+      "Select 1st kebab",
+    ),
     "select_location_first": MessageLookupByLibrary.simpleMessage(
       "Select the location on the map before continuing! 📍",
     ),
@@ -948,6 +970,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "select_place_to_review": MessageLookupByLibrary.simpleMessage(
       "Select the place you want to review! 🌯",
+    ),
+    "select_second_kebab": MessageLookupByLibrary.simpleMessage(
+      "Select 2nd kebab",
+    ),
+    "select_two_kebabs_to_compare": MessageLookupByLibrary.simpleMessage(
+      "Select two kebabs to view the detailed comparison.",
     ),
     "selected_point": MessageLookupByLibrary.simpleMessage("Selected point"),
     "seleziona_il_tuo_kebab_preferito": MessageLookupByLibrary.simpleMessage(
@@ -974,6 +1002,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sort_price": MessageLookupByLibrary.simpleMessage("price"),
     "sort_quality": MessageLookupByLibrary.simpleMessage("quality"),
     "sort_stars": MessageLookupByLibrary.simpleMessage("stars"),
+    "sovrascrivi": MessageLookupByLibrary.simpleMessage("Overwrite"),
     "spicy": MessageLookupByLibrary.simpleMessage("Spicy"),
     "staff": MessageLookupByLibrary.simpleMessage("Staff"),
     "staff_certified": MessageLookupByLibrary.simpleMessage(

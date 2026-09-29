@@ -768,5 +768,17 @@
   "feed_posts_label": "Posts du fil",
   "unlocked_badge": "Débloquée",
   "completed_badge": "Terminé ! ⭐",
-  "open_in_app": "Ouvrir l'appli"
+  "open_in_app": "Ouvrir l'appli",
+  "compare_kebabs": "Comparer les Kebabs",
+  "select_first_kebab": "Sélectionne le 1er kebab",
+  "select_second_kebab": "Sélectionne le 2ème kebab",
+  "search_kebab_to_compare": "Chercher un kebab à comparer...",
+  "change": "Changer",
+  "pillars_comparison": "Comparaison des Piliers",
+  "ingredients_comparison": "Comparaison des Ingrédients",
+  "select_two_kebabs_to_compare": "Sélectionne deux kebabs pour afficher la comparaison détaillée.",
+  "review_already_exists_title": "Avis déjà existant",
+  "review_already_exists_message": "Un avis existe déjà pour cet établissement, souhaitez-vous l'écraser ?",
+  "sovrascrivi": "Écraser",
+  "open_or_get_app": "Ouvrir ou télécharger l'appli"
 }

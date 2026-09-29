@@ -768,5 +768,17 @@
   "feed_posts_label": "Feed posts",
   "unlocked_badge": "Unlocked",
   "completed_badge": "Completed! ⭐",
-  "open_in_app": "Open the app"
+  "open_in_app": "Open the app",
+  "compare_kebabs": "Compare Kebabs",
+  "select_first_kebab": "Select 1st kebab",
+  "select_second_kebab": "Select 2nd kebab",
+  "search_kebab_to_compare": "Search a kebab to compare...",
+  "change": "Change",
+  "pillars_comparison": "Pillars Comparison",
+  "ingredients_comparison": "Ingredients Comparison",
+  "select_two_kebabs_to_compare": "Select two kebabs to view the detailed comparison.",
+  "review_already_exists_title": "Review already exists",
+  "review_already_exists_message": "A review already exists for this place, do you want to overwrite it?",
+  "sovrascrivi": "Overwrite",
+  "open_or_get_app": "Open or get the app"
 }

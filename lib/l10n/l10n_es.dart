@@ -1605,4 +1605,39 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get open_in_app => 'Abrir la app';
+
+  @override
+  String get compare_kebabs => 'Comparar Kebabs';
+
+  @override
+  String get select_first_kebab => 'Selecciona 1° kebab';
+
+  @override
+  String get select_second_kebab => 'Selecciona 2° kebab';
+
+  @override
+  String get search_kebab_to_compare => 'Buscar un kebab para comparar...';
+
+  @override
+  String get pillars_comparison => 'Comparación de Pilares';
+
+  @override
+  String get ingredients_comparison => 'Comparación de Ingredientes';
+
+  @override
+  String get select_two_kebabs_to_compare =>
+      'Selecciona dos kebabs para ver la comparación detallada.';
+
+  @override
+  String get review_already_exists_title => 'Reseña ya existente';
+
+  @override
+  String get review_already_exists_message =>
+      'Ya existe otra reseña para este lugar, ¿deseas sobrescribirla?';
+
+  @override
+  String get sovrascrivi => 'Sobrescribir';
+
+  @override
+  String get open_or_get_app => 'Abrir o descargar la app';
 }

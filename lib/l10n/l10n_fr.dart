@@ -1614,4 +1614,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get open_in_app => 'Ouvrir l\'appli';
+
+  @override
+  String get compare_kebabs => 'Comparer les Kebabs';
+
+  @override
+  String get select_first_kebab => 'Sélectionne le 1er kebab';
+
+  @override
+  String get select_second_kebab => 'Sélectionne le 2ème kebab';
+
+  @override
+  String get search_kebab_to_compare => 'Chercher un kebab à comparer...';
+
+  @override
+  String get pillars_comparison => 'Comparaison des Piliers';
+
+  @override
+  String get ingredients_comparison => 'Comparaison des Ingrédients';
+
+  @override
+  String get select_two_kebabs_to_compare =>
+      'Sélectionne deux kebabs pour afficher la comparaison détaillée.';
+
+  @override
+  String get review_already_exists_title => 'Avis déjà existant';
+
+  @override
+  String get review_already_exists_message =>
+      'Un avis existe déjà pour cet établissement, souhaitez-vous l\'écraser ?';
+
+  @override
+  String get sovrascrivi => 'Écraser';
+
+  @override
+  String get open_or_get_app => 'Ouvrir ou télécharger l\'appli';
 }

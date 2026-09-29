@@ -1609,4 +1609,39 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get open_in_app => 'App öffnen';
+
+  @override
+  String get compare_kebabs => 'Döner Vergleichen';
+
+  @override
+  String get select_first_kebab => 'Wähle 1. Döner';
+
+  @override
+  String get select_second_kebab => 'Wähle 2. Döner';
+
+  @override
+  String get search_kebab_to_compare => 'Döner zum Vergleichen suchen...';
+
+  @override
+  String get pillars_comparison => 'Säulen-Vergleich';
+
+  @override
+  String get ingredients_comparison => 'Zutaten-Vergleich';
+
+  @override
+  String get select_two_kebabs_to_compare =>
+      'Wähle zwei Döner, um den detaillierten Vergleich zu sehen.';
+
+  @override
+  String get review_already_exists_title => 'Bewertung bereits vorhanden';
+
+  @override
+  String get review_already_exists_message =>
+      'Für dieses Lokal existiert bereits eine Bewertung. Möchtest du sie überschreiben?';
+
+  @override
+  String get sovrascrivi => 'Überschreiben';
+
+  @override
+  String get open_or_get_app => 'App öffnen oder herunterladen';
 }

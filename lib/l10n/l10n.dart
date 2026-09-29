@@ -2973,6 +2973,72 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Apri l\'app'**
   String get open_in_app;
+
+  /// No description provided for @compare_kebabs.
+  ///
+  /// In it, this message translates to:
+  /// **'Confronta Kebab'**
+  String get compare_kebabs;
+
+  /// No description provided for @select_first_kebab.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona 1° kebab'**
+  String get select_first_kebab;
+
+  /// No description provided for @select_second_kebab.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona 2° kebab'**
+  String get select_second_kebab;
+
+  /// No description provided for @search_kebab_to_compare.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca un kebab da confrontare...'**
+  String get search_kebab_to_compare;
+
+  /// No description provided for @pillars_comparison.
+  ///
+  /// In it, this message translates to:
+  /// **'Confronto Pilastri'**
+  String get pillars_comparison;
+
+  /// No description provided for @ingredients_comparison.
+  ///
+  /// In it, this message translates to:
+  /// **'Bilanciamento Ingredienti'**
+  String get ingredients_comparison;
+
+  /// No description provided for @select_two_kebabs_to_compare.
+  ///
+  /// In it, this message translates to:
+  /// **'Seleziona due kebab per visualizzare il confronto dettagliato.'**
+  String get select_two_kebabs_to_compare;
+
+  /// No description provided for @review_already_exists_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensione già presente'**
+  String get review_already_exists_title;
+
+  /// No description provided for @review_already_exists_message.
+  ///
+  /// In it, this message translates to:
+  /// **'È già presente un\'altra recensione per questo locale, sovrascrivere?'**
+  String get review_already_exists_message;
+
+  /// No description provided for @sovrascrivi.
+  ///
+  /// In it, this message translates to:
+  /// **'Sovrascrivi'**
+  String get sovrascrivi;
+
+  /// No description provided for @open_or_get_app.
+  ///
+  /// In it, this message translates to:
+  /// **'Apri o Scarica l\'app'**
+  String get open_or_get_app;
 }
 
 class _AppLocalizationsDelegate

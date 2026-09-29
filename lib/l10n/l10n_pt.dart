@@ -1135,7 +1135,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get choose_place => 'Escolha o local';
 
   @override
-  String get change => 'Alterar';
+  String get change => 'Mudar';
 
   @override
   String get search_kebabbo_places => 'Buscar entre os locais do Kebabbo';
@@ -1595,4 +1595,39 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get open_in_app => 'Abrir o app';
+
+  @override
+  String get compare_kebabs => 'Comparar Kebabs';
+
+  @override
+  String get select_first_kebab => 'Selecionar 1º kebab';
+
+  @override
+  String get select_second_kebab => 'Selecionar 2º kebab';
+
+  @override
+  String get search_kebab_to_compare => 'Buscar um kebab para comparar...';
+
+  @override
+  String get pillars_comparison => 'Comparação de Pilares';
+
+  @override
+  String get ingredients_comparison => 'Comparação de Ingredientes';
+
+  @override
+  String get select_two_kebabs_to_compare =>
+      'Selecione dois kebabs para ver a comparação detalhada.';
+
+  @override
+  String get review_already_exists_title => 'Avaliação já existente';
+
+  @override
+  String get review_already_exists_message =>
+      'Já existe outra avaliação para este local, deseja substituí-la?';
+
+  @override
+  String get sovrascrivi => 'Substituir';
+
+  @override
+  String get open_or_get_app => 'Abrir ou baixar o app';
 }

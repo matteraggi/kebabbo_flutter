@@ -4299,6 +4299,111 @@ class S {
       args: [],
     );
   }
+
+  /// `Compare Kebabs`
+  String get compare_kebabs {
+    return Intl.message(
+      'Compare Kebabs',
+      name: 'compare_kebabs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select 1st kebab`
+  String get select_first_kebab {
+    return Intl.message(
+      'Select 1st kebab',
+      name: 'select_first_kebab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select 2nd kebab`
+  String get select_second_kebab {
+    return Intl.message(
+      'Select 2nd kebab',
+      name: 'select_second_kebab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search a kebab to compare...`
+  String get search_kebab_to_compare {
+    return Intl.message(
+      'Search a kebab to compare...',
+      name: 'search_kebab_to_compare',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pillars Comparison`
+  String get pillars_comparison {
+    return Intl.message(
+      'Pillars Comparison',
+      name: 'pillars_comparison',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ingredients Comparison`
+  String get ingredients_comparison {
+    return Intl.message(
+      'Ingredients Comparison',
+      name: 'ingredients_comparison',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select two kebabs to view the detailed comparison.`
+  String get select_two_kebabs_to_compare {
+    return Intl.message(
+      'Select two kebabs to view the detailed comparison.',
+      name: 'select_two_kebabs_to_compare',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review already exists`
+  String get review_already_exists_title {
+    return Intl.message(
+      'Review already exists',
+      name: 'review_already_exists_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A review already exists for this place, do you want to overwrite it?`
+  String get review_already_exists_message {
+    return Intl.message(
+      'A review already exists for this place, do you want to overwrite it?',
+      name: 'review_already_exists_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Overwrite`
+  String get sovrascrivi {
+    return Intl.message('Overwrite', name: 'sovrascrivi', desc: '', args: []);
+  }
+
+  /// `Open or get the app`
+  String get open_or_get_app {
+    return Intl.message(
+      'Open or get the app',
+      name: 'open_or_get_app',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

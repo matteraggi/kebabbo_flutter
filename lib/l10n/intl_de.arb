@@ -768,5 +768,17 @@
   "feed_posts_label": "Feed-Posts",
   "unlocked_badge": "Freigeschaltet",
   "completed_badge": "Geschafft! ⭐",
-  "open_in_app": "App öffnen"
+  "open_in_app": "App öffnen",
+  "compare_kebabs": "Döner Vergleichen",
+  "select_first_kebab": "Wähle 1. Döner",
+  "select_second_kebab": "Wähle 2. Döner",
+  "search_kebab_to_compare": "Döner zum Vergleichen suchen...",
+  "change": "Ändern",
+  "pillars_comparison": "Säulen-Vergleich",
+  "ingredients_comparison": "Zutaten-Vergleich",
+  "select_two_kebabs_to_compare": "Wähle zwei Döner, um den detaillierten Vergleich zu sehen.",
+  "review_already_exists_title": "Bewertung bereits vorhanden",
+  "review_already_exists_message": "Für dieses Lokal existiert bereits eine Bewertung. Möchtest du sie überschreiben?",
+  "sovrascrivi": "Überschreiben",
+  "open_or_get_app": "App öffnen oder herunterladen"
 }
