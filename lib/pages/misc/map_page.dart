@@ -615,6 +615,10 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
         ? (item['dimension'] ?? 0.0).toDouble()
         : (commStats?['dimension'] ?? (item['dimension'] ?? 0.0)).toDouble();
 
+    final double displayMenu = showingStaff
+        ? (item['menu'] ?? 0.0).toDouble()
+        : (commStats?['menu'] ?? (item['menu'] ?? 0.0)).toDouble();
+
     final bool hasNoCommunityReviews =
         !showingStaff && isStaff && commCount == 0 && !_isLoadingCommunityReview;
 
@@ -907,13 +911,28 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                   ],
                 ),
                 const SizedBox(height: 8),
-                // Mini statistiche
+                // Mini statistiche (tutte nella stessa riga)
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildStatPill(S.of(context).quality, displayQuality),
-                    _buildStatPill(S.of(context).price, displayPrice),
-                    _buildStatPill(S.of(context).quantity, displayDimension),
+                    Expanded(
+                      child: _buildStatPill(
+                          S.of(context).quality, displayQuality),
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child:
+                          _buildStatPill(S.of(context).price, displayPrice),
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: _buildStatPill(
+                          S.of(context).quantity, displayDimension),
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child:
+                          _buildStatPill(S.of(context).menu, displayMenu),
+                    ),
                   ],
                 ),
               ],
@@ -986,28 +1005,33 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   Widget _buildStatPill(String label, double score) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade300),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "$label: ",
-            style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-          ),
-          Text(
-            score > 0 ? score.toStringAsFixed(1) : "-",
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+      alignment: Alignment.center,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "$label: ",
+              style: TextStyle(fontSize: 11.5, color: Colors.grey[700]),
             ),
-          ),
-        ],
+            Text(
+              score > 0 ? score.toStringAsFixed(1) : "-",
+              style: const TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

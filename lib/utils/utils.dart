@@ -152,6 +152,17 @@ Map<String, dynamic>? parseOrari(dynamic orariApertura) {
   return null;
 }
 
+/// Verifica se sono presenti orari di apertura validi (non null, non mappa vuota, non tutti i valori vuoti o null).
+bool hasOpeningHours(dynamic orariApertura) {
+  final orari = parseOrari(orariApertura);
+  if (orari == null || orari.isEmpty) return false;
+  return orari.values.any((v) {
+    if (v == null) return false;
+    final s = v.toString().trim().toLowerCase();
+    return s.isNotEmpty && s != 'null';
+  });
+}
+
 /// Nome del giorno localizzato per un indice 0 (lunedì) .. 6 (domenica).
 String localizedWeekdayName(BuildContext context, int index) {
   final locale = Localizations.localeOf(context).languageCode;

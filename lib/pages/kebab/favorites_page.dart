@@ -100,7 +100,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
             spicy: (kebab['spicy'] ?? 0.0).toDouble(),
             onion: (kebab['onion'] ?? 0.0).toDouble(),
             tag: kebab['tag'] ?? '',
-            isOpen: isKebabOpen(kebab['orari_apertura']),
+            isOpen: hasOpeningHours(kebab['orari_apertura'])
+                ? isKebabOpen(kebab['orari_apertura'])
+                : null,
             glutenFree: kebab['gluten_free'] ?? false,
             expanded: false,
           );

@@ -20,6 +20,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:kebabbo_flutter/pages/tcg/tcg_profile_preview.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 
 class AccountPage extends StatefulWidget {
   final Position? currentPosition;
@@ -344,7 +345,9 @@ class _AccountPageState extends State<AccountPage> {
                       name: kebab['name'] ?? '',
                       rating: (kebab['rating'] ?? 0.0).toDouble(),
                       tag: (kebab['tag'] ?? ''),
-                      isOpen: kebab['isOpen'] ?? false,
+                      isOpen: hasOpeningHours(kebab['orari_apertura'])
+                          ? isKebabOpen(kebab['orari_apertura'])
+                          : null,
                       glutenFree: kebab['gluten_free'] ?? false,
                       onKebabSelected: (selectedKebabId) {
                         fetchSelectedKebab(selectedKebabId);

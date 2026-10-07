@@ -740,7 +740,8 @@ class KebabSinglePageState extends State<KebabSinglePage>
     }
 
     final String name = kebabData!['name'] ?? S.of(context).kebab_sconosciuto;
-    final bool isOpen = isKebabOpen(kebabData?['orari_apertura']);
+    final bool hasHours = hasOpeningHours(kebabData?['orari_apertura']);
+    final bool isOpen = hasHours && isKebabOpen(kebabData?['orari_apertura']);
     final bool isGlutenFree = kebabData!['gluten_free'] ?? false;
     final double officialRating =
         (kebabData!['rating'] ?? 0.0).toDouble();
@@ -913,43 +914,44 @@ class KebabSinglePageState extends State<KebabSinglePage>
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         // Open status chip
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: isOpen
-                                ? const Color(0xFFE6F4EA)
-                                : Colors.grey[200],
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
+                        if (hasHours)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
                               color: isOpen
-                                  ? const Color(0xFF34A853)
-                                  : Colors.grey[400]!,
+                                  ? const Color(0xFFE6F4EA)
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isOpen
+                                    ? const Color(0xFF34A853)
+                                    : Colors.grey[400]!,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircleAvatar(
+                                  radius: 4,
+                                  backgroundColor: isOpen
+                                      ? const Color(0xFF34A853)
+                                      : Colors.grey[600],
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  isOpen ? S.of(context).aperto : S.of(context).chiuso,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: isOpen
+                                        ? const Color(0xFF137333)
+                                        : Colors.grey[700],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircleAvatar(
-                                radius: 4,
-                                backgroundColor: isOpen
-                                    ? const Color(0xFF34A853)
-                                    : Colors.grey[600],
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                isOpen ? S.of(context).aperto : S.of(context).chiuso,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: isOpen
-                                      ? const Color(0xFF137333)
-                                      : Colors.grey[700],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
 
                         // Gluten Free badge
                         if (isGlutenFree)
@@ -1421,8 +1423,10 @@ class KebabSinglePageState extends State<KebabSinglePage>
           const SizedBox(height: 16),
 
           // 3. Opening Hours Card
-          _buildOpeningHoursCard(orariMap),
-          const SizedBox(height: 24),
+          if (hasOpeningHours(orariMap)) ...[
+            _buildOpeningHoursCard(orariMap),
+            const SizedBox(height: 24),
+          ],
         ],
       ),
     );
@@ -1507,10 +1511,10 @@ class KebabSinglePageState extends State<KebabSinglePage>
   }
 
   Widget _buildOpeningHoursCard(dynamic rawOrari) {
-    final orariMap = parseOrari(rawOrari);
-    if (orariMap == null) {
+    if (!hasOpeningHours(rawOrari)) {
       return const SizedBox.shrink();
     }
+    final orariMap = parseOrari(rawOrari)!;
 
     const daysOrder = orariDayKeys;
 

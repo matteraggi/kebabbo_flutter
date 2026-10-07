@@ -8,7 +8,7 @@ class KebabListItemClickable extends StatefulWidget {
   final String name;
   final double rating;
   final String tag;
-  final bool isOpen;
+  final bool? isOpen;
   final bool glutenFree;
   final Function(String) onKebabSelected;
   final bool shouldSaveFavorite; // ✅ Nuovo parametro
@@ -19,7 +19,7 @@ class KebabListItemClickable extends StatefulWidget {
     required this.name,
     required this.rating,
     required this.tag,
-    required this.isOpen,
+    this.isOpen,
     required this.glutenFree,
     required this.onKebabSelected,
     this.shouldSaveFavorite = false,
@@ -111,20 +111,21 @@ class KebabListItemClickableState extends State<KebabListItemClickable> {
                     ),
                   ],
                 ),
-                if (widget.isOpen)
-                  Text(
-                    S.of(context).aperto,
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 37, 154, 41),
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic),
-                  )
-                else
-                  Text(
-                    S.of(context).chiuso,
-                    style: TextStyle(
-                        color: red, fontSize: 12, fontStyle: FontStyle.italic),
-                  ),
+                if (widget.isOpen != null)
+                  if (widget.isOpen!)
+                    Text(
+                      S.of(context).aperto,
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 37, 154, 41),
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic),
+                    )
+                  else
+                    Text(
+                      S.of(context).chiuso,
+                      style: const TextStyle(
+                          color: red, fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
