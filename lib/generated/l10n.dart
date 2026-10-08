@@ -4404,6 +4404,136 @@ class S {
       args: [],
     );
   }
+
+  /// `No kebab places within {km} km.`
+  String no_kebab_within_distance(String km) {
+    return Intl.message(
+      'No kebab places within $km km.',
+      name: 'no_kebab_within_distance',
+      desc: '',
+      args: [km],
+    );
+  }
+
+  /// `Show all`
+  String get show_all_distances {
+    return Intl.message(
+      'Show all',
+      name: 'show_all_distances',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `On the web, use the full Google Maps link (https://www.google.com/maps/place/...): short links are blocked by the browser.`
+  String get maps_short_link_web {
+    return Intl.message(
+      'On the web, use the full Google Maps link (https://www.google.com/maps/place/...): short links are blocked by the browser.',
+      name: 'maps_short_link_web',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log in to follow this user`
+  String get login_to_follow_user {
+    return Intl.message(
+      'Log in to follow this user',
+      name: 'login_to_follow_user',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile link copied to clipboard!`
+  String get profile_link_copied {
+    return Intl.message(
+      'Profile link copied to clipboard!',
+      name: 'profile_link_copied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} TCG cards`
+  String tcg_cards_count(String count) {
+    return Intl.message(
+      '$count TCG cards',
+      name: 'tcg_cards_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Your profile`
+  String get your_profile {
+    return Intl.message(
+      'Your profile',
+      name: 'your_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FAVORITE KEBAB`
+  String get favorite_kebab_caps {
+    return Intl.message(
+      'FAVORITE KEBAB',
+      name: 'favorite_kebab_caps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No posts yet`
+  String get no_posts_yet {
+    return Intl.message(
+      'No posts yet',
+      name: 'no_posts_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This user hasn't posted in the feed yet.`
+  String get user_no_posts_desc {
+    return Intl.message(
+      'This user hasn\'t posted in the feed yet.',
+      name: 'user_no_posts_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This user hasn't reviewed any kebab yet.`
+  String get user_no_reviews_desc {
+    return Intl.message(
+      'This user hasn\'t reviewed any kebab yet.',
+      name: 'user_no_reviews_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See place`
+  String get see_place {
+    return Intl.message('See place', name: 'see_place', desc: '', args: []);
+  }
+
+  /// `Kebabbo staff`
+  String get staff_kebabbo {
+    return Intl.message(
+      'Kebabbo staff',
+      name: 'staff_kebabbo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Source`
+  String get origin_label {
+    return Intl.message('Source', name: 'origin_label', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -65,23 +65,25 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m21(time) => "Próxima recarga em ${time}";
 
-  static String m22(hours, minutes) =>
+  static String m22(km) => "Nenhum lugar de kebab num raio de ${km} km.";
+
+  static String m23(hours, minutes) =>
       "Nenhum pacote pronto agora (0/2). O próximo estará pronto em ${hours}h ${minutes}min.";
 
-  static String m23(time) =>
+  static String m24(time) =>
       "Nenhum pacote pronto. O próximo estará disponível em ${time}.";
 
-  static String m24(count) => "Abrir 2º pacote (${count})";
+  static String m25(count) => "Abrir 2º pacote (${count})";
 
-  static String m25(error) => "Falha ao redefinir a senha: ${error}";
+  static String m26(error) => "Falha ao redefinir a senha: ${error}";
 
-  static String m26(percent) => "${percent}% concluído";
+  static String m27(percent) => "${percent}% concluído";
 
-  static String m27(time) => "Recarregando: próximo em ${time}";
+  static String m28(time) => "Recarregando: próximo em ${time}";
 
-  static String m28(count) => "${count} restantes";
+  static String m29(count) => "${count} restantes";
 
-  static String m29(
+  static String m30(
     kebabName,
     qualityRating,
     quantityRating,
@@ -92,15 +94,17 @@ class MessageLookup extends MessageLookupByLibrary {
   ) =>
       "Acabei de avaliar o kebab no ${kebabName}!\n\nQualidade: ${qualityRating}\nQuantidade: ${quantityRating}\nMenu: ${menuRating}\nPreço: ${priceRating}\nDiversão: ${funRating}\n\n${description}";
 
-  static String m30(count) => "Fotos (${count})";
+  static String m31(count) => "Fotos (${count})";
 
-  static String m31(count) => "Avaliações (${count})";
+  static String m32(count) => "Avaliações (${count})";
 
-  static String m32(unlocked, total) => "${unlocked} de ${total} desbloqueadas";
+  static String m33(count) => "${count} cartas TCG";
 
-  static String m33(error) => "Erro ao enviar: ${error}";
+  static String m34(unlocked, total) => "${unlocked} de ${total} desbloqueadas";
 
-  static String m34(count) => "Usuários (${count})";
+  static String m35(error) => "Erro ao enviar: ${error}";
+
+  static String m36(count) => "Usuários (${count})";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -405,6 +409,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "failed_to_upload_avatar": MessageLookupByLibrary.simpleMessage(
       "Falha ao carregar o avatar",
     ),
+    "favorite_kebab_caps": MessageLookupByLibrary.simpleMessage(
+      "KEBAB FAVORITO",
+    ),
     "feed_posts_label": MessageLookupByLibrary.simpleMessage("Posts no feed"),
     "fifty_posts": MessageLookupByLibrary.simpleMessage("50 posts"),
     "filter_all_count": m16,
@@ -573,6 +580,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "login_tagline": MessageLookupByLibrary.simpleMessage(
       "Entre na comunidade para descobrir e avaliar os melhores kebabs",
     ),
+    "login_to_follow_user": MessageLookupByLibrary.simpleMessage(
+      "Faça login para seguir este usuário",
+    ),
     "login_to_post_photos": MessageLookupByLibrary.simpleMessage(
       "Faça login para publicar fotos",
     ),
@@ -599,6 +609,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "maps_link_name_and_coords_found": MessageLookupByLibrary.simpleMessage(
       "Coordenadas e nome detectados no link do Maps! 📍",
+    ),
+    "maps_short_link_web": MessageLookupByLibrary.simpleMessage(
+      "Na web, use o link completo do Google Maps (https://www.google.com/maps/place/...): links curtos são bloqueados pelo navegador.",
     ),
     "max_charge_reached": MessageLookupByLibrary.simpleMessage(
       "Carga máxima atingida (1 a cada 12h)",
@@ -706,6 +719,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Você ainda não tem nenhuma carta",
     ),
     "no_image": MessageLookupByLibrary.simpleMessage("Sem imagem"),
+    "no_kebab_within_distance": m22,
     "no_medals_in_filter": MessageLookupByLibrary.simpleMessage(
       "Nenhuma medalha neste filtro",
     ),
@@ -715,8 +729,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_pack_ready": MessageLookupByLibrary.simpleMessage(
       "Nenhum pacote pronto",
     ),
-    "no_pack_ready_hours_minutes": m22,
-    "no_pack_ready_timer": m23,
+    "no_pack_ready_hours_minutes": m23,
+    "no_pack_ready_timer": m24,
     "no_photos_yet": MessageLookupByLibrary.simpleMessage("Ainda não há fotos"),
     "no_photos_yet_desc": MessageLookupByLibrary.simpleMessage(
       "Seja o primeiro a compartilhar uma foto do seu kebab ou prato deste local!",
@@ -724,6 +738,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_place_found_add_it": MessageLookupByLibrary.simpleMessage(
       "Nenhum local encontrado. Se for novo, use \"Adicionar um lugar de kebab\"!",
     ),
+    "no_posts_yet": MessageLookupByLibrary.simpleMessage("Ainda não há posts"),
     "no_reviews_yet_desc": MessageLookupByLibrary.simpleMessage(
       "Compartilhe sua experiência neste local com toda a comunidade!",
     ),
@@ -766,7 +781,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_pack_two_ready": MessageLookupByLibrary.simpleMessage(
       "Abrir pacote (2 prontos!)",
     ),
-    "open_second_pack": m24,
+    "open_second_pack": m25,
     "opening_hours": MessageLookupByLibrary.simpleMessage(
       "Horário de funcionamento",
     ),
@@ -778,6 +793,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ou com e-mail",
     ),
     "order_by": MessageLookupByLibrary.simpleMessage("Ordenar por"),
+    "origin_label": MessageLookupByLibrary.simpleMessage("Origem"),
     "overall_rating_1_5": MessageLookupByLibrary.simpleMessage(
       "Avaliação geral (1 a 5)",
     ),
@@ -812,7 +828,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "A senha deve ter pelo menos 6 caracteres",
         ),
-    "password_reset_failed": m25,
+    "password_reset_failed": m26,
     "password_reset_success": MessageLookupByLibrary.simpleMessage(
       "Redefinição de senha bem-sucedida",
     ),
@@ -823,7 +839,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "É por isso que estamos aqui: estudantes universitários, como você, com anos de experiência como comedores de kebab.",
         ),
-    "percent_completed": m26,
+    "percent_completed": m27,
     "photo": MessageLookupByLibrary.simpleMessage("Foto"),
     "photo_added": MessageLookupByLibrary.simpleMessage("Foto adicionada! 📸"),
     "photo_caption_hint": MessageLookupByLibrary.simpleMessage(
@@ -872,6 +888,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacy_policy_load_error": MessageLookupByLibrary.simpleMessage(
       "Erro ao carregar a política de privacidade",
     ),
+    "profile_link_copied": MessageLookupByLibrary.simpleMessage(
+      "Link do perfil copiado!",
+    ),
     "progress_label": MessageLookupByLibrary.simpleMessage("Progresso"),
     "publish_photo": MessageLookupByLibrary.simpleMessage("Publicar foto"),
     "publish_review": MessageLookupByLibrary.simpleMessage(
@@ -912,12 +931,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "recharge_info": MessageLookupByLibrary.simpleMessage(
       "1 pacote recarrega a cada 12h (máx. 2)",
     ),
-    "recharging_next_in": m27,
+    "recharging_next_in": m28,
     "registrati_per_poter_visualizzare_il_feed":
         MessageLookupByLibrary.simpleMessage(
           "Cadastre-se para visualizar o feed",
         ),
-    "remaining_count": m28,
+    "remaining_count": m29,
     "remove_from_favorites": MessageLookupByLibrary.simpleMessage(
       "Remover dos favoritos",
     ),
@@ -937,7 +956,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "reset_password": MessageLookupByLibrary.simpleMessage("Redefinir senha"),
     "review": MessageLookupByLibrary.simpleMessage("Avaliação"),
-    "reviewMessage": m29,
+    "reviewMessage": m30,
     "review_action": MessageLookupByLibrary.simpleMessage("Avaliar"),
     "review_already_exists_message": MessageLookupByLibrary.simpleMessage(
       "Já existe outra avaliação para este local, deseja substituí-la?",
@@ -1001,6 +1020,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "see_hours_photos_reviews": MessageLookupByLibrary.simpleMessage(
       "Ver horário, fotos e avaliações",
     ),
+    "see_place": MessageLookupByLibrary.simpleMessage("Ver local"),
     "segui": MessageLookupByLibrary.simpleMessage("Seguir"),
     "segui_gia": MessageLookupByLibrary.simpleMessage("Já seguindo"),
     "seguiti": MessageLookupByLibrary.simpleMessage("Seguindo"),
@@ -1033,6 +1053,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "session_expired": MessageLookupByLibrary.simpleMessage(
       "Sessão expirada. Faça login novamente.",
     ),
+    "show_all_distances": MessageLookupByLibrary.simpleMessage("Mostrar todos"),
     "sign_up": MessageLookupByLibrary.simpleMessage("Inscrever-se"),
     "sign_up_with_google": MessageLookupByLibrary.simpleMessage(
       "Cadastrar com o Google",
@@ -1054,6 +1075,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "staff_certified": MessageLookupByLibrary.simpleMessage(
       "Certificado pela equipe Kebabbo",
     ),
+    "staff_kebabbo": MessageLookupByLibrary.simpleMessage("Equipe Kebabbo"),
     "submit_review": MessageLookupByLibrary.simpleMessage("Enviar avaliação"),
     "successfully_updated_profile": MessageLookupByLibrary.simpleMessage(
       "Perfil atualizado com sucesso!",
@@ -1062,8 +1084,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Deslize para navegar na coleção",
     ),
     "tab_overview": MessageLookupByLibrary.simpleMessage("Visão geral"),
-    "tab_photos": m30,
-    "tab_reviews": m31,
+    "tab_photos": m31,
+    "tab_reviews": m32,
     "tag_kebab_pill": MessageLookupByLibrary.simpleMessage("Kebab 🌯"),
     "tag_sandwich_pill": MessageLookupByLibrary.simpleMessage(
       "Sanduicheria 🥪",
@@ -1081,6 +1103,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Toque para selecionar uma foto",
     ),
     "tcg_album": MessageLookupByLibrary.simpleMessage("Álbum de cartas TCG"),
+    "tcg_cards_count": m33,
     "ten_posts": MessageLookupByLibrary.simpleMessage("10 posts"),
     "ten_reviews": MessageLookupByLibrary.simpleMessage("10 avaliações"),
     "testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo":
@@ -1102,7 +1125,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "unit_posts": MessageLookupByLibrary.simpleMessage("posts"),
     "unit_reviews": MessageLookupByLibrary.simpleMessage("avaliações"),
     "unlocked_badge": MessageLookupByLibrary.simpleMessage("Desbloqueada"),
-    "unlocked_of_total": m32,
+    "unlocked_of_total": m34,
     "unpack_and_view_collection": MessageLookupByLibrary.simpleMessage(
       "Abrir e ver coleção",
     ),
@@ -1111,7 +1134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "update": MessageLookupByLibrary.simpleMessage("Atualizar"),
     "upload": MessageLookupByLibrary.simpleMessage("Enviar"),
-    "upload_error": m33,
+    "upload_error": m35,
     "upload_first_photo": MessageLookupByLibrary.simpleMessage(
       "Envie a primeira foto",
     ),
@@ -1119,6 +1142,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Envie uma foto do espeto ou do local",
     ),
     "user_generic": MessageLookupByLibrary.simpleMessage("Usuário"),
+    "user_no_posts_desc": MessageLookupByLibrary.simpleMessage(
+      "Este usuário ainda não publicou no feed.",
+    ),
+    "user_no_reviews_desc": MessageLookupByLibrary.simpleMessage(
+      "Este usuário ainda não avaliou nenhum kebab.",
+    ),
     "user_not_authenticated": MessageLookupByLibrary.simpleMessage(
       "Usuário não autenticado",
     ),
@@ -1145,7 +1174,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "O nome de usuário deve ter pelo menos 3\ncaracteres!",
         ),
     "users": MessageLookupByLibrary.simpleMessage("Usuários"),
-    "users_count": m34,
+    "users_count": m36,
     "users_review": MessageLookupByLibrary.simpleMessage(
       "Avaliação dos usuários",
     ),
@@ -1179,6 +1208,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "your_experience": MessageLookupByLibrary.simpleMessage("Sua experiência"),
     "your_kebab": MessageLookupByLibrary.simpleMessage("O teu kebab"),
     "your_medals_title": MessageLookupByLibrary.simpleMessage("Suas Medalhas"),
+    "your_profile": MessageLookupByLibrary.simpleMessage("Seu perfil"),
     "your_review_optional": MessageLookupByLibrary.simpleMessage(
       "Sua avaliação (opcional)",
     ),

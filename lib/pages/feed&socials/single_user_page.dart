@@ -166,7 +166,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
     final currentUser = supabase.auth.currentUser;
     if (currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Accedi per seguire questo utente")),
+        SnackBar(content: Text(S.of(context).login_to_follow_user)),
       );
       return;
     }
@@ -315,9 +315,9 @@ class _SingleUserPageState extends State<SingleUserPage> {
                 Clipboard.setData(ClipboardData(
                     text: "https://kebabbo.top/user/${widget.userId}"));
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Link del profilo copiato negli appunti!"),
-                    duration: Duration(seconds: 2),
+                  SnackBar(
+                    content: Text(S.of(context).profile_link_copied),
+                    duration: const Duration(seconds: 2),
                   ),
                 );
               },
@@ -498,7 +498,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        "$_tcgCardsCount Carte TCG",
+                                        S.of(context).tcg_cards_count(_tcgCardsCount.toString()),
                                         style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w700,
@@ -608,7 +608,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                                       size: 16, color: Colors.grey.shade700),
                                   const SizedBox(width: 6),
                                   Text(
-                                    "Il tuo profilo",
+                                    S.of(context).your_profile,
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -653,7 +653,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                           ),
                           _buildStatDivider(),
                           _buildStatItem(
-                            label: "Recensioni",
+                            label: S.of(context).reviews_label,
                             value: "${_userReviews.length}",
                             onTap: () {
                               setState(() => _selectedTab = 1);
@@ -760,7 +760,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                                               style: TextStyle(fontSize: 13),
                                             ),
                                             Text(
-                                              "KEBAB DEL CUORE",
+                                              S.of(context).favorite_kebab_caps,
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w800,
@@ -929,7 +929,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      "Recensioni (${_userReviews.length})",
+                                      S.of(context).tab_reviews(_userReviews.length.toString()),
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w700,
@@ -994,9 +994,9 @@ class _SingleUserPageState extends State<SingleUserPage> {
               ),
             ),
             const SizedBox(height: 14),
-            const Text(
-              "Nessun post ancora",
-              style: TextStyle(
+            Text(
+              S.of(context).no_posts_yet,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Colors.black87,
@@ -1004,7 +1004,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
             ),
             const SizedBox(height: 4),
             Text(
-              "Questo utente non ha ancora pubblicato post nel feed.",
+              S.of(context).user_no_posts_desc,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -1075,9 +1075,9 @@ class _SingleUserPageState extends State<SingleUserPage> {
               ),
             ),
             const SizedBox(height: 14),
-            const Text(
-              "Nessuna recensione ancora",
-              style: TextStyle(
+            Text(
+              S.of(context).nessuna_recensione_ancora,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Colors.black87,
@@ -1085,7 +1085,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
             ),
             const SizedBox(height: 4),
             Text(
-              "Questo utente non ha ancora recensito nessun kebab.",
+              S.of(context).user_no_reviews_desc,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -1104,7 +1104,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
       itemCount: _userReviews.length,
       itemBuilder: (context, index) {
         final rev = _userReviews[index];
-        final kebabName = rev['kebab_name'] ?? "Kebabbaro";
+        final kebabName = rev['kebab_name'] ?? S.of(context).nome_non_disponibile;
         final kebabAddress = rev['kebab_address'];
         final kebabTag = rev['kebab_tag'] ?? 'kebab';
         final int kebabId =
@@ -1264,9 +1264,9 @@ class _SingleUserPageState extends State<SingleUserPage> {
                       spacing: 6,
                       runSpacing: 4,
                       children: [
-                        if (q > 0) _buildMiniRatingChip("Qualità", q),
-                        if (dim > 0) _buildMiniRatingChip("Porzione", dim),
-                        if (p > 0) _buildMiniRatingChip("Prezzo", p),
+                        if (q > 0) _buildMiniRatingChip(S.of(context).quality, q),
+                        if (dim > 0) _buildMiniRatingChip(S.of(context).quantity, dim),
+                        if (p > 0) _buildMiniRatingChip(S.of(context).price, p),
                       ],
                     ),
 
@@ -1290,7 +1290,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
                         Row(
                           children: [
                             Text(
-                              "Vedi locale",
+                              S.of(context).see_place,
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,

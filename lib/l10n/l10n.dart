@@ -3039,6 +3039,90 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Apri o Scarica l\'app'**
   String get open_or_get_app;
+
+  /// No description provided for @no_kebab_within_distance.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun kebabbaro entro {km} km.'**
+  String no_kebab_within_distance(String km);
+
+  /// No description provided for @show_all_distances.
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra tutti'**
+  String get show_all_distances;
+
+  /// No description provided for @maps_short_link_web.
+  ///
+  /// In it, this message translates to:
+  /// **'Sul web usa il link completo di Google Maps (https://www.google.com/maps/place/...): i link brevi sono bloccati dal browser.'**
+  String get maps_short_link_web;
+
+  /// No description provided for @login_to_follow_user.
+  ///
+  /// In it, this message translates to:
+  /// **'Accedi per seguire questo utente'**
+  String get login_to_follow_user;
+
+  /// No description provided for @profile_link_copied.
+  ///
+  /// In it, this message translates to:
+  /// **'Link del profilo copiato negli appunti!'**
+  String get profile_link_copied;
+
+  /// No description provided for @tcg_cards_count.
+  ///
+  /// In it, this message translates to:
+  /// **'{count} Carte TCG'**
+  String tcg_cards_count(String count);
+
+  /// No description provided for @your_profile.
+  ///
+  /// In it, this message translates to:
+  /// **'Il tuo profilo'**
+  String get your_profile;
+
+  /// No description provided for @favorite_kebab_caps.
+  ///
+  /// In it, this message translates to:
+  /// **'KEBAB DEL CUORE'**
+  String get favorite_kebab_caps;
+
+  /// No description provided for @no_posts_yet.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun post ancora'**
+  String get no_posts_yet;
+
+  /// No description provided for @user_no_posts_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Questo utente non ha ancora pubblicato post nel feed.'**
+  String get user_no_posts_desc;
+
+  /// No description provided for @user_no_reviews_desc.
+  ///
+  /// In it, this message translates to:
+  /// **'Questo utente non ha ancora recensito nessun kebab.'**
+  String get user_no_reviews_desc;
+
+  /// No description provided for @see_place.
+  ///
+  /// In it, this message translates to:
+  /// **'Vedi locale'**
+  String get see_place;
+
+  /// No description provided for @staff_kebabbo.
+  ///
+  /// In it, this message translates to:
+  /// **'Staff Kebabbo'**
+  String get staff_kebabbo;
+
+  /// No description provided for @origin_label.
+  ///
+  /// In it, this message translates to:
+  /// **'Origine'**
+  String get origin_label;
 }
 
 class _AppLocalizationsDelegate

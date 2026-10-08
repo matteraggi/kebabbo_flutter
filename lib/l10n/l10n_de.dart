@@ -1644,4 +1644,55 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get open_or_get_app => 'App öffnen oder herunterladen';
+
+  @override
+  String no_kebab_within_distance(String km) {
+    return 'Keine Kebab-Läden im Umkreis von $km km.';
+  }
+
+  @override
+  String get show_all_distances => 'Alle anzeigen';
+
+  @override
+  String get maps_short_link_web =>
+      'Nutze im Web den vollständigen Google-Maps-Link (https://www.google.com/maps/place/...): Kurzlinks werden vom Browser blockiert.';
+
+  @override
+  String get login_to_follow_user =>
+      'Melde dich an, um diesem Nutzer zu folgen';
+
+  @override
+  String get profile_link_copied =>
+      'Profil-Link in die Zwischenablage kopiert!';
+
+  @override
+  String tcg_cards_count(String count) {
+    return '$count TCG-Karten';
+  }
+
+  @override
+  String get your_profile => 'Dein Profil';
+
+  @override
+  String get favorite_kebab_caps => 'LIEBLINGS-KEBAB';
+
+  @override
+  String get no_posts_yet => 'Noch keine Posts';
+
+  @override
+  String get user_no_posts_desc =>
+      'Dieser Nutzer hat noch nichts im Feed gepostet.';
+
+  @override
+  String get user_no_reviews_desc =>
+      'Dieser Nutzer hat noch keinen Kebab bewertet.';
+
+  @override
+  String get see_place => 'Laden ansehen';
+
+  @override
+  String get staff_kebabbo => 'Kebabbo-Team';
+
+  @override
+  String get origin_label => 'Herkunft';
 }

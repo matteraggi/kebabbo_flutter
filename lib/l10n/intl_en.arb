@@ -773,12 +773,39 @@
   "select_first_kebab": "Select 1st kebab",
   "select_second_kebab": "Select 2nd kebab",
   "search_kebab_to_compare": "Search a kebab to compare...",
-  "change": "Change",
   "pillars_comparison": "Pillars Comparison",
   "ingredients_comparison": "Ingredients Comparison",
   "select_two_kebabs_to_compare": "Select two kebabs to view the detailed comparison.",
   "review_already_exists_title": "Review already exists",
   "review_already_exists_message": "A review already exists for this place, do you want to overwrite it?",
   "sovrascrivi": "Overwrite",
-  "open_or_get_app": "Open or get the app"
+  "open_or_get_app": "Open or get the app",
+  "no_kebab_within_distance": "No kebab places within {km} km.",
+  "@no_kebab_within_distance": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "show_all_distances": "Show all",
+  "maps_short_link_web": "On the web, use the full Google Maps link (https://www.google.com/maps/place/...): short links are blocked by the browser.",
+  "login_to_follow_user": "Log in to follow this user",
+  "profile_link_copied": "Profile link copied to clipboard!",
+  "tcg_cards_count": "{count} TCG cards",
+  "@tcg_cards_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "your_profile": "Your profile",
+  "favorite_kebab_caps": "FAVORITE KEBAB",
+  "no_posts_yet": "No posts yet",
+  "user_no_posts_desc": "This user hasn't posted in the feed yet.",
+  "user_no_reviews_desc": "This user hasn't reviewed any kebab yet.",
+  "see_place": "See place",
+  "staff_kebabbo": "Kebabbo staff",
+  "origin_label": "Source"
 }

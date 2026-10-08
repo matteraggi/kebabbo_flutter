@@ -773,12 +773,39 @@
   "select_first_kebab": "Wähle 1. Döner",
   "select_second_kebab": "Wähle 2. Döner",
   "search_kebab_to_compare": "Döner zum Vergleichen suchen...",
-  "change": "Ändern",
   "pillars_comparison": "Säulen-Vergleich",
   "ingredients_comparison": "Zutaten-Vergleich",
   "select_two_kebabs_to_compare": "Wähle zwei Döner, um den detaillierten Vergleich zu sehen.",
   "review_already_exists_title": "Bewertung bereits vorhanden",
   "review_already_exists_message": "Für dieses Lokal existiert bereits eine Bewertung. Möchtest du sie überschreiben?",
   "sovrascrivi": "Überschreiben",
-  "open_or_get_app": "App öffnen oder herunterladen"
+  "open_or_get_app": "App öffnen oder herunterladen",
+  "no_kebab_within_distance": "Keine Kebab-Läden im Umkreis von {km} km.",
+  "@no_kebab_within_distance": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "show_all_distances": "Alle anzeigen",
+  "maps_short_link_web": "Nutze im Web den vollständigen Google-Maps-Link (https://www.google.com/maps/place/...): Kurzlinks werden vom Browser blockiert.",
+  "login_to_follow_user": "Melde dich an, um diesem Nutzer zu folgen",
+  "profile_link_copied": "Profil-Link in die Zwischenablage kopiert!",
+  "tcg_cards_count": "{count} TCG-Karten",
+  "@tcg_cards_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "your_profile": "Dein Profil",
+  "favorite_kebab_caps": "LIEBLINGS-KEBAB",
+  "no_posts_yet": "Noch keine Posts",
+  "user_no_posts_desc": "Dieser Nutzer hat noch nichts im Feed gepostet.",
+  "user_no_reviews_desc": "Dieser Nutzer hat noch keinen Kebab bewertet.",
+  "see_place": "Laden ansehen",
+  "staff_kebabbo": "Kebabbo-Team",
+  "origin_label": "Herkunft"
 }

@@ -1620,4 +1620,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get open_or_get_app => 'Open or get the app';
+
+  @override
+  String no_kebab_within_distance(String km) {
+    return 'No kebab places within $km km.';
+  }
+
+  @override
+  String get show_all_distances => 'Show all';
+
+  @override
+  String get maps_short_link_web =>
+      'On the web, use the full Google Maps link (https://www.google.com/maps/place/...): short links are blocked by the browser.';
+
+  @override
+  String get login_to_follow_user => 'Log in to follow this user';
+
+  @override
+  String get profile_link_copied => 'Profile link copied to clipboard!';
+
+  @override
+  String tcg_cards_count(String count) {
+    return '$count TCG cards';
+  }
+
+  @override
+  String get your_profile => 'Your profile';
+
+  @override
+  String get favorite_kebab_caps => 'FAVORITE KEBAB';
+
+  @override
+  String get no_posts_yet => 'No posts yet';
+
+  @override
+  String get user_no_posts_desc => 'This user hasn\'t posted in the feed yet.';
+
+  @override
+  String get user_no_reviews_desc =>
+      'This user hasn\'t reviewed any kebab yet.';
+
+  @override
+  String get see_place => 'See place';
+
+  @override
+  String get staff_kebabbo => 'Kebabbo staff';
+
+  @override
+  String get origin_label => 'Source';
 }

@@ -186,7 +186,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
           SnackBar(
             content: Text(
               kIsWeb && query.contains('goo.gl')
-                  ? 'Su Web usa il link completo da Google Maps (https://www.google.com/maps/place/...) per restrizioni del browser.'
+                  ? S.of(context).maps_short_link_web
                   : S.of(context).maps_link_failed,
             ),
             backgroundColor: red,
