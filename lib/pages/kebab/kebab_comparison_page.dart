@@ -27,6 +27,11 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
   Map<String, double>? _statsA;
   Map<String, double>? _statsB;
 
+  // Ignora le risposte di una selezione precedente se l'utente ne ha
+  // fatta un'altra nel frattempo.
+  int _requestA = 0;
+  int _requestB = 0;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +64,9 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
   }
 
   Future<void> _loadKebabDetails(int kebabId, {required bool isSlotA}) async {
+    final int request = isSlotA ? ++_requestA : ++_requestB;
+    bool isStale() => request != (isSlotA ? _requestA : _requestB);
+
     if (isSlotA) {
       setState(() => _isLoadingA = true);
     } else {
@@ -80,7 +88,7 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
 
       final stats = _computeKebabStats(kebabRes, reviews);
 
-      if (mounted) {
+      if (mounted && !isStale()) {
         setState(() {
           if (isSlotA) {
             _kebabA = kebabRes;
@@ -95,7 +103,7 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
       }
     } catch (e) {
       debugPrint('Errore nel caricamento dei dettagli del kebab $kebabId: $e');
-      if (mounted) {
+      if (mounted && !isStale()) {
         setState(() {
           if (isSlotA) {
             _isLoadingA = false;
@@ -607,9 +615,9 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
                   ),
                 ],
               ),
-              const Text(
-                'Rating',
-                style: TextStyle(
+              Text(
+                S.of(context).rating_title,
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
@@ -653,12 +661,12 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildBadge(
-                label: isStaffA ? 'Staff Kebabbo' : 'Community',
+                label: isStaffA ? S.of(context).staff_kebabbo : S.of(context).community_upload,
                 color: isStaffA ? const Color(0xFF1D9BF0) : Colors.purple,
               ),
-              const Text('Origine', style: TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(S.of(context).origin_label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               _buildBadge(
-                label: isStaffB ? 'Staff Kebabbo' : 'Community',
+                label: isStaffB ? S.of(context).staff_kebabbo : S.of(context).community_upload,
                 color: isStaffB ? const Color(0xFF1D9BF0) : Colors.purple,
               ),
             ],

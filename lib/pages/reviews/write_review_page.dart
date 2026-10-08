@@ -171,12 +171,16 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
     try {
       final kebabId = _selectedKebab!['id'].toString();
 
-      // Controlla se l'utente ha già recensito questo locale
+      // Controlla se l'utente ha già recensito questo locale. In passato erano
+      // ammesse più recensioni per locale: prendiamo la più recente, perché
+      // maybeSingle() fallisce se le righe sono più di una.
       final existingReview = await supabase
           .from('reviews')
           .select('id')
           .eq('kebabber_id', kebabId)
           .eq('user_id', user.id)
+          .order('created_at', ascending: false)
+          .limit(1)
           .maybeSingle();
 
       if (existingReview != null) {
