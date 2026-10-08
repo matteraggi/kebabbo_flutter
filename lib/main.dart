@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
 import 'package:kebabbo_flutter/pages/account/reset_password.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
+import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
 import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
@@ -43,8 +44,10 @@ Future<void> main() async {
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
   );
+  await _ensureUsableSession();
 
   String? otherPaths;
+  String? initialUserId;
 
   // Handle deep links based on URL path
   if (kIsWeb) {
@@ -54,6 +57,11 @@ Future<void> main() async {
           otherPaths = "privacy-policy";
         } else if (Uri.base.pathSegments[0] == 'reset-password') {
           otherPaths = "reset-password";
+        } else if (Uri.base.pathSegments[0] == 'user' &&
+            Uri.base.pathSegments.length > 1 &&
+            Uri.base.pathSegments[1].isNotEmpty) {
+          // Link profilo condiviso: https://kebabbo.top/user/<id>
+          initialUserId = Uri.base.pathSegments[1];
         }
       }
     } catch (e) {
@@ -72,15 +80,53 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  runApp(MyApp(otherPaths: otherPaths));
+  runApp(MyApp(otherPaths: otherPaths, initialUserId: initialUserId));
 }
 
 final supabase = Supabase.instance.client;
 
+/// True se all'avvio la sessione salvata era scaduta e non più rinnovabile.
+bool sessionExpiredAtStartup = false;
+
+/// Con una sessione salvata scaduta, *ogni* richiesta (anche la lista pubblica
+/// dei kebab) aspetta il refresh del token e, se fallisce, lancia un errore.
+/// All'avvio proviamo un refresh breve: se il refresh token non è più valido
+/// usciamo solo in locale e l'app parte come ospite.
+Future<void> _ensureUsableSession() async {
+  final auth = Supabase.instance.client.auth;
+  final session = auth.currentSession;
+  if (session == null || !session.isExpired) return;
+
+  try {
+    await auth.refreshSession().timeout(const Duration(seconds: 5));
+  } on TimeoutException {
+    // Rete lenta: non blocchiamo l'avvio, il refresh continua in background.
+  } on AuthRetryableFetchException {
+    // Rete assente: teniamo la sessione, verrà rinnovata quando torna la rete.
+  } on AuthException catch (e) {
+    debugPrint('Sessione salvata non più valida: ${e.message}');
+    sessionExpiredAtStartup = true;
+    await _localSignOut();
+  } catch (e) {
+    debugPrint('Errore durante il ripristino della sessione: $e');
+  }
+}
+
+/// Esce in locale senza dipendere dalla rete (la sessione viene rimossa
+/// subito; la chiamata al server può fallire senza conseguenze).
+Future<void> _localSignOut() async {
+  try {
+    await Supabase.instance.client.auth.signOut(scope: SignOutScope.local);
+  } catch (e) {
+    debugPrint('signOut locale: $e');
+  }
+}
+
 class MyApp extends StatelessWidget {
   final String? otherPaths;
+  final String? initialUserId;
 
-  const MyApp({super.key, this.otherPaths});
+  const MyApp({super.key, this.otherPaths, this.initialUserId});
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +174,7 @@ class MyApp extends StatelessWidget {
       },
       home: MyHomePage(
         otherPaths: otherPaths,
+        initialUserId: initialUserId,
       ), // Set MyHomePage as the home
     );
   }
@@ -148,8 +195,9 @@ extension ContextExtension on BuildContext {
 
 class MyHomePage extends StatefulWidget {
   final String? otherPaths;
+  final String? initialUserId;
 
-  const MyHomePage({super.key, this.otherPaths});
+  const MyHomePage({super.key, this.otherPaths, this.initialUserId});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -171,6 +219,15 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     otherPaths = widget.otherPaths;
+    final initialUserId = widget.initialUserId;
+    if (initialUserId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => SingleUserPage(userId: initialUserId),
+        ));
+      });
+    }
     _showStartupDialogs();
     _getLocation();
     if (!kIsWeb) {
@@ -180,23 +237,26 @@ class _MyHomePageState extends State<MyHomePage> {
       registerNotificationListeners(context);
     } // Register notification listeners
 
-    // Listener globale per intercettare errori di refresh del token e forzare il signOut
+    // Se il refresh token non è più valido usciamo in locale. Gli errori di
+    // rete (offline) NON devono disconnettere l'utente: il refresh riprova.
     _authSubscription = supabase.auth.onAuthStateChange.listen(
       (data) {},
       onError: (error) async {
         debugPrint('Auth stream error intercepted: $error');
-        // Valvola di sicurezza: se il refresh fallisce, facciamo un signOut pulito
-        await supabase.auth.signOut();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(S.of(context).session_expired),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+        if (error is AuthRetryableFetchException || error is! AuthException) {
+          return;
         }
+        if (supabase.auth.currentSession == null) return;
+        await _localSignOut();
+        _showSessionExpired();
       },
     );
+
+    if (sessionExpiredAtStartup) {
+      sessionExpiredAtStartup = false;
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _showSessionExpired());
+    }
 
   }
 
@@ -303,6 +363,13 @@ class _MyHomePageState extends State<MyHomePage> {
       _currentPositionNotifier.value = null;
       debugPrint("Error getting location: $e");
     }
+  }
+
+  void _showSessionExpired() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(S.of(context).session_expired)),
+    );
   }
 
   void _showLocationError(String message) {
