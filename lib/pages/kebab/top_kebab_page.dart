@@ -31,8 +31,14 @@ class TopKebabPageState extends State<TopKebabPage> {
   bool _hasAutoScrolled = false;
   String? _expandedKebabId;
   bool showStaffRatings = true;
-  double maxDistance = double.infinity; // nessun limite all'inizio
-  bool useDistanceFilter = false; // lo switch nella bottom sheet
+  // Di default mostriamo solo i kebabbari entro 50 km (dalla posizione
+  // dell'utente, o da Bologna se non disponibile): altrimenti un locale
+  // all'estero può finire primo in classifica.
+  static const double defaultMaxDistanceKm = 50;
+  static const double _bolognaLat = 44.4949;
+  static const double _bolognaLng = 11.3426;
+  double maxDistance = defaultMaxDistanceKm;
+  bool useDistanceFilter = true; // lo switch nella bottom sheet
 
   @override
   void initState() {
@@ -56,12 +62,17 @@ class TopKebabPageState extends State<TopKebabPage> {
       final Future<dynamic> kebabsFuture = supabase.from('kebab').select('*');
       final Future<dynamic> reviewsFuture = supabase.from('reviews').select(
           'kebabber_id, quality, quantity, menu, price, fun, vegetables, yogurt, spicy, onion');
+      // I preferiti non devono mai bloccare la lista (es. sessione scaduta).
       final Future<dynamic> favoritesFuture = user != null
           ? supabase
               .from('profiles')
               .select('favorites')
               .eq('id', user.id)
               .maybeSingle()
+              .then<dynamic>((v) => v, onError: (e) {
+              debugPrint('Preferiti non disponibili: $e');
+              return null;
+            })
           : Future<dynamic>.value(null);
 
       final results = await Future.wait<dynamic>([
@@ -94,6 +105,22 @@ class TopKebabPageState extends State<TopKebabPage> {
       }
 
       for (var kebab in kebabs) {
+        // Distanza usata solo per il filtro: dall'utente o, in mancanza, da Bologna.
+        final num? kLat = kebab['lat'] as num?;
+        final num? kLng = kebab['lng'] as num?;
+        if (kLat != null && kLng != null && (kLat != 0 || kLng != 0)) {
+          kebab['filter_distance'] = Geolocator.distanceBetween(
+                userPosition?.latitude ?? _bolognaLat,
+                userPosition?.longitude ?? _bolognaLng,
+                kLat.toDouble(),
+                kLng.toDouble(),
+              ) /
+              1000;
+        } else {
+          kebab['filter_distance'] =
+              null; // posizione ignota: non lo escludiamo
+        }
+
         if (userPosition != null) {
           final double lat =
               (kebab['lat'] is num) ? (kebab['lat'] as num).toDouble() : 0.0;
@@ -194,8 +221,7 @@ class TopKebabPageState extends State<TopKebabPage> {
           kebab['user_price'] = kebab['staff_price'] ?? 0.0;
           kebab['user_fun'] = kebab['staff_fun'] ?? 0.0;
           kebab['user_vegetables'] = kebab['staff_vegetables'] ?? 0.0;
-          kebab['user_yogurt'] =
-              (kebab['yogurt'] as num?)?.toDouble() ?? 0.0;
+          kebab['user_yogurt'] = (kebab['yogurt'] as num?)?.toDouble() ?? 0.0;
           kebab['user_spicy'] = kebab['staff_spicy'] ?? 0.0;
           kebab['user_onion'] = kebab['staff_onion'] ?? 0.0;
           kebab['user_reviews_count'] = 0;
@@ -238,13 +264,11 @@ class TopKebabPageState extends State<TopKebabPage> {
       }
     }
 
-    if (widget.currentPosition != null &&
-        useDistanceFilter &&
-        !maxDistance.isInfinite) {
-      kebabs = kebabs
-          .where((kebab) =>
-              (kebab['distance'] ?? double.infinity) <= maxDistance)
-          .toList();
+    if (useDistanceFilter && !maxDistance.isInfinite) {
+      kebabs = kebabs.where((kebab) {
+        final d = kebab['filter_distance'] as double?;
+        return d == null || d <= maxDistance;
+      }).toList();
     }
 
     // Filtro staff / utenti
@@ -275,12 +299,8 @@ class TopKebabPageState extends State<TopKebabPage> {
     if (mounted) {
       setState(() {
         dashList = kebabs;
-        searchResultList = fuzzySearchAndSort(
-            dashList,
-            searchController.text,
-            'name',
-            showOnlyOpen,
-            showOnlyKebab);
+        searchResultList = fuzzySearchAndSort(dashList, searchController.text,
+            'name', showOnlyOpen, showOnlyKebab);
         isLoading = false;
 
         // Se troviamo un kebab vicino, salviamo il suo ID
@@ -345,28 +365,34 @@ class TopKebabPageState extends State<TopKebabPage> {
     final kebabIndex = dashList
         .indexWhere((kebab) => kebab['id'].toString() == kebabId.toString());
     if (kebabIndex != -1) {
-      final isCurrentlyFavorite = dashList[kebabIndex]['isFavorite'];
-      
-      final userResponse = await supabase
-          .from('profiles')
-          .select('favorites')
-          .eq('id', user.id)
-          .single();
+      final isCurrentlyFavorite = dashList[kebabIndex]['isFavorite'] == true;
+      try {
+        final userResponse = await supabase
+            .from('profiles')
+            .select('favorites')
+            .eq('id', user.id)
+            .single();
 
-      final updatedFavorites = List<String>.from(userResponse['favorites'] ?? []);
+        final updatedFavorites =
+            List<String>.from(userResponse['favorites'] ?? []);
 
-      if (isCurrentlyFavorite) {
-        updatedFavorites.remove(kebabId);
-      } else {
-        if (!updatedFavorites.contains(kebabId)) {
-          updatedFavorites.add(kebabId);
+        if (isCurrentlyFavorite) {
+          updatedFavorites.remove(kebabId);
+        } else {
+          if (!updatedFavorites.contains(kebabId)) {
+            updatedFavorites.add(kebabId);
+          }
         }
-      }
 
-      // Effettua aggiornamento su Supabase
-      await supabase
-          .from('profiles')
-          .update({'favorites': updatedFavorites}).eq('id', user.id);
+        // Effettua aggiornamento su Supabase
+        await supabase
+            .from('profiles')
+            .update({'favorites': updatedFavorites}).eq('id', user.id);
+      } catch (e) {
+        debugPrint('Errore aggiornamento preferiti: $e');
+        return;
+      }
+      if (!mounted) return;
 
       // Aggiorna lo stato in dashList e in _allKebabs
       setState(() {
@@ -535,15 +561,11 @@ class TopKebabPageState extends State<TopKebabPage> {
                                           },
                                           useDistanceFilter: useDistanceFilter,
                                           maxDistanceKm: maxDistance.isInfinite
-                                              ? 50
+                                              ? defaultMaxDistanceKm
                                               : maxDistance,
                                           onToggleUseDistanceFilter: (enabled) {
                                             setState(() {
                                               useDistanceFilter = enabled;
-                                              // se lo spegne => infinito
-                                              maxDistance = enabled
-                                                  ? maxDistance
-                                                  : double.infinity;
                                               _applyFilterAndSort(
                                                   useStaffRatings:
                                                       showStaffRatings);
@@ -568,8 +590,35 @@ class TopKebabPageState extends State<TopKebabPage> {
                           ),
                           dashList.isEmpty
                               ? Center(
-                                  child: Text(
-                                      S.of(context).nessun_kebabbaro_presente))
+                                  child:
+                                      useDistanceFilter && _allKebabs.isNotEmpty
+                                          ? Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(S
+                                                    .of(context)
+                                                    .no_kebab_within_distance(
+                                                        maxDistance
+                                                            .round()
+                                                            .toString())),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      useDistanceFilter = false;
+                                                      _applyFilterAndSort(
+                                                          useStaffRatings:
+                                                              showStaffRatings);
+                                                    });
+                                                  },
+                                                  child: Text(S
+                                                      .of(context)
+                                                      .show_all_distances),
+                                                ),
+                                              ],
+                                            )
+                                          : Text(S
+                                              .of(context)
+                                              .nessun_kebabbaro_presente))
                               : Expanded(
                                   child: ListView.builder(
                                     controller:
@@ -622,16 +671,31 @@ class TopKebabPageState extends State<TopKebabPage> {
                                             kebab['user_reviewed'] ?? false,
                                         flipped: !showStaffRatings,
                                         approved: kebab['approved'],
-                                        userRating: (kebab['user_rating'] as num?)?.toDouble(),
-                                        userQuality: (kebab['user_quality'] as num?)?.toDouble(),
-                                        userQuantity: (kebab['user_dimension'] as num?)?.toDouble(),
-                                        userMenu: (kebab['user_menu'] as num?)?.toDouble(),
-                                        userPrice: (kebab['user_price'] as num?)?.toDouble(),
-                                        userFun: (kebab['user_fun'] as num?)?.toDouble(),
-                                        userVegetables: (kebab['user_vegetables'] as num?)?.toDouble(),
-                                        userYogurt: (kebab['user_yogurt'] as num?)?.toDouble(),
-                                        userSpicy: (kebab['user_spicy'] as num?)?.toDouble(),
-                                        userOnion: (kebab['user_onion'] as num?)?.toDouble(),
+                                        userRating:
+                                            (kebab['user_rating'] as num?)
+                                                ?.toDouble(),
+                                        userQuality:
+                                            (kebab['user_quality'] as num?)
+                                                ?.toDouble(),
+                                        userQuantity:
+                                            (kebab['user_dimension'] as num?)
+                                                ?.toDouble(),
+                                        userMenu: (kebab['user_menu'] as num?)
+                                            ?.toDouble(),
+                                        userPrice: (kebab['user_price'] as num?)
+                                            ?.toDouble(),
+                                        userFun: (kebab['user_fun'] as num?)
+                                            ?.toDouble(),
+                                        userVegetables:
+                                            (kebab['user_vegetables'] as num?)
+                                                ?.toDouble(),
+                                        userYogurt:
+                                            (kebab['user_yogurt'] as num?)
+                                                ?.toDouble(),
+                                        userSpicy: (kebab['user_spicy'] as num?)
+                                            ?.toDouble(),
+                                        userOnion: (kebab['user_onion'] as num?)
+                                            ?.toDouble(),
                                       );
                                     },
                                   ),
