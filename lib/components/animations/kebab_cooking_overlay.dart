@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/utils/app_theme.dart';
 
 /// Modern, highly polished animated overlay shown while cooking/building a kebab
 /// or rerolling a recommendation. Replaces the legacy sliding cloud PNG.
@@ -221,7 +222,7 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
                               color: Colors.white.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: const Color(0xFFFFBA1C)
+                                color: AppColors.saffron
                                     .withValues(alpha: 0.4),
                               ),
                             ),
@@ -230,7 +231,7 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
                               children: [
                                 const Icon(
                                   Icons.restaurant,
-                                  color: Color(0xFFFFBA1C),
+                                  color: AppColors.saffron,
                                   size: 16,
                                 ),
                                 const SizedBox(width: 8),
@@ -268,7 +269,7 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
                                       colors: [
                                         const Color(0xFFFF6D00)
                                             .withValues(alpha: 0.35 + pulse * 0.15),
-                                        const Color(0xFFFFBA1C)
+                                        AppColors.saffron
                                             .withValues(alpha: 0.15),
                                         Colors.transparent,
                                       ],
@@ -285,7 +286,7 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: const Color(0xFFFFBA1C)
+                                        color: AppColors.saffron
                                             .withValues(alpha: 0.25),
                                         width: 1.5,
                                       ),
@@ -380,7 +381,7 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
                                 height: 7,
                                 decoration: BoxDecoration(
                                   color: isActive
-                                      ? const Color(0xFFFFBA1C)
+                                      ? AppColors.saffron
                                       : Colors.white24,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
@@ -458,12 +459,12 @@ class _KebabCookingOverlayState extends State<KebabCookingOverlay>
                   color: Colors.black.withValues(alpha: 0.55),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: const Color(0xFFFFBA1C).withValues(alpha: 0.6),
+                    color: AppColors.saffron.withValues(alpha: 0.6),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFFBA1C).withValues(alpha: 0.3),
+                      color: AppColors.saffron.withValues(alpha: 0.3),
                       blurRadius: 8,
                     ),
                   ],

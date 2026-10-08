@@ -141,15 +141,6 @@ void showMedalDialog(BuildContext context) {
   );
 }
 
-void showFirstTimeDialog(BuildContext context) {
-  showKebabboDialog(
-    context,
-    title: S.of(context).first_time_title,
-    description: S.of(context).first_time_description,
-    header: Image.asset(_logoAsset, width: 100, height: 100),
-  );
-}
-
 void showAppInstallDialog(BuildContext context) {
   showKebabboDialog(
     context,
