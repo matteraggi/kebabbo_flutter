@@ -5,9 +5,11 @@ import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab/kebab_single_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong2/latlong.dart' hide Path;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:kebabbo_flutter/utils/utils.dart';
 
 enum MapStyleType {
   googleRoadmap,
@@ -104,7 +106,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   Future<void> fetchKebab() async {
     try {
-      final response = await supabase.from('kebab').select('*');
+      final response = await readPublic((db) => db.from('kebab').select('*'));
 
       if (mounted) {
         setState(() {
@@ -291,81 +293,108 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
     );
   }
 
+  /// Fasce di voto dei pin: il colore dice quanto è buono il locale.
+  /// Contrasto testo/sfondo sempre >= 5:1 (WCAG AA anche per testo piccolo).
+  static const List<({double min, Color fill, Color text})> _pinBands = [
+    // Dal verde (ottimo) al rosso (scarso).
+    // Stessi valori di ratingColors() in seo/lib.mjs (pagine web).
+    // Fasce generose: i voti di Kebabbo sono severi (quasi nessuno supera il 4).
+    (min: 4.0, fill: Color(0xFF1B5E20), text: Colors.white),
+    (min: 3.5, fill: Color(0xFF2E7D32), text: Colors.white),
+    (min: 3.0, fill: Color(0xFF8BC34A), text: AppColors.char),
+    (min: 2.5, fill: Color(0xFFF2A900), text: AppColors.char),
+    (min: 0.01, fill: Color(0xFFC62828), text: Colors.white),
+  ];
+
+  static ({Color fill, Color text}) _pinColors(double rating) {
+    for (final band in _pinBands) {
+      if (rating >= band.min) return (fill: band.fill, text: band.text);
+    }
+    return (fill: const Color(0xFFD9D2CC), text: AppColors.char); // senza voto
+  }
+
+  String _formatScore(double value) =>
+      NumberFormat('0.0', Localizations.localeOf(context).toString())
+          .format(value);
+
+  /// Pin = disco del voto colorato per fascia, con un badge: spunta blu per
+  /// lo staff, persone viola per la community. Chiuso ora: anello grigio.
   Widget _buildKebabMarkerWidget(Map<String, dynamic> item, bool isSelected) {
-    final isKebab = item['tag'] == 'kebab';
-    final isStaff = item['is_staff'] == true;
-    final Color ringColor = isSelected
-        ? red
-        : (isStaff ? const Color(0xFFFFB300) : const Color(0xFF1E88E5));
+    final bool isStaff = item['is_staff'] == true;
+    final double rating = (item['rating'] as num?)?.toDouble() ?? 0;
+    final bool isClosed = hasOpeningHours(item['orari_apertura']) &&
+        !isKebabOpen(item['orari_apertura']);
+    final String label = rating > 0 ? _formatScore(rating) : '–';
+    final colors = _pinColors(rating);
+    final double size = isSelected ? 54 : 42;
+    final Color ring = isClosed ? const Color(0xFF9E9E9E) : Colors.white;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        _selectKebab(item);
-      },
-      child: AnimatedScale(
-        scale: isSelected ? 1.25 : 1.0,
-        duration: const Duration(milliseconds: 200),
-        child: SizedBox(
-          width: 48,
-          height: 48,
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: isSelected ? yellow : Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: ringColor,
-                    width: isSelected ? 2.8 : 2.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.25),
-                      blurRadius: isSelected ? 8 : 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Image.asset(
-                  isKebab
-                      ? "assets/images/kebab.png"
-                      : "assets/images/sandwitch.png",
-                  width: 24,
-                  height: 24,
-                ),
-              ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(2.5),
+      onTap: () => _selectKebab(item),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: size + 8,
+            height: size + 4,
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.bottomCenter,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  width: size,
+                  height: size,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isStaff
-                        ? const Color(0xFFFF8F00)
-                        : const Color(0xFF1976D2),
+                    color: colors.fill,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
+                    border: Border.all(color: ring, width: isSelected ? 4 : 3),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.25),
-                        blurRadius: 3,
+                        color: Colors.black.withValues(alpha: 0.35),
+                        blurRadius: isSelected ? 10 : 6,
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
-                  child: Icon(
-                    isStaff ? Icons.workspace_premium : Icons.people_alt,
-                    size: 9,
-                    color: Colors.white,
+                  child: Text(
+                    label,
+                    style: headingStyle(
+                      size: isSelected ? 18 : 15,
+                      color: colors.text,
+                    ).copyWith(letterSpacing: -0.4, height: 1),
                   ),
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    width: 18,
+                    height: 18,
+                    decoration: BoxDecoration(
+                      color: isStaff ? AppColors.staff : AppColors.community,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: Icon(
+                      isStaff ? Icons.check : Icons.people_alt,
+                      size: 10,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          // Punta del pin, che indica il punto esatto sulla mappa
+          CustomPaint(
+            size: const Size(14, 8),
+            painter: _PinTipPainter(ring),
+          ),
+        ],
       ),
     );
   }
@@ -388,10 +417,10 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
     setState(() => _isLoadingCommunityReview = true);
     try {
-      final response = await supabase
+      final response = await readPublic((db) => db
           .from('reviews')
           .select('quality, quantity, price, menu, fun')
-          .eq('kebabber_id', kebabId.toString());
+          .eq('kebabber_id', kebabId.toString()));
 
       final List<dynamic> reviews = response as List<dynamic>;
       if (reviews.isNotEmpty) {
@@ -562,7 +591,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       ? Icons.satellite_alt
                       : Icons.layers,
                   size: 18,
-                  color: const Color(0xFF1A73E8),
+                  color: AppColors.mapsBlue,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -755,7 +784,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                   horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
                                 color: !showingStaff
-                                    ? const Color(0xFF1565C0)
+                                    ? AppColors.info
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(14),
                               ),
@@ -802,14 +831,14 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.people_alt_rounded,
-                              size: 13, color: Color(0xFF1565C0)),
+                              size: 13, color: AppColors.info),
                           SizedBox(width: 4),
                           Text(
                             S.of(context).community_review,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1565C0),
+                              color: AppColors.info,
                             ),
                           ),
                         ],
@@ -847,7 +876,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                   child: Row(
                     children: [
                       const Icon(Icons.rate_review_outlined,
-                          color: Color(0xFF1565C0), size: 18),
+                          color: AppColors.info, size: 18),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -859,7 +888,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       const SizedBox(width: 6),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1565C0),
+                          backgroundColor: AppColors.info,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 9, vertical: 5),
@@ -949,7 +978,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1A73E8),
+                        backgroundColor: AppColors.mapsBlue,
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -1082,8 +1111,10 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
           _selectedKebab != null && _selectedKebab!['id'] == item['id'];
       markers.add(
         Marker(
-          width: 48.0,
-          height: 48.0,
+          width: 70.0,
+          height: 74.0,
+          // La punta del pin (in basso al centro) sta sul punto esatto.
+          alignment: Alignment.topCenter,
           point: LatLng(item['lat'], item['lng']),
           child: _buildKebabMarkerWidget(item, isSelected),
           key: ValueKey('kebab_marker_${item['id']}'),
@@ -1146,27 +1177,32 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
           top: 16.0,
           left: 16.0,
           right: 16.0,
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildFilterToggle(
-                icon: Icons.workspace_premium,
-                label: S.of(context).staff,
-                count: staffCount,
-                isSelected: _showStaff,
-                activeColor: const Color(0xFFE65100),
-                onTap: _toggleStaff,
+              Row(
+                children: [
+                  _buildFilterToggle(
+                    icon: Icons.verified,
+                    label: S.of(context).staff,
+                    count: staffCount,
+                    isSelected: _showStaff,
+                    activeColor: AppColors.staff,
+                    onTap: _toggleStaff,
+                  ),
+                  const SizedBox(width: 8),
+                  _buildFilterToggle(
+                    icon: Icons.people_alt,
+                    label: S.of(context).community_upload,
+                    count: communityCount,
+                    isSelected: _showCommunity,
+                    activeColor: AppColors.community,
+                    onTap: _toggleCommunity,
+                  ),
+                  const Spacer(),
+                  _buildMapStyleButton(),
+                ],
               ),
-              const SizedBox(width: 8),
-              _buildFilterToggle(
-                icon: Icons.people_alt,
-                label: S.of(context).community_upload,
-                count: communityCount,
-                isSelected: _showCommunity,
-                activeColor: const Color(0xFF1565C0),
-                onTap: _toggleCommunity,
-              ),
-              const Spacer(),
-              _buildMapStyleButton(),
             ],
           ),
         ),
@@ -1201,7 +1237,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                 ? Icons.my_location
                                 : Icons.location_searching,
                             color: _currentPosition != null
-                                ? const Color(0xFF1A73E8)
+                                ? AppColors.mapsBlue
                                 : Colors.grey[700],
                             size: 22,
                           ),
@@ -1256,3 +1292,22 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 }
 
+class _PinTipPainter extends CustomPainter {
+  final Color color;
+  _PinTipPainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width / 2, size.height)
+      ..close();
+    canvas.drawShadow(path, Colors.black, 2, false);
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(covariant _PinTipPainter oldDelegate) =>
+      oldDelegate.color != color;
+}
