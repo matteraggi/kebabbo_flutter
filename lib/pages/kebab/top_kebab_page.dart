@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/filter_search.dart';
@@ -6,6 +8,9 @@ import 'package:kebabbo_flutter/components/buttons&selectors/order_bar.dart';
 import 'package:kebabbo_flutter/components/list_items/kebab_item.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kebabbo_flutter/components/misc/empty_state.dart';
+import 'package:kebabbo_flutter/components/misc/skeleton.dart';
 
 class TopKebabPage extends StatefulWidget {
   final Position? currentPosition;
@@ -40,10 +45,52 @@ class TopKebabPageState extends State<TopKebabPage> {
   double maxDistance = defaultMaxDistanceKm;
   bool useDistanceFilter = true; // lo switch nella bottom sheet
 
+  // Ultima lista scaricata: mostrata subito all'apertura e quando si è offline.
+  static const _cacheKey = 'top_kebab_cache_v1';
+
   @override
   void initState() {
     super.initState();
-    fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings);
+    _loadFromCache().whenComplete(() =>
+        fetchKebab(widget.currentPosition, useStaffRatings: showStaffRatings));
+  }
+
+  Future<void> _loadFromCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_cacheKey);
+      if (raw == null || !mounted || _allKebabs.isNotEmpty) return;
+      final data = jsonDecode(raw) as Map<String, dynamic>;
+      // I preferiti salvati valgono solo per lo stesso utente.
+      final sameUser = data['user_id'] == supabase.auth.currentUser?.id;
+      _buildFromRaw(
+        data['kebabs'] as List,
+        data['reviews'] as List,
+        sameUser ? List<String>.from(data['favorites'] ?? []) : const [],
+        widget.currentPosition,
+        showStaffRatings,
+      );
+    } catch (e) {
+      debugPrint('Cache lista kebab non leggibile: $e');
+    }
+  }
+
+  Future<void> _saveCache(
+      List kebabs, List reviews, List<String> favorites, String? userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        _cacheKey,
+        jsonEncode({
+          'kebabs': kebabs,
+          'reviews': reviews,
+          'favorites': favorites,
+          'user_id': userId,
+        }),
+      );
+    } catch (e) {
+      debugPrint('Impossibile salvare la cache della lista kebab: $e');
+    }
   }
 
   @override
@@ -59,9 +106,10 @@ class TopKebabPageState extends State<TopKebabPage> {
       {required bool useStaffRatings}) async {
     try {
       final user = supabase.auth.currentUser;
-      final Future<dynamic> kebabsFuture = supabase.from('kebab').select('*');
-      final Future<dynamic> reviewsFuture = supabase.from('reviews').select(
-          'kebabber_id, quality, quantity, menu, price, fun, vegetables, yogurt, spicy, onion');
+      final Future<dynamic> kebabsFuture =
+          readPublic((db) => db.from('kebab').select('*'));
+      final Future<dynamic> reviewsFuture = readPublic((db) => db.from('reviews').select(
+          'kebabber_id, quality, quantity, menu, price, fun, vegetables, yogurt, spicy, onion'));
       // I preferiti non devono mai bloccare la lista (es. sessione scaduta).
       final Future<dynamic> favoritesFuture = user != null
           ? supabase
@@ -84,162 +132,170 @@ class TopKebabPageState extends State<TopKebabPage> {
       final reviewsList = results[1] as List;
       final userProfile = results[2] as Map<String, dynamic>?;
 
-      if (!mounted) return;
-
-      List<Map<String, dynamic>> kebabs =
-          List<Map<String, dynamic>>.from(response);
-
       final List<String> favoriteIds = userProfile != null
           ? List<String>.from(userProfile['favorites'] ?? [])
           : [];
 
-      // Raggruppa le recensioni utenti per kebabber_id
-      final Map<String, List<Map<String, dynamic>>> reviewsByKebabId = {};
-      for (var r in reviewsList) {
-        final kid = r['kebabber_id']?.toString();
-        if (kid != null) {
-          reviewsByKebabId
-              .putIfAbsent(kid, () => [])
-              .add(Map<String, dynamic>.from(r));
-        }
+      _saveCache(response, reviewsList, favoriteIds, user?.id);
+      if (!mounted) return;
+      _buildFromRaw(
+          response, reviewsList, favoriteIds, userPosition, useStaffRatings);
+    } catch (error) {
+      if (!mounted) return;
+      if (_allKebabs.isNotEmpty) {
+        // Offline o errore di rete: resta visibile l'ultima lista salvata.
+        debugPrint('Aggiornamento lista kebab fallito, uso la cache: $error');
+        return;
+      }
+      setState(() {
+        errorMessage = error.toString();
+        isLoading = false;
+      });
+    }
+  }
+
+  void _buildFromRaw(List response, List reviewsList, List<String> favoriteIds,
+      Position? userPosition, bool useStaffRatings) {
+    final List<Map<String, dynamic>> kebabs =
+        response.map((k) => Map<String, dynamic>.from(k as Map)).toList();
+
+    // Raggruppa le recensioni utenti per kebabber_id
+    final Map<String, List<Map<String, dynamic>>> reviewsByKebabId = {};
+    for (var r in reviewsList) {
+      final kid = r['kebabber_id']?.toString();
+      if (kid != null) {
+        reviewsByKebabId
+            .putIfAbsent(kid, () => [])
+            .add(Map<String, dynamic>.from(r));
+      }
+    }
+
+    for (var kebab in kebabs) {
+      // Distanza usata solo per il filtro: dall'utente o, in mancanza, da Bologna.
+      final num? kLat = kebab['lat'] as num?;
+      final num? kLng = kebab['lng'] as num?;
+      if (kLat != null && kLng != null && (kLat != 0 || kLng != 0)) {
+        kebab['filter_distance'] = Geolocator.distanceBetween(
+              userPosition?.latitude ?? _bolognaLat,
+              userPosition?.longitude ?? _bolognaLng,
+              kLat.toDouble(),
+              kLng.toDouble(),
+            ) /
+            1000;
+      } else {
+        kebab['filter_distance'] = null; // posizione ignota: non lo escludiamo
       }
 
-      for (var kebab in kebabs) {
-        // Distanza usata solo per il filtro: dall'utente o, in mancanza, da Bologna.
-        final num? kLat = kebab['lat'] as num?;
-        final num? kLng = kebab['lng'] as num?;
-        if (kLat != null && kLng != null && (kLat != 0 || kLng != 0)) {
-          kebab['filter_distance'] = Geolocator.distanceBetween(
-                userPosition?.latitude ?? _bolognaLat,
-                userPosition?.longitude ?? _bolognaLng,
-                kLat.toDouble(),
-                kLng.toDouble(),
-              ) /
-              1000;
-        } else {
-          kebab['filter_distance'] =
-              null; // posizione ignota: non lo escludiamo
-        }
+      if (userPosition != null) {
+        final double lat =
+            (kebab['lat'] is num) ? (kebab['lat'] as num).toDouble() : 0.0;
+        final double lng =
+            (kebab['lng'] is num) ? (kebab['lng'] as num).toDouble() : 0.0;
 
-        if (userPosition != null) {
-          final double lat =
-              (kebab['lat'] is num) ? (kebab['lat'] as num).toDouble() : 0.0;
-          final double lng =
-              (kebab['lng'] is num) ? (kebab['lng'] as num).toDouble() : 0.0;
-
-          if (lat != 0.0 || lng != 0.0) {
-            double distanceInMeters = Geolocator.distanceBetween(
-              userPosition.latitude,
-              userPosition.longitude,
-              lat,
-              lng,
-            );
-            kebab['distance'] = distanceInMeters / 1000;
-          } else {
-            kebab['distance'] = null;
-          }
+        if (lat != 0.0 || lng != 0.0) {
+          double distanceInMeters = Geolocator.distanceBetween(
+            userPosition.latitude,
+            userPosition.longitude,
+            lat,
+            lng,
+          );
+          kebab['distance'] = distanceInMeters / 1000;
         } else {
           kebab['distance'] = null;
         }
-
-        // Controllo Orari
-        kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
-
-        kebab['staff_rating'] = (kebab['rating'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_quality'] = (kebab['quality'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_price'] = (kebab['price'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_dimension'] =
-            (kebab['dimension'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_menu'] = (kebab['menu'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_fun'] = (kebab['fun'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_vegetables'] =
-            (kebab['vegetables'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_onion'] = (kebab['onion'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_spicy'] = (kebab['spicy'] as num?)?.toDouble() ?? 0.0;
-        kebab['staff_meat'] = (kebab['meat'] as num?)?.toDouble() ?? 0.0;
-        kebab['name'] = kebab['name'] ?? '';
-
-        if (kebab['distance'] == null) {
-          kebab['distance_sortable'] = double.maxFinite;
-        } else {
-          kebab['distance_sortable'] = kebab['distance'];
-        }
-
-        // Calcola medie delle recensioni utenti
-        final kid = kebab['id'].toString();
-        final userReviews = reviewsByKebabId[kid];
-
-        if (userReviews != null && userReviews.isNotEmpty) {
-          double totalQuality = 0;
-          double totalQuantity = 0;
-          double totalMenu = 0;
-          double totalPrice = 0;
-          double totalFun = 0;
-          double totalVegetables = 0;
-          double totalYogurt = 0;
-          double totalSpicy = 0;
-          double totalOnion = 0;
-
-          for (var review in userReviews) {
-            totalQuality += (review['quality'] as num?)?.toDouble() ?? 0.0;
-            totalQuantity += (review['quantity'] as num?)?.toDouble() ?? 0.0;
-            totalMenu += (review['menu'] as num?)?.toDouble() ?? 0.0;
-            totalPrice += (review['price'] as num?)?.toDouble() ?? 0.0;
-            totalFun += (review['fun'] as num?)?.toDouble() ?? 0.0;
-            totalVegetables +=
-                (review['vegetables'] as num?)?.toDouble() ?? 0.0;
-            totalYogurt += (review['yogurt'] as num?)?.toDouble() ?? 0.0;
-            totalSpicy += (review['spicy'] as num?)?.toDouble() ?? 0.0;
-            totalOnion += (review['onion'] as num?)?.toDouble() ?? 0.0;
-          }
-
-          int count = userReviews.length;
-          double avgQuality = totalQuality / count;
-          double avgQuantity = totalQuantity / count;
-          double avgMenu = totalMenu / count;
-          double avgPrice = totalPrice / count;
-          double avgFun = totalFun / count;
-          double overallAvg =
-              (avgQuality + avgQuantity + avgMenu + avgPrice) / 4;
-
-          kebab['user_rating'] = overallAvg;
-          kebab['user_quality'] = avgQuality;
-          kebab['user_dimension'] = avgQuantity;
-          kebab['user_menu'] = avgMenu;
-          kebab['user_price'] = avgPrice;
-          kebab['user_fun'] = avgFun;
-          kebab['user_vegetables'] = totalVegetables / count;
-          kebab['user_yogurt'] = totalYogurt / count;
-          kebab['user_spicy'] = totalSpicy / count;
-          kebab['user_onion'] = totalOnion / count;
-          kebab['user_reviews_count'] = count;
-        } else {
-          kebab['user_rating'] = kebab['staff_rating'] ?? 0.0;
-          kebab['user_quality'] = kebab['staff_quality'] ?? 0.0;
-          kebab['user_dimension'] = kebab['staff_dimension'] ?? 0.0;
-          kebab['user_menu'] = kebab['staff_menu'] ?? 0.0;
-          kebab['user_price'] = kebab['staff_price'] ?? 0.0;
-          kebab['user_fun'] = kebab['staff_fun'] ?? 0.0;
-          kebab['user_vegetables'] = kebab['staff_vegetables'] ?? 0.0;
-          kebab['user_yogurt'] = (kebab['yogurt'] as num?)?.toDouble() ?? 0.0;
-          kebab['user_spicy'] = kebab['staff_spicy'] ?? 0.0;
-          kebab['user_onion'] = kebab['staff_onion'] ?? 0.0;
-          kebab['user_reviews_count'] = 0;
-        }
-
-        kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
+      } else {
+        kebab['distance'] = null;
       }
 
-      _allKebabs = kebabs;
-      _applyFilterAndSort(useStaffRatings: useStaffRatings);
-    } catch (error) {
-      if (mounted) {
-        setState(() {
-          errorMessage = error.toString();
-          isLoading = false;
-        });
+      // Controllo Orari
+      kebab['isOpen'] = isKebabOpen(kebab['orari_apertura']);
+
+      kebab['staff_rating'] = (kebab['rating'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_quality'] = (kebab['quality'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_price'] = (kebab['price'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_dimension'] =
+          (kebab['dimension'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_menu'] = (kebab['menu'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_fun'] = (kebab['fun'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_vegetables'] =
+          (kebab['vegetables'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_onion'] = (kebab['onion'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_spicy'] = (kebab['spicy'] as num?)?.toDouble() ?? 0.0;
+      kebab['staff_meat'] = (kebab['meat'] as num?)?.toDouble() ?? 0.0;
+      kebab['name'] = kebab['name'] ?? '';
+
+      if (kebab['distance'] == null) {
+        kebab['distance_sortable'] = double.maxFinite;
+      } else {
+        kebab['distance_sortable'] = kebab['distance'];
       }
+
+      // Calcola medie delle recensioni utenti
+      final kid = kebab['id'].toString();
+      final userReviews = reviewsByKebabId[kid];
+
+      if (userReviews != null && userReviews.isNotEmpty) {
+        double totalQuality = 0;
+        double totalQuantity = 0;
+        double totalMenu = 0;
+        double totalPrice = 0;
+        double totalFun = 0;
+        double totalVegetables = 0;
+        double totalYogurt = 0;
+        double totalSpicy = 0;
+        double totalOnion = 0;
+
+        for (var review in userReviews) {
+          totalQuality += (review['quality'] as num?)?.toDouble() ?? 0.0;
+          totalQuantity += (review['quantity'] as num?)?.toDouble() ?? 0.0;
+          totalMenu += (review['menu'] as num?)?.toDouble() ?? 0.0;
+          totalPrice += (review['price'] as num?)?.toDouble() ?? 0.0;
+          totalFun += (review['fun'] as num?)?.toDouble() ?? 0.0;
+          totalVegetables += (review['vegetables'] as num?)?.toDouble() ?? 0.0;
+          totalYogurt += (review['yogurt'] as num?)?.toDouble() ?? 0.0;
+          totalSpicy += (review['spicy'] as num?)?.toDouble() ?? 0.0;
+          totalOnion += (review['onion'] as num?)?.toDouble() ?? 0.0;
+        }
+
+        int count = userReviews.length;
+        double avgQuality = totalQuality / count;
+        double avgQuantity = totalQuantity / count;
+        double avgMenu = totalMenu / count;
+        double avgPrice = totalPrice / count;
+        double avgFun = totalFun / count;
+        double overallAvg = (avgQuality + avgQuantity + avgMenu + avgPrice) / 4;
+
+        kebab['user_rating'] = overallAvg;
+        kebab['user_quality'] = avgQuality;
+        kebab['user_dimension'] = avgQuantity;
+        kebab['user_menu'] = avgMenu;
+        kebab['user_price'] = avgPrice;
+        kebab['user_fun'] = avgFun;
+        kebab['user_vegetables'] = totalVegetables / count;
+        kebab['user_yogurt'] = totalYogurt / count;
+        kebab['user_spicy'] = totalSpicy / count;
+        kebab['user_onion'] = totalOnion / count;
+        kebab['user_reviews_count'] = count;
+      } else {
+        kebab['user_rating'] = kebab['staff_rating'] ?? 0.0;
+        kebab['user_quality'] = kebab['staff_quality'] ?? 0.0;
+        kebab['user_dimension'] = kebab['staff_dimension'] ?? 0.0;
+        kebab['user_menu'] = kebab['staff_menu'] ?? 0.0;
+        kebab['user_price'] = kebab['staff_price'] ?? 0.0;
+        kebab['user_fun'] = kebab['staff_fun'] ?? 0.0;
+        kebab['user_vegetables'] = kebab['staff_vegetables'] ?? 0.0;
+        kebab['user_yogurt'] = (kebab['yogurt'] as num?)?.toDouble() ?? 0.0;
+        kebab['user_spicy'] = kebab['staff_spicy'] ?? 0.0;
+        kebab['user_onion'] = kebab['staff_onion'] ?? 0.0;
+        kebab['user_reviews_count'] = 0;
+      }
+
+      kebab['isFavorite'] = favoriteIds.contains(kebab['id'].toString());
     }
+
+    _allKebabs = kebabs;
+    errorMessage = null;
+    _applyFilterAndSort(useStaffRatings: useStaffRatings);
   }
 
   void _applyFilterAndSort({required bool useStaffRatings}) {
@@ -442,7 +498,7 @@ class TopKebabPageState extends State<TopKebabPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const HomeListSkeleton()
           : errorMessage != null
               ? Center(
                   child: Text(S.of(context).errore + errorMessage.toString()))
@@ -589,36 +645,37 @@ class TopKebabPageState extends State<TopKebabPage> {
                             ),
                           ),
                           dashList.isEmpty
-                              ? Center(
-                                  child:
-                                      useDistanceFilter && _allKebabs.isNotEmpty
-                                          ? Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(S
-                                                    .of(context)
-                                                    .no_kebab_within_distance(
-                                                        maxDistance
-                                                            .round()
-                                                            .toString())),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      useDistanceFilter = false;
-                                                      _applyFilterAndSort(
-                                                          useStaffRatings:
-                                                              showStaffRatings);
-                                                    });
-                                                  },
-                                                  child: Text(S
-                                                      .of(context)
-                                                      .show_all_distances),
-                                                ),
-                                              ],
-                                            )
-                                          : Text(S
+                              ? Expanded(
+                                  child: (useDistanceFilter &&
+                                          _allKebabs.isNotEmpty
+                                      ? EmptyState(
+                                          title: S
                                               .of(context)
-                                              .nessun_kebabbaro_presente))
+                                              .no_kebab_within_distance(
+                                                  maxDistance
+                                                      .round()
+                                                      .toString()),
+                                          badgeIcon: Icons.place_rounded,
+                                          onSaffron: true,
+                                          actionLabel:
+                                              S.of(context).show_all_distances,
+                                          actionIcon: Icons.public,
+                                          onAction: () {
+                                            setState(() {
+                                              useDistanceFilter = false;
+                                              _applyFilterAndSort(
+                                                  useStaffRatings:
+                                                      showStaffRatings);
+                                            });
+                                          },
+                                        )
+                                      : EmptyState(
+                                          title: S
+                                              .of(context)
+                                              .nessun_kebabbaro_presente,
+                                          badgeIcon: Icons.search_rounded,
+                                          onSaffron: true,
+                                        )))
                               : Expanded(
                                   child: ListView.builder(
                                     controller:

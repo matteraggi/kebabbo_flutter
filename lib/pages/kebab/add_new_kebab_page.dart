@@ -494,11 +494,11 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                       decoration: BoxDecoration(
                         color: const Color(0xFFE8F5E9),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFF81C784)),
+                        border: Border.all(color: AppColors.successLight),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.check_circle, color: Color(0xFF2E7D32), size: 24),
+                          const Icon(Icons.check_circle, color: AppColors.success, size: 24),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Column(
@@ -509,7 +509,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13,
-                                    color: Color(0xFF1B5E20),
+                                    color: AppColors.successDark,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -655,14 +655,14 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
                   // Switch Senza Glutine
                   Container(
                     decoration: BoxDecoration(
-                      color: _glutenFree ? const Color(0xFFFEF7E0) : Colors.grey[50],
+                      color: _glutenFree ? AppColors.glutenFreeBg : Colors.grey[50],
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _glutenFree ? const Color(0xFFFFB300) : Colors.grey[300]!,
+                        color: _glutenFree ? AppColors.amber : Colors.grey[300]!,
                       ),
                     ),
                     child: SwitchListTile(
-                      activeThumbColor: const Color(0xFFB06000),
+                      activeThumbColor: AppColors.glutenFree,
                       title: Text(
                         S.of(context).gluten_free_option,
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -971,11 +971,7 @@ class _AddNewKebabPageState extends State<AddNewKebabPage> {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                style: headingStyle(size: 17),
               ),
             ],
           ),

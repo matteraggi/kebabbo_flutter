@@ -177,6 +177,32 @@ String formatTimeAgo(BuildContext context, DateTime date) {
   return timeago.format(date, locale: locale);
 }
 
+/// Indirizzo leggibile di un kebab, es. "I Panini di Mirò" -> "i-panini-di-miro".
+/// Deve dare lo stesso risultato di `slugify` in seo/lib.mjs (pagine web).
+String kebabSlug(String name) {
+  const special = {'ı': 'i', 'ß': 'ss', 'ø': 'o', 'ł': 'l', 'æ': 'ae', 'œ': 'oe', 'đ': 'd'};
+  const accents = {
+    'a': 'àáâãäåāăą', 'c': 'çćĉċč', 'd': 'ď', 'e': 'èéêëēĕėęě', 'g': 'ĝğġģ',
+    'h': 'ĥ', 'i': 'ìíîïĩīĭįİ', 'j': 'ĵ', 'k': 'ķ', 'l': 'ĺļľ', 'n': 'ñńņňŉ',
+    'o': 'òóôõöōŏő', 'r': 'ŕŗř', 's': 'śŝşšș', 't': 'ţťț', 'u': 'ùúûüũūŭůűų',
+    'w': 'ŵ', 'y': 'ýÿŷ', 'z': 'źżž',
+  };
+  final buf = StringBuffer();
+  for (final ch in name.toLowerCase().runes.map(String.fromCharCode)) {
+    if (ch == "'" || ch == '’') continue;
+    final mapped = special[ch] ??
+        accents.entries
+            .firstWhere((e) => e.value.contains(ch),
+                orElse: () => const MapEntry('', ''))
+            .key;
+    buf.write(mapped.isNotEmpty ? mapped : (ch == '&' ? ' e ' : ch));
+  }
+  return buf
+      .toString()
+      .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
+      .replaceAll(RegExp(r'^-+|-+$'), '');
+}
+
 /// Registra i messaggi timeago per tutte le lingue supportate (en è già incluso).
 void registerTimeagoLocales() {
   timeago.setLocaleMessages('it', timeago.ItMessages());

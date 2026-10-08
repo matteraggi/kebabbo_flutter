@@ -3,6 +3,7 @@ import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/kebab/kebab_single_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class KebabComparisonPage extends StatefulWidget {
   final int? initialKebabId;
@@ -242,7 +243,7 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
                   ),
                   Expanded(
                     child: _isLoadingAllKebabs
-                        ? const Center(child: CircularProgressIndicator())
+                        ? const KebabLoader()
                         : filtered.isEmpty
                             ? Center(
                                 child: Text(
@@ -302,7 +303,7 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
   String? _getCardAssetPath(String? name) {
     if (name == null || name.isEmpty) return null;
     final kebabberId = name.toLowerCase().replaceAll(' ', '-');
-    return 'assets/kebab-card/$kebabberId.png';
+    return 'assets/kebab-card/$kebabberId.webp';
   }
 
   Widget _buildKebabCardSlot({
@@ -516,7 +517,7 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: aWins ? FontWeight.bold : FontWeight.w600,
-                  color: aWins ? const Color(0xFF2E7D32) : Colors.black87,
+                  color: aWins ? AppColors.success : Colors.black87,
                 ),
               ),
               Text(
@@ -532,7 +533,7 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: bWins ? FontWeight.bold : FontWeight.w600,
-                  color: bWins ? const Color(0xFF2E7D32) : Colors.black87,
+                  color: bWins ? AppColors.success : Colors.black87,
                 ),
               ),
             ],
@@ -603,14 +604,14 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.star, color: Color(0xFFFFBA1C), size: 22),
+                  const Icon(Icons.star, color: AppColors.saffron, size: 22),
                   const SizedBox(width: 4),
                   Text(
                     ratingA.toStringAsFixed(1),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: ratingA >= ratingB ? const Color(0xFF2E7D32) : Colors.black87,
+                      color: ratingA >= ratingB ? AppColors.success : Colors.black87,
                     ),
                   ),
                 ],
@@ -630,11 +631,11 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: ratingB >= ratingA ? const Color(0xFF2E7D32) : Colors.black87,
+                      color: ratingB >= ratingA ? AppColors.success : Colors.black87,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(Icons.star, color: Color(0xFFFFBA1C), size: 22),
+                  const Icon(Icons.star, color: AppColors.saffron, size: 22),
                 ],
               ),
             ],
@@ -662,12 +663,12 @@ class _KebabComparisonPageState extends State<KebabComparisonPage> {
             children: [
               _buildBadge(
                 label: isStaffA ? S.of(context).staff_kebabbo : S.of(context).community_upload,
-                color: isStaffA ? const Color(0xFF1D9BF0) : Colors.purple,
+                color: isStaffA ? AppColors.staff : Colors.purple,
               ),
               Text(S.of(context).origin_label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               _buildBadge(
                 label: isStaffB ? S.of(context).staff_kebabbo : S.of(context).community_upload,
-                color: isStaffB ? const Color(0xFF1D9BF0) : Colors.purple,
+                color: isStaffB ? AppColors.staff : Colors.purple,
               ),
             ],
           ),

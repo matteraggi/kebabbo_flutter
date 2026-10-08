@@ -3,6 +3,8 @@ import 'package:kebabbo_flutter/components/buttons&selectors/kebab_item_favorite
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:kebabbo_flutter/components/misc/empty_state.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class FavoritesPage extends StatefulWidget {
   final String userId;
@@ -67,11 +69,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Center(child: CircularProgressIndicator());
+      return const KebabLoader();
     }
     if (_favoriteKebabs.isEmpty) {
-      return Center(
-        child: Text(S.of(context).nessun_kebab_tra_i_preferiti),
+      return EmptyState(
+        title: S.of(context).nessun_kebab_tra_i_preferiti,
+        badgeIcon: Icons.bookmark_rounded,
+        onSaffron: true,
       );
     }
     return Padding(

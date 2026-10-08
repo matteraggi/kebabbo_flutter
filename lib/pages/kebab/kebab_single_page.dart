@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/single_chart.dart';
@@ -11,6 +10,11 @@ import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:kebabbo_flutter/components/misc/empty_state.dart';
+import 'package:kebabbo_flutter/components/misc/skeleton.dart';
 
 class KebabSinglePage extends StatefulWidget {
   final int kebabId;
@@ -53,18 +57,18 @@ class KebabSinglePageState extends State<KebabSinglePage>
       final currentUserId = supabase.auth.currentUser?.id;
 
       // 1. Fetch Kebab Details
-      final kebabResponse = await supabase
+      final kebabResponse = await readPublic((db) => db
           .from('kebab')
           .select('*')
           .eq('id', widget.kebabId)
-          .single();
+          .single());
 
       // 2. Fetch Reviews for this Kebab
-      final reviewsResponse = await supabase
+      final reviewsResponse = await readPublic((db) => db
           .from('reviews')
           .select('*')
           .eq('kebabber_id', widget.kebabId.toString())
-          .order('created_at', ascending: false);
+          .order('created_at', ascending: false));
       final List<Map<String, dynamic>> fetchedReviews =
           List<Map<String, dynamic>>.from(reviewsResponse as List);
 
@@ -232,6 +236,246 @@ class KebabSinglePageState extends State<KebabSinglePage>
         ),
       ),
     ).then((_) => _fetchAllData());
+  }
+
+  /// Link pubblico del kebab (aperto dal sito o, se installata, dall'app).
+  String get _shareUrl {
+    final slug = kebabSlug(kebabData?['name']?.toString() ?? '');
+    return 'https://kebabbo.top/kebab/${slug.isEmpty ? widget.kebabId : slug}';
+  }
+
+  String _formatRating(double value) =>
+      NumberFormat('0.0', Localizations.localeOf(context).toString())
+          .format(value);
+
+  String _shareText() {
+    final name = kebabData?['name']?.toString() ?? '';
+    final rating = (kebabData?['rating'] as num?)?.toDouble() ?? 0;
+    final message = S
+        .of(context)
+        .share_message(name, rating > 0 ? _formatRating(rating) : '–');
+    return '$message\n$_shareUrl';
+  }
+
+  Future<void> _openExternal(Uri uri) async {
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.of(context).could_not_open_link)),
+        );
+      }
+    }
+  }
+
+  void _showShareSheet() {
+    if (kebabData == null) return;
+    final s = S.of(context);
+    final name = kebabData!['name']?.toString() ?? '';
+    final rating = (kebabData!['rating'] as num?)?.toDouble() ?? 0;
+    final String? photo = _findCoverPhotoUrl();
+    final String? cardAsset = _getCardAssetPath();
+
+    Widget thumb() {
+      const size = 60.0;
+      final fallback = Image.asset('assets/images/kebabcolored.png',
+          width: size, height: size);
+      final Widget img = photo != null
+          ? Image.network(photo,
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => fallback)
+          : cardAsset != null
+              ? Image.asset(cardAsset,
+                  width: size,
+                  height: size,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => fallback)
+              : fallback;
+      return ClipRRect(borderRadius: BorderRadius.circular(12), child: img);
+    }
+
+    Widget target(String label, Widget icon, Color bg, VoidCallback onTap) {
+      return InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+                child: Center(child: icon),
+              ),
+              const SizedBox(height: 6),
+              Text(label,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+      );
+    }
+
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        void copyLink() {
+          Clipboard.setData(ClipboardData(text: _shareUrl));
+          Navigator.pop(sheetContext);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(s.link_copied)),
+          );
+        }
+
+        final text = Uri.encodeComponent(_shareText());
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 0, 18, 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(s.share_this_kebab, style: headingStyle(size: 20)),
+                const SizedBox(height: 12),
+                // Anteprima di ciò che verrà condiviso
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFFEDE6DF)),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Row(
+                    children: [
+                      thumb(),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700)),
+                            if (rating > 0)
+                              Text(
+                                s.share_rating_line(_formatRating(rating)),
+                                style: const TextStyle(
+                                    fontSize: 12.5, color: AppColors.muted),
+                              ),
+                          ],
+                        ),
+                      ),
+                      if (rating > 0) _ratingDisc(rating, 36),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: target(
+                        'WhatsApp',
+                        const Icon(Icons.chat_rounded, color: Colors.white),
+                        const Color(0xFF25D366),
+                        () {
+                          Navigator.pop(sheetContext);
+                          _openExternal(
+                              Uri.parse('https://wa.me/?text=$text'));
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: target(
+                        'Telegram',
+                        const Icon(Icons.send_rounded, color: Colors.white),
+                        const Color(0xFF29A9EB),
+                        () {
+                          Navigator.pop(sheetContext);
+                          _openExternal(Uri.parse(
+                              'https://t.me/share/url?url=${Uri.encodeComponent(_shareUrl)}&text=${Uri.encodeComponent(S.of(context).share_message(name, rating > 0 ? _formatRating(rating) : '–'))}'));
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: target(
+                        s.copy_link,
+                        const Icon(Icons.copy_rounded, color: AppColors.char),
+                        const Color(0xFFF1ECE7),
+                        copyLink,
+                      ),
+                    ),
+                    Expanded(
+                      child: target(
+                        s.share_more,
+                        const Icon(Icons.ios_share_rounded,
+                            color: AppColors.char),
+                        const Color(0xFFF1ECE7),
+                        () {
+                          Navigator.pop(sheetContext);
+                          SharePlus.instance.share(
+                            ShareParams(text: _shareText(), subject: name),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(12, 6, 6, 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF7F3EF),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _shareUrl.replaceFirst('https://', ''),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 13, color: AppColors.muted),
+                        ),
+                      ),
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.char,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        onPressed: copyLink,
+                        child: Text(s.copy),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Disco rosso con il voto in giallo: l'elemento ricorrente del brand.
+  Widget _ratingDisc(double rating, double size) {
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(color: red, shape: BoxShape.circle),
+      child: Text(
+        _formatRating(rating),
+        style: headingStyle(size: size * 0.36, color: yellow)
+            .copyWith(height: 1, letterSpacing: -0.4),
+      ),
+    );
   }
 
   Future<void> _showAddPhotoSheet() async {
@@ -708,21 +952,20 @@ class KebabSinglePageState extends State<KebabSinglePage>
     final name = kebabData?['name'] ?? '';
     if (name.isEmpty) return null;
     final kebabberId = name.toString().toLowerCase().replaceAll(' ', '-');
-    return 'assets/kebab-card/$kebabberId.png';
+    return 'assets/kebab-card/$kebabberId.webp';
   }
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: red,
+          backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        body: const Center(
-          child: CircularProgressIndicator(color: red),
-        ),
+        body: const KebabPageSkeleton(),
       );
     }
 
@@ -773,7 +1016,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                   IconButton(
                     icon: const Icon(
                       Icons.verified,
-                      color: Color(0xFF1D9BF0),
+                      color: AppColors.staff,
                     ),
                     tooltip: S.of(context).verified_by_staff_tooltip,
                     onPressed: () {
@@ -782,7 +1025,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                           content: Row(
                             children: [
                               const Icon(Icons.verified,
-                                  color: Color(0xFF1D9BF0), size: 20),
+                                  color: AppColors.staff, size: 20),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
@@ -796,6 +1039,11 @@ class KebabSinglePageState extends State<KebabSinglePage>
                       );
                     },
                   ),
+                IconButton(
+                  icon: const Icon(Icons.share_rounded, color: Colors.white),
+                  tooltip: S.of(context).share_action,
+                  onPressed: _showShareSheet,
+                ),
                 IconButton(
                   icon: const Icon(Icons.compare_arrows, color: Colors.white),
                   tooltip: S.of(context).compare_kebabs,
@@ -811,7 +1059,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                 IconButton(
                   icon: Icon(
                     isFavorite ? Icons.bookmark : Icons.bookmark_border,
-                    color: isFavorite ? const Color(0xFFFFBA1C) : Colors.white,
+                    color: isFavorite ? AppColors.saffron : Colors.white,
                   ),
                   tooltip: isFavorite ? S.of(context).remove_from_favorites : S.of(context).save_to_favorites,
                   onPressed: _toggleFavorite,
@@ -846,17 +1094,10 @@ class KebabSinglePageState extends State<KebabSinglePage>
                       name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black87,
-                            blurRadius: 8,
-                          ),
-                        ],
-                      ),
+                      style: headingStyle(size: 21, color: Colors.white)
+                          .copyWith(shadows: const [
+                        Shadow(color: Colors.black87, blurRadius: 8),
+                      ]),
                     ),
                     background: Stack(
                       fit: StackFit.expand,
@@ -920,12 +1161,12 @@ class KebabSinglePageState extends State<KebabSinglePage>
                                 horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: isOpen
-                                  ? const Color(0xFFE6F4EA)
+                                  ? AppColors.openBg
                                   : Colors.grey[200],
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: isOpen
-                                    ? const Color(0xFF34A853)
+                                    ? AppColors.open
                                     : Colors.grey[400]!,
                               ),
                             ),
@@ -935,7 +1176,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                                 CircleAvatar(
                                   radius: 4,
                                   backgroundColor: isOpen
-                                      ? const Color(0xFF34A853)
+                                      ? AppColors.open
                                       : Colors.grey[600],
                                 ),
                                 const SizedBox(width: 6),
@@ -945,7 +1186,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: isOpen
-                                        ? const Color(0xFF137333)
+                                        ? AppColors.openText
                                         : Colors.grey[700],
                                   ),
                                 ),
@@ -959,7 +1200,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFEF7E0),
+                              color: AppColors.glutenFreeBg,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: const Color(0xFFF9AB00),
@@ -969,14 +1210,14 @@ class KebabSinglePageState extends State<KebabSinglePage>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.grain,
-                                    size: 14, color: Color(0xFFB06000)),
+                                    size: 14, color: AppColors.glutenFree),
                                 const SizedBox(width: 4),
                                 Text(
                                   S.of(context).gluten_free,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFFB06000),
+                                    color: AppColors.glutenFree,
                                   ),
                                 ),
                               ],
@@ -995,7 +1236,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(Icons.star,
-                                  size: 14, color: Color(0xFFFFBA1C)),
+                                  size: 14, color: AppColors.saffron),
                               const SizedBox(width: 4),
                               Text(
                                 '${officialRating.toStringAsFixed(1)} Kebabbo',
@@ -1105,7 +1346,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                           child: _buildActionButton(
                             icon: Icons.directions_outlined,
                             label: S.of(context).mappa,
-                            color: const Color(0xFF1A73E8),
+                            color: AppColors.mapsBlue,
                             onTap: _openMap,
                           ),
                         ),
@@ -1125,6 +1366,16 @@ class KebabSinglePageState extends State<KebabSinglePage>
                             label: S.of(context).photo,
                             color: const Color(0xFFE37400),
                             onTap: _showAddPhotoSheet,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildActionButton(
+                            icon: Icons.share_rounded,
+                            label: S.of(context).share_action,
+                            color: red,
+                            filled: true,
+                            onTap: _showShareSheet,
                           ),
                         ),
                       ],
@@ -1194,28 +1445,33 @@ class KebabSinglePageState extends State<KebabSinglePage>
     required String label,
     required Color color,
     required VoidCallback onTap,
+    bool filled = false,
   }) {
+    final Color fg = filled ? Colors.white : color;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 2),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
+          color: filled ? color : color.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.25)),
+          border: Border.all(
+              color: filled ? color : color.withValues(alpha: 0.25)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 18, color: color),
-            const SizedBox(width: 6),
+            Icon(icon, size: 19, color: fg),
+            const SizedBox(height: 3),
             Text(
               label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: color,
+                color: fg,
               ),
             ),
           ],
@@ -1566,7 +1822,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                             width: 6,
                             height: 6,
                             decoration: const BoxDecoration(
-                              color: Color(0xFF34A853),
+                              color: AppColors.open,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -1613,49 +1869,20 @@ class KebabSinglePageState extends State<KebabSinglePage>
   // ---------------------------------------------------------------------------
   // TAB 2: FOTO DELLA COMMUNITY (Photos)
   // ---------------------------------------------------------------------------
+  String get _emptyIllustration => kebabData?['tag'] == 'kebab'
+      ? 'assets/images/kebabcolored.png'
+      : 'assets/images/sandwitch.png';
+
   Widget _buildPhotosTab(List<Map<String, dynamic>> photosList) {
     if (photosList.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.photo_camera_outlined, size: 64, color: Colors.grey[400]),
-              const SizedBox(height: 16),
-              Text(
-                S.of(context).no_photos_yet,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                S.of(context).no_photos_yet_desc,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: red,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: _showAddPhotoSheet,
-                icon: const Icon(Icons.add_a_photo, size: 18),
-                label: Text(S.of(context).upload_first_photo),
-              ),
-            ],
-          ),
-        ),
+      return EmptyState(
+        title: S.of(context).no_photos_yet,
+        message: S.of(context).no_photos_yet_desc,
+        badgeIcon: Icons.photo_camera_rounded,
+        illustration: _emptyIllustration,
+        actionLabel: S.of(context).upload_first_photo,
+        actionIcon: Icons.add_a_photo,
+        onAction: _showAddPhotoSheet,
       );
     }
 
@@ -1769,47 +1996,14 @@ class KebabSinglePageState extends State<KebabSinglePage>
   // ---------------------------------------------------------------------------
   Widget _buildReviewsTab(communityAverages) {
     if (reviews.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
-              const SizedBox(height: 16),
-              Text(
-                S.of(context).nessuna_recensione_ancora,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                S.of(context).no_reviews_yet_desc,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: red,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: _openWriteReview,
-                icon: const Icon(Icons.edit, size: 18),
-                label: Text(S.of(context).write_first_review),
-              ),
-            ],
-          ),
-        ),
+      return EmptyState(
+        title: S.of(context).nessuna_recensione_ancora,
+        message: S.of(context).no_reviews_yet_desc,
+        badgeIcon: Icons.edit_rounded,
+        illustration: _emptyIllustration,
+        actionLabel: S.of(context).write_first_review,
+        actionIcon: Icons.edit,
+        onAction: _openWriteReview,
       );
     }
 
@@ -1852,13 +2046,13 @@ class KebabSinglePageState extends State<KebabSinglePage>
                         final double score = communityAverages.overallRating;
                         if (score >= starVal) {
                           return const Icon(Icons.star,
-                              size: 18, color: Color(0xFFFFBA1C));
+                              size: 18, color: AppColors.saffron);
                         } else if (score >= starVal - 0.5) {
                           return const Icon(Icons.star_half,
-                              size: 18, color: Color(0xFFFFBA1C));
+                              size: 18, color: AppColors.saffron);
                         } else {
                           return const Icon(Icons.star_border,
-                              size: 18, color: Color(0xFFFFBA1C));
+                              size: 18, color: AppColors.saffron);
                         }
                       }),
                     ),
@@ -1984,7 +2178,7 @@ class KebabSinglePageState extends State<KebabSinglePage>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.star,
-                            size: 14, color: Color(0xFFFFBA1C)),
+                            size: 14, color: AppColors.saffron),
                         const SizedBox(width: 3),
                         Text(
                           avgScore.toStringAsFixed(1),
