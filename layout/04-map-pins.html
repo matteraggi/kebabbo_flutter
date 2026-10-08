@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebabbo – Mappa con voti</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red: #BB0000; --saffron: #FFBA1C; --char: #2B1A12; --muted: #7A6A60; --board: #FFF3D6; --community: #7B3FA0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--board); color: var(--char); font-family: "Figtree", system-ui, sans-serif; font-size: 15px; line-height: 1.45; }
+  header.board-head { max-width: 1240px; margin: 0 auto; padding: 40px 24px 8px; }
+  header.board-head h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.02em; margin: 0 0 6px; }
+  header.board-head p { margin: 0; max-width: 64ch; color: var(--muted); }
+  .board { max-width: 1240px; margin: 0 auto; padding: 24px; display: flex; gap: 48px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  figcaption { max-width: 340px; font-size: 14px; color: var(--muted); text-align: center; }
+  figcaption strong { color: var(--char); }
+  .phone { width: 360px; height: 740px; border-radius: 42px; overflow: hidden; position: relative; box-shadow: 0 0 0 10px #1c120d, 0 24px 60px rgba(60,30,0,.25); background: #EAE4DA; }
+
+  /* map tiles */
+  .tiles { position: absolute; display: grid; grid-template-columns: repeat(4, 256px); filter: saturate(.75) contrast(.95); }
+  .tiles img { width: 256px; height: 256px; display: block; }
+  .tiles.z14 { grid-template-columns: repeat(3, 256px); }
+  .attrib { position: absolute; right: 6px; bottom: 66px; font-size: 10px; background: rgba(255,255,255,.8); padding: 1px 5px; border-radius: 4px; z-index: 3; }
+
+  /* top controls (as in the app) */
+  .topbar { position: absolute; top: 40px; left: 12px; right: 12px; display: flex; gap: 8px; z-index: 4; }
+  .toggle { display: flex; background: #fff; border-radius: 999px; padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  .toggle span { padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .toggle span.on.staff { background: var(--red); color: #fff; }
+  .toggle span.on.comm { background: var(--community); color: #fff; }
+  .toggle span:not(.on) { color: var(--muted); }
+
+  /* ---- the pin: rating disc with a point ---- */
+  .pin {
+    position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; z-index: 2; border: 0; background: none; padding: 0; font: inherit;
+  }
+  .pin .disc {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--red); color: var(--saffron);
+    display: grid; place-items: center; font: 800 15px "Bricolage Grotesque", sans-serif; letter-spacing: -0.03em;
+    border: 3px solid #fff; box-shadow: 0 3px 8px rgba(60,20,0,.35);
+  }
+  .pin::after {
+    content: ""; width: 0; height: 0; margin-top: -2px;
+    border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid #fff;
+    filter: drop-shadow(0 2px 1px rgba(60,20,0,.25));
+  }
+  .pin.comm .disc { background: var(--community); color: #fff; }
+  .pin.low .disc { background: #8A5A4A; color: #FFE7C2; }
+  .pin.closed .disc { opacity: .62; }
+  .pin.sel { z-index: 3; }
+  .pin.sel .disc { width: 54px; height: 54px; font-size: 19px; border-width: 4px; }
+  .pin .name {
+    position: absolute; bottom: calc(100% + 4px); white-space: nowrap; background: var(--char); color: #fff;
+    font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 8px;
+  }
+  .pin:focus-visible .disc { outline: 3px solid var(--saffron); outline-offset: 2px; }
+
+  /* clusters (zoomed out) */
+  .cluster {
+    position: absolute; transform: translate(-50%, -50%); width: 58px; height: 58px; border-radius: 50%;
+    background: var(--saffron); border: 3px solid var(--red); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(60,20,0,.35); z-index: 2; line-height: 1;
+  }
+  .cluster b { font: 800 19px "Bricolage Grotesque", sans-serif; color: var(--red); }
+  .cluster small { font-size: 10px; font-weight: 700; color: var(--char); margin-top: 2px; }
+  .cluster.big { width: 72px; height: 72px; }
+  .cluster.big b { font-size: 23px; }
+
+  /* user dot */
+  .me { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #1A73E8; border: 3px solid #fff; box-shadow: 0 0 0 8px rgba(26,115,232,.18); transform: translate(-50%, -50%); z-index: 2; }
+
+  /* bottom card */
+  .peek {
+    position: absolute; left: 10px; right: 10px; bottom: 74px; background: #fff; border-radius: 20px; padding: 12px;
+    display: flex; gap: 12px; align-items: center; box-shadow: 0 8px 24px rgba(60,20,0,.25); z-index: 4;
+  }
+  .peek img { width: 62px; height: 62px; border-radius: 14px; object-fit: cover; object-position: center 30%; }
+  .peek .t { flex: 1; min-width: 0; }
+  .peek b { display: block; font: 700 17px "Bricolage Grotesque", sans-serif; }
+  .peek span { font-size: 13px; color: var(--muted); }
+  .peek .go { border: 0; background: var(--red); color: #fff; border-radius: 12px; padding: 10px 12px; font: 700 13px "Figtree", sans-serif; }
+  .legend { position: absolute; left: 10px; right: 10px; bottom: 74px; background: #fff; border-radius: 16px; padding: 10px 12px; font-size: 12.5px; color: var(--muted); z-index: 4; box-shadow: 0 6px 18px rgba(60,20,0,.18); }
+  .legend b { color: var(--char); }
+  .nav { position: absolute; left: 0; right: 0; bottom: 0; height: 62px; background: var(--red); display: flex; justify-content: space-around; align-items: center; color: #fff; font-size: 11px; z-index: 5; }
+  .nav span.on { color: var(--saffron); font-weight: 700; }
+</style>
+</head>
+<body>
+<header class="board-head">
+  <h1>Mappa con i voti</h1>
+  <p>Every pin is the rating disc itself, so you can compare places without tapping each one. Red for staff ratings, purple for community ones, faded when closed. Zoomed out, nearby places group into one bubble showing the count and the best rating inside.</p>
+</header>
+
+<main class="board">
+  <figure>
+    <div class="phone">
+      <div class="tiles" style="left:-300px; top:-250px">
+        <img src="https://tile.openstreetmap.org/15/17415/11852.png" alt=""><img src="https://tile.openstreetmap.org/15/17416/11852.png" alt=""><img src="https://tile.openstreetmap.org/15/17417/11852.png" alt=""><img src="https://tile.openstreetmap.org/15/17418/11852.png" alt="">
+        <img src="https://tile.openstreetmap.org/15/17415/11853.png" alt=""><img src="https://tile.openstreetmap.org/15/17416/11853.png" alt=""><img src="https://tile.openstreetmap.org/15/17417/11853.png" alt=""><img src="https://tile.openstreetmap.org/15/17418/11853.png" alt="">
+        <img src="https://tile.openstreetmap.org/15/17415/11854.png" alt=""><img src="https://tile.openstreetmap.org/15/17416/11854.png" alt=""><img src="https://tile.openstreetmap.org/15/17417/11854.png" alt=""><img src="https://tile.openstreetmap.org/15/17418/11854.png" alt="">
+        <img src="https://tile.openstreetmap.org/15/17415/11855.png" alt=""><img src="https://tile.openstreetmap.org/15/17416/11855.png" alt=""><img src="https://tile.openstreetmap.org/15/17417/11855.png" alt=""><img src="https://tile.openstreetmap.org/15/17418/11855.png" alt="">
+      </div>
+      <div class="topbar">
+        <div class="toggle"><span class="on staff">Staff</span><span>Community</span></div>
+      </div>
+
+      <div class="me" style="left:150px; top:420px"></div>
+      <button class="pin" style="left:206px; top:300px" aria-label="Bella Istanbul 3, 4,6"><span class="disc">4,6</span></button>
+      <button class="pin sel" style="left:112px; top:250px" aria-label="Nemrut Döner, 4,5, selezionato"><span class="name">Nemrut Döner</span><span class="disc">4,5</span></button>
+      <button class="pin" style="left:262px; top:430px" aria-label="Dr Jimmy, 4,3"><span class="disc">4,3</span></button>
+      <button class="pin closed" style="left:80px; top:390px" aria-label="Taj Mahal, 4,3, chiuso"><span class="disc">4,3</span></button>
+      <button class="pin comm" style="left:300px; top:205px" aria-label="Ciao Kebab, community 3,9"><span class="disc">3,9</span></button>
+      <button class="pin low" style="left:186px; top:520px" aria-label="Pizza n Pizza, 2,8"><span class="disc">2,8</span></button>
+
+      <div class="peek">
+        <img src="../assets/kebab-card/nemrut-doner.webp" alt="">
+        <div class="t"><b>Nemrut Döner</b><span>Aperto, 450 m da te</span></div>
+        <button class="go">Indicazioni</button>
+      </div>
+      <span class="attrib">© OpenStreetMap</span>
+      <div class="nav"><span>Home</span><span class="on">Mappa</span><span>Aggiungi</span><span>Feed</span><span>Account</span></div>
+    </div>
+    <figcaption><strong>Zoomed in.</strong> Tapping a pin enlarges it, shows its name and opens the bottom card. Low ratings (under 3) turn brown so the good places stand out.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="phone">
+      <div class="tiles z14" style="left:-210px; top:-170px"><img src="https://tile.openstreetmap.org/14/8707/5925.png" alt=""><img src="https://tile.openstreetmap.org/14/8708/5925.png" alt=""><img src="https://tile.openstreetmap.org/14/8709/5925.png" alt=""><img src="https://tile.openstreetmap.org/14/8707/5926.png" alt=""><img src="https://tile.openstreetmap.org/14/8708/5926.png" alt=""><img src="https://tile.openstreetmap.org/14/8709/5926.png" alt=""><img src="https://tile.openstreetmap.org/14/8707/5927.png" alt=""><img src="https://tile.openstreetmap.org/14/8708/5927.png" alt=""><img src="https://tile.openstreetmap.org/14/8709/5927.png" alt=""><img src="https://tile.openstreetmap.org/14/8707/5928.png" alt=""><img src="https://tile.openstreetmap.org/14/8708/5928.png" alt=""><img src="https://tile.openstreetmap.org/14/8709/5928.png" alt=""></div>
+      <div class="topbar">
+        <div class="toggle"><span class="on staff">Staff</span><span>Community</span></div>
+      </div>
+      <div class="cluster big" style="left:170px; top:250px"><b>12</b><small>max 4,6</small></div>
+      <div class="cluster" style="left:262px; top:380px"><b>4</b><small>max 4,3</small></div>
+      <div class="cluster" style="left:96px; top:420px"><b>3</b><small>max 4,0</small></div>
+      <button class="pin" style="left:300px; top:200px" aria-label="Ekopollo, 3,8"><span class="disc">3,8</span></button>
+      <div class="legend"><b>23 kebabbari in questa zona.</b> Avvicina la mappa o tocca un gruppo per vedere i singoli voti.</div>
+      <span class="attrib">© OpenStreetMap</span>
+      <div class="nav"><span>Home</span><span class="on">Mappa</span><span>Aggiungi</span><span>Feed</span><span>Account</span></div>
+    </div>
+    <figcaption><strong>Zoomed out.</strong> Overlapping pins merge into a gold bubble with how many places it holds and the best rating among them. Tap it to zoom in.</figcaption>
+  </figure>
+</main>
+</body>
+</html>

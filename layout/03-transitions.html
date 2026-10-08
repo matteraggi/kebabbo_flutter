@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebabbo – Transizioni</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red: #BB0000; --saffron: #FFBA1C; --char: #2B1A12; --muted: #7A6A60; --line: #EDE6DF; --board: #FFF3D6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--board); color: var(--char); font-family: "Figtree", system-ui, sans-serif; font-size: 15px; line-height: 1.45; }
+  header.board-head { max-width: 1240px; margin: 0 auto; padding: 40px 24px 8px; }
+  header.board-head h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.02em; margin: 0 0 6px; }
+  header.board-head p { margin: 0; max-width: 64ch; color: var(--muted); }
+  .board { max-width: 1240px; margin: 0 auto; padding: 24px; display: flex; gap: 48px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  figcaption { max-width: 340px; font-size: 14px; color: var(--muted); text-align: center; }
+  figcaption strong { color: var(--char); }
+  .phone { width: 360px; height: 740px; border-radius: 42px; overflow: hidden; position: relative; box-shadow: 0 0 0 10px #1c120d, 0 24px 60px rgba(60,30,0,.25); background: var(--saffron); }
+  .statusbar { height: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 26px; font-size: 13px; font-weight: 600; }
+  .score { width: 44px; height: 44px; border-radius: 50%; background: var(--red); color: var(--saffron); display: grid; place-items: center; font: 800 16px "Bricolage Grotesque", sans-serif; flex: none; box-shadow: inset 0 0 0 3px rgba(255,186,28,.35); }
+
+  /* ---------- list ---------- */
+  .list { padding: 6px 12px; display: flex; flex-direction: column; gap: 12px; }
+  .hint { font-size: 13px; font-weight: 600; text-align: center; color: var(--char); opacity: .7; margin: 2px 0; }
+  .k-card { background: #fff; border-radius: 18px; padding: 12px; display: flex; gap: 12px; align-items: center; border: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; }
+  .k-card:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+  .k-card img { width: 64px; height: 64px; border-radius: 14px; object-fit: cover; object-position: center 30%; }
+  .k-card .meta { flex: 1; min-width: 0; }
+  .k-card b { display: block; font-size: 16px; }
+  .k-card span { font-size: 13px; color: var(--muted); }
+
+  /* ---------- detail (shown after hero) ---------- */
+  .detail { position: absolute; inset: 0; background: #FAF7F4; z-index: 4; visibility: hidden; }
+  .detail.open { visibility: visible; }
+  .detail .hero { height: 260px; position: relative; }
+  .detail .hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+  .detail .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.35), transparent 40%, rgba(0,0,0,.75)); }
+  .detail h2 { position: absolute; left: 16px; bottom: 14px; margin: 0; color: #fff; font: 800 27px "Bricolage Grotesque", sans-serif; z-index: 2; }
+  .detail .back { position: absolute; top: 40px; left: 12px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(0,0,0,.25); color: #fff; font-size: 20px; cursor: pointer; }
+  .detail .back:focus-visible { outline: 3px solid var(--saffron); }
+  .detail .rest { padding: 16px; display: flex; flex-direction: column; gap: 12px; opacity: 0; transform: translateY(12px); transition: opacity .3s .25s, transform .3s .25s; }
+  .detail.open .rest { opacity: 1; transform: none; }
+  .detail .rest .row { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 16px; padding: 12px; }
+  .detail .rest p { margin: 0; background: #fff; border-radius: 16px; padding: 14px; font-style: italic; color: #5b4a40; font-size: 14px; }
+  .flyer { position: absolute; z-index: 6; object-fit: cover; object-position: center 30%; pointer-events: none; }
+
+  /* ---------- rating sliders ---------- */
+  .form { background: #FAF7F4; height: 100%; display: flex; flex-direction: column; }
+  .form .top { background: var(--red); color: #fff; padding: 46px 18px 14px; font: 800 20px "Bricolage Grotesque", sans-serif; }
+  .form .body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .panel { background: #fff; border-radius: 18px; padding: 16px; }
+  .panel h3 { margin: 0 0 4px; font: 700 17px "Bricolage Grotesque", sans-serif; }
+  .panel > small { color: var(--muted); font-size: 13px; }
+  .slider { display: grid; grid-template-columns: 74px minmax(0, 1fr) 40px; align-items: center; gap: 8px; margin-top: 14px; }
+  .slider label { font-size: 14px; font-weight: 600; }
+  .slider output { font: 800 18px "Bricolage Grotesque", sans-serif; text-align: right; color: var(--red); display: inline-block; transition: transform .12s; }
+  .slider output.bump { transform: scale(1.35); }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 30px; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 8px; border-radius: 6px; background: linear-gradient(to right, var(--red) var(--p, 50%), #F1E6DC var(--p, 50%)); }
+  input[type=range]::-moz-range-track { height: 8px; border-radius: 6px; background: #F1E6DC; }
+  input[type=range]::-moz-range-progress { height: 8px; border-radius: 6px; background: var(--red); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; margin-top: -9px; border-radius: 50%; background: #fff; border: 4px solid var(--red); box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+  input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 4px solid var(--red); }
+  input[type=range]:focus-visible { outline: 3px solid var(--saffron); outline-offset: 2px; border-radius: 8px; }
+  .buzz { position: absolute; right: 22px; top: 92px; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #fff; background: var(--char); padding: 6px 10px; border-radius: 999px; opacity: 0; transition: opacity .15s; }
+  .buzz.show { opacity: 1; }
+  .buzz svg { width: 16px; height: 16px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .detail .rest { transition: none; }
+    .slider output { transition: none; }
+  }
+</style>
+</head>
+<body>
+<header class="board-head">
+  <h1>Transizioni</h1>
+  <p>Motion only where it answers a tap: the photo you tap grows into the kebab page header, and rating sliders give a light vibration at each step. Try both on the phones below.</p>
+</header>
+
+<main class="board">
+  <figure>
+    <div class="phone" id="heroPhone">
+      <div class="statusbar"><span>12:41</span><span>5G ▮▮▮</span></div>
+      <div class="list">
+        <p class="hint">Tocca un kebab</p>
+        <button class="k-card" data-name="Bella Istanbul 3" data-img="../assets/kebab-card/bella-istanbul-3.webp" data-score="4,6"><img src="../assets/kebab-card/bella-istanbul-3.webp" alt=""><div class="meta"><b>Bella Istanbul 3</b><span>Aperto, 2,1 km</span></div><div class="score">4,6</div></button>
+        <button class="k-card" data-name="Nemrut Döner" data-img="../assets/kebab-card/nemrut-doner.webp" data-score="4,5"><img src="../assets/kebab-card/nemrut-doner.webp" alt=""><div class="meta"><b>Nemrut Döner</b><span>Aperto, 1,4 km</span></div><div class="score">4,5</div></button>
+        <button class="k-card" data-name="Taj Mahal" data-img="../assets/kebab-card/taj-mahal.webp" data-score="4,3"><img src="../assets/kebab-card/taj-mahal.webp" alt=""><div class="meta"><b>Taj Mahal</b><span>Chiuso, 3,2 km</span></div><div class="score">4,3</div></button>
+        <button class="k-card" data-name="Beirut Snack" data-img="../assets/kebab-card/beirut-snack.webp" data-score="4,1"><img src="../assets/kebab-card/beirut-snack.webp" alt=""><div class="meta"><b>Beirut Snack</b><span>Aperto, 0,9 km</span></div><div class="score">4,1</div></button>
+      </div>
+      <div class="detail" aria-hidden="true">
+        <div class="hero"><img alt=""><button class="back" aria-label="Indietro">‹</button><h2></h2></div>
+        <div class="rest">
+          <div class="row"><div class="score"></div><div style="font-size:13px;color:var(--muted)"><b style="color:var(--char)">Voto dello staff Kebabbo</b><br>Tocca ‹ per tornare alla lista</div></div>
+          <p>The rest of the page slides in a moment after the photo lands, so the eye follows the photo first.</p>
+        </div>
+      </div>
+    </div>
+    <figcaption><strong>From card to page.</strong> The thumbnail flies and grows into the header (Flutter's Hero widget). Back plays it in reverse, so you always know where you came from.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="phone">
+      <div class="form">
+        <div class="top">Scrivi una recensione</div>
+        <div class="buzz" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M4 8v8M20 8v8"/></svg>vibrazione</div>
+        <div class="body">
+          <div class="panel">
+            <h3>Valutazione generale</h3>
+            <small>Da 1 a 5, a passi di mezzo punto</small>
+            <div class="slider"><label for="q">Qualità</label><input id="q" type="range" min="1" max="5" step="0.5" value="4"><output for="q">4,0</output></div>
+            <div class="slider"><label for="p">Prezzo</label><input id="p" type="range" min="1" max="5" step="0.5" value="3.5"><output for="p">3,5</output></div>
+            <div class="slider"><label for="d">Quantità</label><input id="d" type="range" min="1" max="5" step="0.5" value="4.5"><output for="d">4,5</output></div>
+            <div class="slider"><label for="m">Menu</label><input id="m" type="range" min="1" max="5" step="0.5" value="3"><output for="m">3,0</output></div>
+          </div>
+          <div class="panel">
+            <h3>Piccante</h3>
+            <small>Da 1 a 10</small>
+            <div class="slider"><label for="s">Piccante</label><input id="s" type="range" min="1" max="10" step="1" value="6"><output for="s">6</output></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><strong>Sliders that click.</strong> Each step gives a short haptic tick and the number pops, so you can rate without staring at the value. A stronger tick marks the ends.</figcaption>
+  </figure>
+</main>
+
+<script>
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- hero ----
+  var phone = document.getElementById('heroPhone');
+  var detail = phone.querySelector('.detail');
+  var heroImg = detail.querySelector('.hero img');
+  var lastCard = null;
+
+  function fly(fromEl, toEl, src, done) {
+    var p = phone.getBoundingClientRect();
+    var a = fromEl.getBoundingClientRect();
+    var b = toEl.getBoundingClientRect();
+    var img = document.createElement('img');
+    img.src = src; img.className = 'flyer';
+    img.style.left = (a.left - p.left) + 'px'; img.style.top = (a.top - p.top) + 'px';
+    img.style.width = a.width + 'px'; img.style.height = a.height + 'px';
+    img.style.borderRadius = getComputedStyle(fromEl).borderRadius;
+    phone.appendChild(img);
+    var anim = img.animate([
+      { left: (a.left - p.left) + 'px', top: (a.top - p.top) + 'px', width: a.width + 'px', height: a.height + 'px', borderRadius: getComputedStyle(fromEl).borderRadius },
+      { left: (b.left - p.left) + 'px', top: (b.top - p.top) + 'px', width: b.width + 'px', height: b.height + 'px', borderRadius: getComputedStyle(toEl).borderRadius }
+    ], { duration: reduce ? 1 : 380, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' });
+    anim.onfinish = function () { done(); img.remove(); };
+  }
+
+  phone.querySelectorAll('.k-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      lastCard = card;
+      heroImg.src = card.dataset.img;
+      detail.querySelector('h2').textContent = card.dataset.name;
+      detail.querySelector('.rest .score').textContent = card.dataset.score;
+      heroImg.style.visibility = 'hidden';
+      detail.style.visibility = 'visible';
+      detail.classList.add('open');
+      detail.setAttribute('aria-hidden', 'false');
+      fly(card.querySelector('img'), heroImg, card.dataset.img, function () {
+        heroImg.style.visibility = 'visible';
+        detail.querySelector('.back').focus();
+      });
+    });
+  });
+
+  detail.querySelector('.back').addEventListener('click', function () {
+    if (!lastCard) return;
+    var target = lastCard.querySelector('img');
+    heroImg.style.visibility = 'hidden';
+    detail.classList.remove('open');
+    detail.style.visibility = 'hidden';
+    target.style.visibility = 'hidden';
+    fly(heroImg, target, heroImg.src, function () {
+      target.style.visibility = 'visible';
+      detail.setAttribute('aria-hidden', 'true');
+      lastCard.focus();
+    });
+  });
+
+  // ---- haptic sliders ----
+  var buzz = document.querySelector('.buzz');
+  var buzzTimer;
+  document.querySelectorAll('input[type=range]').forEach(function (r) {
+    var out = r.parentElement.querySelector('output');
+    var last = r.value;
+    function paint() {
+      var pct = (r.value - r.min) / (r.max - r.min) * 100;
+      r.style.setProperty('--p', pct + '%');
+      out.textContent = r.step === '1' ? r.value : Number(r.value).toFixed(1).replace('.', ',');
+    }
+    paint();
+    r.addEventListener('input', function () {
+      paint();
+      if (r.value === last) return;
+      last = r.value;
+      var atEnd = r.value === r.min || r.value === r.max;
+      if (navigator.vibrate) navigator.vibrate(atEnd ? 18 : 8);
+      out.classList.remove('bump'); void out.offsetWidth; out.classList.add('bump');
+      setTimeout(function () { out.classList.remove('bump'); }, 120);
+      buzz.textContent = '';
+      buzz.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M4 8v8M20 8v8"/></svg>' + (atEnd ? 'vibrazione forte' : 'vibrazione'));
+      buzz.classList.add('show');
+      clearTimeout(buzzTimer);
+      buzzTimer = setTimeout(function () { buzz.classList.remove('show'); }, 500);
+    });
+  });
+</script>
+</body>
+</html>

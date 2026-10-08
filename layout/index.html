@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebabbo – Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red: #BB0000; --saffron: #FFBA1C; --char: #2B1A12; --muted: #7A6A60; --board: #FFF3D6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--board); color: var(--char); font-family: "Figtree", system-ui, sans-serif; line-height: 1.45; }
+  main { max-width: 1180px; margin: 0 auto; padding: 44px 24px 60px; }
+  h1 { font: 800 40px "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .lead { margin: 0 0 30px; color: var(--muted); max-width: 66ch; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; }
+  a.card { display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; color: inherit; text-decoration: none; box-shadow: 0 6px 22px rgba(60,30,0,.1); transition: transform .15s; }
+  a.card:hover { transform: translateY(-3px); }
+  a.card:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+  a.card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-bottom: 1px solid #f0e6dc; }
+  a.card div { padding: 14px 18px 18px; }
+  a.card b { font: 800 20px "Bricolage Grotesque", sans-serif; display: block; margin-bottom: 4px; }
+  a.card span { color: var(--muted); font-size: 14.5px; }
+  @media (prefers-reduced-motion: reduce) { a.card { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Mockup Kebabbo</h1>
+  <p class="lead">Proposals to choose from before building them in the app. Same brand as today: red, saffron, white cards. The rating disc is the one element repeated everywhere. Each page opens with a double-click and works offline (map tiles and fonts need a connection).</p>
+  <div class="grid">
+    <a class="card" href="01-share-kebab.html"><img src="screens/01-share-kebab.png" alt=""><div><b>Condividi un kebab</b><span>Share button on the kebab page, the share sheet, and the link preview your friends see on WhatsApp.</span></div></a>
+    <a class="card" href="02-skeletons.html"><img src="screens/02-skeletons.png" alt=""><div><b>Caricamento con anteprima</b><span>Placeholder blocks in the shape of each screen instead of a spinner: home list, kebab page, profile.</span></div></a>
+    <a class="card" href="03-transitions.html"><img src="screens/03-transitions.png" alt=""><div><b>Transizioni</b><span>The tapped photo grows into the kebab page; rating sliders tick with a light vibration. Interactive.</span></div></a>
+    <a class="card" href="04-map-pins.html"><img src="screens/04-map-pins.png" alt=""><div><b>Mappa con i voti</b><span>Pins that are the rating itself, colored by staff, community, closed or low, and grouped when zoomed out.</span></div></a>
+    <a class="card" href="05-login-loader.html"><img src="screens/05-login-loader.png" alt=""><div><b>Caricamento dell'accesso</b><span>A turning döner spit: tiny inside the login button, full screen with progress steps after Google sign-in.</span></div></a>
+  </div>
+</main>
+</body>
+</html>

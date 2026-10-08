@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebabbo – Caricamento accesso</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red: #BB0000; --saffron: #FFBA1C; --char: #2B1A12; --muted: #7A6A60; --board: #FFF3D6;
+          --meat-1: #A2481A; --meat-2: #B95E24; --meat-3: #CF7A36; --crisp: #6E2A0C; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--board); color: var(--char); font-family: "Figtree", system-ui, sans-serif; font-size: 15px; line-height: 1.45; }
+  header.board-head { max-width: 1240px; margin: 0 auto; padding: 40px 24px 8px; }
+  header.board-head h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.02em; margin: 0 0 6px; }
+  header.board-head p { margin: 0; max-width: 64ch; color: var(--muted); }
+  .board { max-width: 1240px; margin: 0 auto; padding: 24px; display: flex; gap: 48px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  figcaption { max-width: 340px; font-size: 14px; color: var(--muted); text-align: center; }
+  figcaption strong { color: var(--char); }
+  .phone { width: 360px; height: 740px; border-radius: 42px; overflow: hidden; position: relative; box-shadow: 0 0 0 10px #1c120d, 0 24px 60px rgba(60,30,0,.25); background: var(--saffron); }
+
+  /* ---------- the spit ---------- */
+  .spit { --s: 1; position: relative; width: calc(120px * var(--s)); height: calc(190px * var(--s)); }
+  .spit .rod { position: absolute; left: 50%; top: 0; bottom: 0; width: calc(5px * var(--s)); transform: translateX(-50%); background: linear-gradient(90deg, #8f8f8f, #e7e7e7, #8f8f8f); border-radius: 3px; }
+  .spit .cap { position: absolute; left: 50%; top: calc(-4px * var(--s)); width: calc(18px * var(--s)); height: calc(10px * var(--s)); transform: translateX(-50%); background: #9a9a9a; border-radius: 4px; }
+  .spit .heat {
+    position: absolute; left: calc(-30px * var(--s)); top: calc(24px * var(--s)); width: calc(16px * var(--s)); height: calc(120px * var(--s));
+    border-radius: calc(6px * var(--s)); background: linear-gradient(90deg, #5a1d08, #ff6a1a 60%, #ffb347);
+    box-shadow: calc(10px * var(--s)) 0 calc(26px * var(--s)) rgba(255,110,30,.65);
+    animation: glow 1.6s ease-in-out infinite alternate;
+  }
+  @keyframes glow { from { opacity: .75; } to { opacity: 1; } }
+  .spit .base { position: absolute; left: 50%; bottom: 0; width: calc(54px * var(--s)); height: calc(8px * var(--s)); transform: translateX(-50%); background: #7d7d7d; border-radius: 4px; }
+  .spit .cone {
+    position: absolute; left: 50%; top: calc(14px * var(--s)); width: calc(104px * var(--s)); height: calc(150px * var(--s));
+    transform: translateX(-50%);
+    clip-path: polygon(4% 0, 96% 0, 100% 8%, 80% 100%, 20% 100%, 0 8%);
+    background:
+      radial-gradient(ellipse 60% 120% at 50% 40%, rgba(255,214,150,.28), transparent 60%),
+      linear-gradient(90deg, rgba(40,10,0,.55), transparent 28%, transparent 72%, rgba(40,10,0,.6)),
+      repeating-linear-gradient(90deg, var(--meat-2) 0 calc(11px * var(--s)), var(--meat-1) calc(11px * var(--s)) calc(18px * var(--s)), var(--meat-3) calc(18px * var(--s)) calc(23px * var(--s)), var(--crisp) calc(23px * var(--s)) calc(26px * var(--s)));
+    background-size: 100% 100%, 100% 100%, calc(52px * var(--s)) 100%;
+    animation: turn 1.1s linear infinite;
+  }
+  .spit .cone::after { /* horizontal layer lines of stacked meat */
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(176deg, transparent 0 calc(10px * var(--s)), rgba(60,15,0,.35) calc(10px * var(--s)) calc(12px * var(--s)), rgba(255,200,140,.18) calc(12px * var(--s)) calc(13px * var(--s)));
+  }
+  @keyframes turn { from { background-position: 0 0, 0 0, 0 0; } to { background-position: 0 0, 0 0, calc(52px * var(--s)) 0; } }
+  .spit .shaving {
+    position: absolute; width: calc(10px * var(--s)); height: calc(5px * var(--s)); background: var(--meat-3);
+    border-radius: 50% 50% 40% 40%; top: calc(110px * var(--s)); opacity: 0;
+    animation: fall 1.4s ease-in infinite;
+  }
+  .spit .shaving:nth-of-type(1) { left: calc(78px * var(--s)); animation-delay: .1s; }
+  .spit .shaving:nth-of-type(2) { left: calc(84px * var(--s)); animation-delay: .6s; background: var(--meat-2); }
+  .spit .shaving:nth-of-type(3) { left: calc(74px * var(--s)); animation-delay: 1s; }
+  @keyframes fall {
+    0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+    15% { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(14px * var(--s)), calc(70px * var(--s))) rotate(140deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spit .cone { animation-duration: 4s; }
+    .spit .shaving { display: none; }
+  }
+
+  /* ---------- login screen ---------- */
+  .login { height: 100%; display: flex; flex-direction: column; align-items: center; padding: 64px 22px 22px; gap: 14px; }
+  .login img.logo { width: 128px; height: 128px; object-fit: contain; }
+  .login h2 { margin: 0; font: 800 30px "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; }
+  .login p { margin: 0 0 6px; text-align: center; color: #5b4228; font-size: 14px; max-width: 30ch; }
+  .field { width: 100%; height: 52px; border-radius: 14px; background: #fff; display: flex; align-items: center; padding: 0 16px; color: var(--char); font-size: 15px; }
+  .field.muted { color: #9a8b80; letter-spacing: .2em; }
+  .btn { width: 100%; height: 54px; border-radius: 16px; border: 0; background: var(--red); color: #fff; font: 700 16px "Figtree", sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+  .btn:focus-visible { outline: 3px solid var(--char); outline-offset: 2px; }
+  .btn[aria-busy="true"] { background: #9E0B0B; cursor: progress; }
+  .btn .spit { --s: .16; display: inline-block; flex: none; }
+  .btn .spit .rod, .btn .spit .cap, .btn .spit .base { background: #fff; }
+  .google { width: 100%; height: 52px; border-radius: 16px; background: #fff; border: 1.2px solid #e5ddd5; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; color: #1f1f1f; opacity: .5; }
+  .or { font-size: 13px; color: #6d5642; }
+
+  /* ---------- full-screen variant ---------- */
+  .wait { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 24px; text-align: center; }
+  .wait h2 { margin: 0 0 6px; font: 800 26px "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; }
+  .wait p { margin: 0; color: #5b4228; max-width: 28ch; }
+  .steps { display: flex; flex-direction: column; gap: 8px; text-align: left; font-size: 14px; }
+  .steps li { list-style: none; display: flex; align-items: center; gap: 8px; color: #6d5642; }
+  .steps li::before { content: ""; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(43,26,18,.35); flex: none; }
+  .steps li.done { color: var(--char); font-weight: 600; }
+  .steps li.done::before { background: var(--red); border-color: var(--red); box-shadow: inset 0 0 0 3px var(--saffron); }
+  .steps { padding: 0; margin: 0; }
+</style>
+</head>
+<body>
+<header class="board-head">
+  <h1>Caricamento dell'accesso</h1>
+  <p>Instead of a generic spinner, logging in shows a turning döner spit. Small inside the button while the password is checked; full screen while Google sign-in and the profile load, with the steps so it never looks stuck.</p>
+</header>
+
+<main class="board">
+  <figure>
+    <div class="phone">
+      <div class="login">
+        <img class="logo" src="../assets/new-logos/logo scritta ad arco-1.png" alt="Kebabbo">
+        <h2>Kebabbo</h2>
+        <p>Entra nella community per scoprire e recensire i migliori kebab</p>
+        <div class="field">giulia.rossi@studio.unibo.it</div>
+        <div class="field muted">••••••••••</div>
+        <button class="btn" id="loginBtn" type="button">Accedi</button>
+        <span class="or">oppure</span>
+        <div class="google"><img src="../assets/images/google.png" alt="" width="20" height="20">Accedi con Google</div>
+      </div>
+    </div>
+    <figcaption><strong>In the button.</strong> Tap "Accedi": the label becomes a tiny turning spit and "Accesso in corso", and the other buttons dim so nobody taps twice.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="phone">
+      <div class="wait" role="status" aria-live="polite">
+        <div class="spit">
+          <div class="heat"></div>
+          <div class="rod"></div><div class="cap"></div>
+          <div class="cone"></div>
+          <span class="shaving"></span><span class="shaving"></span><span class="shaving"></span>
+          <div class="base"></div>
+        </div>
+        <div>
+          <h2>Ti stiamo facendo entrare</h2>
+          <p>Un attimo, stiamo preparando il tuo profilo.</p>
+        </div>
+        <ol class="steps">
+          <li class="done">Accesso con Google</li>
+          <li class="done">Profilo trovato</li>
+          <li>Carico preferiti e medaglie</li>
+        </ol>
+      </div>
+    </div>
+    <figcaption><strong>Full screen.</strong> After returning from Google, the spit turns while the profile loads. The checklist fills in as each step completes; it only appears if loading takes more than half a second.</figcaption>
+  </figure>
+</main>
+
+<script>
+  var btn = document.getElementById('loginBtn');
+  var spitSmall = '<span class="spit" aria-hidden="true"><span class="rod"></span><span class="cap"></span><span class="cone"></span><span class="base"></span></span>';
+  btn.addEventListener('click', function () {
+    if (btn.getAttribute('aria-busy') === 'true') return;
+    btn.setAttribute('aria-busy', 'true');
+    btn.innerHTML = spitSmall + 'Accesso in corso';
+    setTimeout(function () {
+      btn.removeAttribute('aria-busy');
+      btn.textContent = 'Accedi';
+    }, 2600);
+  });
+  btn.click(); // mostra subito lo stato di caricamento
+</script>
+</body>
+</html>

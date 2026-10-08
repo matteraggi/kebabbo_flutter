@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebabbo – Caricamento</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #BB0000; --saffron: #FFBA1C; --char: #2B1A12; --muted: #7A6A60;
+    --line: #EDE6DF; --board: #FFF3D6;
+    /* placeholder tones: tinted towards the saffron background, not neutral grey */
+    --bone: #F6E2B0; --bone-hi: #FFF0CC;
+    --bone-w: #EFE8E1; --bone-w-hi: #FAF6F2;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--board); color: var(--char); font-family: "Figtree", system-ui, sans-serif; font-size: 15px; line-height: 1.45; }
+  header.board-head { max-width: 1240px; margin: 0 auto; padding: 40px 24px 8px; display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; }
+  header.board-head h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.02em; margin: 0 0 6px; }
+  header.board-head p { margin: 0; max-width: 62ch; color: var(--muted); }
+  .switch { display: inline-flex; background: #fff; border-radius: 999px; padding: 4px; box-shadow: 0 2px 10px rgba(60,30,0,.08); }
+  .switch button { border: 0; background: none; font: 700 14px "Figtree", sans-serif; padding: 8px 16px; border-radius: 999px; cursor: pointer; color: var(--muted); }
+  .switch button[aria-pressed="true"] { background: var(--red); color: #fff; }
+  .switch button:focus-visible { outline: 3px solid var(--saffron); outline-offset: 2px; }
+  .board { max-width: 1240px; margin: 0 auto; padding: 24px; display: flex; gap: 36px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  figcaption { max-width: 340px; font-size: 14px; color: var(--muted); text-align: center; }
+  figcaption strong { color: var(--char); }
+  .phone { width: 360px; height: 740px; border-radius: 42px; overflow: hidden; position: relative; box-shadow: 0 0 0 10px #1c120d, 0 24px 60px rgba(60,30,0,.25); display: flex; flex-direction: column; }
+  .statusbar { height: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 26px; font-size: 13px; font-weight: 600; flex: none; }
+
+  /* shimmer */
+  .sk { position: relative; overflow: hidden; background: var(--bone-w); border-radius: 8px; }
+  .on-yellow .sk { background: var(--bone); }
+  .sk::after {
+    content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--bone-w-hi), transparent);
+    animation: sweep 1.3s ease-in-out infinite;
+  }
+  .on-yellow .sk::after { background: linear-gradient(90deg, transparent, var(--bone-hi), transparent); }
+  @keyframes sweep { to { transform: translateX(100%); } }
+  @media (prefers-reduced-motion: reduce) { .sk::after { animation: none; } }
+
+  .loaded .is-loading, .loading .is-loaded { display: none !important; }
+  .fade-in { animation: fade .35s ease both; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---------- home ---------- */
+  .home { background: var(--saffron); flex: 1; display: flex; flex-direction: column; }
+  .home-inner { padding: 6px 12px; display: flex; flex-direction: column; gap: 12px; flex: 1; overflow: hidden; }
+  .seg { display: flex; background: rgba(255,255,255,.55); border-radius: 999px; padding: 4px; }
+  .seg span { flex: 1; text-align: center; font-weight: 700; font-size: 14px; padding: 7px 0; border-radius: 999px; color: var(--char); }
+  .seg span.on { background: var(--red); color: #fff; }
+  .search { display: flex; gap: 10px; }
+  .search .bar { flex: 1; height: 44px; border-radius: 999px; background: #fff; display: flex; align-items: center; padding: 0 16px; color: #8a7b70; font-size: 15px; }
+  .search .flt { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center; }
+  .k-card { background: #fff; border-radius: 18px; padding: 12px; display: flex; gap: 12px; align-items: center; }
+  .k-card .thumb { width: 64px; height: 64px; border-radius: 14px; flex: none; object-fit: cover; }
+  .k-card .meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .k-card b { font-size: 16px; }
+  .k-card .sub { font-size: 13px; color: var(--muted); }
+  .score { width: 44px; height: 44px; border-radius: 50%; background: var(--red); color: var(--saffron); display: grid; place-items: center; font: 800 16px "Bricolage Grotesque", sans-serif; flex: none; box-shadow: inset 0 0 0 3px rgba(255,186,28,.35); }
+  .rank { font: 800 14px "Bricolage Grotesque", sans-serif; color: var(--red); width: 18px; text-align: center; flex: none; }
+  .nav { height: 62px; background: var(--red); display: flex; justify-content: space-around; align-items: center; color: #fff; font-size: 11px; flex: none; }
+  .nav span.on { color: var(--saffron); font-weight: 700; }
+
+  /* ---------- kebab page ---------- */
+  .kp { background: #FAF7F4; flex: 1; display: flex; flex-direction: column; }
+  .kp .hero { height: 220px; position: relative; flex: none; }
+  .kp .hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+  .kp .hero h2 { position: absolute; left: 16px; bottom: 12px; margin: 0; color: #fff; font: 800 26px "Bricolage Grotesque", sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,.6); }
+  .kp .hero.sk { border-radius: 0; }
+  .kp .sec { background: #fff; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .chip { padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .chip.open { background: #E6F4EA; color: #137333; }
+  .chip.gf { background: #FEF7E0; color: #B06000; }
+  .act { flex: 1; height: 54px; border-radius: 12px; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+  .card { background: #fff; border-radius: 16px; margin: 12px 16px 0; padding: 14px; display: flex; flex-direction: column; gap: 9px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .bar-row span { width: 70px; }
+  .bar { flex: 1; height: 10px; border-radius: 6px; background: #eee; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 6px; }
+
+  /* ---------- profile ---------- */
+  .pf { background: var(--saffron); flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 16px; gap: 12px; }
+  .avatar { width: 96px; height: 96px; border-radius: 50%; border: 4px solid #fff; object-fit: cover; background: #fff; }
+  .avatar.sk { border: 4px solid #fff; }
+  .handle { font: 800 22px "Bricolage Grotesque", sans-serif; }
+  .stats { display: flex; width: 100%; background: #fff; border-radius: 18px; padding: 12px 0; }
+  .stats div { flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .stats b { font: 800 20px "Bricolage Grotesque", sans-serif; }
+  .stats small { font-size: 12px; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; width: 100%; }
+  .grid > * { aspect-ratio: 1; border-radius: 8px; object-fit: cover; width: 100%; }
+  .btn { width: 100%; height: 44px; border-radius: 14px; background: var(--red); color: #fff; display: grid; place-items: center; font-weight: 700; }
+</style>
+</head>
+<body class="loading">
+<header class="board-head">
+  <div>
+    <h1>Caricamento con anteprima</h1>
+    <p>While data loads, each screen shows its own shape in soft placeholder blocks, so the layout never jumps and the app feels faster than a lone spinner. Switch between the two states to compare.</p>
+  </div>
+  <div class="switch" role="group" aria-label="Stato">
+    <button type="button" aria-pressed="true" data-state="loading">In caricamento</button>
+    <button type="button" aria-pressed="false" data-state="loaded">Caricato</button>
+  </div>
+</header>
+
+<main class="board">
+  <!-- Home list -->
+  <figure>
+    <div class="phone">
+      <div class="statusbar" style="background:var(--saffron)"><span>12:41</span><span>5G ▮▮▮</span></div>
+      <div class="home on-yellow">
+        <div class="home-inner">
+          <div class="seg"><span class="on">Staff</span><span>Community</span></div>
+          <div class="search"><div class="bar">Cerca un kebabbaro...</div><div class="flt">☰</div></div>
+
+          <div class="is-loading" style="display:flex;flex-direction:column;gap:12px">
+            <div class="k-card"><div class="sk" style="width:18px;height:18px;border-radius:50%"></div><div class="sk thumb"></div><div class="meta"><div class="sk" style="height:14px;width:70%"></div><div class="sk" style="height:11px;width:45%"></div></div><div class="sk" style="width:44px;height:44px;border-radius:50%"></div></div>
+            <div class="k-card"><div class="sk" style="width:18px;height:18px;border-radius:50%"></div><div class="sk thumb"></div><div class="meta"><div class="sk" style="height:14px;width:55%"></div><div class="sk" style="height:11px;width:60%"></div></div><div class="sk" style="width:44px;height:44px;border-radius:50%"></div></div>
+            <div class="k-card"><div class="sk" style="width:18px;height:18px;border-radius:50%"></div><div class="sk thumb"></div><div class="meta"><div class="sk" style="height:14px;width:62%"></div><div class="sk" style="height:11px;width:38%"></div></div><div class="sk" style="width:44px;height:44px;border-radius:50%"></div></div>
+            <div class="k-card"><div class="sk" style="width:18px;height:18px;border-radius:50%"></div><div class="sk thumb"></div><div class="meta"><div class="sk" style="height:14px;width:48%"></div><div class="sk" style="height:11px;width:52%"></div></div><div class="sk" style="width:44px;height:44px;border-radius:50%"></div></div>
+            <div class="k-card"><div class="sk" style="width:18px;height:18px;border-radius:50%"></div><div class="sk thumb"></div><div class="meta"><div class="sk" style="height:14px;width:66%"></div><div class="sk" style="height:11px;width:40%"></div></div><div class="sk" style="width:44px;height:44px;border-radius:50%"></div></div>
+          </div>
+
+          <div class="is-loaded fade-in" style="display:flex;flex-direction:column;gap:12px">
+            <div class="k-card"><span class="rank">1</span><img class="thumb" src="../assets/kebab-card/bella-istanbul-3.webp" alt=""><div class="meta"><b>Bella Istanbul 3</b><span class="sub">Aperto, 2,1 km</span></div><div class="score">4,6</div></div>
+            <div class="k-card"><span class="rank">2</span><img class="thumb" src="../assets/kebab-card/nemrut-doner.webp" alt=""><div class="meta"><b>Nemrut Döner</b><span class="sub">Aperto, 1,4 km</span></div><div class="score">4,5</div></div>
+            <div class="k-card"><span class="rank">3</span><img class="thumb" src="../assets/kebab-card/dr-jimmy.webp" alt=""><div class="meta"><b>Dr Jimmy</b><span class="sub">Chiuso, 3,0 km</span></div><div class="score">4,3</div></div>
+            <div class="k-card"><span class="rank">4</span><img class="thumb" src="../assets/kebab-card/ali-baba-food-house.webp" alt=""><div class="meta"><b>Ali Baba Food House</b><span class="sub">Aperto, 0,8 km</span></div><div class="score">4,2</div></div>
+            <div class="k-card"><span class="rank">5</span><img class="thumb" src="../assets/kebab-card/agra.webp" alt=""><div class="meta"><b>Agra</b><span class="sub">Aperto, 2,6 km</span></div><div class="score">4,0</div></div>
+          </div>
+        </div>
+        <div class="nav"><span class="on">Home</span><span>Mappa</span><span>Aggiungi</span><span>Feed</span><span>Account</span></div>
+      </div>
+    </div>
+    <figcaption><strong>Home list.</strong> Five placeholder cards in the exact card shape: rank, photo, name, distance, rating disc. The search bar and toggle stay usable while loading.</figcaption>
+  </figure>
+
+  <!-- Kebab page -->
+  <figure>
+    <div class="phone">
+      <div class="kp">
+        <div class="is-loading" style="display:flex;flex-direction:column;flex:1">
+          <div class="sk hero" style="height:254px"></div>
+          <div class="sec">
+            <div class="row"><div class="sk" style="width:64px;height:22px;border-radius:999px"></div><div class="sk" style="width:96px;height:22px;border-radius:999px"></div></div>
+            <div class="row"><div class="sk" style="width:46px;height:46px;border-radius:50%"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px"><div class="sk" style="height:13px;width:60%"></div><div class="sk" style="height:11px;width:35%"></div></div></div>
+            <div class="row"><div class="sk act"></div><div class="sk act"></div><div class="sk act"></div><div class="sk act"></div></div>
+          </div>
+          <div class="card"><div class="sk" style="height:14px;width:45%"></div><div class="sk" style="height:11px"></div><div class="sk" style="height:11px;width:85%"></div></div>
+          <div class="card"><div class="sk" style="height:14px;width:35%"></div><div class="sk" style="height:10px"></div><div class="sk" style="height:10px"></div><div class="sk" style="height:10px"></div></div>
+        </div>
+
+        <div class="is-loaded fade-in" style="display:flex;flex-direction:column;flex:1">
+          <div class="hero" style="height:254px"><img src="../assets/kebab-card/nemrut-doner.webp" alt=""><h2>Nemrut Döner</h2></div>
+          <div class="sec">
+            <div class="row"><span class="chip open">Aperto</span><span class="chip gf">Senza glutine</span></div>
+            <div class="row"><div class="score">4,5</div><div style="font-size:13px;color:var(--muted)"><b style="color:var(--char)">Voto dello staff Kebabbo</b><br>1,4 km da te</div></div>
+            <div class="row"><div class="act" style="background:rgba(26,115,232,.08);color:#1A73E8">Mappa</div><div class="act" style="background:rgba(187,0,0,.07);color:var(--red)">Recensisci</div><div class="act" style="background:rgba(227,116,0,.08);color:#E37400">Foto</div><div class="act" style="background:var(--red);color:#fff">Condividi</div></div>
+          </div>
+          <div class="card"><b>La recensione di Kebabbo</b><span style="font-size:14px;color:#5b4a40;font-style:italic">Carne di agnello e manzo, pane cotto al momento, piccante vero.</span></div>
+          <div class="card"><b>Valutazione</b>
+            <div class="bar-row"><span>Qualità</span><div class="bar"><i style="width:92%;background:#4CAF50"></i></div>4,6</div>
+            <div class="bar-row"><span>Prezzo</span><div class="bar"><i style="width:80%;background:#2196F3"></i></div>4,0</div>
+            <div class="bar-row"><span>Quantità</span><div class="bar"><i style="width:88%;background:#FF9800"></i></div>4,4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><strong>Kebab page.</strong> Photo, chips, rating, the four actions and the first two cards appear as blocks; the real page fades in over them in one step.</figcaption>
+  </figure>
+
+  <!-- Profile -->
+  <figure>
+    <div class="phone">
+      <div class="statusbar" style="background:var(--saffron)"><span>12:41</span><span>5G ▮▮▮</span></div>
+      <div class="pf on-yellow">
+        <div class="is-loading" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <div class="sk avatar" style="width:96px;height:96px;border-radius:50%"></div>
+          <div class="sk" style="height:20px;width:40%"></div>
+          <div class="stats"><div><div class="sk" style="height:18px;width:26px"></div><div class="sk" style="height:10px;width:50px"></div></div><div><div class="sk" style="height:18px;width:26px"></div><div class="sk" style="height:10px;width:50px"></div></div><div><div class="sk" style="height:18px;width:26px"></div><div class="sk" style="height:10px;width:50px"></div></div></div>
+          <div class="sk" style="height:44px;width:100%;border-radius:14px"></div>
+          <div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+        </div>
+        <div class="is-loaded fade-in" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <img class="avatar" src="../assets/images/matteo.jpg" alt="">
+          <div class="handle">@matteo</div>
+          <div class="stats"><div><b>24</b><small>Recensioni</small></div><div><b>11</b><small>Post</small></div><div><b>87</b><small>Follower</small></div></div>
+          <div class="btn">Segui</div>
+          <div class="grid"><img src="../assets/kebab-card/taj-mahal.webp" alt=""><img src="../assets/kebab-card/beirut-snack.webp" alt=""><img src="../assets/kebab-card/to-steki.webp" alt=""><img src="../assets/kebab-card/parsit.webp" alt=""><img src="../assets/kebab-card/ciao-kebab.webp" alt=""><img src="../assets/kebab-card/sham-cibo-siriano.webp" alt=""></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><strong>Profile.</strong> On the yellow background the placeholders are tinted gold rather than grey, so loading still looks like Kebabbo.</figcaption>
+  </figure>
+</main>
+
+<script>
+  var buttons = document.querySelectorAll('[data-state]');
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.body.className = b.dataset.state;
+      buttons.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+    });
+  });
+</script>
+</body>
+</html>
