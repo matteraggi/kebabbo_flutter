@@ -89,22 +89,72 @@
       transition: opacity .3s ease;
     }
     #seo-splash.hide { opacity: 0; pointer-events: none; }
-    .loader { position: relative; width: 132px; height: 132px; }
-    .loader img {
-      position: absolute; inset: 18px; width: 96px; height: 96px;
-      animation: pulse 1.6s ease-in-out infinite;
+    #seo-splash h1 { font-size: 22px; margin: 22px 0 0; color: #BB0000; font-weight: 800; }
+    #seo-splash p { max-width: 420px; margin: 6px 0 0; font-size: 14px; line-height: 1.4; opacity: .8; }
+
+    /* Spiedo di kebab che gira, con un coltello che lo affetta (come nell'app). */
+    .spit { position: relative; width: 120px; height: 170px; }
+    .spit .rod { position: absolute; left: 37px; top: 0; width: 6px; height: 164px; border-radius: 3px;
+      background: linear-gradient(90deg, #8f8f8f, #e7e7e7, #8f8f8f); }
+    .spit .cap { position: absolute; left: 30px; top: -2px; width: 20px; height: 9px; border-radius: 4px; background: #9a9a9a; }
+    .spit .base { position: absolute; left: 10px; bottom: 0; width: 60px; height: 8px; border-radius: 4px; background: #7d7d7d; }
+    .spit .cone {
+      position: absolute; left: 8px; top: 14px; width: 64px; height: 127px;
+      clip-path: polygon(3% 0, 97% 0, 100% 7%, 78% 100%, 22% 100%, 0 7%);
+      background:
+        radial-gradient(ellipse 60% 120% at 50% 40%, rgba(255,214,150,.25), transparent 60%),
+        linear-gradient(90deg, rgba(40,10,0,.55), transparent 28%, transparent 72%, rgba(40,10,0,.6)),
+        repeating-linear-gradient(176deg, transparent 0 10px, rgba(60,15,0,.35) 10px 12px),
+        repeating-linear-gradient(90deg, #B95E24 0 11px, #A2481A 11px 18px, #CF7A36 18px 23px, #6E2A0C 23px 26px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 52px 100%;
+      animation: turn 0.8s linear infinite;
     }
-    .loader::before {
-      content: ""; position: absolute; inset: 0; border-radius: 50%;
-      border: 5px solid rgba(187, 0, 0, .18); border-top-color: #BB0000;
-      animation: spin .9s linear infinite;
+    /* Sciabola: inclinata verso l'alto, la lama passa dietro la carne. */
+    .spit .saber { position: absolute; left: 0; top: 0; width: 0; height: 0; animation: slice 1.6s ease-in-out infinite; }
+    .spit .saber .blade { position: absolute; left: -76px; top: -12px; width: 76px; height: 17px;
+      clip-path: polygon(100% 50%, 55% 38%, 0 0, 48% 78%, 100% 96%);
+      background: linear-gradient(180deg, #f7f7f7, #c3c8ce 60%, #8d949b); }
+    .spit .saber .guard { position: absolute; left: 0; top: -8px; width: 5px; height: 16px; border-radius: 2px; background: #D4A017; }
+    .spit .saber .grip { position: absolute; left: 5px; top: -4px; width: 20px; height: 8px; border-radius: 4px; background: #3A2416; }
+    .spit .saber .grip::after { content: ""; position: absolute; right: -5px; top: -1px; width: 9px; height: 9px; border-radius: 50%; background: #D4A017; }
+    .spit .slice { position: absolute; left: 0; top: 0; width: 12px; height: 5px; border-radius: 50%; background: #CF7A36; opacity: 0;
+      animation: fall 1.6s ease-in infinite; }
+    .spit .slice:nth-of-type(2) { animation-delay: .2s; background: #B95E24; width: 9px; height: 4px; }
+    .spit .slice:nth-of-type(3) { animation-delay: .4s; animation-name: fall2; }
+    .spit .slice:nth-of-type(4) { animation-delay: .6s; background: #A2481A; width: 14px; height: 6px; }
+    .spit .slice:nth-of-type(5) { animation-delay: .8s; animation-name: fall3; width: 10px; }
+    .spit .slice:nth-of-type(6) { animation-delay: 1s; background: #B95E24; animation-name: fall2; }
+    .spit .slice:nth-of-type(7) { animation-delay: 1.2s; width: 8px; height: 4px; }
+    .spit .slice:nth-of-type(8) { animation-delay: 1.4s; background: #A2481A; animation-name: fall3; width: 13px; }
+    @keyframes turn {
+      from { background-position: 0 0, 0 0, 0 0, 0 0; }
+      to { background-position: 0 0, 0 0, 0 0, 52px 0; }
     }
-    #seo-splash h1 { font-size: 18px; margin: 20px 0 0; color: #BB0000; font-weight: 700; }
-    #seo-splash p { max-width: 420px; margin: 6px 0 0; font-size: 13px; line-height: 1.4; opacity: .75; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+    /* il coltello scende lungo il lato destro del cono e risale veloce */
+    @keyframes slice {
+      0% { transform: translate(84px, 30px) rotate(22deg); }
+      78% { transform: translate(70px, 122px) rotate(22deg); }
+      100% { transform: translate(84px, 30px) rotate(22deg); }
+    }
+    @keyframes fall {
+      0% { opacity: 0; transform: translate(70px, 50px) rotate(0); }
+      12% { opacity: 1; }
+      100% { opacity: 0; transform: translate(84px, 160px) rotate(220deg); }
+    }
+    @keyframes fall2 {
+      0% { opacity: 0; transform: translate(66px, 85px) rotate(0); }
+      12% { opacity: 1; }
+      100% { opacity: 0; transform: translate(90px, 165px) rotate(-200deg); }
+    }
+    @keyframes fall3 {
+      0% { opacity: 0; transform: translate(62px, 110px) rotate(0); }
+      12% { opacity: 1; }
+      100% { opacity: 0; transform: translate(74px, 168px) rotate(260deg); }
+    }
     @media (prefers-reduced-motion: reduce) {
-      .loader img, .loader::before { animation-duration: 3s; }
+      .spit .cone { animation-duration: 4s; }
+      .spit .saber, .spit .slice { animation: none; }
+      .spit .saber { transform: translate(78px, 80px) rotate(22deg); }
     }
   </style>
 </head>
@@ -112,13 +162,40 @@
   <!-- Contenuto HTML reale per crawler e anteprime (Flutter disegna su canvas).
        Viene rimosso quando l'app Flutter mostra il primo frame. -->
   <main id="seo-splash" aria-busy="true">
-    <div class="loader" role="progressbar" aria-label="Caricamento">
-      <img src="icons/Icon-192.png" alt="Kebabbo">
+    <div class="spit" role="progressbar" aria-label="Caricamento">
+      <span class="rod"></span><span class="cap"></span>
+      <span class="saber"><span class="blade"></span><span class="guard"></span><span class="grip"></span></span>
+      <span class="cone"></span>
+      <span class="slice"></span><span class="slice"></span><span class="slice"></span><span class="slice"></span>
+      <span class="slice"></span><span class="slice"></span><span class="slice"></span><span class="slice"></span>
+      <span class="base"></span>
     </div>
-    <h1>Kebabbo – I migliori kebab di Bologna</h1>
-    <p>Classifiche, recensioni della community e mappa dei kebabbari.</p>
+    <h1 id="splash-title">Kebabbo – I migliori kebab di Bologna</h1>
+    <p id="splash-text">Classifiche, recensioni della community e mappa dei kebabbari.</p>
   </main>
   <script>
+    // Testo nella lingua del visitatore, come nell'app. Al ritorno dall'accesso
+    // con Google (?code=...) mostra lo stesso messaggio del login.
+    (function () {
+      var t = {
+        it: ['Kebabbo – I migliori kebab di Bologna', 'Classifiche, recensioni della community e mappa dei kebabbari.',
+             'Ti stiamo facendo entrare', 'Un attimo, stiamo preparando il tuo profilo.'],
+        en: ["Kebabbo – Bologna's best kebabs", 'Rankings, community reviews and a map of kebab places.',
+             'Signing you in', "One moment, we're getting your profile ready."],
+        de: ['Kebabbo – die besten Kebabs in Bologna', 'Ranglisten, Community-Bewertungen und eine Karte der Kebab-Läden.',
+             'Du wirst angemeldet', 'Einen Moment, wir bereiten dein Profil vor.'],
+        es: ['Kebabbo – los mejores kebabs de Bolonia', 'Clasificaciones, reseñas de la comunidad y mapa de los locales de kebab.',
+             'Iniciando sesión', 'Un momento, estamos preparando tu perfil.'],
+        fr: ['Kebabbo – les meilleurs kebabs de Bologne', 'Classements, avis de la communauté et carte des kebabs.',
+             'Connexion en cours', 'Un instant, nous préparons votre profil.'],
+        pt: ['Kebabbo – os melhores kebabs de Bolonha', 'Rankings, avaliações da comunidade e mapa dos lugares de kebab.',
+             'Entrando na sua conta', 'Um momento, estamos preparando seu perfil.']
+      };
+      var m = t[(navigator.language || 'en').slice(0, 2)] || t.en;
+      var login = /[?&]code=/.test(location.search);
+      document.getElementById('splash-title').textContent = login ? m[2] : m[0];
+      document.getElementById('splash-text').textContent = login ? m[3] : m[1];
+    })();
     window.addEventListener('flutter-first-frame', function () {
       var splash = document.getElementById('seo-splash');
       if (!splash) return;

@@ -1,9 +1,8 @@
 {
-    "rewrites": [
-      {
-        "source": "/(.*)",   
-        "destination": "/" 
-      }
-    ]
-  }
-  
+  "rewrites": [
+    { "source": "/kebab", "destination": "/api/kebab" },
+    { "source": "/kebab/:slug", "destination": "/api/kebab?slug=:slug" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/((?!api/).*)", "destination": "/" }
+  ]
+}
