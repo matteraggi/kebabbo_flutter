@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/pages/tcg/tcg_hub_page.dart';
 import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/utils/app_theme.dart';
 
 class TcgProfilePreview extends StatefulWidget {
   final String userId;
@@ -100,7 +101,7 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                               Container(
                                 padding: const EdgeInsets.all(7),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFFBA1C)
+                                  color: AppColors.saffron
                                       .withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -125,7 +126,7 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 3),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFBA1C),
+                              color: AppColors.saffron,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -186,8 +187,8 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                           value: progress,
                           minHeight: 6,
                           backgroundColor: Colors.grey[200],
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                              Color(0xFFFFBA1C)),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.saffron),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -216,7 +217,7 @@ class _TcgProfilePreviewState extends State<TcgProfilePreview> {
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: hasPacks
-                                    ? const Color(0xFFFFBA1C)
+                                    ? AppColors.saffron
                                         .withValues(alpha: 0.6)
                                     : Colors.grey[300]!,
                                 width: 1,

@@ -62,7 +62,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
 
   String _formatKebabName(String path) {
     if (path.isEmpty) return '';
-    final fileName = path.split('/').last.replaceAll('.png', '');
+    final fileName = path.split('/').last.replaceAll(RegExp(r'\.(png|webp)$'), '');
     return fileName
         .split('-')
         .where((word) => word.isNotEmpty)
@@ -383,7 +383,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                     offset: const Offset(0, 10),
                   ),
                   BoxShadow(
-                    color: const Color(0xFFFFBA1C).withValues(alpha: 0.28),
+                    color: AppColors.saffron.withValues(alpha: 0.28),
                     blurRadius: 16,
                     spreadRadius: 2,
                     offset: const Offset(0, 0),
@@ -435,7 +435,7 @@ class RotationSceneV1State extends State<RotationSceneV1> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(borderRadius),
                     border: Border.all(
-                      color: const Color(0xFFFFBA1C).withValues(alpha: 0.7),
+                      color: AppColors.saffron.withValues(alpha: 0.7),
                       width: 2.5,
                     ),
                   ),

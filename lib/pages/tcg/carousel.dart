@@ -5,6 +5,7 @@ import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/pages/tcg/rotation_scene_v1.dart';
 import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class KebabCarouselPage extends StatefulWidget {
   const KebabCarouselPage({super.key});
@@ -50,7 +51,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
                     .toString()
                     .toLowerCase()
                     .replaceAll(' ', '-');
-                kebabList.add('assets/kebab-card/$kebabberId.png');
+                kebabList.add('assets/kebab-card/$kebabberId.webp');
               }
             }
 
@@ -110,7 +111,7 @@ class _KebabCarouselPageState extends State<KebabCarouselPage> {
         ],
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const KebabLoader()
           : imagePaths.isEmpty
               ? Center(
                   child: Column(

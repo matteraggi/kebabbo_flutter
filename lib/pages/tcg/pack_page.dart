@@ -152,8 +152,8 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
   static List<_Particle> _generateParticles(int count) {
     final rand = math.Random(42);
     final colors = [
-      const Color(0xFFFFD700), // Gold
-      const Color(0xFFFFBA1C), // Kebabbo Yellow
+      AppColors.gold, // Gold
+      AppColors.saffron, // Kebabbo Yellow
       const Color(0xFFFF5252), // Bright Red
       const Color(0xFFFFFFFF), // White flash
       const Color(0xFFFF9100), // Amber
@@ -274,7 +274,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
       // Precache the image before starting animation
       if (mounted) {
         await precacheImage(
-            AssetImage('assets/kebab-card/$imageName.png'), context);
+            AssetImage('assets/kebab-card/$imageName.webp'), context);
       }
 
       if (!mounted) return;
@@ -369,7 +369,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: _availablePacks > 0
-                    ? const Color(0xFFFFBA1C)
+                    ? AppColors.saffron
                     : Colors.white24,
                 width: 1,
               ),
@@ -381,7 +381,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                   Icons.card_giftcard,
                   size: 16,
                   color: _availablePacks > 0
-                      ? const Color(0xFFFFBA1C)
+                      ? AppColors.saffron
                       : Colors.white60,
                 ),
                 const SizedBox(width: 6),
@@ -514,7 +514,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                             BorderRadius.circular(16),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: const Color(0xFFFFBA1C)
+                                            color: AppColors.saffron
                                                 .withValues(alpha: 0.35 * popT),
                                             blurRadius: 28,
                                             spreadRadius: 4,
@@ -533,7 +533,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                             borderRadius:
                                                 BorderRadius.circular(14),
                                             child: Image.asset(
-                                              'assets/kebab-card/$_kebabName.png',
+                                              'assets/kebab-card/$_kebabName.webp',
                                               width: cardWidth,
                                               height: cardHeight,
                                               fit: BoxFit.contain,
@@ -729,7 +729,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                         gradient: const RadialGradient(
                                           colors: [
                                             Colors.white,
-                                            Color(0xFFFFD700),
+                                            AppColors.gold,
                                             Colors.transparent,
                                           ],
                                           stops: [0.0, 0.4, 1.0],
@@ -765,12 +765,12 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                             color: Colors.black.withValues(alpha: 0.55),
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(
-                              color: const Color(0xFFFFBA1C).withValues(alpha: 0.6),
+                              color: AppColors.saffron.withValues(alpha: 0.6),
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFFFBA1C).withValues(alpha: 0.2),
+                                color: AppColors.saffron.withValues(alpha: 0.2),
                                 blurRadius: 12,
                               ),
                             ],
@@ -783,14 +783,14 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                   width: 18,
                                   height: 18,
                                   child: CircularProgressIndicator(
-                                    color: Color(0xFFFFBA1C),
+                                    color: AppColors.saffron,
                                     strokeWidth: 2,
                                   ),
                                 )
                               else
                                 const Icon(
                                   Icons.touch_app,
-                                  color: Color(0xFFFFBA1C),
+                                  color: AppColors.saffron,
                                   size: 20,
                                 ),
                               const SizedBox(width: 10),
@@ -840,19 +840,19 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   color: _isDuplicate
                                       ? const Color(0xFF232326)
-                                      : const Color(0xFF1B5E20),
+                                      : AppColors.successDark,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: _isDuplicate
-                                        ? const Color(0xFFFFB300)
-                                        : const Color(0xFF81C784),
+                                        ? AppColors.amber
+                                        : AppColors.successLight,
                                     width: 1.2,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: (_isDuplicate
-                                              ? const Color(0xFFFFB300)
-                                              : const Color(0xFF81C784))
+                                              ? AppColors.amber
+                                              : AppColors.successLight)
                                           .withValues(alpha: 0.35),
                                       blurRadius: 8,
                                     ),
@@ -866,7 +866,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                           ? Icons.repeat_rounded
                                           : Icons.auto_awesome,
                                       color: _isDuplicate
-                                          ? const Color(0xFFFFB300)
+                                          ? AppColors.amber
                                           : Colors.white,
                                       size: 15,
                                     ),
@@ -877,7 +877,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                           : S.of(context).new_card_unlocked,
                                       style: TextStyle(
                                         color: _isDuplicate
-                                            ? const Color(0xFFFFB300)
+                                            ? AppColors.amber
                                             : Colors.white,
                                         fontWeight: FontWeight.w900,
                                         fontSize: 12,
@@ -900,7 +900,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                             Color(0xFFBDBDBD),
                                           ]
                                         : const [
-                                            Color(0xFFFFBA1C),
+                                            AppColors.saffron,
                                             Color(0xFFFF8C00),
                                           ],
                                   ),
@@ -909,7 +909,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                     BoxShadow(
                                       color: (_isDuplicate
                                               ? Colors.white24
-                                              : const Color(0xFFFFBA1C))
+                                              : AppColors.saffron)
                                           .withValues(alpha: 0.4),
                                       blurRadius: 10,
                                       spreadRadius: 1,
@@ -976,7 +976,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                           borderRadius:
                                               BorderRadius.circular(28),
                                           side: const BorderSide(
-                                            color: Color(0xFFFFBA1C),
+                                            color: AppColors.saffron,
                                             width: 1.5,
                                           ),
                                         ),
@@ -989,7 +989,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                         children: [
                                           const Icon(Icons.replay,
                                               size: 18,
-                                              color: Color(0xFFFFBA1C)),
+                                              color: AppColors.saffron),
                                           const SizedBox(width: 6),
                                           Text(
                                             S.of(context).open_second_pack(_availablePacks.toString()),
@@ -1014,7 +1014,7 @@ class PackPageState extends State<PackPage> with TickerProviderStateMixin {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(28),
                                       side: const BorderSide(
-                                        color: Color(0xFFFFBA1C),
+                                        color: AppColors.saffron,
                                         width: 1.5,
                                       ),
                                     ),
@@ -1116,7 +1116,7 @@ class _SunburstPainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..shader = RadialGradient(
         colors: [
-          const Color(0xFFFFD700).withValues(alpha: 0.40),
+          AppColors.gold.withValues(alpha: 0.40),
           const Color(0xFFFF8C00).withValues(alpha: 0.18),
           Colors.transparent,
         ],

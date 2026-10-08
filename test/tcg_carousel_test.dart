@@ -9,9 +9,9 @@ void main() {
     testWidgets('Renders CoverFlow carousel with cards',
         (WidgetTester tester) async {
       final List<String> testCards = [
-        'assets/kebab-card/ali-baba-food-house.png',
-        'assets/kebab-card/baba-turkish.png',
-        'assets/kebab-card/dr-jimmy.png',
+        'assets/kebab-card/ali-baba-food-house.webp',
+        'assets/kebab-card/baba-turkish.webp',
+        'assets/kebab-card/dr-jimmy.webp',
       ];
 
       await tester.pumpWidget(
@@ -34,7 +34,7 @@ void main() {
     testWidgets('Renders cleanly with a single card',
         (WidgetTester tester) async {
       final List<String> testCards = [
-        'assets/kebab-card/dr-jimmy.png',
+        'assets/kebab-card/dr-jimmy.webp',
       ];
 
       await tester.pumpWidget(

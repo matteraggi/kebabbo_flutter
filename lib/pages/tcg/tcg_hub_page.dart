@@ -7,6 +7,8 @@ import 'package:kebabbo_flutter/pages/tcg/pack_page.dart';
 import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/utils/app_theme.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class TcgHubPage extends StatefulWidget {
   const TcgHubPage({super.key});
@@ -91,7 +93,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
         centerTitle: true,
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const KebabLoader()
           : SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -148,7 +150,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.style, color: Color(0xFFFFD700), size: 26),
+                    Icon(Icons.style, color: AppColors.gold, size: 26),
                     SizedBox(width: 8),
                     Text(
                       S.of(context).card_collection,
@@ -166,7 +168,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFD700),
+                        color: AppColors.gold,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -225,7 +227,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
                 minHeight: 8,
                 backgroundColor: Colors.white12,
                 valueColor:
-                    const AlwaysStoppedAnimation<Color>(Color(0xFFFFBA1C)),
+                    AlwaysStoppedAnimation<Color>(AppColors.saffron),
               ),
             ),
             const SizedBox(height: 14),
@@ -234,7 +236,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
               children: [
                 Icon(Icons.view_carousel,
                     size: 16,
-                    color: const Color(0xFFFFD700).withValues(alpha: 0.9)),
+                    color: AppColors.gold.withValues(alpha: 0.9)),
                 const SizedBox(width: 6),
                 Text(
                   S.of(context).tap_to_browse_album,
@@ -447,7 +449,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
         color: isReady ? Colors.white : Colors.black.withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isReady ? const Color(0xFFFFBA1C) : Colors.black12,
+          color: isReady ? AppColors.saffron : Colors.black12,
           width: 1.2,
         ),
         boxShadow: isReady
@@ -466,7 +468,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
           Icon(
             icon,
             size: 16,
-            color: isReady ? const Color(0xFF2E7D32) : Colors.black54,
+            color: isReady ? AppColors.success : Colors.black54,
           ),
           const SizedBox(width: 8),
           Column(
@@ -485,7 +487,7 @@ class _TcgHubPageState extends State<TcgHubPage> {
                 statusText,
                 style: TextStyle(
                   fontSize: 13,
-                  color: isReady ? const Color(0xFF1B5E20) : Colors.black87,
+                  color: isReady ? AppColors.successDark : Colors.black87,
                   fontWeight: FontWeight.w800,
                 ),
               ),
