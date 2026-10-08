@@ -807,5 +807,46 @@
   "user_no_reviews_desc": "Questo utente non ha ancora recensito nessun kebab.",
   "see_place": "Vedi locale",
   "staff_kebabbo": "Staff Kebabbo",
-  "origin_label": "Origine"
+  "origin_label": "Origine",
+  "intro_1_title": "Trova il tuo kebab",
+  "intro_1_text": "Classifiche dello staff e della community, mappa con i voti e filtri per distanza, prezzo e orari.",
+  "intro_2_title": "Recensisci e condividi",
+  "intro_2_text": "Vota qualità, prezzo e ingredienti, carica le foto del tuo piatto e aggiungi i locali che mancano.",
+  "intro_3_title": "Colleziona medaglie e carte",
+  "intro_3_text": "Ogni recensione e ogni post sblocca medaglie, e ogni 12 ore puoi aprire un pacchetto di carte Kebabbo.",
+  "intro_next": "Avanti",
+  "intro_start": "Inizia",
+  "intro_skip": "Salta",
+  "share_action": "Condividi",
+  "share_this_kebab": "Condividi questo kebab",
+  "share_more": "Altro",
+  "copy_link": "Copia link",
+  "copy": "Copia",
+  "link_copied": "Link copiato",
+  "share_message": "{name}: {rating} su Kebabbo 🌯",
+  "@share_message": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "share_rating_line": "Voto Kebabbo {rating}",
+  "@share_rating_line": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "login_loader_title": "Ti stiamo facendo entrare",
+  "login_loader_subtitle": "Un attimo, stiamo preparando il tuo profilo.",
+  "login_step_auth": "Accesso",
+  "login_step_profile": "Profilo, preferiti e medaglie",
+  "loading": "Caricamento",
+  "loader_title": "Kebabbo – I migliori kebab di Bologna",
+  "loader_subtitle": "Classifiche, recensioni della community e mappa dei kebabbari."
 }

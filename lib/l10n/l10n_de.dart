@@ -1695,4 +1695,85 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get origin_label => 'Herkunft';
+
+  @override
+  String get intro_1_title => 'Finde deinen Kebab';
+
+  @override
+  String get intro_1_text =>
+      'Ranglisten vom Team und der Community, eine Karte mit Bewertungen und Filter für Entfernung, Preis und Öffnungszeiten.';
+
+  @override
+  String get intro_2_title => 'Bewerten und teilen';
+
+  @override
+  String get intro_2_text =>
+      'Bewerte Qualität, Preis und Zutaten, poste Fotos deines Gerichts und füge fehlende Läden hinzu.';
+
+  @override
+  String get intro_3_title => 'Sammle Medaillen und Karten';
+
+  @override
+  String get intro_3_text =>
+      'Jede Bewertung und jeder Post schaltet Medaillen frei, und alle 12 Stunden kannst du ein Paket Kebabbo-Karten öffnen.';
+
+  @override
+  String get intro_next => 'Weiter';
+
+  @override
+  String get intro_start => 'Los geht\'s';
+
+  @override
+  String get intro_skip => 'Überspringen';
+
+  @override
+  String get share_action => 'Teilen';
+
+  @override
+  String get share_this_kebab => 'Diesen Kebab teilen';
+
+  @override
+  String get share_more => 'Mehr';
+
+  @override
+  String get copy_link => 'Link kopieren';
+
+  @override
+  String get copy => 'Kopieren';
+
+  @override
+  String get link_copied => 'Link kopiert';
+
+  @override
+  String share_message(String name, String rating) {
+    return '$name: $rating auf Kebabbo 🌯';
+  }
+
+  @override
+  String share_rating_line(String rating) {
+    return 'Kebabbo-Bewertung $rating';
+  }
+
+  @override
+  String get login_loader_title => 'Du wirst angemeldet';
+
+  @override
+  String get login_loader_subtitle =>
+      'Einen Moment, wir bereiten dein Profil vor.';
+
+  @override
+  String get login_step_auth => 'Anmeldung';
+
+  @override
+  String get login_step_profile => 'Profil, Favoriten und Medaillen';
+
+  @override
+  String get loading => 'Wird geladen';
+
+  @override
+  String get loader_title => 'Kebabbo – die besten Kebabs in Bologna';
+
+  @override
+  String get loader_subtitle =>
+      'Ranglisten, Community-Bewertungen und eine Karte der Kebab-Läden.';
 }

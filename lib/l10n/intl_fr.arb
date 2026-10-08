@@ -807,5 +807,46 @@
   "user_no_reviews_desc": "Cet utilisateur n'a encore évalué aucun kebab.",
   "see_place": "Voir le lieu",
   "staff_kebabbo": "Équipe Kebabbo",
-  "origin_label": "Origine"
+  "origin_label": "Origine",
+  "intro_1_title": "Trouvez votre kebab",
+  "intro_1_text": "Classements de l'équipe et de la communauté, une carte avec les notes et des filtres par distance, prix et horaires.",
+  "intro_2_title": "Évaluez et partagez",
+  "intro_2_text": "Notez la qualité, le prix et les ingrédients, publiez des photos de votre plat et ajoutez les lieux manquants.",
+  "intro_3_title": "Collectionnez médailles et cartes",
+  "intro_3_text": "Chaque avis et chaque post débloque des médailles, et toutes les 12 heures vous pouvez ouvrir un pack de cartes Kebabbo.",
+  "intro_next": "Suivant",
+  "intro_start": "Commencer",
+  "intro_skip": "Passer",
+  "share_action": "Partager",
+  "share_this_kebab": "Partager ce kebab",
+  "share_more": "Plus",
+  "copy_link": "Copier le lien",
+  "copy": "Copier",
+  "link_copied": "Lien copié",
+  "share_message": "{name} : {rating} sur Kebabbo 🌯",
+  "@share_message": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "share_rating_line": "Note Kebabbo {rating}",
+  "@share_rating_line": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "login_loader_title": "Connexion en cours",
+  "login_loader_subtitle": "Un instant, nous préparons votre profil.",
+  "login_step_auth": "Connexion",
+  "login_step_profile": "Profil, favoris et médailles",
+  "loading": "Chargement",
+  "loader_title": "Kebabbo – les meilleurs kebabs de Bologne",
+  "loader_subtitle": "Classements, avis de la communauté et carte des kebabs."
 }

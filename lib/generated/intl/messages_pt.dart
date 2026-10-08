@@ -94,17 +94,21 @@ class MessageLookup extends MessageLookupByLibrary {
   ) =>
       "Acabei de avaliar o kebab no ${kebabName}!\n\nQualidade: ${qualityRating}\nQuantidade: ${quantityRating}\nMenu: ${menuRating}\nPreço: ${priceRating}\nDiversão: ${funRating}\n\n${description}";
 
-  static String m31(count) => "Fotos (${count})";
+  static String m31(name, rating) => "${name}: ${rating} no Kebabbo 🌯";
 
-  static String m32(count) => "Avaliações (${count})";
+  static String m32(rating) => "Nota Kebabbo ${rating}";
 
-  static String m33(count) => "${count} cartas TCG";
+  static String m33(count) => "Fotos (${count})";
 
-  static String m34(unlocked, total) => "${unlocked} de ${total} desbloqueadas";
+  static String m34(count) => "Avaliações (${count})";
 
-  static String m35(error) => "Erro ao enviar: ${error}";
+  static String m35(count) => "${count} cartas TCG";
 
-  static String m36(count) => "Usuários (${count})";
+  static String m36(unlocked, total) => "${unlocked} de ${total} desbloqueadas";
+
+  static String m37(error) => "Erro ao enviar: ${error}";
+
+  static String m38(count) => "Usuários (${count})";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -286,6 +290,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "cooking_title_reroll": MessageLookupByLibrary.simpleMessage(
       "Buscando alternativa",
     ),
+    "copy": MessageLookupByLibrary.simpleMessage("Copiar"),
+    "copy_link": MessageLookupByLibrary.simpleMessage("Copiar link"),
     "could_not_open_link": MessageLookupByLibrary.simpleMessage(
       "Não foi possível abrir o link.",
     ),
@@ -514,6 +520,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Comparação de Ingredientes",
     ),
     "inserted_by": MessageLookupByLibrary.simpleMessage("Adicionado por"),
+    "intro_1_text": MessageLookupByLibrary.simpleMessage(
+      "Rankings da equipe e da comunidade, um mapa com as notas e filtros por distância, preço e horário.",
+    ),
+    "intro_1_title": MessageLookupByLibrary.simpleMessage("Encontre seu kebab"),
+    "intro_2_text": MessageLookupByLibrary.simpleMessage(
+      "Avalie qualidade, preço e ingredientes, publique fotos do seu prato e adicione os locais que faltam.",
+    ),
+    "intro_2_title": MessageLookupByLibrary.simpleMessage(
+      "Avalie e compartilhe",
+    ),
+    "intro_3_text": MessageLookupByLibrary.simpleMessage(
+      "Cada avaliação e post desbloqueia medalhas, e a cada 12 horas você pode abrir um pacote de cartas Kebabbo.",
+    ),
+    "intro_3_title": MessageLookupByLibrary.simpleMessage(
+      "Colecione medalhas e cartas",
+    ),
+    "intro_next": MessageLookupByLibrary.simpleMessage("Próximo"),
+    "intro_skip": MessageLookupByLibrary.simpleMessage("Pular"),
+    "intro_start": MessageLookupByLibrary.simpleMessage("Começar"),
     "invia": MessageLookupByLibrary.simpleMessage("Enviar"),
     "it_looks_like_the_review_you_are_trying_to_access_does_not_exist_please_check_the_link_and_try_again":
         MessageLookupByLibrary.simpleMessage(
@@ -557,6 +582,14 @@ class MessageLookup extends MessageLookupByLibrary {
           "Sua solução para o almoço universitário",
         ),
     "legends": MessageLookupByLibrary.simpleMessage("Lendas"),
+    "link_copied": MessageLookupByLibrary.simpleMessage("Link copiado"),
+    "loader_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Rankings, avaliações da comunidade e mapa dos lugares de kebab.",
+    ),
+    "loader_title": MessageLookupByLibrary.simpleMessage(
+      "Kebabbo – os melhores kebabs de Bolonha",
+    ),
+    "loading": MessageLookupByLibrary.simpleMessage("Carregando"),
     "location_permission_denied": MessageLookupByLibrary.simpleMessage(
       "Permissão de localização negada.",
     ),
@@ -574,8 +607,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "logged_in": MessageLookupByLibrary.simpleMessage("Conectado"),
     "login": MessageLookupByLibrary.simpleMessage("Entrar"),
+    "login_loader_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Um momento, estamos preparando seu perfil.",
+    ),
+    "login_loader_title": MessageLookupByLibrary.simpleMessage(
+      "Entrando na sua conta",
+    ),
     "login_required_section": MessageLookupByLibrary.simpleMessage(
       "Você deve fazer login para usar esta seção.",
+    ),
+    "login_step_auth": MessageLookupByLibrary.simpleMessage("Login"),
+    "login_step_profile": MessageLookupByLibrary.simpleMessage(
+      "Perfil, favoritos e medalhas",
     ),
     "login_tagline": MessageLookupByLibrary.simpleMessage(
       "Entre na comunidade para descobrir e avaliar os melhores kebabs",
@@ -1053,6 +1096,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "session_expired": MessageLookupByLibrary.simpleMessage(
       "Sessão expirada. Faça login novamente.",
     ),
+    "share_action": MessageLookupByLibrary.simpleMessage("Compartilhar"),
+    "share_message": m31,
+    "share_more": MessageLookupByLibrary.simpleMessage("Mais"),
+    "share_rating_line": m32,
+    "share_this_kebab": MessageLookupByLibrary.simpleMessage(
+      "Compartilhe este kebab",
+    ),
     "show_all_distances": MessageLookupByLibrary.simpleMessage("Mostrar todos"),
     "sign_up": MessageLookupByLibrary.simpleMessage("Inscrever-se"),
     "sign_up_with_google": MessageLookupByLibrary.simpleMessage(
@@ -1084,8 +1134,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Deslize para navegar na coleção",
     ),
     "tab_overview": MessageLookupByLibrary.simpleMessage("Visão geral"),
-    "tab_photos": m31,
-    "tab_reviews": m32,
+    "tab_photos": m33,
+    "tab_reviews": m34,
     "tag_kebab_pill": MessageLookupByLibrary.simpleMessage("Kebab 🌯"),
     "tag_sandwich_pill": MessageLookupByLibrary.simpleMessage(
       "Sanduicheria 🥪",
@@ -1103,7 +1153,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Toque para selecionar uma foto",
     ),
     "tcg_album": MessageLookupByLibrary.simpleMessage("Álbum de cartas TCG"),
-    "tcg_cards_count": m33,
+    "tcg_cards_count": m35,
     "ten_posts": MessageLookupByLibrary.simpleMessage("10 posts"),
     "ten_reviews": MessageLookupByLibrary.simpleMessage("10 avaliações"),
     "testiamo_e_recensiamo_kebabbari_e_street_food_per_voi_benvenuti_su_kebabbo":
@@ -1125,7 +1175,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "unit_posts": MessageLookupByLibrary.simpleMessage("posts"),
     "unit_reviews": MessageLookupByLibrary.simpleMessage("avaliações"),
     "unlocked_badge": MessageLookupByLibrary.simpleMessage("Desbloqueada"),
-    "unlocked_of_total": m34,
+    "unlocked_of_total": m36,
     "unpack_and_view_collection": MessageLookupByLibrary.simpleMessage(
       "Abrir e ver coleção",
     ),
@@ -1134,7 +1184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "update": MessageLookupByLibrary.simpleMessage("Atualizar"),
     "upload": MessageLookupByLibrary.simpleMessage("Enviar"),
-    "upload_error": m35,
+    "upload_error": m37,
     "upload_first_photo": MessageLookupByLibrary.simpleMessage(
       "Envie a primeira foto",
     ),
@@ -1174,7 +1224,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "O nome de usuário deve ter pelo menos 3\ncaracteres!",
         ),
     "users": MessageLookupByLibrary.simpleMessage("Usuários"),
-    "users_count": m36,
+    "users_count": m38,
     "users_review": MessageLookupByLibrary.simpleMessage(
       "Avaliação dos usuários",
     ),

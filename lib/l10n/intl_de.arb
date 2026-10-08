@@ -807,5 +807,46 @@
   "user_no_reviews_desc": "Dieser Nutzer hat noch keinen Kebab bewertet.",
   "see_place": "Laden ansehen",
   "staff_kebabbo": "Kebabbo-Team",
-  "origin_label": "Herkunft"
+  "origin_label": "Herkunft",
+  "intro_1_title": "Finde deinen Kebab",
+  "intro_1_text": "Ranglisten vom Team und der Community, eine Karte mit Bewertungen und Filter für Entfernung, Preis und Öffnungszeiten.",
+  "intro_2_title": "Bewerten und teilen",
+  "intro_2_text": "Bewerte Qualität, Preis und Zutaten, poste Fotos deines Gerichts und füge fehlende Läden hinzu.",
+  "intro_3_title": "Sammle Medaillen und Karten",
+  "intro_3_text": "Jede Bewertung und jeder Post schaltet Medaillen frei, und alle 12 Stunden kannst du ein Paket Kebabbo-Karten öffnen.",
+  "intro_next": "Weiter",
+  "intro_start": "Los geht's",
+  "intro_skip": "Überspringen",
+  "share_action": "Teilen",
+  "share_this_kebab": "Diesen Kebab teilen",
+  "share_more": "Mehr",
+  "copy_link": "Link kopieren",
+  "copy": "Kopieren",
+  "link_copied": "Link kopiert",
+  "share_message": "{name}: {rating} auf Kebabbo 🌯",
+  "@share_message": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "share_rating_line": "Kebabbo-Bewertung {rating}",
+  "@share_rating_line": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "login_loader_title": "Du wirst angemeldet",
+  "login_loader_subtitle": "Einen Moment, wir bereiten dein Profil vor.",
+  "login_step_auth": "Anmeldung",
+  "login_step_profile": "Profil, Favoriten und Medaillen",
+  "loading": "Wird geladen",
+  "loader_title": "Kebabbo – die besten Kebabs in Bologna",
+  "loader_subtitle": "Ranglisten, Community-Bewertungen und eine Karte der Kebab-Läden."
 }

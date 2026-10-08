@@ -1699,4 +1699,85 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get origin_label => 'Origine';
+
+  @override
+  String get intro_1_title => 'Trouvez votre kebab';
+
+  @override
+  String get intro_1_text =>
+      'Classements de l\'équipe et de la communauté, une carte avec les notes et des filtres par distance, prix et horaires.';
+
+  @override
+  String get intro_2_title => 'Évaluez et partagez';
+
+  @override
+  String get intro_2_text =>
+      'Notez la qualité, le prix et les ingrédients, publiez des photos de votre plat et ajoutez les lieux manquants.';
+
+  @override
+  String get intro_3_title => 'Collectionnez médailles et cartes';
+
+  @override
+  String get intro_3_text =>
+      'Chaque avis et chaque post débloque des médailles, et toutes les 12 heures vous pouvez ouvrir un pack de cartes Kebabbo.';
+
+  @override
+  String get intro_next => 'Suivant';
+
+  @override
+  String get intro_start => 'Commencer';
+
+  @override
+  String get intro_skip => 'Passer';
+
+  @override
+  String get share_action => 'Partager';
+
+  @override
+  String get share_this_kebab => 'Partager ce kebab';
+
+  @override
+  String get share_more => 'Plus';
+
+  @override
+  String get copy_link => 'Copier le lien';
+
+  @override
+  String get copy => 'Copier';
+
+  @override
+  String get link_copied => 'Lien copié';
+
+  @override
+  String share_message(String name, String rating) {
+    return '$name : $rating sur Kebabbo 🌯';
+  }
+
+  @override
+  String share_rating_line(String rating) {
+    return 'Note Kebabbo $rating';
+  }
+
+  @override
+  String get login_loader_title => 'Connexion en cours';
+
+  @override
+  String get login_loader_subtitle =>
+      'Un instant, nous préparons votre profil.';
+
+  @override
+  String get login_step_auth => 'Connexion';
+
+  @override
+  String get login_step_profile => 'Profil, favoris et médailles';
+
+  @override
+  String get loading => 'Chargement';
+
+  @override
+  String get loader_title => 'Kebabbo – les meilleurs kebabs de Bologne';
+
+  @override
+  String get loader_subtitle =>
+      'Classements, avis de la communauté et carte des kebabs.';
 }

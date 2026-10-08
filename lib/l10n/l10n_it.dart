@@ -1689,4 +1689,85 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get origin_label => 'Origine';
+
+  @override
+  String get intro_1_title => 'Trova il tuo kebab';
+
+  @override
+  String get intro_1_text =>
+      'Classifiche dello staff e della community, mappa con i voti e filtri per distanza, prezzo e orari.';
+
+  @override
+  String get intro_2_title => 'Recensisci e condividi';
+
+  @override
+  String get intro_2_text =>
+      'Vota qualità, prezzo e ingredienti, carica le foto del tuo piatto e aggiungi i locali che mancano.';
+
+  @override
+  String get intro_3_title => 'Colleziona medaglie e carte';
+
+  @override
+  String get intro_3_text =>
+      'Ogni recensione e ogni post sblocca medaglie, e ogni 12 ore puoi aprire un pacchetto di carte Kebabbo.';
+
+  @override
+  String get intro_next => 'Avanti';
+
+  @override
+  String get intro_start => 'Inizia';
+
+  @override
+  String get intro_skip => 'Salta';
+
+  @override
+  String get share_action => 'Condividi';
+
+  @override
+  String get share_this_kebab => 'Condividi questo kebab';
+
+  @override
+  String get share_more => 'Altro';
+
+  @override
+  String get copy_link => 'Copia link';
+
+  @override
+  String get copy => 'Copia';
+
+  @override
+  String get link_copied => 'Link copiato';
+
+  @override
+  String share_message(String name, String rating) {
+    return '$name: $rating su Kebabbo 🌯';
+  }
+
+  @override
+  String share_rating_line(String rating) {
+    return 'Voto Kebabbo $rating';
+  }
+
+  @override
+  String get login_loader_title => 'Ti stiamo facendo entrare';
+
+  @override
+  String get login_loader_subtitle =>
+      'Un attimo, stiamo preparando il tuo profilo.';
+
+  @override
+  String get login_step_auth => 'Accesso';
+
+  @override
+  String get login_step_profile => 'Profilo, preferiti e medaglie';
+
+  @override
+  String get loading => 'Caricamento';
+
+  @override
+  String get loader_title => 'Kebabbo – I migliori kebab di Bologna';
+
+  @override
+  String get loader_subtitle =>
+      'Classifiche, recensioni della community e mappa dei kebabbari.';
 }

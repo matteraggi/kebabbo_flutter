@@ -1689,4 +1689,85 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get origin_label => 'Origen';
+
+  @override
+  String get intro_1_title => 'Encuentra tu kebab';
+
+  @override
+  String get intro_1_text =>
+      'Clasificaciones del staff y de la comunidad, un mapa con las valoraciones y filtros por distancia, precio y horario.';
+
+  @override
+  String get intro_2_title => 'Reseña y comparte';
+
+  @override
+  String get intro_2_text =>
+      'Valora calidad, precio e ingredientes, sube fotos de tu plato y añade los locales que faltan.';
+
+  @override
+  String get intro_3_title => 'Colecciona medallas y cartas';
+
+  @override
+  String get intro_3_text =>
+      'Cada reseña y publicación desbloquea medallas, y cada 12 horas puedes abrir un paquete de cartas Kebabbo.';
+
+  @override
+  String get intro_next => 'Siguiente';
+
+  @override
+  String get intro_start => 'Empezar';
+
+  @override
+  String get intro_skip => 'Saltar';
+
+  @override
+  String get share_action => 'Compartir';
+
+  @override
+  String get share_this_kebab => 'Comparte este kebab';
+
+  @override
+  String get share_more => 'Más';
+
+  @override
+  String get copy_link => 'Copiar enlace';
+
+  @override
+  String get copy => 'Copiar';
+
+  @override
+  String get link_copied => 'Enlace copiado';
+
+  @override
+  String share_message(String name, String rating) {
+    return '$name: $rating en Kebabbo 🌯';
+  }
+
+  @override
+  String share_rating_line(String rating) {
+    return 'Valoración Kebabbo $rating';
+  }
+
+  @override
+  String get login_loader_title => 'Iniciando sesión';
+
+  @override
+  String get login_loader_subtitle =>
+      'Un momento, estamos preparando tu perfil.';
+
+  @override
+  String get login_step_auth => 'Inicio de sesión';
+
+  @override
+  String get login_step_profile => 'Perfil, favoritos y medallas';
+
+  @override
+  String get loading => 'Cargando';
+
+  @override
+  String get loader_title => 'Kebabbo – los mejores kebabs de Bolonia';
+
+  @override
+  String get loader_subtitle =>
+      'Clasificaciones, reseñas de la comunidad y mapa de los locales de kebab.';
 }

@@ -807,5 +807,46 @@
   "user_no_reviews_desc": "This user hasn't reviewed any kebab yet.",
   "see_place": "See place",
   "staff_kebabbo": "Kebabbo staff",
-  "origin_label": "Source"
+  "origin_label": "Source",
+  "intro_1_title": "Find your kebab",
+  "intro_1_text": "Staff and community rankings, a map with ratings, and filters for distance, price and opening hours.",
+  "intro_2_title": "Review and share",
+  "intro_2_text": "Rate quality, price and ingredients, post photos of your dish and add places that are missing.",
+  "intro_3_title": "Collect medals and cards",
+  "intro_3_text": "Every review and post unlocks medals, and every 12 hours you can open a pack of Kebabbo cards.",
+  "intro_next": "Next",
+  "intro_start": "Get started",
+  "intro_skip": "Skip",
+  "share_action": "Share",
+  "share_this_kebab": "Share this kebab",
+  "share_more": "More",
+  "copy_link": "Copy link",
+  "copy": "Copy",
+  "link_copied": "Link copied",
+  "share_message": "{name}: rated {rating} on Kebabbo 🌯",
+  "@share_message": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "share_rating_line": "Kebabbo rating {rating}",
+  "@share_rating_line": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "login_loader_title": "Signing you in",
+  "login_loader_subtitle": "One moment, we're getting your profile ready.",
+  "login_step_auth": "Signing in",
+  "login_step_profile": "Profile, favorites and medals",
+  "loading": "Loading",
+  "loader_title": "Kebabbo – Bologna's best kebabs",
+  "loader_subtitle": "Rankings, community reviews and a map of kebab places."
 }

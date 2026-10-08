@@ -4534,6 +4534,201 @@ class S {
   String get origin_label {
     return Intl.message('Source', name: 'origin_label', desc: '', args: []);
   }
+
+  /// `Find your kebab`
+  String get intro_1_title {
+    return Intl.message(
+      'Find your kebab',
+      name: 'intro_1_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Staff and community rankings, a map with ratings, and filters for distance, price and opening hours.`
+  String get intro_1_text {
+    return Intl.message(
+      'Staff and community rankings, a map with ratings, and filters for distance, price and opening hours.',
+      name: 'intro_1_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review and share`
+  String get intro_2_title {
+    return Intl.message(
+      'Review and share',
+      name: 'intro_2_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rate quality, price and ingredients, post photos of your dish and add places that are missing.`
+  String get intro_2_text {
+    return Intl.message(
+      'Rate quality, price and ingredients, post photos of your dish and add places that are missing.',
+      name: 'intro_2_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Collect medals and cards`
+  String get intro_3_title {
+    return Intl.message(
+      'Collect medals and cards',
+      name: 'intro_3_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Every review and post unlocks medals, and every 12 hours you can open a pack of Kebabbo cards.`
+  String get intro_3_text {
+    return Intl.message(
+      'Every review and post unlocks medals, and every 12 hours you can open a pack of Kebabbo cards.',
+      name: 'intro_3_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next`
+  String get intro_next {
+    return Intl.message('Next', name: 'intro_next', desc: '', args: []);
+  }
+
+  /// `Get started`
+  String get intro_start {
+    return Intl.message('Get started', name: 'intro_start', desc: '', args: []);
+  }
+
+  /// `Skip`
+  String get intro_skip {
+    return Intl.message('Skip', name: 'intro_skip', desc: '', args: []);
+  }
+
+  /// `Share`
+  String get share_action {
+    return Intl.message('Share', name: 'share_action', desc: '', args: []);
+  }
+
+  /// `Share this kebab`
+  String get share_this_kebab {
+    return Intl.message(
+      'Share this kebab',
+      name: 'share_this_kebab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `More`
+  String get share_more {
+    return Intl.message('More', name: 'share_more', desc: '', args: []);
+  }
+
+  /// `Copy link`
+  String get copy_link {
+    return Intl.message('Copy link', name: 'copy_link', desc: '', args: []);
+  }
+
+  /// `Copy`
+  String get copy {
+    return Intl.message('Copy', name: 'copy', desc: '', args: []);
+  }
+
+  /// `Link copied`
+  String get link_copied {
+    return Intl.message('Link copied', name: 'link_copied', desc: '', args: []);
+  }
+
+  /// `{name}: rated {rating} on Kebabbo 🌯`
+  String share_message(String name, String rating) {
+    return Intl.message(
+      '$name: rated $rating on Kebabbo 🌯',
+      name: 'share_message',
+      desc: '',
+      args: [name, rating],
+    );
+  }
+
+  /// `Kebabbo rating {rating}`
+  String share_rating_line(String rating) {
+    return Intl.message(
+      'Kebabbo rating $rating',
+      name: 'share_rating_line',
+      desc: '',
+      args: [rating],
+    );
+  }
+
+  /// `Signing you in`
+  String get login_loader_title {
+    return Intl.message(
+      'Signing you in',
+      name: 'login_loader_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One moment, we're getting your profile ready.`
+  String get login_loader_subtitle {
+    return Intl.message(
+      'One moment, we\'re getting your profile ready.',
+      name: 'login_loader_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signing in`
+  String get login_step_auth {
+    return Intl.message(
+      'Signing in',
+      name: 'login_step_auth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile, favorites and medals`
+  String get login_step_profile {
+    return Intl.message(
+      'Profile, favorites and medals',
+      name: 'login_step_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading`
+  String get loading {
+    return Intl.message('Loading', name: 'loading', desc: '', args: []);
+  }
+
+  /// `Kebabbo – Bologna's best kebabs`
+  String get loader_title {
+    return Intl.message(
+      'Kebabbo – Bologna\'s best kebabs',
+      name: 'loader_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rankings, community reviews and a map of kebab places.`
+  String get loader_subtitle {
+    return Intl.message(
+      'Rankings, community reviews and a map of kebab places.',
+      name: 'loader_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

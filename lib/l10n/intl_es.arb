@@ -807,5 +807,46 @@
   "user_no_reviews_desc": "Este usuario aún no ha reseñado ningún kebab.",
   "see_place": "Ver local",
   "staff_kebabbo": "Staff de Kebabbo",
-  "origin_label": "Origen"
+  "origin_label": "Origen",
+  "intro_1_title": "Encuentra tu kebab",
+  "intro_1_text": "Clasificaciones del staff y de la comunidad, un mapa con las valoraciones y filtros por distancia, precio y horario.",
+  "intro_2_title": "Reseña y comparte",
+  "intro_2_text": "Valora calidad, precio e ingredientes, sube fotos de tu plato y añade los locales que faltan.",
+  "intro_3_title": "Colecciona medallas y cartas",
+  "intro_3_text": "Cada reseña y publicación desbloquea medallas, y cada 12 horas puedes abrir un paquete de cartas Kebabbo.",
+  "intro_next": "Siguiente",
+  "intro_start": "Empezar",
+  "intro_skip": "Saltar",
+  "share_action": "Compartir",
+  "share_this_kebab": "Comparte este kebab",
+  "share_more": "Más",
+  "copy_link": "Copiar enlace",
+  "copy": "Copiar",
+  "link_copied": "Enlace copiado",
+  "share_message": "{name}: {rating} en Kebabbo 🌯",
+  "@share_message": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "share_rating_line": "Valoración Kebabbo {rating}",
+  "@share_rating_line": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "login_loader_title": "Iniciando sesión",
+  "login_loader_subtitle": "Un momento, estamos preparando tu perfil.",
+  "login_step_auth": "Inicio de sesión",
+  "login_step_profile": "Perfil, favoritos y medallas",
+  "loading": "Cargando",
+  "loader_title": "Kebabbo – los mejores kebabs de Bolonia",
+  "loader_subtitle": "Clasificaciones, reseñas de la comunidad y mapa de los locales de kebab."
 }

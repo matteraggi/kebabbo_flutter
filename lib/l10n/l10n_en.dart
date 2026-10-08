@@ -1668,4 +1668,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get origin_label => 'Source';
+
+  @override
+  String get intro_1_title => 'Find your kebab';
+
+  @override
+  String get intro_1_text =>
+      'Staff and community rankings, a map with ratings, and filters for distance, price and opening hours.';
+
+  @override
+  String get intro_2_title => 'Review and share';
+
+  @override
+  String get intro_2_text =>
+      'Rate quality, price and ingredients, post photos of your dish and add places that are missing.';
+
+  @override
+  String get intro_3_title => 'Collect medals and cards';
+
+  @override
+  String get intro_3_text =>
+      'Every review and post unlocks medals, and every 12 hours you can open a pack of Kebabbo cards.';
+
+  @override
+  String get intro_next => 'Next';
+
+  @override
+  String get intro_start => 'Get started';
+
+  @override
+  String get intro_skip => 'Skip';
+
+  @override
+  String get share_action => 'Share';
+
+  @override
+  String get share_this_kebab => 'Share this kebab';
+
+  @override
+  String get share_more => 'More';
+
+  @override
+  String get copy_link => 'Copy link';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get link_copied => 'Link copied';
+
+  @override
+  String share_message(String name, String rating) {
+    return '$name: rated $rating on Kebabbo 🌯';
+  }
+
+  @override
+  String share_rating_line(String rating) {
+    return 'Kebabbo rating $rating';
+  }
+
+  @override
+  String get login_loader_title => 'Signing you in';
+
+  @override
+  String get login_loader_subtitle =>
+      'One moment, we\'re getting your profile ready.';
+
+  @override
+  String get login_step_auth => 'Signing in';
+
+  @override
+  String get login_step_profile => 'Profile, favorites and medals';
+
+  @override
+  String get loading => 'Loading';
+
+  @override
+  String get loader_title => 'Kebabbo – Bologna\'s best kebabs';
+
+  @override
+  String get loader_subtitle =>
+      'Rankings, community reviews and a map of kebab places.';
 }

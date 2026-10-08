@@ -3123,6 +3123,150 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Origine'**
   String get origin_label;
+
+  /// No description provided for @intro_1_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Trova il tuo kebab'**
+  String get intro_1_title;
+
+  /// No description provided for @intro_1_text.
+  ///
+  /// In it, this message translates to:
+  /// **'Classifiche dello staff e della community, mappa con i voti e filtri per distanza, prezzo e orari.'**
+  String get intro_1_text;
+
+  /// No description provided for @intro_2_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensisci e condividi'**
+  String get intro_2_title;
+
+  /// No description provided for @intro_2_text.
+  ///
+  /// In it, this message translates to:
+  /// **'Vota qualità, prezzo e ingredienti, carica le foto del tuo piatto e aggiungi i locali che mancano.'**
+  String get intro_2_text;
+
+  /// No description provided for @intro_3_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Colleziona medaglie e carte'**
+  String get intro_3_title;
+
+  /// No description provided for @intro_3_text.
+  ///
+  /// In it, this message translates to:
+  /// **'Ogni recensione e ogni post sblocca medaglie, e ogni 12 ore puoi aprire un pacchetto di carte Kebabbo.'**
+  String get intro_3_text;
+
+  /// No description provided for @intro_next.
+  ///
+  /// In it, this message translates to:
+  /// **'Avanti'**
+  String get intro_next;
+
+  /// No description provided for @intro_start.
+  ///
+  /// In it, this message translates to:
+  /// **'Inizia'**
+  String get intro_start;
+
+  /// No description provided for @intro_skip.
+  ///
+  /// In it, this message translates to:
+  /// **'Salta'**
+  String get intro_skip;
+
+  /// No description provided for @share_action.
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi'**
+  String get share_action;
+
+  /// No description provided for @share_this_kebab.
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi questo kebab'**
+  String get share_this_kebab;
+
+  /// No description provided for @share_more.
+  ///
+  /// In it, this message translates to:
+  /// **'Altro'**
+  String get share_more;
+
+  /// No description provided for @copy_link.
+  ///
+  /// In it, this message translates to:
+  /// **'Copia link'**
+  String get copy_link;
+
+  /// No description provided for @copy.
+  ///
+  /// In it, this message translates to:
+  /// **'Copia'**
+  String get copy;
+
+  /// No description provided for @link_copied.
+  ///
+  /// In it, this message translates to:
+  /// **'Link copiato'**
+  String get link_copied;
+
+  /// No description provided for @share_message.
+  ///
+  /// In it, this message translates to:
+  /// **'{name}: {rating} su Kebabbo 🌯'**
+  String share_message(String name, String rating);
+
+  /// No description provided for @share_rating_line.
+  ///
+  /// In it, this message translates to:
+  /// **'Voto Kebabbo {rating}'**
+  String share_rating_line(String rating);
+
+  /// No description provided for @login_loader_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Ti stiamo facendo entrare'**
+  String get login_loader_title;
+
+  /// No description provided for @login_loader_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Un attimo, stiamo preparando il tuo profilo.'**
+  String get login_loader_subtitle;
+
+  /// No description provided for @login_step_auth.
+  ///
+  /// In it, this message translates to:
+  /// **'Accesso'**
+  String get login_step_auth;
+
+  /// No description provided for @login_step_profile.
+  ///
+  /// In it, this message translates to:
+  /// **'Profilo, preferiti e medaglie'**
+  String get login_step_profile;
+
+  /// No description provided for @loading.
+  ///
+  /// In it, this message translates to:
+  /// **'Caricamento'**
+  String get loading;
+
+  /// No description provided for @loader_title.
+  ///
+  /// In it, this message translates to:
+  /// **'Kebabbo – I migliori kebab di Bologna'**
+  String get loader_title;
+
+  /// No description provided for @loader_subtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Classifiche, recensioni della community e mappa dei kebabbari.'**
+  String get loader_subtitle;
 }
 
 class _AppLocalizationsDelegate
