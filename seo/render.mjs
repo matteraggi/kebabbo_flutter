@@ -137,8 +137,28 @@ ${body}
 
 const tagLabel = (tag) => (tag === 'kebab' ? 'Kebab' : 'Paninoteca');
 
+/** True only for https Google Maps links (the `map` field is user-supplied). */
+function isGoogleMapsUrl(raw) {
+  let u;
+  try {
+    u = new URL(String(raw));
+  } catch {
+    return false;
+  }
+  if (u.protocol !== 'https:') return false;
+  const host = u.hostname.toLowerCase();
+  if (host === 'maps.app.goo.gl') return true;
+  if (host === 'goo.gl') return u.pathname.startsWith('/maps');
+  // google.com, google.it, google.co.uk, google.com.br ... (no other subdomains)
+  if (/^maps\.google\.(com|[a-z]{2}|co\.[a-z]{2}|com\.[a-z]{2})$/.test(host)) return true;
+  if (/^(www\.)?google\.(com|[a-z]{2}|co\.[a-z]{2}|com\.[a-z]{2})$/.test(host)) {
+    return u.pathname.startsWith('/maps');
+  }
+  return false;
+}
+
 function mapsUrl(k) {
-  if (k.map && /^https?:\/\//.test(k.map)) return k.map;
+  if (k.map && isGoogleMapsUrl(k.map)) return k.map;
   if (typeof k.lat === 'number' && typeof k.lng === 'number') {
     return `https://www.google.com/maps/search/?api=1&query=${k.lat},${k.lng}`;
   }
@@ -259,7 +279,7 @@ export function renderKebabPage(kebab, reviews, others) {
   </div>
   <div class="actions">
     <a class="btn btn-red" href="/?kebab=${kebab.id}">Apri in Kebabbo</a>
-    ${maps ? `<a class="btn btn-light" href="${e(maps)}" rel="noopener">Indicazioni</a>` : ''}
+    ${maps ? `<a class="btn btn-light" href="${e(maps)}" rel="noopener nofollow ugc">Indicazioni</a>` : ''}
   </div>
 </div></div>
 
