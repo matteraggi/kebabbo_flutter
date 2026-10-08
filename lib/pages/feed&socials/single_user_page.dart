@@ -9,6 +9,8 @@ import 'package:kebabbo_flutter/pages/misc/medal_page.dart';
 import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:kebabbo_flutter/components/misc/empty_state.dart';
+import 'package:kebabbo_flutter/components/misc/skeleton.dart';
 
 class SingleUserPage extends StatefulWidget {
   final String userId;
@@ -340,9 +342,7 @@ class _SingleUserPageState extends State<SingleUserPage> {
         ],
       ),
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(color: red),
-            )
+          ? const ProfileSkeleton()
           : RefreshIndicator(
               onRefresh: _loadAllData,
               color: red,
@@ -979,39 +979,11 @@ class _SingleUserPageState extends State<SingleUserPage> {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: const BoxDecoration(
-                color: Color(0xFFF6F6F8),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.photo_library_outlined,
-                size: 38,
-                color: Colors.grey.shade400,
-              ),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              S.of(context).no_posts_yet,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              S.of(context).user_no_posts_desc,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade600,
-              ),
-            ),
-          ],
+        child: EmptyState(
+          title: S.of(context).no_posts_yet,
+          message: S.of(context).user_no_posts_desc,
+          badgeIcon: Icons.photo_library_rounded,
+          scrollable: false,
         ),
       );
     }
@@ -1060,39 +1032,11 @@ class _SingleUserPageState extends State<SingleUserPage> {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: const BoxDecoration(
-                color: Color(0xFFF6F6F8),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.rate_review_outlined,
-                size: 38,
-                color: Colors.grey.shade400,
-              ),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              S.of(context).nessuna_recensione_ancora,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              S.of(context).user_no_reviews_desc,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade600,
-              ),
-            ),
-          ],
+        child: EmptyState(
+          title: S.of(context).nessuna_recensione_ancora,
+          message: S.of(context).user_no_reviews_desc,
+          badgeIcon: Icons.edit_rounded,
+          scrollable: false,
         ),
       );
     }

@@ -21,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:kebabbo_flutter/pages/tcg/tcg_profile_preview.dart';
 import 'package:kebabbo_flutter/pages/account/tools_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class AccountPage extends StatefulWidget {
   final Position? currentPosition;
@@ -408,7 +409,7 @@ class _AccountPageState extends State<AccountPage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
         child: _loading
-            ? const Center(child: CircularProgressIndicator())
+            ? const KebabLoader()
             : Column(
                 children: [
                   Row(

@@ -8,8 +8,10 @@ import 'package:kebabbo_flutter/pages/feed&socials/feet_page.dart';
 import 'package:kebabbo_flutter/pages/feed&socials/single_user_page.dart';
 import 'package:kebabbo_flutter/pages/account/login_page.dart';
 import 'package:kebabbo_flutter/pages/misc/map_page.dart';
+import 'package:kebabbo_flutter/pages/misc/intro_page.dart';
 import 'package:kebabbo_flutter/pages/misc/privacy_policy.dart';
 import 'package:kebabbo_flutter/pages/kebab/add_new_kebab_page.dart';
+import 'package:kebabbo_flutter/pages/kebab/kebab_single_page.dart';
 import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
 import 'package:kebabbo_flutter/pages/kebab/top_kebab_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,9 +26,13 @@ import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:flutter/foundation.dart'; // Import for kIsWeb
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'firebase_options.dart';
+import 'package:kebabbo_flutter/utils/app_theme.dart';
 
-const Color red = Color.fromRGBO(187, 0, 0, 1.0);
-const Color yellow = Color.fromRGBO(255, 186, 28, 1.0);
+export 'package:kebabbo_flutter/utils/app_theme.dart';
+
+// Alias storici, usati in tutta l'app: i valori vivono in AppColors.
+const Color red = AppColors.red;
+const Color yellow = AppColors.saffron;
 
 const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
 const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
@@ -48,10 +54,14 @@ Future<void> main() async {
 
   String? otherPaths;
   String? initialUserId;
+  int? initialKebabId;
 
   // Handle deep links based on URL path
   if (kIsWeb) {
     try {
+      // "Apri in Kebabbo" dalle pagine web dei kebab: /?kebab=<id>
+      final kebabParam = Uri.base.queryParameters['kebab'];
+      if (kebabParam != null) initialKebabId = int.tryParse(kebabParam);
       if (Uri.base.pathSegments.isNotEmpty) {
         if (Uri.base.pathSegments[0] == 'privacy-policy') {
           otherPaths = "privacy-policy";
@@ -62,6 +72,10 @@ Future<void> main() async {
             Uri.base.pathSegments[1].isNotEmpty) {
           // Link profilo condiviso: https://kebabbo.top/user/<id>
           initialUserId = Uri.base.pathSegments[1];
+        } else if (Uri.base.pathSegments[0] == 'kebab' &&
+            Uri.base.pathSegments.length > 1) {
+          // Link kebab condiviso: https://kebabbo.top/kebab/<id>
+          initialKebabId = int.tryParse(Uri.base.pathSegments[1]);
         }
       }
     } catch (e) {
@@ -80,10 +94,57 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  runApp(MyApp(otherPaths: otherPaths, initialUserId: initialUserId));
+  runApp(MyApp(
+    otherPaths: otherPaths,
+    initialUserId: initialUserId,
+    initialKebabId: initialKebabId,
+  ));
 }
 
 final supabase = Supabase.instance.client;
+
+/// Controlla che il profilo dell'utente appena entrato sia leggibile
+/// (secondo passo del caricamento dell'accesso).
+Future<void> checkOwnProfile() async {
+  final userId = supabase.auth.currentUser?.id;
+  if (userId == null) return;
+  await supabase
+      .from('profiles')
+      .select('id, username, favorites, medals')
+      .eq('id', userId)
+      .maybeSingle();
+}
+
+/// Client senza sessione, solo per i dati pubblici (kebab, recensioni).
+/// Funziona anche quando la sessione dell'utente non si riesce a rinnovare.
+final SupabaseClient publicDb = SupabaseClient(
+  supabaseUrl,
+  supabaseAnonKey,
+  authOptions: const AuthClientOptions(autoRefreshToken: false),
+);
+
+bool _isSessionError(Object e) {
+  if (e is AuthException) return true;
+  if (e is PostgrestException) {
+    return e.code == 'PGRST301' ||
+        e.code == 'PGRST303' ||
+        e.message.toLowerCase().contains('jwt');
+  }
+  return false;
+}
+
+/// Legge dati pubblici con la sessione dell'utente; se fallisce per un
+/// problema di sessione (token scaduto, server auth in errore), riprova come
+/// ospite. Così mappa e liste restano visibili anche con il login rotto.
+Future<T> readPublic<T>(Future<T> Function(SupabaseClient db) query) async {
+  try {
+    return await query(supabase);
+  } catch (e) {
+    if (!_isSessionError(e)) rethrow;
+    debugPrint('Lettura con sessione fallita, riprovo come ospite: $e');
+    return query(publicDb);
+  }
+}
 
 /// True se all'avvio la sessione salvata era scaduta e non più rinnovabile.
 bool sessionExpiredAtStartup = false;
@@ -101,8 +162,14 @@ Future<void> _ensureUsableSession() async {
     await auth.refreshSession().timeout(const Duration(seconds: 5));
   } on TimeoutException {
     // Rete lenta: non blocchiamo l'avvio, il refresh continua in background.
-  } on AuthRetryableFetchException {
+  } on AuthRetryableFetchException catch (e) {
     // Rete assente: teniamo la sessione, verrà rinnovata quando torna la rete.
+    // Errore del server auth (5xx): la sessione non si rinnova, usciamo.
+    if ((e.statusCode ?? '').startsWith('5')) {
+      debugPrint('Server auth in errore durante il refresh: ${e.message}');
+      sessionExpiredAtStartup = true;
+      await _localSignOut();
+    }
   } on AuthException catch (e) {
     debugPrint('Sessione salvata non più valida: ${e.message}');
     sessionExpiredAtStartup = true;
@@ -125,27 +192,16 @@ Future<void> _localSignOut() async {
 class MyApp extends StatelessWidget {
   final String? otherPaths;
   final String? initialUserId;
+  final int? initialKebabId;
 
-  const MyApp({super.key, this.otherPaths, this.initialUserId});
+  const MyApp(
+      {super.key, this.otherPaths, this.initialUserId, this.initialKebabId});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kebabbo',
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: yellow,
-        primaryColor: red,
-        appBarTheme: const AppBarTheme(backgroundColor: yellow),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor: red),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: red,
-          ),
-        ),
-      ),
+      theme: buildAppTheme(),
       localizationsDelegates: [
         AppLocalizationDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -175,6 +231,7 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(
         otherPaths: otherPaths,
         initialUserId: initialUserId,
+        initialKebabId: initialKebabId,
       ), // Set MyHomePage as the home
     );
   }
@@ -196,8 +253,10 @@ extension ContextExtension on BuildContext {
 class MyHomePage extends StatefulWidget {
   final String? otherPaths;
   final String? initialUserId;
+  final int? initialKebabId;
 
-  const MyHomePage({super.key, this.otherPaths, this.initialUserId});
+  const MyHomePage(
+      {super.key, this.otherPaths, this.initialUserId, this.initialKebabId});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -220,11 +279,14 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     otherPaths = widget.otherPaths;
     final initialUserId = widget.initialUserId;
-    if (initialUserId != null) {
+    final initialKebabId = widget.initialKebabId;
+    if (initialUserId != null || initialKebabId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => SingleUserPage(userId: initialUserId),
+          builder: (_) => initialKebabId != null
+              ? KebabSinglePage(kebabId: initialKebabId)
+              : SingleUserPage(userId: initialUserId!),
         ));
       });
     }
@@ -291,7 +353,10 @@ class _MyHomePageState extends State<MyHomePage> {
       // viene chiusa con il dialog aperto.
       await prefs.setBool('isFirstTime', false);
       if (!mounted) return;
-      showFirstTimeDialog(context);
+      Navigator.of(context).push(MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => const IntroPage(),
+      ));
       return;
     }
 
@@ -531,7 +596,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         child: const Icon(
                           Icons.rate_review_outlined,
-                          color: Color(0xFFFFBA1C),
+                          color: AppColors.saffron,
                           size: 26,
                         ),
                       ),

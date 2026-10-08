@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:kebabbo_flutter/utils/image_compressor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class WriteReviewPage extends StatefulWidget {
   final int? preselectedKebabId;
@@ -368,7 +369,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
         ),
       ),
       body: _isLoadingKebabs
-          ? const Center(child: CircularProgressIndicator(color: red))
+          ? const KebabLoader()
           : Form(
               key: _formKey,
               child: ListView(
@@ -661,11 +662,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                style: headingStyle(size: 17),
               ),
             ],
           ),

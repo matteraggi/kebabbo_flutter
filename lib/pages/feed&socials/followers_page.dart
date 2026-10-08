@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/user_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/components/misc/empty_state.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class FollowersPage extends StatefulWidget {
   final String userId;
@@ -54,9 +56,13 @@ class FollowersPageState extends State<FollowersPage> {
         title: Text(S.of(context).followers),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const KebabLoader()
           : followers.isEmpty
-              ? Center(child: Text(S.of(context).nessun_utente_ti_segue))
+              ? EmptyState(
+                  title: S.of(context).nessun_utente_ti_segue,
+                  badgeIcon: Icons.people_alt_rounded,
+                  onSaffron: true,
+                )
               : ListView.builder(
                   itemCount: followers.length,
                   itemBuilder: (context, index) {

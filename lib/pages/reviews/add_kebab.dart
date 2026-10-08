@@ -4,6 +4,7 @@ import 'package:kebabbo_flutter/pages/reviews/thankyou_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/main.dart' as main;
 import 'package:kebabbo_flutter/utils/utils.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class AddKebab extends StatefulWidget {
   final String? kebabId;
@@ -501,7 +502,7 @@ class _AddKebabState extends State<AddKebab> {
         ),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const KebabLoader()
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Form(

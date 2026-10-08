@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/misc/user_item.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class SeguitiPage extends StatefulWidget {
   final String userId;
@@ -71,7 +72,7 @@ class SeguitiPageState extends State<SeguitiPage> {
         title: Text(S.of(context).seguiti),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const KebabLoader()
           : followedUsersProfiles.isEmpty
               ? Center(child: Text(S.of(context).nessun_utente_seguito))
               : ListView.builder(

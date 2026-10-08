@@ -6,6 +6,7 @@ import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/reviews/write_review_page.dart';
 import 'package:kebabbo_flutter/utils/utils.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class UserReviewsPage extends StatefulWidget {
   final String userId;
@@ -173,7 +174,7 @@ class UserReviewsState extends State<UserReviewsPage> {
 
           // The rest of the content
           isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const KebabLoader()
               : reviews.isEmpty
                   ? textExplanation(
                       context, S.of(context).nessuna_recensione_ancora)

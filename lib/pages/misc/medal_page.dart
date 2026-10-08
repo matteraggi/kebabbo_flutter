@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kebabbo_flutter/components/misc/empty_state.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class MedalInfo {
   final int id;
@@ -311,12 +313,12 @@ class _MedalPageState extends State<MedalPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 decoration: BoxDecoration(
                   color: isUnlocked
-                      ? const Color(0xFFE6F4EA)
+                      ? AppColors.openBg
                       : Colors.grey[100],
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isUnlocked
-                        ? const Color(0xFF34A853)
+                        ? AppColors.open
                         : Colors.grey[300]!,
                   ),
                 ),
@@ -327,7 +329,7 @@ class _MedalPageState extends State<MedalPage> {
                       isUnlocked ? Icons.check_circle : Icons.lock_outline,
                       size: 15,
                       color: isUnlocked
-                          ? const Color(0xFF137333)
+                          ? AppColors.openText
                           : Colors.grey[700],
                     ),
                     const SizedBox(width: 6),
@@ -337,7 +339,7 @@ class _MedalPageState extends State<MedalPage> {
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: isUnlocked
-                            ? const Color(0xFF137333)
+                            ? AppColors.openText
                             : Colors.grey[700],
                       ),
                     ),
@@ -432,7 +434,7 @@ class _MedalPageState extends State<MedalPage> {
                         minHeight: 8,
                         backgroundColor: Colors.grey[200],
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          isUnlocked ? const Color(0xFFFFB300) : red,
+                          isUnlocked ? AppColors.amber : red,
                         ),
                       ),
                     ),
@@ -509,7 +511,7 @@ class _MedalPageState extends State<MedalPage> {
         ),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: red))
+          ? const KebabLoader()
           : RefreshIndicator(
               color: red,
               onRefresh: _loadMedalData,
@@ -571,25 +573,10 @@ class _MedalPageState extends State<MedalPage> {
                   // 3. Griglia Medaglie
                   if (filteredMedals.isEmpty)
                     SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.all(36.0),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Icon(Icons.emoji_events_outlined,
-                                  size: 48, color: Colors.grey[400]),
-                              const SizedBox(height: 12),
-                              Text(
-                                S.of(context).no_medals_in_filter,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      child: EmptyState(
+                        title: S.of(context).no_medals_in_filter,
+                        badgeIcon: Icons.emoji_events_rounded,
+                        scrollable: false,
                       ),
                     )
                   else
@@ -688,7 +675,7 @@ class _MedalPageState extends State<MedalPage> {
                       child: Text(
                         rank.rankName.toUpperCase(),
                         style: const TextStyle(
-                          color: Color(0xFFB06000),
+                          color: AppColors.glutenFree,
                           fontWeight: FontWeight.w800,
                           fontSize: 11,
                           letterSpacing: 0.5,
@@ -872,20 +859,20 @@ class _MedalPageState extends State<MedalPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE6F4EA),
+                      color: AppColors.openBg,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check, size: 10, color: Color(0xFF137333)),
+                        Icon(Icons.check, size: 10, color: AppColors.openText),
                         SizedBox(width: 2),
                         Text(
                           S.of(context).unlocked_badge,
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF137333),
+                            color: AppColors.openText,
                           ),
                         ),
                       ],

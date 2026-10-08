@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kebabbo_flutter/components/list_items/feed_list_item.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/generated/l10n.dart';
+import 'package:kebabbo_flutter/components/misc/empty_state.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 
 class UserPostsPage extends StatefulWidget {
   final String userId; // Aggiungiamo il parametro userId
@@ -66,9 +68,13 @@ class _UserPostsPageState extends State<UserPostsPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
           child: _loading
-              ? const Center(child: CircularProgressIndicator())
+              ? const KebabLoader()
               : _userPosts.isEmpty
-                  ? Center(child: Text(S.of(context).nessun_post_trovato))
+                  ? EmptyState(
+                      title: S.of(context).nessun_post_trovato,
+                      badgeIcon: Icons.photo_library_rounded,
+                      onSaffron: true,
+                    )
                   : ListView.builder(
                       itemCount: _userPosts.length,
                       itemBuilder: (context, index) {

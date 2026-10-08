@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,7 +18,7 @@ class GoogleLoginButton extends StatelessWidget {
     this.label,
   });
 
-  Future<void> _nativeGoogleSignIn() async {
+  Future<void> _nativeGoogleSignIn(BuildContext context) async {
     const webClientId =
         '1072333391081-nqs3njkquq8sprkq7dbd7d6q1j3i3h28.apps.googleusercontent.com';
     const iosClientId = 'my-ios.apps.googleusercontent.com';
@@ -40,10 +41,16 @@ class GoogleLoginButton extends StatelessWidget {
       throw 'Missing token(s) for authentication.';
     }
 
-    await supabase.auth.signInWithIdToken(
-      provider: OAuthProvider.google,
-      idToken: idToken,
-      accessToken: accessToken,
+    if (!context.mounted) return;
+    // Dopo la scelta dell'account Google: caricamento a pieno schermo.
+    await runWithSignInLoader(
+      context,
+      signIn: () => supabase.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+        accessToken: accessToken,
+      ),
+      loadProfile: checkOwnProfile,
     );
   }
 
@@ -76,7 +83,7 @@ class GoogleLoginButton extends StatelessWidget {
           onTap: () async {
             try {
               if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-                await _nativeGoogleSignIn();
+                await _nativeGoogleSignIn(context);
               } else {
                 await supabase.auth.signInWithOAuth(
                   OAuthProvider.google,

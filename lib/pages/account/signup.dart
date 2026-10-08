@@ -96,15 +96,7 @@ class SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 12),
 
                   // Heading
-                  Text(
-                    S.of(context).sign_up,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF1E1E24),
-                      letterSpacing: -0.5,
-                    ),
-                  ),
+                  Text(S.of(context).sign_up, style: headingStyle(size: 30)),
                   const SizedBox(height: 6),
                   Text(
                     S.of(context).signup_tagline,

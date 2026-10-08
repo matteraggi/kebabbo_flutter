@@ -11,6 +11,7 @@ import 'package:kebabbo_flutter/utils/user_logic.dart';
 import 'package:kebabbo_flutter/utils/tcg_stamina.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/pressable.dart';
+import 'package:kebabbo_flutter/utils/app_theme.dart';
 
 class GamesPage extends StatefulWidget {
   final Position? currentPosition;
@@ -400,7 +401,7 @@ class _GamesPageState extends State<GamesPage> {
               border: !hasPacks
                   ? Border.all(color: Colors.white24, width: 1.0)
                   : (isMax
-                      ? Border.all(color: const Color(0xFFFFD700), width: 1.5)
+                      ? Border.all(color: AppColors.gold, width: 1.5)
                       : null),
               boxShadow: [
                 BoxShadow(
@@ -431,7 +432,7 @@ class _GamesPageState extends State<GamesPage> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 1),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFBA1C),
+                            color: AppColors.saffron,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.white, width: 1),
                           ),
@@ -473,7 +474,7 @@ class _GamesPageState extends State<GamesPage> {
                         ? (isMax ? "MAX (2/2)" : "+1 in $timerText")
                         : "In Ricarica (0/2)",
                     style: TextStyle(
-                      color: hasPacks ? const Color(0xFFFFD700) : Colors.white70,
+                      color: hasPacks ? AppColors.gold : Colors.white70,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),

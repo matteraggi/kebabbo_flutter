@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:kebabbo_flutter/components/animations/doner_loader.dart';
 import 'package:kebabbo_flutter/components/buttons&selectors/google_login_button.dart';
 import 'package:kebabbo_flutter/main.dart';
 import 'package:kebabbo_flutter/pages/account/forgot_password.dart';
@@ -52,9 +53,13 @@ class LoginPageState extends State<LoginPage> {
     });
 
     try {
-      await supabase.auth.signInWithPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
+      await runWithSignInLoader(
+        context,
+        signIn: () => supabase.auth.signInWithPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        ),
+        loadProfile: checkOwnProfile,
       );
 
       if (mounted) {
@@ -117,15 +122,7 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 12),
 
                   // Heading
-                  const Text(
-                    'Kebabbo',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF1E1E24),
-                      letterSpacing: -0.5,
-                    ),
-                  ),
+                  Text('Kebabbo', style: headingStyle(size: 30)),
                   const SizedBox(height: 6),
                   Text(
                     S.of(context).login_tagline,
@@ -280,22 +277,14 @@ class LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 22,
-                              width: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(
-                              S.of(context).login,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                      // Il caricamento è a pieno schermo, non nel pulsante.
+                      child: Text(
+                        S.of(context).login,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
