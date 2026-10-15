@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kebabbo.top/sitemap.xml
+Sitemap: https://www.kebabbo.top/sitemap.xml

@@ -1,6 +1,7 @@
 // Shared helpers for the public kebab pages (no dependencies).
 
-export const SITE = 'https://kebabbo.top';
+// Host ufficiale: kebabbo.top reindirizza (308) a www.kebabbo.top.
+export const SITE = 'https://www.kebabbo.top';
 export const PLAY_URL =
   'https://play.google.com/store/apps/details?id=com.canny.kebabbologna';
 
