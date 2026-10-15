@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Feature graphic A – Classifica</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1024px; height: 500px; overflow: hidden; background: #FFBA1C; font-family: "Figtree", sans-serif; color: #2B1A12; }
+  .wrap { position: relative; width: 1024px; height: 500px; }
+  .mascot { position: absolute; left: 30px; bottom: 26px; height: 300px; }
+  .copy { position: absolute; left: 250px; top: 70px; width: 360px; }
+  h1 { font: 800 56px/0.98 "Bricolage Grotesque", sans-serif; letter-spacing: -0.03em; color: #BB0000; }
+  p { margin-top: 16px; font-size: 22px; font-weight: 600; line-height: 1.3; }
+  .card {
+    position: absolute; right: 52px; top: 50px; width: 330px; background: #fff; border-radius: 26px;
+    padding: 20px 20px 10px; transform: rotate(3deg); box-shadow: 0 18px 40px rgba(90, 40, 0, .28);
+  }
+  .card h2 { font: 800 20px "Bricolage Grotesque", sans-serif; margin-bottom: 12px; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #F1EAE3; }
+  .row .n { width: 20px; font: 800 20px "Bricolage Grotesque", sans-serif; color: #BB0000; text-align: center; }
+  .row .t { flex: 1; }
+  .row b { display: block; font-size: 18px; }
+  .row span { font-size: 13px; color: #7A6A60; }
+  .disc { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; color: #fff;
+    font: 800 18px "Bricolage Grotesque", sans-serif; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="mascot" src="mascotte.png" alt="">
+  <div class="copy">
+    <h1>I migliori kebab di Bologna</h1>
+    <p>Classifiche, recensioni e mappa dei kebabbari.</p>
+  </div>
+  <div class="card">
+    <h2>Classifica Kebabbo</h2>
+    <div class="row"><span class="n">1</span><div class="t"><b>Agra</b><span>Kebab, aperto ora</span></div><div class="disc" style="background:#1B5E20">4,5</div></div>
+    <div class="row"><span class="n">2</span><div class="t"><b>Pizzeria Chicco</b><span>Kebab e pizza</span></div><div class="disc" style="background:#1B5E20">4,1</div></div>
+    <div class="row"><span class="n">3</span><div class="t"><b>Taj Mahal</b><span>Kebab</span></div><div class="disc" style="background:#1B5E20">4,1</div></div>
+    <div class="row"><span class="n">4</span><div class="t"><b>Parsit</b><span>Kebab</span></div><div class="disc" style="background:#1B5E20">4,0</div></div>
+  </div>
+</div>
+</body>
+</html>

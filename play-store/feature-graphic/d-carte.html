@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Feature graphic D – Carte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1024px; height: 500px; overflow: hidden; background: #FFBA1C; font-family: "Figtree", sans-serif; color: #2B1A12; }
+  .wrap { position: relative; width: 1024px; height: 500px; }
+  .copy { position: absolute; left: 50px; top: 78px; width: 420px; }
+  h1 { font: 800 56px/0.98 "Bricolage Grotesque", sans-serif; letter-spacing: -0.03em; color: #BB0000; }
+  p { margin-top: 16px; font-size: 22px; font-weight: 600; line-height: 1.3; }
+  .cards { position: absolute; left: 560px; top: 40px; width: 420px; height: 440px; }
+  .cards img { position: absolute; width: 190px; height: 338px; border-radius: 14px; object-fit: cover;
+    box-shadow: 0 16px 34px rgba(90, 30, 0, .35); border: 4px solid #fff; transform-origin: 50% 110%; }
+  .c1 { left: 40px; top: 50px; transform: rotate(-14deg); }
+  .c2 { left: 120px; top: 20px; transform: rotate(0deg); z-index: 2; }
+  .c3 { left: 200px; top: 50px; transform: rotate(14deg); }
+  .mascot { position: absolute; left: 445px; bottom: 18px; height: 230px; z-index: 3; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="copy">
+    <h1>Recensisci, condividi, colleziona</h1>
+    <p>I migliori kebab di Bologna, con le carte dei tuoi locali preferiti.</p>
+  </div>
+  <div class="cards">
+    <img class="c1" src="../../assets/kebab-card/nemrut-doner.webp" alt="">
+    <img class="c2" src="../../assets/kebab-card/agra.webp" alt="">
+    <img class="c3" src="../../assets/kebab-card/taj-mahal.webp" alt="">
+  </div>
+  <img class="mascot" src="mascotte.png" alt="">
+</div>
+</body>
+</html>
