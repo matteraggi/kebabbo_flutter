@@ -13,7 +13,7 @@ const SHOTS = {
     ['3-kebab', 'Ogni locale,', 'tutti i dettagli'],
     ['5-review', 'Recensisci', 'in pochi secondi'],
     ['4-share', 'Condividi', 'con gli amici'],
-    ['6-profile', 'Colleziona', 'medaglie e carte'],
+    ['6-profile', 'Sblocca', 'tutte le medaglie'],
   ],
   en: [
     ['1-home', 'The best kebabs', 'in Bologna, ranked'],
@@ -21,7 +21,7 @@ const SHOTS = {
     ['3-kebab', 'Every place,', 'every detail'],
     ['5-review', 'Review', 'in a few seconds'],
     ['4-share', 'Share', 'with your friends'],
-    ['6-profile', 'Collect', 'medals and cards'],
+    ['6-profile', 'Unlock', 'every medal'],
   ],
 };
 
