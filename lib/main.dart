@@ -1,6 +1,7 @@
 import 'dart:async';
 // <── Aggiunto
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kebabbo_flutter/components/misc/medal_popup.dart';
 import 'package:kebabbo_flutter/pages/account/account_page.dart';
 import 'package:kebabbo_flutter/pages/account/reset_password.dart';
@@ -40,6 +41,9 @@ const firebaseKey = String.fromEnvironment('FIREBASE_KEY');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Disegna dietro barra di stato e di navigazione anche prima di Android 15
+  // (da Android 15 è obbligatorio): stesso aspetto su tutte le versioni.
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   registerTimeagoLocales();
 
   if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {

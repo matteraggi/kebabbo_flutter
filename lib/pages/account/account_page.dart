@@ -87,8 +87,8 @@ class _AccountPageState extends State<AccountPage> {
           _seguitiCount = (profileData['seguitiCount'] != null)
               ? profileData['seguitiCount'].length
               : 0;
-          _ingredients = List<int>.from(
-              profileData['ingredients'] ?? [5, 5, 5, 5, 5]);
+          _ingredients =
+              List<int>.from(profileData['ingredients'] ?? [5, 5, 5, 5, 5]);
           _medals = List<int>.from(profileData['medals'] ?? []);
           _loading = false;
         });
@@ -406,606 +406,620 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-        child: _loading
-            ? const KebabLoader()
-            : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 48,
-                        child: InkWell(
-                          onTap: () async {
-                            final RenderBox renderBox =
-                                context.findRenderObject() as RenderBox;
-                            final position =
-                                renderBox.localToGlobal(Offset.zero);
+      // SafeArea: l'app disegna a tutto schermo, il contenuto resta sotto la barra di stato.
+      body: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+          child: _loading
+              ? const KebabLoader()
+              : Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 48,
+                          child: InkWell(
+                            onTap: () async {
+                              final RenderBox renderBox =
+                                  context.findRenderObject() as RenderBox;
+                              final position =
+                                  renderBox.localToGlobal(Offset.zero);
 
-                            showMenu(
-                              context: context,
-                              position: RelativeRect.fromLTRB(
-                                position.dx + 10,
-                                position.dy + 60,
-                                position.dx + renderBox.size.width,
-                                position.dy + 60,
-                              ),
-                              items: [
-                                PopupMenuItem<int>(
-                                  value: 1,
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.settings,
-                                          color: Colors.black),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        S.of(context).edit_profile,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                              showMenu(
+                                context: context,
+                                position: RelativeRect.fromLTRB(
+                                  position.dx + 10,
+                                  position.dy + 60,
+                                  position.dx + renderBox.size.width,
+                                  position.dy + 60,
                                 ),
-                                PopupMenuItem<int>(
-                                  value: 2,
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.info_outline,
-                                          color: Colors.black),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        S.of(context).about,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem<int>(
-                                  value: 3,
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.privacy_tip,
-                                          color: Colors.black),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        S.of(context).privacy_policy,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem<int>(
-                                  value: 7,
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.compare_arrows,
-                                          color: Colors.black),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        S.of(context).compare_kebabs,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem<int>(
-                                  value: 6,
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.logout,
-                                          color: Colors.black),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        S.of(context).logout,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              elevation: 5,
-                              color: Colors.white,
-                            ).then((value) {
-                              if (!context.mounted) return;
-                              if (value != null) {
-                                if (value == 1) {
-                                  Future.delayed(
-                                      const Duration(milliseconds: 100), () {
-                                    _changeUsername();
-                                  });
-                                } else if (value == 2) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => const AboutPage()));
-                                } else if (value == 3) {
-                                  () async {
-                                    final url = Uri.parse(privacyPolicyUrl);
-                                    if (await canLaunchUrl(url)) {
-                                      await launchUrl(
-                                        url,
-                                        mode: LaunchMode.inAppWebView,
-                                      );
-                                    } else {
-                                      if (!context.mounted) return;
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(S
-                                              .of(context)
-                                              .could_not_open_link),
-                                          duration: const Duration(seconds: 2),
-                                        ),
-                                      );
-                                    }
-                                  }();
-                                } else if (value == 7) {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) => const KebabComparisonPage()),
-                                  );
-                                } else if (value == 6) {
-                                  _signOut();
-                                }
-                              }
-                            });
-                          },
-                          child: const Icon(Icons.menu,
-                              color: Colors.black, size: 24),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          _username,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const SizedBox(width: 48), // Balancer
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  // Profile + Stats
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                  backgroundColor: Colors.transparent,
-                                  child: Stack(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () =>
-                                            Navigator.of(context).pop(),
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.8,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.5,
-                                          child: Image(
-                                            image: (_avatarUrl != null &&
-                                                    _avatarUrl!.isNotEmpty)
-                                                ? NetworkImage(_avatarUrl!)
-                                                : const AssetImage(
-                                                        'assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
-                                                    as ImageProvider,
-                                            fit: BoxFit.cover,
+                                items: [
+                                  PopupMenuItem<int>(
+                                    value: 1,
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.settings,
+                                            color: Colors.black),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          S.of(context).edit_profile,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87,
                                           ),
                                         ),
-                                      ),
-                                      Positioned(
-                                        top: 10,
-                                        right: 10,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(4.0),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            icon: Icon(
-                                              Icons.camera_alt,
-                                              size: 25,
-                                              color: main.red,
-                                            ),
-                                            onPressed: _changeAvatar,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: main.red, width: 3),
-                            ),
-                            child: CircleAvatar(
-                              radius: 47,
-                              backgroundImage:
-                                  (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                                      ? NetworkImage(_avatarUrl!)
-                                      : const AssetImage(
-                                              'assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
-                                          as ImageProvider,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 24),
-
-                      // Stats & Medals
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                children: [
-                                  // POSTS
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserPostsPage(userId: _id),
-                                          ),
-                                        );
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            "$_postCount",
-                                            style: const TextStyle(
-                                              fontSize: 19,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            S.of(context).posts,
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      ],
                                     ),
                                   ),
-
-                                  // FOLLOWERS
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                FollowersPage(userId: _id),
+                                  PopupMenuItem<int>(
+                                    value: 2,
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.info_outline,
+                                            color: Colors.black),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          S.of(context).about,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87,
                                           ),
-                                        );
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            '$_followersCount',
-                                            style: const TextStyle(
-                                              fontSize: 19,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            S.of(context).followers,
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-
-                                  // SEGUITI
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                SeguitiPage(userId: _id),
+                                  PopupMenuItem<int>(
+                                    value: 3,
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.privacy_tip,
+                                            color: Colors.black),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          S.of(context).privacy_policy,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87,
                                           ),
-                                        );
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            '$_seguitiCount',
-                                            style: const TextStyle(
-                                              fontSize: 19,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem<int>(
+                                    value: 7,
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.compare_arrows,
+                                            color: Colors.black),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          S.of(context).compare_kebabs,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87,
                                           ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            S.of(context).following,
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem<int>(
+                                    value: 6,
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.logout,
+                                            color: Colors.black),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          S.of(context).logout,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
-                              ),
-                              const SizedBox(height: 10),
-                              // OBIETTIVI & MEDAGLIE (STILE PULITO, NO BOX)
-                              InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          MedalPage(userId: _id),
-                                    ),
-                                  ).then((_) => _loadProfile());
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 6),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.emoji_events_outlined,
-                                          size: 17, color: Color(0xFFD49B00)),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        "${S.of(context).objectives}: ${_medals.length}/${allMedalsList.length}",
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 2),
-                                      const Icon(Icons.chevron_right,
-                                          size: 16, color: Colors.black45),
-                                    ],
-                                  ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ),
-                            ],
+                                elevation: 5,
+                                color: Colors.white,
+                              ).then((value) {
+                                if (!context.mounted) return;
+                                if (value != null) {
+                                  if (value == 1) {
+                                    Future.delayed(
+                                        const Duration(milliseconds: 100), () {
+                                      _changeUsername();
+                                    });
+                                  } else if (value == 2) {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AboutPage()));
+                                  } else if (value == 3) {
+                                    () async {
+                                      final url = Uri.parse(privacyPolicyUrl);
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(
+                                          url,
+                                          mode: LaunchMode.inAppWebView,
+                                        );
+                                      } else {
+                                        if (!context.mounted) return;
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(S
+                                                .of(context)
+                                                .could_not_open_link),
+                                            duration:
+                                                const Duration(seconds: 2),
+                                          ),
+                                        );
+                                      }
+                                    }();
+                                  } else if (value == 7) {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const KebabComparisonPage()),
+                                    );
+                                  } else if (value == 6) {
+                                    _signOut();
+                                  }
+                                }
+                              });
+                            },
+                            child: const Icon(Icons.menu,
+                                color: Colors.black, size: 24),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        // KEBAB PREFERITO (Expanded)
                         Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 6,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
+                          child: Text(
+                            _username,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
                             ),
-                            child: InkWell(
-                              onTap: () {
-                                _openFavoriteKebabSelection();
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (_favoriteKebab == null ||
-                                      _favoriteKebab!.isEmpty)
-                                    Flexible(
-                                      child: Text(
-                                        S.of(context).seleziona_il_tuo_kebab_preferito,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(fontSize: 13),
-                                      ),
-                                    )
-                                  else
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            _favoriteKebab?["tag"] == "kebab"
-                                                ? "assets/images/kebabcolored.png"
-                                                : "assets/images/sandwitch.png",
-                                            height: 22,
-                                            width: 22,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(width: 48), // Balancer
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    // Profile + Stats
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    child: Stack(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () =>
+                                              Navigator.of(context).pop(),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.8,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.5,
+                                            child: Image(
+                                              image: (_avatarUrl != null &&
+                                                      _avatarUrl!.isNotEmpty)
+                                                  ? NetworkImage(_avatarUrl!)
+                                                  : const AssetImage(
+                                                          'assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
+                                                      as ImageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
+                                        ),
+                                        Positioned(
+                                          top: 10,
+                                          right: 10,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4.0),
+                                            decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              constraints:
+                                                  const BoxConstraints(),
+                                              icon: Icon(
+                                                Icons.camera_alt,
+                                                size: 25,
+                                                color: main.red,
+                                              ),
+                                              onPressed: _changeAvatar,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: main.red, width: 3),
+                              ),
+                              child: CircleAvatar(
+                                radius: 47,
+                                backgroundImage: (_avatarUrl != null &&
+                                        _avatarUrl!.isNotEmpty)
+                                    ? NetworkImage(_avatarUrl!)
+                                    : const AssetImage(
+                                            'assets/new-logos/logo scritta ad arco sfondo giallo-1.png')
+                                        as ImageProvider,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 24),
+
+                        // Stats & Medals
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    // POSTS
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  UserPostsPage(userId: _id),
+                                            ),
+                                          );
+                                        },
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "$_postCount",
                                               style: const TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 19,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              S.of(context).posts,
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  const SizedBox(width: 6),
-                                  const Icon(Icons.border_color,
-                                      color: Colors.black54, size: 18),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        // PERSONALIZZA / CREA IL TUO KEBAB
-                        Container(
-                          decoration: BoxDecoration(
-                            color: main.red,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: main.red.withValues(alpha: 0.35),
-                                blurRadius: 6,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(16),
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => ToolsPage(
-                                      currentPosition: widget.currentPosition,
-                                      ingredients: _ingredients,
-                                      onIngredientsUpdated:
-                                          (updatedIngredients) {
-                                        setState(() {
-                                          _ingredients = updatedIngredients;
-                                        });
-                                      },
+
+                                    // FOLLOWERS
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FollowersPage(userId: _id),
+                                            ),
+                                          );
+                                        },
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              '$_followersCount',
+                                              style: const TextStyle(
+                                                fontSize: 19,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              S.of(context).followers,
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 10),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.tune_rounded,
-                                        color: Colors.white, size: 19),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      S.of(context).your_kebab,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
+
+                                    // SEGUITI
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SeguitiPage(userId: _id),
+                                            ),
+                                          );
+                                        },
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              '$_seguitiCount',
+                                              style: const TextStyle(
+                                                fontSize: 19,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              S.of(context).following,
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
+                                const SizedBox(height: 10),
+                                // OBIETTIVI & MEDAGLIE (STILE PULITO, NO BOX)
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(10),
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MedalPage(userId: _id),
+                                          ),
+                                        )
+                                        .then((_) => _loadProfile());
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 6),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.emoji_events_outlined,
+                                            size: 17, color: Color(0xFFD49B00)),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          "${S.of(context).objectives}: ${_medals.length}/${allMedalsList.length}",
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 2),
+                                        const Icon(Icons.chevron_right,
+                                            size: 16, color: Colors.black45),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Expanded(
-                    child: DefaultTabController(
-                      length: 3,
-                      child: Column(
+                    const SizedBox(height: 18),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
                         children: [
-                          const TabBar(
-                            physics: BouncingScrollPhysics(),
-                            indicatorColor: Colors.black,
-                            labelColor: Colors.black,
-                            unselectedLabelColor: Colors.grey,
-                            tabs: [
-                              Tab(icon: Icon(Icons.style)),
-                              Tab(icon: Icon(Icons.reviews)),
-                              Tab(icon: Icon(Icons.bookmark)),
-                            ],
-                          ),
+                          // KEBAB PREFERITO (Expanded)
                           Expanded(
-                            child: TabBarView(
-                              children: [
-                                TcgProfilePreview(userId: _id),
-                                UserReviewsPage(
-                                  userId: _id,
-                                  initialPosition: widget.currentPosition,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  _openFavoriteKebabSelection();
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    if (_favoriteKebab == null ||
+                                        _favoriteKebab!.isEmpty)
+                                      Flexible(
+                                        child: Text(
+                                          S
+                                              .of(context)
+                                              .seleziona_il_tuo_kebab_preferito,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                      )
+                                    else
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Image.asset(
+                                              _favoriteKebab?["tag"] == "kebab"
+                                                  ? "assets/images/kebabcolored.png"
+                                                  : "assets/images/sandwitch.png",
+                                              height: 22,
+                                              width: 22,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                "${_favoriteKebab?["name"] ?? S.of(context).nome_non_disponibile}",
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    const SizedBox(width: 6),
+                                    const Icon(Icons.border_color,
+                                        color: Colors.black54, size: 18),
+                                  ],
                                 ),
-                                FavoritesPage(userId: _id),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // PERSONALIZZA / CREA IL TUO KEBAB
+                          Container(
+                            decoration: BoxDecoration(
+                              color: main.red,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: main.red.withValues(alpha: 0.35),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 3),
+                                ),
                               ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(16),
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ToolsPage(
+                                        currentPosition: widget.currentPosition,
+                                        ingredients: _ingredients,
+                                        onIngredientsUpdated:
+                                            (updatedIngredients) {
+                                          setState(() {
+                                            _ingredients = updatedIngredients;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 10),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.tune_rounded,
+                                          color: Colors.white, size: 19),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        S.of(context).your_kebab,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(height: 15),
+                    Expanded(
+                      child: DefaultTabController(
+                        length: 3,
+                        child: Column(
+                          children: [
+                            const TabBar(
+                              physics: BouncingScrollPhysics(),
+                              indicatorColor: Colors.black,
+                              labelColor: Colors.black,
+                              unselectedLabelColor: Colors.grey,
+                              tabs: [
+                                Tab(icon: Icon(Icons.style)),
+                                Tab(icon: Icon(Icons.reviews)),
+                                Tab(icon: Icon(Icons.bookmark)),
+                              ],
+                            ),
+                            Expanded(
+                              child: TabBarView(
+                                children: [
+                                  TcgProfilePreview(userId: _id),
+                                  UserReviewsPage(
+                                    userId: _id,
+                                    initialPosition: widget.currentPosition,
+                                  ),
+                                  FavoritesPage(userId: _id),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }

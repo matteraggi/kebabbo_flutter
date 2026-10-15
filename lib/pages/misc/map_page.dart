@@ -444,8 +444,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
         final double avgP = totalPrice / count;
         final double avgM = totalMenu / count;
         final double avgF = totalFun / count;
-        final double avgRating =
-            (avgQ + avgDim + avgP + avgM) / 4.0;
+        final double avgRating = (avgQ + avgDim + avgP + avgM) / 4.0;
 
         _communityStatsCache[kebabId] = {
           'count': count,
@@ -543,8 +542,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
               ),
               const SizedBox(width: 5),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? Colors.white.withValues(alpha: 0.25)
@@ -648,8 +646,10 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
         ? (item['menu'] ?? 0.0).toDouble()
         : (commStats?['menu'] ?? (item['menu'] ?? 0.0)).toDouble();
 
-    final bool hasNoCommunityReviews =
-        !showingStaff && isStaff && commCount == 0 && !_isLoadingCommunityReview;
+    final bool hasNoCommunityReviews = !showingStaff &&
+        isStaff &&
+        commCount == 0 &&
+        !_isLoadingCommunityReview;
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -766,8 +766,8 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
                                       color: showingStaff
-                                        ? Colors.white
-                                        : Colors.black87,
+                                          ? Colors.white
+                                          : Colors.black87,
                                     ),
                                   ),
                                 ],
@@ -801,14 +801,16 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                   const SizedBox(width: 4),
                                   Text(
                                     commCount > 0
-                                        ? S.of(context).users_count(commCount.toString())
+                                        ? S
+                                            .of(context)
+                                            .users_count(commCount.toString())
                                         : S.of(context).users,
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
                                       color: !showingStaff
-                                        ? Colors.white
-                                        : Colors.black87,
+                                          ? Colors.white
+                                          : Colors.black87,
                                     ),
                                   ),
                                 ],
@@ -881,8 +883,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       Expanded(
                         child: Text(
                           S.of(context).no_user_reviews_yet,
-                          style:
-                              TextStyle(fontSize: 11, color: Colors.black87),
+                          style: TextStyle(fontSize: 11, color: Colors.black87),
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -944,13 +945,12 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildStatPill(
-                          S.of(context).quality, displayQuality),
+                      child:
+                          _buildStatPill(S.of(context).quality, displayQuality),
                     ),
                     const SizedBox(width: 5),
                     Expanded(
-                      child:
-                          _buildStatPill(S.of(context).price, displayPrice),
+                      child: _buildStatPill(S.of(context).price, displayPrice),
                     ),
                     const SizedBox(width: 5),
                     Expanded(
@@ -959,8 +959,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                     ),
                     const SizedBox(width: 5),
                     Expanded(
-                      child:
-                          _buildStatPill(S.of(context).menu, displayMenu),
+                      child: _buildStatPill(S.of(context).menu, displayMenu),
                     ),
                   ],
                 ),
@@ -1174,7 +1173,8 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
         // Barra Superiore: Filtri Multipli Staff / Community & Selettore Stile Mappa
         Positioned(
-          top: 16.0,
+          // Sotto la barra di stato (l'app disegna a tutto schermo).
+          top: 16.0 + MediaQuery.paddingOf(context).top,
           left: 16.0,
           right: 16.0,
           child: Column(
@@ -1255,8 +1255,8 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     InkWell(
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(10)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(10)),
                       onTap: _zoomIn,
                       child: const Padding(
                         padding: EdgeInsets.all(10.0),
